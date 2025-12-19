@@ -14,16 +14,16 @@ server = FastMCP(server_name)
 
 def main():
 
-    logger.info("Starting {server_name}")
+    logger.info(f"Starting {server_name}")
     server.run(transport="stdio")
 
-    logger.info("Initializing tools for {server_name}")
+    logger.info(f"Initializing tools for {server_name}")
     initialize_tools(server)
 
-    logger.info("Initializing resources for {server_name}")
+    logger.info(f"Initializing resources for {server_name}")
     initialize_resources(server)
 
-    logger.info("Initializing prompts for {server_name}")
+    logger.info(f"Initializing prompts for {server_name}")
     initialize_prompts(server)
 
 if __name__ == "__main__":

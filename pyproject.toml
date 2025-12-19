@@ -1,19 +1,10 @@
-[tool.poetry]
-name = "actian-mcp-server"
-version = "0.1.0"
-description = ""
-authors = ["Alba Lokaj <alba.lokaj@actian.com>"]
-packages = [
-    { include = "actian_mcp_server", from = "src" }
-]
-
 [project]
 name = "actian-mcp-server"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [
-    { name = "alokaj", email = "alba.lokaj@actian.com" }
+    { name = "alokaj", email = "alba.lokaj@hcl-software.com" }
 ]
 requires-python = ">=3.12"
 dependencies = [
