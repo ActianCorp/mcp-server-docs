@@ -1,46 +1,58 @@
 # Copyright (C) 2025 Actian Corp.
 # All Rights Reserved.
 
-import asyncio
+import pytest
 from fastmcp import Client
 from actian_mcp_server.server import server
 from actian_mcp_server.tools import initialize_tools
 from actian_mcp_server.resources import initialize_resources
 from actian_mcp_server.prompts import initialize_prompts
-from tests.test_utils import (
-    test_server_reachability,
-    test_tools_list,
-    test_resources_list,
-    test_prompts_list,
-    test_tool__print_text,
-    test_resource__read_text,
-    test_prompt__ask_question
-)
 
-async def main():
-    client = Client(server)
-    async with client:
-        assert client.is_connected()
+actual_tools = ["print_text"]
+actual_resources = ["read_text"]
+actual_prompts = ["ask_question"]
 
-        # Test server
-        await test_server_reachability(client)
+@pytest.fixture
+async def client():
+    initialize_tools(server)
+    initialize_resources(server)
+    initialize_prompts(server)
+    async with Client(server) as c:
+        yield c
 
-        # Test tools
-        initialize_tools(server)
-        await test_tools_list(client)
-        await test_tool__print_text(client)
+async def test_server_reachability(client):
+    response = await client.ping()
+    assert client
 
-        # Test resources
-        initialize_resources(server)
-        await test_resources_list(client)
-        await test_resource__read_text(client)
+async def test_tools_list(client):
+    tool_list = await client.list_tools()
+    num_tools = len(tool_list)
+    assert num_tools == len(actual_tools)
+    for i in range(num_tools):
+        assert tool_list[i].name == actual_tools[i]
 
-        # Test prompts
-        initialize_prompts(server)
-        await test_prompts_list(client)
-        await test_prompt__ask_question(client)
+async def test_resources_list(client):
+    resource_list = await client.list_resources()
+    num_resources = len(resource_list)
+    assert num_resources == len(actual_resources)
+    for i in range(num_resources):
+        assert resource_list[i].name == actual_resources[i]
 
-    assert not client.is_connected()
+async def test_prompts_list(client):
+    prompt_list = await client.list_prompts()
+    num_prompts = len(prompt_list)
+    assert num_prompts == len(actual_prompts)
+    for i in range(num_prompts):
+        assert prompt_list[i].name == actual_prompts[i]
 
-if __name__ == "__main__":
-    asyncio.run(main())
+async def test_tool__print_text(client):
+    result = await client.call_tool("print_text", {"text": "hello world"})
+    assert result.content[0].text == "hello world"
+
+async def test_resource__read_text(client):
+    result = await client.read_resource("read://text")
+    assert result[0].text == "hello world"
+
+async def test_prompt__ask_question(client):
+    result = await client.get_prompt("ask_question", {"question": ""})
+    assert result
