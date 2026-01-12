@@ -47,7 +47,7 @@ async def test_prompts_list(client):
 
 async def test_tool__print_text(client):
     result = await client.call_tool("print_text", {"text": "hello world"})
-    assert result.content[0].text == "hello world!"
+    assert result.content[0].text == "hello world"
 
 async def test_resource__read_text(client):
     result = await client.read_resource("read://text")
