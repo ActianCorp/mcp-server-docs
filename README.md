@@ -6,4 +6,4 @@ cd actian_mcp_server
 uv sync
 ```
 ### Run the tests
-`uv run src/tests/test_server.py`
+`uv run pytest`
