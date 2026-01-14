@@ -4,9 +4,11 @@
 import asyncio
 from fastmcp import Client
 from actian_mcp_server.server import server
-from actian_mcp_server.tools import initialize_tools
-from actian_mcp_server.resources import initialize_resources
-from actian_mcp_server.prompts import initialize_prompts
+from actian_mcp_server.server import (
+    initialize_tools, 
+    initialize_resources, 
+    initialize_prompts
+)
 from tests.test_utils import (
     test_server_reachability,
     test_tools_list,

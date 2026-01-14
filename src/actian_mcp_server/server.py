@@ -7,25 +7,21 @@ import pyodbc
 from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
 from fastmcp.utilities.logging import get_logger
-from actian_mcp_server.tools import initialize_tools
-from actian_mcp_server.resources import initialize_resources
-from actian_mcp_server.prompts import initialize_prompts
 
 server_name = "Actian MCP Server"
 logger = get_logger(server_name)
 
 class ActianMCP:
-    def __init__(self, conn_param: str):
-        self.conn_param = conn_param
+    def __init__(self, conn_string: str):
+        self.conn_string = conn_string
         self.connection = None
 
     def connect_db(self):
-        logger.debug("Initializing database connection")
+        logger.info("Initializing database connection")
         try:
-            logger.debug(f"Connection string: {self.conn_param}")
-            self.connection = pyodbc.connect(self.conn_param)
-            logger.debug("Database connection established successfully")
-            # cursor = self.connection.cursor()
+            logger.debug(f"Connection string: {self.conn_string}")
+            self.connection = pyodbc.connect(self.conn_string)
+            logger.info("Database connection established successfully")
             return self.connection
         except Exception as e:
             logger.critical(f"Database connection error: {type(e).__name__}: {str(e)}", exc_info=True)
@@ -33,38 +29,55 @@ class ActianMCP:
     
     def cleanup_db(self):
         if self.connection:
-            logger.debug("Closing database connection")
+            logger.info("Closing database connection")
             try:
                 self.connection.close()
             except Exception:
                 logger.warning("Error closing database connection", exc_info=True)
-            
-def app_lifespan(conn_string):
+
+from vector.tools import initialize_vector_tools
+from vector.resources import initialize_vector_resources
+from vector.prompts import initialize_vector_prompts
+
+def initialize_tools(server, actianmcp, dbms):
+    if dbms == "vector":
+        initialize_vector_tools(server, actianmcp)
+
+def initialize_resources(server, actianmcp, dbms):
+    if dbms == "vector":
+        initialize_vector_resources(server, actianmcp)
+
+def initialize_prompts(server, dbms):
+    if dbms == "vector":
+        initialize_vector_prompts(server)
+
+def app_lifespan(args):
     @asynccontextmanager
     async def create_actianmcp(server: FastMCP) -> AsyncIterator[ActianMCP]:
-        actianmcp = ActianMCP(conn_string)
+        actianmcp = ActianMCP(args["conn_string"])
         try:
-            # Connect using a loop.run_in_executor to avoid blocking
-            loop = asyncio.get_event_loop()
-            actianmcp.connection = await loop.run_in_executor(None, actianmcp.connect_db)
+            actianmcp.connection = await asyncio.to_thread(actianmcp.connect_db)
 
             logger.info(f"Initializing tools for {server_name}")
-            initialize_tools(server, actianmcp)
+            initialize_tools(server, actianmcp, args["dbms"])
             logger.info(f"Initializing resources for {server_name}")
-            initialize_resources(server, actianmcp)
+            initialize_resources(server, actianmcp, args["dbms"])
             logger.info(f"Initializing prompts for {server_name}")
-            initialize_prompts(server)
+            initialize_prompts(server, args["dbms"])
 
             yield actianmcp
         except Exception as e:
             raise RuntimeError(f"{str(e)}")
         finally:
-            await loop.run_in_executor(None, actianmcp.cleanup_db)
+            await asyncio.to_thread(actianmcp.cleanup_db)
     return create_actianmcp
 
-# TODO(alokaj): parse it as cli argument
-conn_string = "Driver={Actian VW};database=sep_db"
-server = FastMCP(server_name, lifespan=app_lifespan(conn_string))
+# TODO(alokaj): parse args from cmd or conf file
+args = {
+    "conn_string": "Driver={Actian VW};database=sep_db",
+    "dbms": "vector"
+}
+server = FastMCP(server_name, lifespan=app_lifespan(args))
 
 def main():
 
