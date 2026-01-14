@@ -28,22 +28,22 @@ async def test_tools_list(client):
     tool_list = await client.list_tools()
     num_tools = len(tool_list)
     assert num_tools == len(actual_tools)
-    for i in range(num_tools):
-        assert tool_list[i].name in actual_tools
+    tool_names = [t.name for t in tool_list]
+    assert set(tool_names) == set(actual_tools)
 
 async def test_resources_list(client):
     resource_list = await client.list_resources()
     num_resources = len(resource_list)
     assert num_resources == len(actual_resources)
-    for i in range(num_resources):
-        assert resource_list[i].name in actual_resources[i]
+    resource_names = [r.name for r in resource_list]
+    assert set(resource_names) == set(actual_resources)
 
 async def test_prompts_list(client):
     prompt_list = await client.list_prompts()
     num_prompts = len(prompt_list)
     assert num_prompts == len(actual_prompts)
-    for i in range(num_prompts):
-        assert prompt_list[i].name in actual_prompts[i]
+    prompt_names = [p.name for p in prompt_list]
+    assert set(prompt_names) == set(actual_prompts)
 
 async def test_tool__print_text(client):
     result = await client.call_tool("print_text", {"text": "hello world"})
