@@ -39,15 +39,15 @@ from vector.tools import initialize_vector_tools
 from vector.resources import initialize_vector_resources
 from vector.prompts import initialize_vector_prompts
 
-def initialize_tools(server, actianmcp, dbms):
+def initialize_tools(server: FastMCP, connection: pyodbc.Connection, dbms: str):
     if dbms == "vector":
-        initialize_vector_tools(server, actianmcp)
+        initialize_vector_tools(server, connection)
 
-def initialize_resources(server, actianmcp, dbms):
+def initialize_resources(server: FastMCP, connection: pyodbc.Connection, dbms: str):
     if dbms == "vector":
-        initialize_vector_resources(server, actianmcp)
+        initialize_vector_resources(server, connection)
 
-def initialize_prompts(server, dbms):
+def initialize_prompts(server: FastMCP, dbms: str):
     if dbms == "vector":
         initialize_vector_prompts(server)
 
@@ -59,9 +59,9 @@ def app_lifespan(args):
             actianmcp.connection = await asyncio.to_thread(actianmcp.connect_db)
 
             logger.info(f"Initializing tools for {server_name}")
-            initialize_tools(server, actianmcp, args["dbms"])
+            initialize_tools(server, actianmcp.connection, args["dbms"])
             logger.info(f"Initializing resources for {server_name}")
-            initialize_resources(server, actianmcp, args["dbms"])
+            initialize_resources(server, actianmcp.connection, args["dbms"])
             logger.info(f"Initializing prompts for {server_name}")
             initialize_prompts(server, args["dbms"])
 

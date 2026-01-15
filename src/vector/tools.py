@@ -56,8 +56,8 @@ class VectorTools(MCPTools):
         except Exception as e:
             return f"Error: {str(e)}"
 
-def initialize_vector_tools(server: FastMCP, actianmcp):
-    tools = VectorTools(actianmcp.connection)
+def initialize_vector_tools(server: FastMCP, connection: pyodbc.Connection):
+    tools = VectorTools(connection)
 
     server.tool(name="print_text")(tools.print_text)
     server.tool(name="execute_query_tool")(tools.execute_query_tool)

@@ -10,15 +10,12 @@ from actian_mcp_server.server import (
     initialize_prompts
 )
 
-actual_tools = ["print_text"]
+actual_tools = ["print_text", "execute_query_tool"]
 actual_resources = ["read_text"]
 actual_prompts = ["ask_question"]
 
 @pytest.fixture
 async def client():
-    initialize_tools(server)
-    initialize_resources(server)
-    initialize_prompts(server)
     async with Client(server) as c:
         yield c
 
