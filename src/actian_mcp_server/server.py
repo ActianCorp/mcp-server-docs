@@ -31,7 +31,7 @@ class ActianDB:
         except Exception as e:
             logger.critical(f"Database connection error: {type(e).__name__}: {str(e)}", exc_info=True)
             raise RuntimeError("Failed to establish database connection") from e
-    
+
     def cleanup_db(self):
         if self.connection:
             logger.info("Closing database connection")

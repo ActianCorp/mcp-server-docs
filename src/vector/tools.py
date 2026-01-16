@@ -26,7 +26,7 @@ class VectorTools(MCPTools):
         Execute an SQL query and fetch all the results.
 
         Obtains a database cursor, executes the SQL query
-        and returns all results in json format.
+        and returns all results as a string.
 
         Parameters
             query: str
