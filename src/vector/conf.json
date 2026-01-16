@@ -1,0 +1,3 @@
+{
+    "conn_string": "Driver={Actian VW};database=mcp_vector_db"
+}
