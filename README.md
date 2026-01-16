@@ -6,5 +6,15 @@ git clone https://alm.actian.com/bitbucket/scm/~alokaj/actian_mcp_server.git
 cd actian_mcp_server
 uv sync
 ```
-### Run the tests
-`uv run pytest`
+### Start the MCP server only
+```
+uv run src/actian_mcp_server/server.py --dbms=<dbms_name>
+```
+
+### Testing with Vector
+> NOTE: requires a Vector instance installation.
+```
+cd src/vector/tests
+bash test_db_init.sh
+uv run pytest
+```
