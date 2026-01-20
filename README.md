@@ -8,11 +8,11 @@ uv sync
 ```
 ### Start the MCP server only
 ```
-uv run src/actian_mcp_server/server.py --dbms=<dbms_name>
+uv run actian-mcp-server --dbms=<dbms_name> --conf_file=<db_specific_conf_file>
 ```
 
 ### Testing with Vector
-> NOTE: requires a Vector instance installation.
+> NOTE: requires a Vector instance installation and ODBC setup.
 ```
 cd src/vector/tests
 bash test_db_init.sh
