@@ -6,6 +6,7 @@ import pyodbc
 import asyncio
 from actian_mcp_server.server_interfaces import MCPTools
 from typing import List, Dict, Any
+import toons
 
 def _execute_query(query: str, connection: pyodbc.Connection) -> str:
     try:
@@ -16,7 +17,7 @@ def _execute_query(query: str, connection: pyodbc.Connection) -> str:
                 columns = [column[0] for column in cur.description]
                 rows = cur.fetchall()
                 results = [dict(zip(columns, map(str, row))) for row in rows]
-            return str(results)
+            return str(toons.dumps(results))
     except pyodbc.Error as e:
         return f"Error: {str(e)}"
 

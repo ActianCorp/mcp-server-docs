@@ -24,6 +24,7 @@ dev = [
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
     "pytest-html>=4.1.1",
+    "toons>=0.4.0",
 ]
 
 [tool.pytest.ini_options]

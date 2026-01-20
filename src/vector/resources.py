@@ -6,6 +6,7 @@ import pyodbc
 import asyncio
 from actian_mcp_server.server_interfaces import MCPResources
 from typing import Dict, Any
+import toons
 
 def _get_database_schema(connection: pyodbc.Connection) -> str:
     try:
@@ -22,7 +23,7 @@ def _get_database_schema(connection: pyodbc.Connection) -> str:
                 schema.setdefault(table, []).append({
                     column: dtype
                 })
-            return str(schema)
+            return str(toons.dumps(schema))
     except pyodbc.Error as e:
         return f"Error: {str(e)}"
 

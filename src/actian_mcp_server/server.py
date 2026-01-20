@@ -9,7 +9,6 @@ from collections.abc import AsyncIterator
 from fastmcp.utilities.logging import get_logger
 import argparse
 import json
-import os
 from pathlib import Path
 
 server_name = "Actian MCP Server"
@@ -40,36 +39,53 @@ class ActianDB:
             except Exception:
                 logger.warning("Error closing database connection", exc_info=True)
 
-from vector.tools import initialize_vector_tools
-from vector.resources import initialize_vector_resources
-from vector.prompts import initialize_vector_prompts
-
 def initialize_tools(server: FastMCP, connection: pyodbc.Connection, dbms: str):
-    logger.info(f"Initializing tools for {server_name}")
+    logger.info(f"Initializing tools for {dbms}")
     if dbms == "vector":
+        from vector.tools import initialize_vector_tools
         initialize_vector_tools(server, connection)
+    else:
+        logger.error(f"There is no support for {dbms}")
+        raise
 
 def initialize_resources(server: FastMCP, connection: pyodbc.Connection, dbms: str):
-    logger.info(f"Initializing resources for {server_name}")
+    logger.info(f"Initializing resources for {dbms}")
     if dbms == "vector":
+        from vector.resources import initialize_vector_resources
         initialize_vector_resources(server, connection)
+    else:
+        logger.error(f"There is no support for {dbms}")
+        raise
 
 def initialize_prompts(server: FastMCP, dbms: str):
-    logger.info(f"Initializing prompts for {server_name}")
+    logger.info(f"Initializing prompts for {dbms}")
     if dbms == "vector":
+        from vector.prompts import initialize_vector_prompts
         initialize_vector_prompts(server)
+    else:
+        logger.error(f"There is no support for {dbms}")
+        raise
 
-def load_conf_json(dbms: str):
-    src_dir = Path(__file__).resolve().parents[1]
-    conf_file = os.path.join(src_dir, dbms, "conf.json")
-    with open(conf_file, 'r') as f:
-        return json.load(f)
+def load_conf_json(conf_file: str):
+    if conf_file is None:
+        logger.error(f"conf_file cannot be None. Please provide a path to the configuration file.")
+        raise
+    full_conf_file = str(Path(conf_file).expanduser().resolve())
+    try:
+        with open(full_conf_file, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        logger.error(f"Configuration file not found: {full_conf_file}")
+        raise
+    except Exception:
+        logger.error(f"Unexpected error loading the configuration file: {full_conf_file}")
+        raise
 
 def app_lifespan(args):
     @asynccontextmanager
     async def create_actiandb(server: FastMCP) -> AsyncIterator[ActianDB]:
         try:
-            conf_args = load_conf_json(args.dbms)
+            conf_args = load_conf_json(args.conf_file)
             actiandb = ActianDB(conf_args["conn_string"], args.transport)
             actiandb.connection = await asyncio.to_thread(actiandb.connect_db)
 
@@ -85,9 +101,12 @@ def app_lifespan(args):
     return create_actiandb
 
 def parse_args():
+    supported_dbms = ['vector']
+    supported_transport = ['stdio']
     parser = argparse.ArgumentParser(description="Actian MCP Server Arguments")
-    parser.add_argument("--dbms", type=str, required=True, help="The Actian DBMS Name")
-    parser.add_argument("--transport", type=str, required=False, help="Transport for the communication", default="stdio")
+    parser.add_argument("--dbms", choices=supported_dbms, required=True, help="The Actian DBMS name")
+    parser.add_argument("--conf-file", required=True, help="The Actian DBMS configuration file")
+    parser.add_argument("--transport", choices=supported_transport, required=False, help="Transport for the communication", default="stdio")
     return parser.parse_args()
 
 def main():
