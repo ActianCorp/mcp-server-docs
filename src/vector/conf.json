@@ -1,3 +1,5 @@
 {
-    "conn_string": "Driver={Actian VW};database=mcp_vector_db"
+    "conn_string": "<connection_string>",
+    "host": "<host_url>",
+    "port": "<port_number>"
 }

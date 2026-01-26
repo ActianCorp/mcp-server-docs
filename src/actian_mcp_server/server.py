@@ -81,17 +81,16 @@ def load_conf_json(conf_file: str):
         logger.error(f"Unexpected error loading the configuration file: {full_conf_file}")
         raise
 
-def app_lifespan(args):
+def app_lifespan(cli_args, conf_file_args):
     @asynccontextmanager
     async def create_actiandb(server: FastMCP) -> AsyncIterator[ActianDB]:
         try:
-            conf_args = load_conf_json(args.conf_file)
-            actiandb = ActianDB(conf_args["conn_string"], args.transport)
+            actiandb = ActianDB(conf_file_args["conn_string"], cli_args.transport)
             actiandb.connection = await asyncio.to_thread(actiandb.connect_db)
 
-            initialize_tools(server, actiandb.connection, args.dbms)
-            initialize_resources(server, actiandb.connection, args.dbms)
-            initialize_prompts(server, args.dbms)
+            initialize_tools(server, actiandb.connection, cli_args.dbms)
+            initialize_resources(server, actiandb.connection, cli_args.dbms)
+            initialize_prompts(server, cli_args.dbms)
 
             yield actiandb
         except Exception as e:
@@ -101,19 +100,37 @@ def app_lifespan(args):
     return create_actiandb
 
 def parse_args():
-    supported_dbms = ['vector']
-    supported_transport = ['stdio']
     parser = argparse.ArgumentParser(description="Actian MCP Server Arguments")
-    parser.add_argument("--dbms", choices=supported_dbms, required=True, help="The Actian DBMS name")
-    parser.add_argument("--conf-file", required=True, help="The Actian DBMS configuration file")
-    parser.add_argument("--transport", choices=supported_transport, required=False, help="Transport for the communication", default="stdio")
+    parser.add_argument(
+        "--dbms",
+        choices=["vector"],
+        required=True,
+        help="The Actian DBMS name"
+    )
+    parser.add_argument(
+        "--conf-file",
+        required=True,
+        help="The Actian DBMS configuration file"
+    )
+    parser.add_argument(
+        "--transport",
+        choices=["stdio", "sse", "http"],
+        required=False,
+        help="Transport for the communication",
+        default="stdio"
+    )
     return parser.parse_args()
 
 def main():
-    args = parse_args()
-    server = FastMCP(server_name, lifespan=app_lifespan(args))
+    cli_args = parse_args()
+    conf_file_args = load_conf_json(cli_args.conf_file)
+
+    server = FastMCP(server_name, lifespan=app_lifespan(cli_args, conf_file_args))
     logger.info(f"Starting {server_name}")
-    server.run(args.transport)
+    if cli_args.transport in ["sse", "http"]:
+        server.run(transport=cli_args.transport, host=conf_file_args["host"], port=conf_file_args["port"])
+    else:
+        server.run()
 
 if __name__ == "__main__":
     main()
