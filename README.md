@@ -13,14 +13,6 @@ A configuration file is used to establish the connection to the database and sta
 uv run actian-mcp-server --dbms=<dbms_name> --conf_file=<db_specific_conf_file>
 ```
 
-### Testing with Vector
-> NOTE: requires a Vector instance installation and ODBC setup.
-```
-cd src/vector/tests
-bash test_db_init.sh
-uv run pytest
-```
-
 ### Instructions on supporting a new database
 #### Create a new file subtree
 ```
@@ -57,4 +49,15 @@ These functions are called accordingly in the lifespan object of the server toge
 ```
 cp src/conf_temp.json src/<dbms>/conf.json
 # adjust the configuration parameters in conf.json
+```
+
+### Testing with Vector
+Apply the steps under [Adapt the configuration file](#adapt-the-configuration-file) first.
+> NOTE: requires a Vector instance installation and ODBC setup.
+
+
+```
+cd src/vector/tests
+bash test_db_init.sh
+uv run pytest
 ```
