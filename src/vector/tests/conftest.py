@@ -11,8 +11,9 @@ import time
 CONF_ARGS = {
     "driver": "{Ingres VW}",
     "database": "mcp_vector_db",
+    "max_connections": 10,
     "host": "127.0.0.1",
-    "port": 8000
+    "port": 55555
 }
 
 @pytest.fixture()

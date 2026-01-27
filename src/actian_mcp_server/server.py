@@ -25,14 +25,14 @@ class ActianDB:
         self.transport = cli_args.transport
         self.pool = None
 
-    def create_pool(self):
+    def create_pool(self, max_connections):
         logger.info("Initializing database connection pool")
         try:
             self.pool = PooledDB(creator=pyodbc,
-                                 mincached=2,  # idle connections opened at startup
-                                 maxcached=5,  # max idle connections
-                                 maxconnections=10,  # max connections to the db at once
-                                 blocking=True,  # wait for a free connection
+                                 mincached=2,                    # idle connections opened at startup
+                                 maxcached=5,                    # max idle connections
+                                 maxconnections=max_connections, # max connections to the db at once
+                                 blocking=True,                  # wait for a free connection
                                  driver=self.driver,
                                  database=self.database)
             logger.info("Database connection established successfully")
@@ -110,7 +110,7 @@ def app_lifespan(cli_args, conf_file_args):
     async def create_actiandb(server: FastMCP) -> AsyncIterator[ActianDB]:
         try:
             actiandb = ActianDB(cli_args, conf_file_args)
-            actiandb.pool = await asyncio.to_thread(actiandb.create_pool)
+            actiandb.pool = await asyncio.to_thread(actiandb.create_pool, conf_file_args["max_connections"])
 
             initialize_tools(server, actiandb)
             initialize_resources(server, actiandb)
