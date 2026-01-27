@@ -2,10 +2,10 @@
 # All Rights Reserved.
 
 from abc import ABC, abstractmethod
-from actian_mcp_server.server import ActianDB
+from typing import Any
 
 class MCPTools(ABC):
-    actiandb: ActianDB
+    actiandb: Any
 
     def __init__(self, actiandb):
         self.actiandb = actiandb
@@ -15,7 +15,7 @@ class MCPTools(ABC):
         ...
 
 class MCPResources(ABC):
-    actiandb: ActianDB
+    actiandb: Any
 
     def __init__(self, actiandb):
         self.actiandb = actiandb
