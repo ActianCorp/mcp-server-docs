@@ -9,7 +9,8 @@ from multiprocessing import Process
 import time
 
 CONF_ARGS = {
-    "conn_string": "Driver={Actian VW};database=mcp_vector_db",
+    "driver": "{Ingres VW}",
+    "database": "mcp_vector_db",
     "host": "127.0.0.1",
     "port": 8000
 }
@@ -30,7 +31,6 @@ def _server_localhost():
 def server_localhost():
     proc = Process(target=_server_localhost, daemon=True)
     proc.start()
-    time.sleep(1)
     try:
         yield
     finally:

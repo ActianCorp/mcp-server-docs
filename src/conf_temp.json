@@ -1,3 +1,6 @@
 {
-    "conn_string": "<connection_string>"
+    "driver": "<odbc_driver>",
+    "database": "<database>",
+    "host": "<host>",
+    "port": "<port>"
 }

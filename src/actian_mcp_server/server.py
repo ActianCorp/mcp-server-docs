@@ -4,66 +4,90 @@
 from fastmcp import FastMCP
 import asyncio
 import pyodbc
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
 from collections.abc import AsyncIterator
 from fastmcp.utilities.logging import get_logger
 import argparse
 import json
 from pathlib import Path
+from dbutils.pooled_db import PooledDB
 
 server_name = "Actian MCP Server"
 logger = get_logger(server_name)
 
 class ActianDB:
-    def __init__(self, conn_string: str, transport: str):
-        self.conn_string = conn_string
-        self.transport = transport
-        self.connection = None
+    def __init__(self, cli_args, conf_file_args):
+        self.driver = conf_file_args["driver"]
+        self.database = conf_file_args["database"]
+        self.host = conf_file_args["host"]
+        self.port = conf_file_args["port"]
+        self.dbms = cli_args.dbms
+        self.transport = cli_args.transport
+        self.pool = None
 
-    def connect_db(self):
-        logger.info("Initializing database connection")
+    def create_pool(self):
+        logger.info("Initializing database connection pool")
         try:
-            logger.debug(f"Connection string: {self.conn_string}")
-            self.connection = pyodbc.connect(self.conn_string)
+            self.pool = PooledDB(creator=pyodbc,
+                                 mincached=2,  # idle connections opened at startup
+                                 maxcached=5,  # max idle connections
+                                 maxconnections=10,  # max connections to the db at once
+                                 blocking=True,  # wait for a free connection
+                                 driver=self.driver,
+                                 database=self.database)
             logger.info("Database connection established successfully")
-            return self.connection
+            return self.pool
         except Exception as e:
             logger.critical(f"Database connection error: {type(e).__name__}: {str(e)}", exc_info=True)
-            raise RuntimeError("Failed to establish database connection") from e
+            raise RuntimeError("Failed to establish database connection pool") from e
 
-    def cleanup_db(self):
-        if self.connection:
-            logger.info("Closing database connection")
+    @contextmanager
+    def get_cursor(self):
+        logger.info("Getting a database cursor")
+        try:
+            connection = self.pool.connection()
+            cursor = connection.cursor()
+            yield cursor
+        except Exception as e:
+            logger.critical(f"Database connection error: {type(e).__name__}: {str(e)}", exc_info=True)
+            raise RuntimeError("Failed to get the database connection or cursor") from e
+        finally:
+            cursor.close()
+            connection.close()
+
+    def cleanup_pool(self):
+        if self.pool:
+            logger.info("Closing the database connection pool")
             try:
-                self.connection.close()
+                self.pool.close()
             except Exception:
-                logger.warning("Error closing database connection", exc_info=True)
+                logger.warning("Error closing the database connection pool", exc_info=True)
 
-def initialize_tools(server: FastMCP, connection: pyodbc.Connection, dbms: str):
-    logger.info(f"Initializing tools for {dbms}")
-    if dbms == "vector":
+def initialize_tools(server: FastMCP, actiandb: ActianDB):
+    logger.info(f"Initializing tools for {actiandb.dbms}")
+    if actiandb.dbms == "vector":
         from vector.tools import initialize_vector_tools
-        initialize_vector_tools(server, connection)
+        initialize_vector_tools(server, actiandb)
     else:
-        logger.error(f"There is no support for {dbms}")
+        logger.error(f"There is no support for {actiandb.dbms}")
         raise
 
-def initialize_resources(server: FastMCP, connection: pyodbc.Connection, dbms: str):
-    logger.info(f"Initializing resources for {dbms}")
-    if dbms == "vector":
+def initialize_resources(server: FastMCP, actiandb: ActianDB):
+    logger.info(f"Initializing resources for {actiandb.dbms}")
+    if actiandb.dbms == "vector":
         from vector.resources import initialize_vector_resources
-        initialize_vector_resources(server, connection)
+        initialize_vector_resources(server, actiandb)
     else:
-        logger.error(f"There is no support for {dbms}")
+        logger.error(f"There is no support for {actiandb.dbms}")
         raise
 
-def initialize_prompts(server: FastMCP, dbms: str):
-    logger.info(f"Initializing prompts for {dbms}")
-    if dbms == "vector":
+def initialize_prompts(server: FastMCP, actiandb: ActianDB):
+    logger.info(f"Initializing prompts for {actiandb.dbms}")
+    if actiandb.dbms == "vector":
         from vector.prompts import initialize_vector_prompts
         initialize_vector_prompts(server)
     else:
-        logger.error(f"There is no support for {dbms}")
+        logger.error(f"There is no support for {actiandb.dbms}")
         raise
 
 def load_conf_json(conf_file: str):
@@ -85,18 +109,18 @@ def app_lifespan(cli_args, conf_file_args):
     @asynccontextmanager
     async def create_actiandb(server: FastMCP) -> AsyncIterator[ActianDB]:
         try:
-            actiandb = ActianDB(conf_file_args["conn_string"], cli_args.transport)
-            actiandb.connection = await asyncio.to_thread(actiandb.connect_db)
+            actiandb = ActianDB(cli_args, conf_file_args)
+            actiandb.pool = await asyncio.to_thread(actiandb.create_pool)
 
-            initialize_tools(server, actiandb.connection, cli_args.dbms)
-            initialize_resources(server, actiandb.connection, cli_args.dbms)
-            initialize_prompts(server, cli_args.dbms)
+            initialize_tools(server, actiandb)
+            initialize_resources(server, actiandb)
+            initialize_prompts(server, actiandb)
 
             yield actiandb
         except Exception as e:
             raise RuntimeError(f"{str(e)}")
         finally:
-            await asyncio.to_thread(actiandb.cleanup_db)
+            await asyncio.to_thread(actiandb.cleanup_pool)
     return create_actiandb
 
 def parse_args():
