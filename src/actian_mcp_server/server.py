@@ -6,6 +6,7 @@ from fastmcp.utilities.logging import get_logger
 from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
 from .plugin import MCPPlugin
+from .oauth import configure_authentication
 import argparse
 import importlib
 import json
@@ -103,7 +104,13 @@ def main():
     config = load_config(cli_args)
     validate_config(config)
 
-    server = FastMCP(server_name, lifespan=app_lifespan(config))
+    auth = None
+    if config["transport"] in ("sse", "http", "streamable-http"):
+        auth = configure_authentication(config)
+    else:
+        logger.info("OAuth authentication is not supported with stdio transport")
+
+    server = FastMCP(server_name, lifespan=app_lifespan(config), auth=auth)
     logger.info(f"Starting {server_name} (dbms={config['dbms']}, transport={config['transport']})")
     if config["transport"] in ("sse", "http", "streamable-http"):
         server.run(transport=config["transport"],

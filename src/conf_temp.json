@@ -5,5 +5,14 @@
     "max_connections": "(int)<max_concurrent_connections_to_database>",
     "max_rows": "(int, optional, default 1000)<max_number_of_rows_to_retrieve_from_database>",
     "host": "(str)<mcp_server_host>",
-    "port": "(str)<mcp_server_port>"
+    "port": "(str)<mcp_server_port>",
+    "oauth": {
+        "FASTMCP_SERVER_AUTH_CONFIG_URL": "<auth0_openid_configuration_url>",
+        "FASTMCP_SERVER_AUTH_CLIENT_ID": "<auth0_client_id>",
+        "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<auth0_client_secret>",
+        "FASTMCP_SERVER_AUTH_BASE_URL": "<server_base_url>",
+        "FASTMCP_SERVER_AUTH_AUDIENCE": "<auth_audience>",
+        "FASTMCP_SERVER_AUTH_SCOPE": "<auth_scope>",
+        "user_impersonation": true
+    }
 }
