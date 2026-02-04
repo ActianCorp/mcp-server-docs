@@ -8,9 +8,9 @@ from actian_mcp_server.server_interfaces import MCPTools
 from typing import List, Dict, Any
 import toons
 
-def _execute_query(query: str, connection: pyodbc.Connection) -> str:
+def _execute_query(query: str, actiandb: Any) -> str:
     try:
-        with connection.cursor() as cur:
+        with actiandb.get_cursor() as cur:
             cur.execute(query)
             results: List[Dict[str, Any]] = []
             if cur.description:
@@ -38,12 +38,12 @@ class VectorTools(MCPTools):
                 Query results containing columns and rows, or query error containing the pyodbc.Error message
         """
         try:
-            ret = await asyncio.to_thread(_execute_query, query, self._connection)
+            ret = await asyncio.to_thread(_execute_query, query, self.actiandb)
             return ret
         except Exception as e:
             return f"Error: {str(e)}"
 
-def initialize_vector_tools(server: FastMCP, connection: pyodbc.Connection):
-    tools = VectorTools(connection)
+def initialize_vector_tools(server: FastMCP, actiandb):
+    tools = VectorTools(actiandb)
 
     server.tool(name="execute_query")(tools.execute_query)

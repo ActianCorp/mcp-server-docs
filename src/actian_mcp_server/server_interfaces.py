@@ -2,23 +2,23 @@
 # All Rights Reserved.
 
 from abc import ABC, abstractmethod
-import pyodbc
+from typing import Any
 
 class MCPTools(ABC):
-    _connection: pyodbc.Connection
+    actiandb: Any
 
-    def __init__(self, connection: pyodbc.Connection):
-        self._connection = connection
+    def __init__(self, actiandb):
+        self.actiandb = actiandb
 
     @abstractmethod
     async def execute_query(self, query: str) -> str:
         ...
 
 class MCPResources(ABC):
-    _connection: pyodbc.Connection
+    actiandb: Any
 
-    def __init__(self, connection: pyodbc.Connection):
-        self._connection = connection
+    def __init__(self, actiandb):
+        self.actiandb = actiandb
 
     @abstractmethod
     async def get_database_schema(self) -> str:

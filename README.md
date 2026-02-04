@@ -10,7 +10,7 @@ uv sync
 #### Configuration 
 A configuration file is used to establish the connection to the database and start the server. The template of this file can be seen at [src/conf_temp.json](src/conf_temp.json). 
 ```
-uv run actian-mcp-server --dbms=<dbms_name> --conf_file=<db_specific_conf_file>
+uv run actian-mcp-server --dbms=<dbms_name> --conf-file=<db_specific_conf_file>
 ```
 
 ### Instructions on supporting a new database

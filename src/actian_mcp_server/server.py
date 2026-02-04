@@ -4,66 +4,106 @@
 from fastmcp import FastMCP
 import asyncio
 import pyodbc
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
 from collections.abc import AsyncIterator
 from fastmcp.utilities.logging import get_logger
 import argparse
 import json
 from pathlib import Path
+from dbutils.pooled_db import PooledDB
 
 server_name = "Actian MCP Server"
 logger = get_logger(server_name)
 
 class ActianDB:
-    def __init__(self, conn_string: str, transport: str):
-        self.conn_string = conn_string
-        self.transport = transport
-        self.connection = None
+    def __init__(self, cli_args, conf_file_args):
+        self.driver = conf_file_args["driver"]
+        self.database = conf_file_args["database"]
+        self.host = conf_file_args["host"]
+        self.port = conf_file_args["port"]
+        self.dbms = cli_args.dbms
+        self.transport = cli_args.transport
+        self.pool = None
 
-    def connect_db(self):
-        logger.info("Initializing database connection")
+    def create_pool(self, max_connections):
+        logger.info("Initializing database connection pool")
         try:
-            logger.debug(f"Connection string: {self.conn_string}")
-            self.connection = pyodbc.connect(self.conn_string)
+            self.pool = PooledDB(creator=pyodbc,
+                                 mincached=2,                    # idle connections opened at startup
+                                 maxcached=5,                    # max idle connections
+                                 maxconnections=max_connections, # max connections to the db at once
+                                 blocking=True,                  # wait for a free connection
+                                 driver=self.driver,
+                                 database=self.database)
             logger.info("Database connection established successfully")
-            return self.connection
+            return self.pool
         except Exception as e:
             logger.critical(f"Database connection error: {type(e).__name__}: {str(e)}", exc_info=True)
-            raise RuntimeError("Failed to establish database connection") from e
+            raise RuntimeError("Failed to establish database connection pool") from e
 
-    def cleanup_db(self):
-        if self.connection:
-            logger.info("Closing database connection")
+    @contextmanager
+    def get_cursor(self):
+        logger.info("Getting a database cursor")
+        try:
+            connection = self.pool.connection()
+            cursor = connection.cursor()
+            yield cursor
+        except Exception as e:
+            logger.critical(f"Database connection error: {type(e).__name__}: {str(e)}", exc_info=True)
+            raise RuntimeError("Failed to get the database connection or cursor") from e
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if connection is not None:
+                connection.close()
+
+    def cleanup_pool(self):
+        if self.pool:
+            logger.info("Closing the database connection pool")
             try:
-                self.connection.close()
+                self.pool.close()
             except Exception:
-                logger.warning("Error closing database connection", exc_info=True)
+                logger.warning("Error closing the database connection pool", exc_info=True)
 
-def initialize_tools(server: FastMCP, connection: pyodbc.Connection, dbms: str):
-    logger.info(f"Initializing tools for {dbms}")
-    if dbms == "vector":
+def initialize_tools(server: FastMCP, actiandb: ActianDB):
+    logger.info(f"Initializing tools for {actiandb.dbms}")
+    if actiandb.dbms == "vector":
         from vector.tools import initialize_vector_tools
-        initialize_vector_tools(server, connection)
+        initialize_vector_tools(server, actiandb)
     else:
-        logger.error(f"There is no support for {dbms}")
+        logger.error(f"There is no support for {actiandb.dbms}")
         raise
 
-def initialize_resources(server: FastMCP, connection: pyodbc.Connection, dbms: str):
-    logger.info(f"Initializing resources for {dbms}")
-    if dbms == "vector":
+def initialize_resources(server: FastMCP, actiandb: ActianDB):
+    logger.info(f"Initializing resources for {actiandb.dbms}")
+    if actiandb.dbms == "vector":
         from vector.resources import initialize_vector_resources
-        initialize_vector_resources(server, connection)
+        initialize_vector_resources(server, actiandb)
     else:
-        logger.error(f"There is no support for {dbms}")
+        logger.error(f"There is no support for {actiandb.dbms}")
         raise
 
-def initialize_prompts(server: FastMCP, dbms: str):
-    logger.info(f"Initializing prompts for {dbms}")
-    if dbms == "vector":
+def initialize_prompts(server: FastMCP, actiandb: ActianDB):
+    logger.info(f"Initializing prompts for {actiandb.dbms}")
+    if actiandb.dbms == "vector":
         from vector.prompts import initialize_vector_prompts
         initialize_vector_prompts(server)
     else:
-        logger.error(f"There is no support for {dbms}")
+        logger.error(f"There is no support for {actiandb.dbms}")
+        raise
+
+def validate_conf_file_args(conf_file_args: dict, transport: str):
+    required_args = ["driver", "database", "max_connections"]
+    if transport in ["sse", "http"]:
+        required_args.append("host")
+        required_args.append("port")
+    missing_or_empty = []
+    for arg in required_args:
+        if arg not in conf_file_args.keys() or conf_file_args[arg] in (None, ""):
+            missing_or_empty.append(arg)
+
+    if missing_or_empty:
+        logger.critical(f"Required arguments in the configuration file are missing: {', '.join(missing_or_empty)}")
         raise
 
 def load_conf_json(conf_file: str):
@@ -81,39 +121,57 @@ def load_conf_json(conf_file: str):
         logger.error(f"Unexpected error loading the configuration file: {full_conf_file}")
         raise
 
-def app_lifespan(args):
+def app_lifespan(cli_args, conf_file_args):
     @asynccontextmanager
     async def create_actiandb(server: FastMCP) -> AsyncIterator[ActianDB]:
         try:
-            conf_args = load_conf_json(args.conf_file)
-            actiandb = ActianDB(conf_args["conn_string"], args.transport)
-            actiandb.connection = await asyncio.to_thread(actiandb.connect_db)
+            actiandb = ActianDB(cli_args, conf_file_args)
+            actiandb.pool = await asyncio.to_thread(actiandb.create_pool, conf_file_args["max_connections"])
 
-            initialize_tools(server, actiandb.connection, args.dbms)
-            initialize_resources(server, actiandb.connection, args.dbms)
-            initialize_prompts(server, args.dbms)
+            initialize_tools(server, actiandb)
+            initialize_resources(server, actiandb)
+            initialize_prompts(server, actiandb)
 
             yield actiandb
         except Exception as e:
             raise RuntimeError(f"{str(e)}")
         finally:
-            await asyncio.to_thread(actiandb.cleanup_db)
+            await asyncio.to_thread(actiandb.cleanup_pool)
     return create_actiandb
 
 def parse_args():
-    supported_dbms = ['vector']
-    supported_transport = ['stdio']
     parser = argparse.ArgumentParser(description="Actian MCP Server Arguments")
-    parser.add_argument("--dbms", choices=supported_dbms, required=True, help="The Actian DBMS name")
-    parser.add_argument("--conf-file", required=True, help="The Actian DBMS configuration file")
-    parser.add_argument("--transport", choices=supported_transport, required=False, help="Transport for the communication", default="stdio")
+    parser.add_argument(
+        "--dbms",
+        choices=["vector"],
+        required=True,
+        help="The Actian DBMS name"
+    )
+    parser.add_argument(
+        "--conf-file",
+        required=True,
+        help="The Actian DBMS configuration file"
+    )
+    parser.add_argument(
+        "--transport",
+        choices=["stdio", "sse", "http"],
+        required=False,
+        help="Transport for the communication",
+        default="stdio"
+    )
     return parser.parse_args()
 
 def main():
-    args = parse_args()
-    server = FastMCP(server_name, lifespan=app_lifespan(args))
+    cli_args = parse_args()
+    conf_file_args = load_conf_json(cli_args.conf_file)
+    validate_conf_file_args(conf_file_args, cli_args.transport)
+
+    server = FastMCP(server_name, lifespan=app_lifespan(cli_args, conf_file_args))
     logger.info(f"Starting {server_name}")
-    server.run(args.transport)
+    if cli_args.transport in ["sse", "http"]:
+        server.run(transport=cli_args.transport, host=conf_file_args["host"], port=conf_file_args["port"])
+    else:
+        server.run()
 
 if __name__ == "__main__":
     main()

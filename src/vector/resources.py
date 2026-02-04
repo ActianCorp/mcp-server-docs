@@ -8,9 +8,9 @@ from actian_mcp_server.server_interfaces import MCPResources
 from typing import Dict, Any
 import toons
 
-def _get_database_schema(connection: pyodbc.Connection) -> str:
+def _get_database_schema(actiandb: Any) -> str:
     try:
-        with connection.cursor() as cur:
+        with actiandb.get_cursor() as cur:
             query = """
                 SELECT trim(T.table_name), trim(column_name), trim(column_datatype)
                 FROM iitables T, iicolumns C
@@ -46,12 +46,12 @@ class VectorResources(MCPResources):
                 or query error containing the pyodbc.Error message
         """
         try:
-            ret = await asyncio.to_thread(_get_database_schema, self._connection)
+            ret = await asyncio.to_thread(_get_database_schema, self.actiandb)
             return ret
         except Exception as e:
             return f"Error: {str(e)}"
     
-def initialize_vector_resources(server: FastMCP, connection: pyodbc.Connection):
-    resources = VectorResources(connection)
+def initialize_vector_resources(server: FastMCP, actiandb):
+    resources = VectorResources(actiandb)
 
     server.resource(uri="resource://database/schema")(resources.get_database_schema)
