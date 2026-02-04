@@ -52,8 +52,10 @@ class ActianDB:
             logger.critical(f"Database connection error: {type(e).__name__}: {str(e)}", exc_info=True)
             raise RuntimeError("Failed to get the database connection or cursor") from e
         finally:
-            cursor.close()
-            connection.close()
+            if cursor is not None:
+                cursor.close()
+            if connection is not None:
+                connection.close()
 
     def cleanup_pool(self):
         if self.pool:
@@ -88,6 +90,20 @@ def initialize_prompts(server: FastMCP, actiandb: ActianDB):
         initialize_vector_prompts(server)
     else:
         logger.error(f"There is no support for {actiandb.dbms}")
+        raise
+
+def validate_conf_file_args(conf_file_args: dict, transport: str):
+    required_args = ["driver", "database", "max_connections"]
+    if transport in ["sse", "http"]:
+        required_args.append("host")
+        required_args.append("port")
+    missing_or_empty = []
+    for arg in required_args:
+        if arg not in conf_file_args.keys() or conf_file_args[arg] in (None, ""):
+            missing_or_empty.append(arg)
+
+    if missing_or_empty:
+        logger.critical(f"Required arguments in the configuration file are missing: {', '.join(missing_or_empty)}")
         raise
 
 def load_conf_json(conf_file: str):
@@ -148,6 +164,7 @@ def parse_args():
 def main():
     cli_args = parse_args()
     conf_file_args = load_conf_json(cli_args.conf_file)
+    validate_conf_file_args(conf_file_args, cli_args.transport)
 
     server = FastMCP(server_name, lifespan=app_lifespan(cli_args, conf_file_args))
     logger.info(f"Starting {server_name}")
