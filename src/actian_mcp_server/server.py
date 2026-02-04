@@ -11,7 +11,6 @@ import argparse
 import json
 from pathlib import Path
 from dbutils.pooled_db import PooledDB
-from typing import List, Dict, Any
 
 server_name = "Actian MCP Server"
 logger = get_logger(server_name)
