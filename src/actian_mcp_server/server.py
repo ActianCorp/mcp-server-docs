@@ -11,6 +11,7 @@ import argparse
 import json
 from pathlib import Path
 from dbutils.pooled_db import PooledDB
+from typing import List, Dict, Any
 
 server_name = "Actian MCP Server"
 logger = get_logger(server_name)
@@ -56,6 +57,17 @@ class ActianDB:
                 cursor.close()
             if connection is not None:
                 connection.close()
+    
+    def execute_query(self, query: str) -> str:
+        try:
+            with self.get_cursor() as cur:
+                cur.execute(query)
+                if cur.description:
+                    columns = [column[0] for column in cur.description]
+                    rows = cur.fetchall()
+                return columns, rows
+        except pyodbc.Error as e:
+            return f"Error: {str(e)}"
 
     def cleanup_pool(self):
         if self.pool:

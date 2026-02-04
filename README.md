@@ -1,7 +1,9 @@
 # Actian MCP Server
 ## Quick start
+> NOTE: install the following dependencies (uv, unixodbc) if not present:\
+`curl -LsSf https://astral.sh/uv/install.sh | sh`\
+`sudo apt install unixodbc`
 ```
-curl -LsSf https://astral.sh/uv/install.sh | sh
 git clone https://alm.actian.com/bitbucket/scm/~alokaj/actian_mcp_server.git
 cd actian_mcp_server
 uv sync
