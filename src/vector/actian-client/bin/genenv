@@ -1,0 +1,228 @@
+#!/bin/bash
+#  Copyright (c) 2014 Actian Corporation, All Rights Reserved
+#
+# Name: genenv.sh
+#
+# Purpose:
+#	Generate environment script for instance pointed 
+#	to by II_SYSTEM
+#
+# Usage:
+#	genenv [-b] [-c] [-o filename]
+#	    -b 		- generate Bourne shell script (default)
+#	    -c 		- generate C shell script 
+#	    -o filename	- Send output to 'filename'
+#
+
+
+[ -x ${II_SYSTEM?}/ingres/utility/iisysdep ] &&
+    . ${II_SYSTEM?}/ingres/utility/iisysdep
+dobsh=false
+docsh=false
+outfile=""
+vhinst=false
+instid=`$II_SYSTEM/ingres/bin/ingprenv II_INSTALLATION`
+reltype=`head -1 $II_SYSTEM/ingres/version.rel | cut -d' ' -f1`
+[ "$reltype" = "VH" -o "$reltype" = "VM" ] && vhinst=true
+
+usage()
+{
+    cat << EOF
+Usage:
+    genenv [-b] [-c] [-o filename]
+	-b 		- generate Bourne shell script (default)
+	-c 		- generate C shell script 
+	-o filename	- Send output to 'filename'
+EOF
+    exit 1
+}
+
+while [ -n "$1" ]
+do
+    case "$1" in
+	-b)
+	    dobsh=true
+	    shift
+	    ;;
+	-c)
+	    docsh=true
+	    shift
+	    ;;
+	-o)
+	    [ "$2" ] || usage
+	    outfile=$2
+	    shift ; shift
+	    ;;
+	*)
+	    usage
+	    ;;
+    esac
+done
+
+# default to bash
+$dobsh || $docsh || dobsh=true
+
+unames=`uname -s`
+unamem=`uname -m`
+case $unames in
+    HP-UX)
+	case $unamem in
+	    ia64)
+		libpathname=SHLIB_PATH
+		libpathdir=$II_SYSTEM/ingres/lib/lp32
+		libpathname64=LD_LIBRARY_PATH
+		libpathdir64=$II_SYSTEM/ingres/lib
+		;;
+	    *)
+		libpathname=SHLIB_PATH
+		libpathdir=$II_SYSTEM/ingres/lib
+		libpathname64=LD_LIBRARY_PATH
+		libpathdir64=$II_SYSTEM/ingres/lib/lp64
+		;;
+	esac
+	;;
+    AIX)
+	libpathname=LIBPATH
+	libpathdir=$II_SYSTEM/ingres/lib:$II_SYSTEM/ingres/lib/lp64
+	;;
+    OSF1|\
+    UnixWare)
+	libpathname=LD_LIBRARY_PATH
+	libpathdir=$II_SYSTEM/ingres/lib
+	;;
+    Linux)
+	TERM_INGRES=konsolel
+	case $unamem in
+	    ia64|\
+	    x86_64)
+	      libpathname=LD_LIBRARY_PATH
+	      libpathdir=$II_SYSTEM/ingres/lib:$II_SYSTEM/ingres/lib/lp32
+	      ;; 
+	    *)
+	      libpathname=LD_LIBRARY_PATH
+	      libpathdir=$II_SYSTEM/ingres/lib
+	      ;; 
+	esac    
+	;;
+    Darwin)
+	libpathname=DYLD_LIBRARY_PATH
+	libpathdir=$II_SYSTEM/ingres/lib
+	if [ x"$TERM" == x ] ; then
+	    export TERM=xterm
+	fi
+	export TERM_INGRES=konsolel
+	;;
+    *)
+	libpathname=LD_LIBRARY_PATH
+	libpathdir=$II_SYSTEM/ingres/lib
+	libpathname64=LD_LIBRARY_PATH_64
+	libpathdir64=$II_SYSTEM/ingres/lib/lp64
+	;;
+esac
+# Pick up term type if set
+[ "$TERM_INGRES" ] || TERM_INGRES=vt100fx
+
+
+genenv()
+{
+    $dobsh &&
+    {
+	cat << EOF
+# Actian Client environment for $instid installation
+# Generated at installation time
+
+TERM_INGRES=$TERM_INGRES
+II_SYSTEM=$II_SYSTEM
+export II_SYSTEM
+PATH=\$II_SYSTEM/ingres/bin:\$II_SYSTEM/ingres/utility:\$PATH
+if [ \${${libpathname}:-} ] ; then
+    ${libpathname}=${libpathdir}:\$${libpathname}
+else
+    ${libpathname}=/lib:/usr/lib:${libpathdir}
+fi
+EOF
+	if $vhinst ; then
+	    cat << EOF
+# setup hadoop environment. iishlib is missing
+# issue a warning
+[ -f \$II_SYSTEM/ingres/utility/iishlib ] ||
+{
+    echo "ERROR: No instance found at: \$II_SYSTEM"
+    echo "Environment may not be set correctly"
+    return 1
+}
+shell_env=true
+. \$II_SYSTEM/ingres/utility/iishlib
+setup_hadoop
+PATH=\$MPI_ROOT/bin:\$PATH
+EOF
+	fi
+	cat << EOF
+export TERM_INGRES PATH ${libpathname}
+EOF
+
+	if [ "$libpathname64" ]; then
+	cat << EOF
+if [ \${${libpathname64}:-} ] ; then
+    ${libpathname64}=${libpathdir64}:\$${libpathname64}
+else
+    ${libpathname64}=/lib:/usr/lib:${libpathdir64}
+fi
+export ${libpathname64}
+EOF
+	fi
+    } #dobsh
+
+    $docsh &&
+    {
+	cat << EOF
+# Actian Client environment for $instid installation
+# Generated at installation time
+
+setenv II_SYSTEM $II_SYSTEM
+set path=(\$II_SYSTEM/ingres/{bin,utility} \$path)
+if ( \$?${libpathname} ) then
+    setenv ${libpathname} ${libpathdir}:\$${libpathname}
+else
+    setenv ${libpathname} /lib:/usr/lib:${libpathdir}
+endif
+setenv TERM_INGRES $TERM_INGRES
+EOF
+if [ "$unames" = "Linux" ]; then
+		    cat << EOF
+# set up environment for:
+#  - Spark provider
+#  - remote file system support
+if (! -e \$II_SYSTEM/ingres/utility/iicshlib) then
+    echo "ERROR: cshell environment script \$II_SYSTEM/ingres/utility/iicshlib missing."
+    echo "Environment may not be set correctly."
+else
+    source \$II_SYSTEM/ingres/utility/iicshlib
+endif
+EOF
+fi	
+    if $vhinst ; then
+         cat << EOF
+echo "C-Shell not support for Actian Client"
+return 1
+EOF
+    fi
+
+    if [ "$libpathname64" ]; then
+	cat << EOF
+if ( \$?${libpathname64} ) then
+    setenv ${libpathname64} ${libpathdir64}:\$${libpathname64}
+else
+    setenv ${libpathname64} /lib:/usr/lib:${libpathdir64}
+endif
+EOF
+	fi
+    } #docsh
+
+} # genenv
+
+if [ "$outfile" ] ; then
+    genenv > $outfile
+else
+    genenv
+fi

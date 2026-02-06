@@ -18,6 +18,9 @@ logger = get_logger(server_name)
 class ActianDB:
     def __init__(self, cli_args, conf_file_args):
         self.driver = conf_file_args["driver"]
+        self.server = conf_file_args["server"]
+        self.uid = conf_file_args["uid"]
+        self.pwd = conf_file_args["pwd"]
         self.database = conf_file_args["database"]
         self.host = conf_file_args["host"]
         self.port = conf_file_args["port"]
@@ -34,6 +37,9 @@ class ActianDB:
                                  maxconnections=max_connections, # max connections to the db at once
                                  blocking=True,                  # wait for a free connection
                                  driver=self.driver,
+                                 server=self.server,
+                                 uid=self.uid,
+                                 pwd=self.pwd,
                                  database=self.database)
             logger.info("Database connection established successfully")
             return self.pool
@@ -154,7 +160,7 @@ def parse_args():
     )
     parser.add_argument(
         "--transport",
-        choices=["stdio", "sse", "http"],
+        choices=["stdio", "sse", "http", "streamable-http"],
         required=False,
         help="Transport for the communication",
         default="stdio"
@@ -168,7 +174,7 @@ def main():
 
     server = FastMCP(server_name, lifespan=app_lifespan(cli_args, conf_file_args))
     logger.info(f"Starting {server_name}")
-    if cli_args.transport in ["sse", "http"]:
+    if cli_args.transport in ["sse", "http", "streamable-http"]:
         server.run(transport=cli_args.transport, host=conf_file_args["host"], port=conf_file_args["port"])
     else:
         server.run()

@@ -1,0 +1,15 @@
+# Copyright (C) 2025 Actian Corp.
+# All Rights Reserved.
+
+services:
+  actian-mcp-server:
+    build:
+      context: .
+      dockerfile: src/vector/Dockerfile
+    image: actian-mcp-server:latest
+    container_name: actian-mcp-server
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

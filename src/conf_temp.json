@@ -1,5 +1,8 @@
 {
     "driver": "<odbc_driver>",
+    "server": "<database_host>",
+    "uid": "<database_username>",
+    "pwd": "database_password>",
     "database": "<database>",
     "max_connections": "<max_concurrent_connections>",
     "host": "<host>",
