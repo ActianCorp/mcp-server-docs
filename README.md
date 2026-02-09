@@ -61,3 +61,18 @@ cd src/vector/tests
 bash test_db_init.sh
 uv run pytest
 ```
+
+### Docker compose deployment
+Apply the steps under [Adapt the configuration file](#adapt-the-configuration-file) first.
+> NOTE: requires a DBMS instance installation and ODBC setup.
+
+```
+# Start the container (build required after changes in Dockerfile)
+docker compose up -d [--build]
+
+# Check the container status
+docker compose ps
+
+# Stop the container
+docker compose stop
+```
