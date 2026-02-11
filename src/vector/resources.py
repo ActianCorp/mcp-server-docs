@@ -31,7 +31,7 @@ class VectorResources(MCPResources):
                  - ...
                 ...
 
-                On query erorr: error message containing the pyodbc.Error
+                On query error: error message containing the pyodbc.Error
         """
 
         query = """

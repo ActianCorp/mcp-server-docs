@@ -57,10 +57,15 @@ class ActianDB:
             if connection is not None:
                 connection.close()
     
-    def execute_query(self, query: str) -> str:
+    def execute_query(self, query: str, params=None) -> str:
+        columns = None
+        rows = None
         try:
             with self.get_cursor() as cur:
-                cur.execute(query)
+                if params:
+                    cur.execute(query, params)
+                else:
+                    cur.execute(query)
                 if cur.description:
                     columns = [column[0] for column in cur.description]
                     rows = cur.fetchall()

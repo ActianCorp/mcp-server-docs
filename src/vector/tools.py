@@ -27,7 +27,7 @@ class VectorTools(MCPTools):
                         row_2_value_1,row_2_value_2,...
                         ...
 
-                On query erorr: error message containing the pyodbc.Error
+                On query error: error message containing the pyodbc.Error
         """
         try:
             columns, rows = await asyncio.to_thread(self.actiandb.execute_query, query)
@@ -52,7 +52,7 @@ class VectorTools(MCPTools):
                         table_name_2
                         ...
 
-                On query erorr: error message containing the pyodbc.Error
+                On query error: error message containing the pyodbc.Error
         """
 
         query = """
@@ -88,19 +88,19 @@ class VectorTools(MCPTools):
                         column_name_2,column_datatype_2,column_length_2,column_scale_2
                         ...
 
-                On query erorr: error message containing the pyodbc.Error
+                On query error: error message containing the pyodbc.Error
         """
 
-        query = f"""
+        query = """
             SELECT trim(column_name) AS column_name,
                    trim(column_datatype) AS column_datatype,
                    trim(column_length) AS column_length,
                    trim(column_scale) AS column_scale
             FROM iitables T, iicolumns C
-            WHERE T.table_name=C.table_name AND T.table_name='{table_name}' AND system_use='U'
+            WHERE T.table_name=C.table_name AND T.table_name=? AND system_use='U'
         """
         try:
-            columns, rows = await asyncio.to_thread(self.actiandb.execute_query, query)
+            columns, rows = await asyncio.to_thread(self.actiandb.execute_query, query, params=(table_name,))
             ret = [dict(zip(columns, map(str, row))) for row in rows]
             return str(toons.dumps(ret))
         except Exception as e:
