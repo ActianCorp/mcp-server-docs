@@ -8,6 +8,11 @@ services:
       dockerfile: src/vector/Dockerfile
     image: actian-mcp-server:latest
     container_name: actian-mcp-server
+    environment:
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - ./src/vector/conf.json:/app/conf.json:ro
     ports:
       - "8000:8000"
     extra_hosts:

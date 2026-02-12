@@ -27,5 +27,12 @@ RUN useradd -ms /bin/bash mcpuser \
 
 USER mcpuser
 
+# NOTE: Make sure the project root copied to /app contains actian-client.tgz under src/vector/
+RUN mkdir -p $HOME/actian-client
+RUN tar -xzf src/vector/actian-client.tgz -C $HOME/actian-client
+
+# Install the Actian client
+RUN $HOME/actian-client/*/client_install.sh -express -acceptlicense AC -noroot $HOME/ActianClient
+
 ENTRYPOINT ["/app/src/vector/entrypoint.sh"]
-CMD ["actian-mcp-server", "--dbms", "vector", "--transport", "http", "--conf-file", "/app/src/vector/conf.json"]
+CMD ["actian-mcp-server", "--dbms", "vector", "--transport", "http", "--conf-file", "/app/conf.json"]
