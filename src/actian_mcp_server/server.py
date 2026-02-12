@@ -56,6 +56,22 @@ class ActianDB:
                 cursor.close()
             if connection is not None:
                 connection.close()
+    
+    def execute_query(self, query: str, params=None) -> str:
+        columns = None
+        rows = None
+        try:
+            with self.get_cursor() as cur:
+                if params:
+                    cur.execute(query, params)
+                else:
+                    cur.execute(query)
+                if cur.description:
+                    columns = [column[0] for column in cur.description]
+                    rows = cur.fetchall()
+                return columns, rows
+        except pyodbc.Error as e:
+            return f"Error: {str(e)}"
 
     def cleanup_pool(self):
         if self.pool:
