@@ -75,7 +75,7 @@ class ActianDB:
 def initialize_tools(server: FastMCP, actiandb: ActianDB):
     logger.info(f"Initializing tools for {actiandb.dbms}")
     if actiandb.dbms == "vector":
-        from vector.tools import initialize_vector_tools
+        from vector.features.tools import initialize_vector_tools
         initialize_vector_tools(server, actiandb)
     else:
         logger.error(f"There is no support for {actiandb.dbms}")
@@ -84,7 +84,7 @@ def initialize_tools(server: FastMCP, actiandb: ActianDB):
 def initialize_resources(server: FastMCP, actiandb: ActianDB):
     logger.info(f"Initializing resources for {actiandb.dbms}")
     if actiandb.dbms == "vector":
-        from vector.resources import initialize_vector_resources
+        from vector.features.resources import initialize_vector_resources
         initialize_vector_resources(server, actiandb)
     else:
         logger.error(f"There is no support for {actiandb.dbms}")
@@ -93,7 +93,7 @@ def initialize_resources(server: FastMCP, actiandb: ActianDB):
 def initialize_prompts(server: FastMCP, actiandb: ActianDB):
     logger.info(f"Initializing prompts for {actiandb.dbms}")
     if actiandb.dbms == "vector":
-        from vector.prompts import initialize_vector_prompts
+        from vector.features.prompts import initialize_vector_prompts
         initialize_vector_prompts(server)
     else:
         logger.error(f"There is no support for {actiandb.dbms}")

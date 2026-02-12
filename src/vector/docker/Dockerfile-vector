@@ -21,18 +21,18 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONPATH="/app"
 
 RUN useradd -ms /bin/bash mcpuser \
-    && chmod +x /app/src/vector/entrypoint.sh
+    && chmod +x /app/vector/docker/entrypoint.sh
 
 USER mcpuser
 
-# NOTE: Make sure the project root copied to /app contains actian-client.tgz under src/vector/
 RUN mkdir -p $HOME/actian-client
-RUN tar -xzf src/vector/actian-client.tgz -C $HOME/actian-client
+RUN tar -xzf actian-client.tgz -C $HOME/actian-client
 
 # Install the Actian client
 RUN $HOME/actian-client/*/client_install.sh -express -acceptlicense AC -noroot $HOME/ActianClient
 
-ENTRYPOINT ["/app/src/vector/entrypoint.sh"]
+ENTRYPOINT ["/app/vector/docker/entrypoint.sh"]
 CMD ["actian-mcp-server", "--dbms", "vector", "--transport", "http", "--conf-file", "/app/conf.json"]

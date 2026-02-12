@@ -3,10 +3,7 @@
 
 services:
   actian-mcp-server:
-    build:
-      context: .
-      dockerfile: src/vector/Dockerfile
-    image: actian-mcp-server:latest
+    image: actian/vector-mcp-server-linux:test
     container_name: actian-mcp-server
     environment:
       - DATABASE_USER=${DATABASE_USER}
