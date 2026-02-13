@@ -9,7 +9,7 @@ services:
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
     volumes:
-      - ./src/vector/conf.json:/app/conf.json:ro
+      - ${MCP_SERVER_ROOT}/src/vector/conf.json:/app/conf.json:ro
     ports:
       - "8000:8000"
     extra_hosts:
