@@ -10,16 +10,28 @@ uv sync
 #### Configuration 
 A configuration file is used to establish the connection to the database and start the server. The template of this file can be seen at [src/conf_temp.json](src/conf_temp.json). 
 ```
-uv run actian-mcp-server --dbms=<dbms_name> --conf-file=<db_specific_conf_file>
+export DATABASE_USER=<your_database_username>
+export DATABASE_PASSWORD=<your_database_password>
+
+uv run actian-mcp-server --dbms=<dbms_name> --conf-file=<db_specific_conf_file> [ --transport=<transport_mode> ]
 ```
 
 ### Instructions on supporting a new database
 #### Create a new file subtree
 ```
 mkdir src/<dbms>
-touch src/<dbms>/tools.py
-touch src/<dbms>/resources.py
-touch src/<dbms>/prompts.py
+
+# MCP Server feature subtree
+mkdir src/<dbms>/features
+touch src/<dbms>/features/tools.py
+touch src/<dbms>/features/resources.py
+touch src/<dbms>/features/prompts.py
+
+# MCP Server docker subtree
+mkdir src/<dbms>/docker
+touch src/<dbms>/features/Dockerfile-<dbms>
+touch src/<dbms>/features/entrypoint.sh
+touch src/<dbms>/features/docker-compose.yml
 ```
 
 #### Implement the tools, resources and prompts
@@ -57,22 +69,32 @@ Apply the steps under [Adapt the configuration file](#adapt-the-configuration-fi
 
 
 ```
+export DATABASE_USER=<your_database_username>
+export DATABASE_PASSWORD=<your_database_password>
+
 cd src/vector/tests
 bash test_db_init.sh
 uv run pytest
 ```
 
-### Docker compose deployment
+### Docker deployment
 Apply the steps under [Adapt the configuration file](#adapt-the-configuration-file) first.
 > NOTE: requires a DBMS instance installation and ODBC setup.
 
+#### Step 1: Setup the environment
 ```
-# Start the container (build required after changes in Dockerfile)
-docker compose up -d [--build]
-
-# Check the container status
+source set_env.sh
+```
+#### Step 2: Build the container image
+```
+bash make-docker-<dbms>.sh
+```
+#### Step 3: Start the container
+```
+docker compose -f src/<dbms>/docker/docker-compose.yml up -d
+```
+#### Step 4: Check the container status
+```
 docker compose ps
-
-# Stop the container
-docker compose stop
+docker logs actian-mcp-server
 ```
