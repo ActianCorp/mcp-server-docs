@@ -21,4 +21,14 @@ VALUES (51, 101, '2026-10-01', 150.00),
        (53, 102, '2026-11-02', 899.50),
        (54, 103, '2026-12-12', 25.00)\g
 
+CREATE PROCEDURE is_date(a VARCHAR(24)) RETURN (VARCHAR(24)) AS
+BEGIN
+    return if(a IS DATE,'YES','NO')
+END\g
+
+CREATE FUNCTION sum_int(a INT, b INT) RETURN (INT) AS
+BEGIN
+    return a+b
+END\g
+
 COMMIT;\g
