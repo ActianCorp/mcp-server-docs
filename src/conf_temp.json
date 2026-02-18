@@ -1,7 +1,8 @@
 {
     "driver": "<odbc_driver>",
-    "database": "<database>",
-    "max_connections": "<max_concurrent_connections>",
-    "host": "<host>",
-    "port": "<port>"
+    "server": "<database_host>",
+    "database": "<database_name>",
+    "max_connections": "<max_concurrent_connections_to_database>",
+    "host": "<mcp_server_host>",
+    "port": "<mcp_server_port>"
 }

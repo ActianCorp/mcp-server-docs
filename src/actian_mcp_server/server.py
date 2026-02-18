@@ -11,6 +11,7 @@ import argparse
 import json
 from pathlib import Path
 from dbutils.pooled_db import PooledDB
+import os
 
 server_name = "Actian MCP Server"
 logger = get_logger(server_name)
@@ -18,9 +19,12 @@ logger = get_logger(server_name)
 class ActianDB:
     def __init__(self, cli_args, conf_file_args):
         self.driver = conf_file_args["driver"]
+        self.server = conf_file_args["server"]
         self.database = conf_file_args["database"]
         self.host = conf_file_args["host"]
         self.port = conf_file_args["port"]
+        self.uid = cli_args.username
+        self.pwd = cli_args.password
         self.dbms = cli_args.dbms
         self.transport = cli_args.transport
         self.pool = None
@@ -34,6 +38,9 @@ class ActianDB:
                                  maxconnections=max_connections, # max connections to the db at once
                                  blocking=True,                  # wait for a free connection
                                  driver=self.driver,
+                                 server=self.server,
+                                 uid=self.uid,
+                                 pwd=self.pwd,
                                  database=self.database)
             logger.info("Database connection established successfully")
             return self.pool
@@ -84,7 +91,7 @@ class ActianDB:
 def initialize_tools(server: FastMCP, actiandb: ActianDB):
     logger.info(f"Initializing tools for {actiandb.dbms}")
     if actiandb.dbms == "vector":
-        from vector.tools import initialize_vector_tools
+        from vector.features.tools import initialize_vector_tools
         initialize_vector_tools(server, actiandb)
     else:
         logger.error(f"There is no support for {actiandb.dbms}")
@@ -93,7 +100,7 @@ def initialize_tools(server: FastMCP, actiandb: ActianDB):
 def initialize_resources(server: FastMCP, actiandb: ActianDB):
     logger.info(f"Initializing resources for {actiandb.dbms}")
     if actiandb.dbms == "vector":
-        from vector.resources import initialize_vector_resources
+        from vector.features.resources import initialize_vector_resources
         initialize_vector_resources(server, actiandb)
     else:
         logger.error(f"There is no support for {actiandb.dbms}")
@@ -102,15 +109,15 @@ def initialize_resources(server: FastMCP, actiandb: ActianDB):
 def initialize_prompts(server: FastMCP, actiandb: ActianDB):
     logger.info(f"Initializing prompts for {actiandb.dbms}")
     if actiandb.dbms == "vector":
-        from vector.prompts import initialize_vector_prompts
+        from vector.features.prompts import initialize_vector_prompts
         initialize_vector_prompts(server)
     else:
         logger.error(f"There is no support for {actiandb.dbms}")
         raise
 
-def validate_conf_file_args(conf_file_args: dict, transport: str):
+def validate_args(conf_file_args, cli_args):
     required_args = ["driver", "database", "max_connections"]
-    if transport in ["sse", "http"]:
+    if cli_args.transport in ["sse", "http"]:
         required_args.append("host")
         required_args.append("port")
     missing_or_empty = []
@@ -122,9 +129,15 @@ def validate_conf_file_args(conf_file_args: dict, transport: str):
         logger.critical(f"Required arguments in the configuration file are missing: {', '.join(missing_or_empty)}")
         raise
 
+    if cli_args.username in (None, "") or cli_args.password in (None, ""):
+        logger.critical("The database username or password cannot be None or empty. " \
+                        "Please provide them as CLI arguments (--username, --password) " \
+                        "and/or environment variables (DATABASE_USERNAME, DATABASE_PASSWORD).")
+        raise
+
 def load_conf_json(conf_file: str):
-    if conf_file is None:
-        logger.error(f"conf_file cannot be None. Please provide a path to the configuration file.")
+    if conf_file in (None, ""):
+        logger.error("The CLI argument conf-file cannot be None or empty. Please provide a path to the configuration file.")
         raise
     full_conf_file = str(Path(conf_file).expanduser().resolve())
     try:
@@ -170,21 +183,37 @@ def parse_args():
     )
     parser.add_argument(
         "--transport",
-        choices=["stdio", "sse", "http"],
+        choices=["stdio", "sse", "http", "streamable-http"],
         required=False,
         help="Transport for the communication",
         default="stdio"
     )
+
+    # Username and password parameters can be passed as CLI arguments and/or environment variables
+    parser.add_argument(
+        "--username",
+        required=False,
+        help="Database username",
+        default=os.getenv("DATABASE_USER")
+    )
+
+    parser.add_argument(
+        "--password",
+        required=False,
+        help="Database username",
+        default=os.getenv("DATABASE_PASSWORD")
+    )
+
     return parser.parse_args()
 
 def main():
     cli_args = parse_args()
     conf_file_args = load_conf_json(cli_args.conf_file)
-    validate_conf_file_args(conf_file_args, cli_args.transport)
+    validate_args(conf_file_args, cli_args)
 
     server = FastMCP(server_name, lifespan=app_lifespan(cli_args, conf_file_args))
     logger.info(f"Starting {server_name}")
-    if cli_args.transport in ["sse", "http"]:
+    if cli_args.transport in ["sse", "http", "streamable-http"]:
         server.run(transport=cli_args.transport, host=conf_file_args["host"], port=conf_file_args["port"])
     else:
         server.run()

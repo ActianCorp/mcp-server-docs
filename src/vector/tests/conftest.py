@@ -7,9 +7,11 @@ from actian_mcp_server.server import server_name, app_lifespan
 from types import SimpleNamespace
 from multiprocessing import Process
 import socket
+import os
 
 CONF_ARGS = {
     "driver": "{Ingres VW}",
+    "server": "@localhost,tcp_ip,VW",
     "database": "mcp_vector_db",
     "max_connections": 10,
     "host": "127.0.0.1",
@@ -28,7 +30,7 @@ def _server_localhost(_transport, _port):
     server = FastMCP(
         server_name,
         lifespan=app_lifespan(
-            SimpleNamespace(dbms="vector", transport=_transport),
+            SimpleNamespace(dbms="vector", transport=_transport, username=os.getenv("DATABASE_USER"), password=os.getenv("DATABASE_PASSWORD")),
             conf_file_args=conf_args,
         ),
     )
@@ -65,7 +67,10 @@ def server_stdio():
     transport = "stdio"
     return FastMCP(
         server_name,
-        lifespan=app_lifespan(SimpleNamespace(dbms="vector", transport=transport), conf_file_args=CONF_ARGS),
+        lifespan=app_lifespan(
+            SimpleNamespace(dbms="vector", transport=transport, username=os.getenv("DATABASE_USER"), password=os.getenv("DATABASE_PASSWORD")),
+            conf_file_args=CONF_ARGS
+        ),
     )
 
 @pytest.fixture()

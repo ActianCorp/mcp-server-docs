@@ -1,0 +1,17 @@
+# Copyright (C) 2025 Actian Corp.
+# All Rights Reserved.
+
+services:
+  actian-mcp-server:
+    image: actian/vector-mcp-server-linux:test
+    container_name: actian-mcp-server
+    environment:
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - ${MCP_SERVER_ROOT}/src/vector/conf.json:/app/conf.json:ro
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
