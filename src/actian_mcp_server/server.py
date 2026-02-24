@@ -1,6 +1,9 @@
 # Copyright (C) 2025 Actian Corp.
 # All Rights Reserved.
 
+import sys
+import struct
+
 from fastmcp import FastMCP
 import asyncio
 import pyodbc
@@ -16,6 +19,7 @@ import os
 server_name = "Actian MCP Server"
 logger = get_logger(server_name)
 
+
 class ActianDB:
     def __init__(self, cli_args, conf_file_args):
         self.driver = conf_file_args["driver"]
@@ -25,23 +29,26 @@ class ActianDB:
         self.port = conf_file_args["port"]
         self.uid = cli_args.username
         self.pwd = cli_args.password
+        self.dsn = conf_file_args["dsn"]
         self.dbms = cli_args.dbms
         self.transport = cli_args.transport
         self.pool = None
 
     def create_pool(self, max_connections):
         logger.info("Initializing database connection pool")
+
         try:
+
             self.pool = PooledDB(creator=pyodbc,
                                  mincached=2,                    # idle connections opened at startup
                                  maxcached=5,                    # max idle connections
                                  maxconnections=max_connections, # max connections to the db at once
                                  blocking=True,                  # wait for a free connection
-                                 driver=self.driver,
-                                 server=self.server,
+                                 dsn=self.dsn,
                                  uid=self.uid,
                                  pwd=self.pwd,
-                                 database=self.database)
+                                 database=self.database
+            )
             logger.info("Database connection established successfully")
             return self.pool
         except Exception as e:
@@ -93,6 +100,9 @@ def initialize_tools(server: FastMCP, actiandb: ActianDB):
     if actiandb.dbms == "vector":
         from vector.features.tools import initialize_vector_tools
         initialize_vector_tools(server, actiandb)
+    elif actiandb.dbms == "informix":
+        from informix.features.tools import initialize_informix_tools
+        initialize_informix_tools(server, actiandb)
     else:
         logger.error(f"There is no support for {actiandb.dbms}")
         raise
@@ -102,6 +112,9 @@ def initialize_resources(server: FastMCP, actiandb: ActianDB):
     if actiandb.dbms == "vector":
         from vector.features.resources import initialize_vector_resources
         initialize_vector_resources(server, actiandb)
+    elif actiandb.dbms == "informix":
+        from informix.features.resources import initialize_informix_resources
+        initialize_informix_resources(server, actiandb)
     else:
         logger.error(f"There is no support for {actiandb.dbms}")
         raise
@@ -111,6 +124,9 @@ def initialize_prompts(server: FastMCP, actiandb: ActianDB):
     if actiandb.dbms == "vector":
         from vector.features.prompts import initialize_vector_prompts
         initialize_vector_prompts(server)
+    elif actiandb.dbms == "informix":
+        from informix.features.prompts import initialize_informix_prompts
+        initialize_informix_prompts(server)
     else:
         logger.error(f"There is no support for {actiandb.dbms}")
         raise
@@ -172,7 +188,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Actian MCP Server Arguments")
     parser.add_argument(
         "--dbms",
-        choices=["vector"],
+        choices=["vector","informix"],
         required=True,
         help="The Actian DBMS name"
     )
