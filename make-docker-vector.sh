@@ -71,6 +71,7 @@ cp $MCP_SERVER/server.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER_FEATURES/tools.py $STAGE/$DBMS/features
 cp $MCP_SERVER_FEATURES/resources.py $STAGE/$DBMS/features
 cp $MCP_SERVER_FEATURES/prompts.py $STAGE/$DBMS/features
+cp $MCP_SERVER_FEATURES/instructions.py $STAGE/$DBMS/features
 cp $MCP_SERVER_DOCKER/Dockerfile-$DBMS $STAGE/$DBMS/docker
 cp $MCP_SERVER_DOCKER/entrypoint.sh $STAGE/$DBMS/docker
 cp $ACTIAN_CLIENT $STAGE
