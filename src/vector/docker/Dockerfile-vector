@@ -28,11 +28,45 @@ RUN useradd -ms /bin/bash mcpuser \
 
 USER mcpuser
 
+# Install the Actian client and remove unnecessary files to reduce the image size
 RUN mkdir -p $HOME/actian-client
-RUN tar -xzf actian-client.tgz -C $HOME/actian-client
-
-# Install the Actian client
-RUN $HOME/actian-client/*/client_install.sh -express -acceptlicense AC -noroot $HOME/ActianClient
+RUN tar -xzf actian-client.tgz -C $HOME/actian-client \
+    && $HOME/actian-client/*/client_install.sh -express -acceptlicense AC -noroot $HOME/ActianClient \
+    && rm -rf $HOME/actian-client \
+              $HOME/ActianClient/ingres/demo/ \
+              $HOME/ActianClient/ingres/bin/ \
+              $HOME/ActianClient/ingres/install/ \
+              $HOME/ActianClient/ingres/utility/ \
+              $HOME/ActianClient/ingres/sig/ \
+              $HOME/ActianClient/ingres/lib/JdbcInfo.class \
+              $HOME/ActianClient/ingres/lib/iijdbc.jar \
+              $HOME/ActianClient/ingres/lib/libgcsaes.so.2.0 \
+              $HOME/ActianClient/ingres/lib/libgcskrb.so.2.0 \
+              $HOME/ActianClient/ingres/lib/libinterp.1.so. \
+              $HOME/ActianClient/ingres/lib/libmicroserviceprotocolstubs.so.0 \
+              $HOME/ActianClient/ingres/lib/libx100.so.0 \
+              $HOME/ActianClient/ingres/lib/edbc.jar \
+              $HOME/ActianClient/ingres/files/*.map \
+              $HOME/ActianClient/ingres/files/*.log \
+              $HOME/ActianClient/ingres/files/*.bak \
+              $HOME/ActianClient/ingres/files/*.h \
+              $HOME/ActianClient/ingres/files/*.scr \
+              $HOME/ActianClient/ingres/files/*.crs \
+              $HOME/ActianClient/ingres/files/start* \
+              $HOME/ActianClient/ingres/files/cbf* \
+              $HOME/ActianClient/ingres/files/dayfile* \
+              $HOME/ActianClient/ingres/files/termcap \
+              $HOME/ActianClient/ingres/files/ut*.def \
+              $HOME/ActianClient/ingres/files/*.rfm \
+              $HOME/ActianClient/ingres/files/ingres.dtd \
+              $HOME/ActianClient/ingres/files/install.dat \
+              $HOME/ActianClient/ingres/files/name/ \
+              $HOME/ActianClient/ingres/files/rcfiles/ \
+              $HOME/ActianClient/ingres/files/config.dat.pre* \
+              $HOME/ActianClient/ingres/files/iiiana.tz \
+              $HOME/ActianClient/ingres/files/ocf/ \
+              $HOME/ActianClient/ingres/files/iijdbc.properties \
+              $HOME/ActianClient/ingres/files/english/
 
 ENTRYPOINT ["/app/vector/docker/entrypoint.sh"]
 CMD ["actian-mcp-server", "--dbms", "vector", "--transport", "http", "--conf-file", "/app/conf.json"]
