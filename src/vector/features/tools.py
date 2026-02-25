@@ -4,12 +4,15 @@
 from fastmcp import FastMCP
 import asyncio
 from actian_mcp_server.server_interfaces import MCPTools
+from .instructions import query_instructions
+from typing import Annotated
+from pydantic import Field
 import toons
 
 class VectorTools(MCPTools):
-    async def execute_query(self, query: str) -> str:
+    async def execute_query(self, query: Annotated[str, Field(description=query_instructions)]) -> str:
         """
-        Execute an SQL query and fetch all the results.
+        Execute an SQL query (read query parameter description) and fetch all the results.
 
         Obtains a database cursor, executes the SQL query
         and returns all results.
@@ -67,7 +70,7 @@ class VectorTools(MCPTools):
         except Exception as e:
             return f"Error: {str(e)}"
 
-    async def describe_table(self, table_name: str) -> str:
+    async def describe_table(self, table_name: Annotated[str, Field(description="Name of the table to describe")]) -> str:
         """
         Retrieves the table schema from the database with information such as the column name, column datatype,
         column length and column scale.
@@ -106,9 +109,42 @@ class VectorTools(MCPTools):
         except Exception as e:
             return f"Error: {str(e)}"
 
+    async def list_functions(self) -> str:
+        """
+        List all User Defined Functions (UDFs) and procedures available in the database.
+
+        Obtains a database cursor, executes the SQL query to retrieve the function names, the create SQL statements (DDL)
+        and returns all results. The input and output information for using the functions should be inferred from the
+        DDL statements.
+
+        Returns
+            str
+                On query success: results containing columns and rows in toon (token-oriented object notation):
+
+                    [row_count]{functions_name, function_ddl}:
+                        functions_name_1,function_ddl_1
+                        functions_name_2,function_ddl_2
+                        ...
+
+                On query error: error message containing the pyodbc.Error
+        """
+
+        query = """
+            SELECT trim(proc_ext_name) AS function_name, trim(text_segment) as function_ddl
+            FROM iiprocedures
+            WHERE procedure_name NOT BEGINNING 'ii' AND is_model='N'
+        """
+        try:
+            columns, rows = await asyncio.to_thread(self.actiandb.execute_query, query)
+            ret = [dict(zip(columns, map(str, row))) for row in rows]
+            return str(toons.dumps(ret))
+        except Exception as e:
+            return f"Error: {str(e)}"
+
 def initialize_vector_tools(server: FastMCP, actiandb):
     tools = VectorTools(actiandb)
 
     server.tool(name="execute_query")(tools.execute_query)
     server.tool(name="list_tables")(tools.list_tables)
     server.tool(name="describe_table")(tools.describe_table)
+    server.tool(name="list_functions")(tools.list_functions)

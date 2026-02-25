@@ -4,7 +4,7 @@
 import toons
 from pytest_unordered import unordered
 
-actual_tools = ["execute_query", "describe_table", "list_tables"]
+actual_tools = ["execute_query", "describe_table", "list_tables", "list_functions"]
 actual_resources = ["get_database_schema"]
 actual_prompts = ["ask_question"]
 
@@ -50,6 +50,15 @@ async def test_tool__describe_table(stdio_client):
         {'column_name': 'email', 'column_datatype': 'VARCHAR', 'column_length': '50', 'column_scale': '0'}
     ]
     result = await stdio_client.call_tool("describe_table", {"table_name": "customers"})
+    table_schema = toons.loads(result.content[0].text)
+    assert table_schema == unordered(expected_result)
+
+async def test_tool__list_functions(stdio_client):
+    expected_result = [
+        {'function_name': 'is_date', 'function_ddl': 'create procedure  is_date(a VARCHAR(24)) RETURN (VARCHAR(24)) AS BEGIN return if(a IS DATE,\'YES\',\'NO\') END'},
+        {'function_name': 'sum_int', 'function_ddl': 'create function  sum_int(a INT, b INT) RETURN (INT) AS BEGIN return a+b END'}
+    ]
+    result = await stdio_client.call_tool("list_functions")
     table_schema = toons.loads(result.content[0].text)
     assert table_schema == unordered(expected_result)
 
