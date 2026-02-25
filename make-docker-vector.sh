@@ -14,7 +14,7 @@ UVLOCK_FILE=$MCP_SERVER_ROOT/uv.lock
 ACTIAN_CLIENT=$MCP_SERVER_ROOT/src/$DBMS/actian-client.tgz
 MCP_SERVER_FEATURES=$MCP_SERVER_ROOT/src/$DBMS/features
 MCP_SERVER_DOCKER=$MCP_SERVER_ROOT/src/$DBMS/docker
-ACTIAN_CLIENT=$MCP_SERVER_ROOT/src/$DBMS/actian-client.tgz
+MCP_SERVER_PLUGIN=$MCP_SERVER_ROOT/src/$DBMS/plugin.py
 
 if [[ ! -f "${MCP_SERVER}/server.py" ]]; then
     echo "Can't find the Actian MCP Server under ${MCP_SERVER}."
@@ -33,6 +33,11 @@ fi
 
 if [[ ! -f "${MCP_SERVER_FEATURES}/tools.py" ]]; then
     echo "Can't find the Actian MCP Server tools under ${MCP_SERVER_FEATURES}."
+    exit 1
+fi
+
+if [[ ! -f "${MCP_SERVER_PLUGIN}" ]]; then
+    echo "Can't find the Vector plugin under ${MCP_SERVER_PLUGIN}."
     exit 1
 fi
 
@@ -66,8 +71,10 @@ mkdir $STAGE/$DBMS/features
 mkdir $STAGE/$DBMS/docker
 
 cp $MCP_SERVER/__init__.py $STAGE/src/actian_mcp_server
+cp $MCP_SERVER/plugin.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER/server_interfaces.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER/server.py $STAGE/src/actian_mcp_server
+cp $MCP_SERVER_PLUGIN $STAGE/$DBMS/plugin.py
 cp $MCP_SERVER_FEATURES/tools.py $STAGE/$DBMS/features
 cp $MCP_SERVER_FEATURES/resources.py $STAGE/$DBMS/features
 cp $MCP_SERVER_FEATURES/prompts.py $STAGE/$DBMS/features
