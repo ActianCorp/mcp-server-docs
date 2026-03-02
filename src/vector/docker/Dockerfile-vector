@@ -1,38 +1,14 @@
-# Copyright (C) 2025 Actian Corp.
-# All Rights Reserved.
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
-
-ENV UV_COMPILE_BYTECODE=1
-ENV UV_LINK_MODE=copy
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends unixodbc
-
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --locked --no-install-project --no-dev
-
-WORKDIR /app
-COPY . /app
-
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-dev
-
-ENV PATH="/app/.venv/bin:$PATH"
-ENV PYTHONPATH="/app"
-
-RUN useradd -ms /bin/bash mcpuser \
-    && chmod +x /app/vector/docker/entrypoint.sh
-
+RUN useradd -ms /bin/bash mcpuser
 USER mcpuser
 
-# Install the Actian client and remove unnecessary files to reduce the image size
-RUN mkdir -p $HOME/actian-client
-RUN tar -xzf actian-client.tgz -C $HOME/actian-client \
-    && $HOME/actian-client/*/client_install.sh -express -acceptlicense AC -noroot $HOME/ActianClient \
-    && rm -rf $HOME/actian-client \
+COPY actian-client.tgz /tmp/actian-client.tgz
+
+RUN mkdir -p /tmp/actian-client \
+    && tar -xzf /tmp/actian-client.tgz -C /tmp/actian-client \
+    && /tmp/actian-client/*/client_install.sh -express -acceptlicense AC -noroot $HOME/ActianClient \
+    && rm -rf /tmp/actian-client \
               $HOME/ActianClient/ingres/demo/ \
               $HOME/ActianClient/ingres/bin/ \
               $HOME/ActianClient/ingres/install/ \
@@ -46,27 +22,58 @@ RUN tar -xzf actian-client.tgz -C $HOME/actian-client \
               $HOME/ActianClient/ingres/lib/libmicroserviceprotocolstubs.so.0 \
               $HOME/ActianClient/ingres/lib/libx100.so.0 \
               $HOME/ActianClient/ingres/lib/edbc.jar \
-              $HOME/ActianClient/ingres/files/*.map \
-              $HOME/ActianClient/ingres/files/*.log \
-              $HOME/ActianClient/ingres/files/*.bak \
-              $HOME/ActianClient/ingres/files/*.h \
-              $HOME/ActianClient/ingres/files/*.scr \
-              $HOME/ActianClient/ingres/files/*.crs \
-              $HOME/ActianClient/ingres/files/start* \
+              $HOME/ActianClient/ingres/files/.map \
+              $HOME/ActianClient/ingres/files/.log \
+              $HOME/ActianClient/ingres/files/.bak \
+              $HOME/ActianClient/ingres/files/.h \
+              $HOME/ActianClient/ingres/files/.scr \
+              $HOME/ActianClient/ingres/files/.crs \
+              $HOME/ActianClient/ingres/files/start \
               $HOME/ActianClient/ingres/files/cbf* \
               $HOME/ActianClient/ingres/files/dayfile* \
               $HOME/ActianClient/ingres/files/termcap \
               $HOME/ActianClient/ingres/files/ut*.def \
-              $HOME/ActianClient/ingres/files/*.rfm \
+              $HOME/ActianClient/ingres/files/.rfm \
               $HOME/ActianClient/ingres/files/ingres.dtd \
               $HOME/ActianClient/ingres/files/install.dat \
               $HOME/ActianClient/ingres/files/name/ \
               $HOME/ActianClient/ingres/files/rcfiles/ \
-              $HOME/ActianClient/ingres/files/config.dat.pre* \
+              $HOME/ActianClient/ingres/files/config.dat.pre \
               $HOME/ActianClient/ingres/files/iiiana.tz \
               $HOME/ActianClient/ingres/files/ocf/ \
               $HOME/ActianClient/ingres/files/iijdbc.properties \
               $HOME/ActianClient/ingres/files/english/
+
+USER root
+WORKDIR /app
+
+COPY uv.lock pyproject.toml /app/
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked --no-install-project --no-dev
+
+COPY . /app
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked --no-dev
+
+FROM python:3.12-slim-bookworm
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends unixodbc \
+    && apt-get clean
+
+RUN useradd -ms /bin/bash mcpuser
+
+COPY --from=builder --chown=mcpuser:mcpuser /home/mcpuser/ActianClient /home/mcpuser/ActianClient
+COPY --from=builder --chown=mcpuser:mcpuser /app /app
+
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONPATH="/app"
+
+USER mcpuser
+
+RUN chmod +x /app/vector/docker/entrypoint.sh
 
 ENTRYPOINT ["/app/vector/docker/entrypoint.sh"]
 CMD ["actian-mcp-server", "--dbms", "vector", "--transport", "http", "--conf-file", "/app/conf.json"]
