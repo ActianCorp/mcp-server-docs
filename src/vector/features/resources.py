@@ -9,31 +9,21 @@ from typing import Dict, Any
 class VectorResources(MCPResources):
     async def get_database_schema(self) -> str:
         """
-        Retrieves the database schema with information such as the table name and for each table
-        the column names and column datatypes respectively.
+        Retrieves the database schema with information such as the table name, keys, comments
+        and for each table the column name, column datatype, and column comment.
 
         Obtains a database cursor, executes the SQL query to retrieve the database schema
         and returns all results in a dictionary format.
 
         Returns
             str
-                On query success: database schema in the toon (token-oriented object notation) format:
+                On query success: JSON object where each key is a table name, with value:
+                    columns (dict): maps column_name -> {dtype (str), comment (str | null)}
+                    keys (list[str] | null): constraint definitions for the table
+                    comment (str | null): table-level comment
 
-                table_1:
-                  columns:
-                    col_1:
-                      dtype: datatype
-                      comment: column comment (or null)
-                    col_2:
-                      dtype: datatype
-                      comment: column comment (or null)
-                    ...
-                  keys: list of table keys (or null)
-                  comment: table comment (or null)
-                table_2:
-                  ...
-
-                On query error: error message containing the pyodbc.Error
+                On query error: str:
+                    The database schema could not be retrieved. Error: (error)
         """
 
         try:
