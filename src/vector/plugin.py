@@ -3,6 +3,7 @@
 
 import asyncio
 import pyodbc
+import json
 from contextlib import asynccontextmanager, contextmanager
 from collections.abc import AsyncIterator
 from dbutils.pooled_db import PooledDB
@@ -12,6 +13,7 @@ from actian_mcp_server.plugin import MCPPlugin
 from vector.features.tools import initialize_vector_tools
 from vector.features.resources import initialize_vector_resources
 from vector.features.prompts import initialize_vector_prompts
+from typing import Dict, Any
 
 logger = get_logger("VectorPlugin")
 
@@ -40,6 +42,8 @@ class VectorPlugin(MCPPlugin):
         missing = [k for k in required if not self.config.get(k)]
         if missing:
             raise ValueError(f"VectorPlugin requires config keys: {', '.join(missing)}")
+        if not self.config.get("max_rows") or self.config["max_rows"] <= 0:
+            self.config["max_rows"] = 1000
         if not self.config.get("username") or not self.config.get("password"):
             raise ValueError("VectorPlugin requires 'username' and 'password'")
 
@@ -57,6 +61,7 @@ class VectorPlugin(MCPPlugin):
                 uid=self.config["username"],
                 pwd=self.config["password"],
                 database=self.config["database"],
+                readonly=True
             )
             logger.info("Vector database connection established successfully")
             return pool
@@ -89,13 +94,74 @@ class VectorPlugin(MCPPlugin):
                     cur.execute(query, params)
                 else:
                     cur.execute(query)
+
                 if cur.description:
                     columns = [col[0] for col in cur.description]
-                    rows = cur.fetchall()
-                    return columns, rows
-                return [], []
-        except pyodbc.Error as e:
-            return f"Error: {str(e)}"
+                    rows = cur.fetchmany(self.config["max_rows"] + 1)
+
+                    # each row is a Row instance, so we convert it to a list (JSON serializable)
+                    rows = [list(row) for row in rows]
+
+                    # limit the number of result rows to max_rows
+                    trunc = False
+                    if len(rows) > self.config["max_rows"]:
+                        trunc = True
+                        del rows[-1]
+
+                    result: dict[str, Any] = {
+                        "success": True,
+                        "columns": columns,
+                        "rows": rows,
+                        "row_count": len(rows),
+                    }
+
+                    if trunc:
+                        result["truncated"] = True
+                        result["warning"] = f"Results were truncated to {self.config["max_rows"]} rows."
+                    
+                    return json.dumps(result, default=str)
+                return json.dumps({"success": True, "columns": [], "rows": [], "row_count": 0})
+        except Exception as e:
+            return json.dumps({
+                "success": False,
+                "error": str(e)
+            }, default=str)
+
+    def get_db_schema(self):
+        query = """
+            SELECT trim(C.table_name),
+                   trim(C.column_name),
+                   trim(C.column_datatype),
+                   trim(SCO.long_remark),
+                   trim(K.text_segment),
+                   trim(CO.long_remark)
+            FROM iicolumns C
+            LEFT JOIN iidb_subcomments SCO
+                ON  SCO.object_name=C.table_name
+                AND SCO.subobject_name=C.column_name
+            LEFT JOIN iiconstraints K
+                ON  K.table_name=C.table_name
+            LEFT JOIN iidb_comments CO
+                ON  CO.object_name=C.table_name
+            WHERE C.table_name NOT BEGINNING 'ii'
+        """
+        try:
+            with self.get_cursor() as cur:
+                cur.execute(query)
+
+                rows = cur.fetchall()
+                schema: Dict[str, Any] = {}
+                for table, column, dtype, col_comm, keys, tbl_comm in rows:
+                    table_entry = schema.setdefault(table, {"columns": {}, "keys": [], "comment": tbl_comm})
+
+                    if column not in table_entry["columns"]:
+                        table_entry["columns"][column] = {"dtype": dtype, "comment": col_comm}
+
+                    if keys is not None and keys not in table_entry["keys"]:
+                        table_entry["keys"].append(keys)
+                return json.dumps(schema, default=str)
+        except Exception as e:
+            return f"The database schema could not be retrieved. Error: {str(e)}"
 
     def register_tools(self, server: FastMCP):
         initialize_vector_tools(server, self)
