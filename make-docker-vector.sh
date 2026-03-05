@@ -71,6 +71,7 @@ mkdir $STAGE/$DBMS/features
 mkdir $STAGE/$DBMS/docker
 
 cp $MCP_SERVER/__init__.py $STAGE/src/actian_mcp_server
+cp $MCP_SERVER/oauth.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER/plugin.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER/server_interfaces.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER/server.py $STAGE/src/actian_mcp_server

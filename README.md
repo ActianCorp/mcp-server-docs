@@ -17,10 +17,57 @@ export DATABASE_PASSWORD=<your_database_password>
 uv run actian-mcp-server --dbms=<dbms_name> --conf-file=<db_specific_conf_file> [ --transport=<transport_mode> ]
 ```
 
+### OAuth Authentication
+The server supports OAuth 2.0 / OIDC authentication (Keycloak, Auth0) for HTTP, SSE and streamable-http transports.
+When enabled, every incoming request must carry a valid JWT — unauthenticated requests are rejected
+before any tool or resource is invoked.
+
+#### Enable OAuth
+Add an `oauth` block to your conf.json (see [src/conf_temp.json](src/conf_temp.json)):
+```json
+{
+    ...
+    "oauth": {
+        "FASTMCP_SERVER_AUTH_CONFIG_URL": "<oidc_discovery_url>",
+        "FASTMCP_SERVER_AUTH_CLIENT_ID": "<client_id>",
+        "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<client_secret>",
+        "FASTMCP_SERVER_AUTH_BASE_URL": "<server_base_url>",
+        "FASTMCP_SERVER_AUTH_AUDIENCE": "<audience>",
+        "FASTMCP_SERVER_AUTH_SCOPE": "<scopes>",
+        "user_impersonation": true
+    }
+}
+```
+
+OAuth is silently skipped if `FASTMCP_SERVER_AUTH_CONFIG_URL` or `FASTMCP_SERVER_AUTH_CLIENT_ID`
+are absent — the server starts without authentication.
+
+> NOTE: OAuth is not supported with `--transport stdio`.
+
+#### User impersonation (`user_impersonation`)
+Controls whether the authenticated end-user's identity is forwarded to the database.
+
+| Value | Behaviour |
+|-------|-----------|
+| `true` (default) | JWT verified + `SET SESSION AUTHORIZATION "<user>"` applied per query. Requires every OAuth user to have a matching database account. |
+| `false` | JWT still verified (unauthenticated requests rejected), but all queries run under the service-account pool credentials. Use this when database accounts per end-user are not practical. |
+
+Username is extracted from the token in priority order: `username` → `preferred_username` →
+email prefix → sanitized `sub`. If no username can be extracted the query runs under the
+service-account credentials regardless of this flag.
+
+---
+
 ### Instructions on supporting a new database
-#### Create a new file subtree
+The server uses a plugin framework. Each database is a self-contained plugin that implements the
+[MCPPlugin](src/actian_mcp_server/plugin.py) abstract base class.
+
+#### Step 1 — Create a new file subtree
 ```
 mkdir src/<dbms>
+
+# Plugin entry point
+touch src/<dbms>/plugin.py
 
 # MCP Server feature subtree
 mkdir src/<dbms>/features
@@ -28,44 +75,66 @@ touch src/<dbms>/features/tools.py
 touch src/<dbms>/features/resources.py
 touch src/<dbms>/features/prompts.py
 
-# MCP Server docker subtree
+# Docker subtree
 mkdir src/<dbms>/docker
-touch src/<dbms>/features/Dockerfile-<dbms>
-touch src/<dbms>/features/entrypoint.sh
-touch src/<dbms>/features/docker-compose.yml
+touch src/<dbms>/docker/Dockerfile-<dbms>
+touch src/<dbms>/docker/entrypoint.sh
+touch src/<dbms>/docker/docker-compose.yml
 ```
 
-#### Implement the tools, resources and prompts
-Create child classes for tools (resources) in their file that inherit from their respective interfaces MCPTools (MCPResources) and implement all the required methods declared in their interface at [src/actian_mcp_server/server_interfaces.py](). \
-Add functions for instantiating the classes and registering the server components.
+#### Step 2 — Implement the plugin
+Create a class in `src/<dbms>/plugin.py` that extends `MCPPlugin`:
+```python
+from contextlib import asynccontextmanager
+from actian_mcp_server.plugin import MCPPlugin
+
+class <DBMS>Plugin(MCPPlugin):
+
+    @asynccontextmanager
+    async def lifespan(self, server):
+        # open connections using self.config
+        self.connection = await connect(self.config)
+        try:
+            yield
+        finally:
+            await self.connection.close()
+
+    def register_tools(self, server):
+        @server.tool(name="my_tool")
+        async def my_tool(arg: str) -> str:
+            ...
+
+    def register_resources(self, server):
+        @server.resource(uri="resource://my_resource")
+        async def my_resource() -> str:
+            ...
+
+    def register_prompts(self, server):
+        @server.prompt
+        def my_prompt(question: str) -> str:
+            return f"Answer: {question}"
 ```
-# tools.py example
 
-class <DBMS>Tools(MCPTools):
-    async def <func_name_1>(arg1, ...):
-        <your implementation here>
-        ...
+See [src/example/plugin.py](src/example/plugin.py) for a complete working example and
+[src/vector/plugin.py](src/vector/plugin.py) for the production Vector implementation.
 
-    async def <func_name_1>(arg1, ...):
-    ...
-
-def initialize_<dbms>_tools(server, connection):
-    tools = <DBMS>Tools(connection)
-
-    server.tool(name="tool_name_1")(tools.func_name_1)
-    server.tool(name="tool_name_2")(tools.func_name_2)
-    ...
+#### Step 3 — Register the plugin
+Add one line to the `PLUGINS` dict in [src/actian_mcp_server/server.py](src/actian_mcp_server/server.py):
+```python
+PLUGINS = {
+    "vector": "vector.plugin:VectorPlugin",
+    "<dbms>": "<dbms>.plugin:<DBMS>Plugin",   # add this
+}
 ```
-These functions are called accordingly in the lifespan object of the server together with additional minor adjustments at [src/actian_mcp_server/server.py]().
 
-#### Adapt the configuration file
+#### Step 4 — Adapt the configuration file
 ```
 cp src/conf_temp.json src/<dbms>/conf.json
 # adjust the configuration parameters in conf.json
 ```
 
 ### Testing with Vector
-Apply the steps under [Adapt the configuration file](#adapt-the-configuration-file) first.
+Apply the steps under [Step 4 — Adapt the configuration file](#step-4--adapt-the-configuration-file) first.
 > NOTE: requires a Vector instance installation and ODBC setup.
 
 
@@ -79,7 +148,7 @@ uv run pytest
 ```
 
 ### Docker deployment
-Apply the steps under [Adapt the configuration file](#adapt-the-configuration-file) first.
+Apply the steps under [Step 4 — Adapt the configuration file](#step-4--adapt-the-configuration-file) first.
 > NOTE: requires a DBMS instance installation and ODBC setup.
 
 #### Step 1: Setup the environment
