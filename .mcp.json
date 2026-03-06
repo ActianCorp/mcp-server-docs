@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "actian-zen": {
+      "type": "stdio",
+      "command": "D:\\ActianMCP\\actian_mcp_server\\.venv\\Scripts\\python.exe",
+      "args": [
+        "-m", "actian_mcp_server.server",
+        "--dbms", "zen",
+        "--conf-file", "D:\\ActianMCP\\actian_mcp_server\\zen_config.json",
+        "--username", "zen",
+        "--password", "zen"
+      ],
+      "env": {
+        "PYTHONPATH": "D:\\ActianMCP\\actian_mcp_server\\src",
+        "OPENROUTER_API_KEY": "set-your-key-here"
+      }
+    }
+  }
+}

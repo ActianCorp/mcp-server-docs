@@ -1,0 +1,100 @@
+# Unified LLM Test Configuration
+# ================================
+# This file configures the LLM provider, model, and test settings.
+# Copy this file and customize for your environment.
+
+# Active provider: openrouter | anthropic | ollama | lmstudio
+provider: "ollama"
+
+# Provider-specific configurations
+providers:
+  openrouter:
+    api_url: "https://openrouter.ai/api/v1/chat/completions"
+    api_key: "${OPENROUTER_API_KEY}"  # Uses environment variable
+    default_model: "openai/gpt-4o-mini"
+    # Available models (uncomment to use):
+    models:
+      - id: "gpt-4o-mini"
+        provider_id: "openai/gpt-4o-mini"
+        description: "Fast, affordable, good for SQL"
+      - id: "gpt-4o"
+        provider_id: "openai/gpt-4o"
+        description: "Best OpenAI model"
+      - id: "claude-sonnet"
+        provider_id: "anthropic/claude-3.5-sonnet"
+        description: "Anthropic via OpenRouter"
+      - id: "claude-sonnet-4"
+        provider_id: "anthropic/claude-sonnet-4"
+        description: "Latest Claude"
+      - id: "deepseek-chat"
+        provider_id: "deepseek/deepseek-chat"
+        description: "Very affordable, good for code"
+      - id: "deepseek-r1"
+        provider_id: "deepseek/deepseek-r1"
+        description: "Reasoning model (slower)"
+      - id: "mistral-7b"
+        provider_id: "mistralai/mistral-7b-instruct"
+        description: "Fast open source"
+      - id: "llama-3.1-8b"
+        provider_id: "meta-llama/llama-3.1-8b-instruct"
+        description: "Meta's Llama"
+
+  anthropic:
+    api_url: "https://api.anthropic.com/v1/messages"
+    api_key: "${ANTHROPIC_API_KEY}"
+    default_model: "claude-sonnet-4-20250514"
+    models:
+      - id: "claude-sonnet-4"
+        provider_id: "claude-sonnet-4-20250514"
+        description: "Latest Claude Sonnet"
+      - id: "claude-3.5-sonnet"
+        provider_id: "claude-3-5-sonnet-20241022"
+        description: "Claude 3.5 Sonnet"
+
+  ollama:
+    api_url: "http://localhost:11434/v1/chat/completions"
+    models_url: "http://localhost:11434/v1/models"
+    default_model: "qwen2.5-coder:7b"
+    # Recommended models for SQL (run: ollama pull <model>)
+    # Use exact model names from 'ollama list' output
+    # - qwen2.5-coder:7b   (~4GB, good for SQL)
+    # - qwen2.5-coder:14b  (~9GB, excellent for SQL)
+    # - qwen3:30b-a3b      (~19GB, best quality)
+    # - mistral:latest     (~4GB, fast)
+
+  lmstudio:
+    api_url: "http://localhost:1234/v1/chat/completions"
+    models_url: "http://localhost:1234/v1/models"
+    default_model: "auto"  # Uses whatever model is loaded
+
+# Test settings
+tests:
+  # Test categories to run: all, basic, joins, subqueries, aggregations, dialect
+  categories: ["all"]
+
+  # Timeout per test in seconds
+  timeout_seconds: 60
+
+  # Retry failed tests
+  max_retries: 1
+
+  # Temperature for LLM (lower = more deterministic)
+  temperature: 0.1
+
+  # Max tokens for response
+  max_tokens: 500
+
+# Output settings
+output:
+  # Output format: json | markdown | both
+  format: "both"
+
+  # Results directory
+  directory: "./results"
+
+  # Include detailed logs
+  verbose: false
+
+# Model selection (override provider default)
+# Uncomment to use specific model:
+# model: "qwen2.5-coder:14b"

@@ -1,0 +1,14 @@
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Generated test reports
+test_report_*.txt
+results/
+
+# Backup files
+*_backup.py
+
+# Temporary files
+*.tmp
+x.cmd

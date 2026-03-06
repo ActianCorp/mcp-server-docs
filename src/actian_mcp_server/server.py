@@ -19,6 +19,7 @@ logger = get_logger(server_name)
 # Plugin registry — add new databases here
 PLUGINS = {
     "vector": "vector.plugin:VectorPlugin",
+    "zen": "zen.plugin:ZenPlugin",
     "example": "example.plugin:ExamplePlugin",
 }
 
@@ -38,10 +39,12 @@ def app_lifespan(config: dict):
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[None]:
         plugin = load_plugin(config["dbms"], config)
-        plugin.register_tools(server)
-        plugin.register_resources(server)
-        plugin.register_prompts(server)
+        # lifespan must run first so plugin._init_connection() is called before
+        # tool/resource registration, which captures connection references
         async with plugin.lifespan(server):
+            plugin.register_tools(server)
+            plugin.register_resources(server)
+            plugin.register_prompts(server)
             yield
     return lifespan
 
@@ -104,6 +107,7 @@ def main():
     config = load_config(cli_args)
     validate_config(config)
 
+    # Configure OAuth authentication if enabled (sse/http/streamable-http only)
     auth = None
     if config["transport"] in ("sse", "http", "streamable-http"):
         auth = configure_authentication(config)

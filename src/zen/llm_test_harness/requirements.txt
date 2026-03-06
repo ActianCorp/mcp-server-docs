@@ -1,0 +1,16 @@
+# LLM MCP Test Harness Dependencies
+
+# REQUIRED: Core functionality
+anthropic>=0.25.0  # For Claude API access
+
+# OPTIONAL: Enhanced features (only for run_tests_colored.py)
+# colorama>=0.4.6    # Colored console output (Windows-compatible)
+# tabulate>=0.9.0    # Pretty tables in reports
+
+# Note: Simple mode (run_tests_simple.py) doesn't require colorama
+# Install optional dependencies with: pip install colorama tabulate
+
+# MCP server dependencies are in parent requirements.txt:
+# - sqlalchemy>=2.0.0
+# - pyodbc>=5.0.0
+# - sqlalchemy-zen>=2.2.0
