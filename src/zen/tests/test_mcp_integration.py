@@ -81,10 +81,10 @@ Use mode='ddl_create_table'.""",
     {
         "id": "relationship_query",
         "name": "Relationship Navigation",
-        "prompt": """Navigate table relationships:
-1. Get customer with customer_id = 1 using orm_operation
-2. Get invoices for that customer using a JOIN query""",
-        "success_keywords": ["customer", "invoice", "join"],
+        "prompt": """Navigate table relationships in the database:
+1. List all students using orm_operation on the Student table (limit 3)
+2. Show which courses those students are enrolled in using a JOIN between Enrolls and Course tables""",
+        "success_keywords": ["student", "course", "enrolls"],
     },
 ]
 
