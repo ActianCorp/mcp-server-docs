@@ -201,7 +201,8 @@ def create_lifespan(config: ZenConfiguration, readonly: bool = False):
 def main():
     config = ZenConfiguration()
     args = parse_args()
-    readonly = getattr(args, 'readonly', False)
+    # Phase 1: readonly hardcoded regardless of config; revert in Phase 2
+    readonly = True
 
     base_instructions = SERVER_INSTRUCTIONS_READONLY if readonly else SERVER_INSTRUCTIONS
 

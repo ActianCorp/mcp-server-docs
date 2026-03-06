@@ -43,7 +43,8 @@ class ZenPlugin(MCPPlugin):
     def __init__(self, config: dict):
         super().__init__(config)
         self.database = config.get("database", "")
-        self.readonly = config.get("readonly", False)
+        # Phase 1: readonly hardcoded regardless of config; revert in Phase 2
+        self.readonly = True
         self._conn: ZenConnection | None = None
         self._orm: ZenORMManager | None = None
         self._ddl: ZenDDLManager | None = None
