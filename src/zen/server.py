@@ -54,9 +54,17 @@ ZEN SQL SYNTAX (Important!):
 * LEN() -> use CHAR_LENGTH() (auto-translated)
 * EXTRACT() -> use DATEPART()
 
+CATALOG FUNCTIONS (always 3 params — NEVER call with 0 or 2 args):
+* dbo.fSQLTables(NULL, NULL, NULL)           -- all tables; filter with WHERE TABLE_TYPE='TABLE'
+* dbo.fSQLColumns(NULL, 'TableName', NULL)   -- columns for a table
+* dbo.fSQLForeignKeys(NULL, NULL, 'Child')   -- FKs where Child is the FK table
+* dbo.fSQLForeignKeys(NULL, 'Parent', NULL)  -- FKs where Parent is the PK table
+* dbo.fSQLStatistics(NULL, 'TableName', 0)   -- indexes; 0=all, 1=unique only
+* dbo.fSQLPrimaryKeys(NULL, 'Table')         -- PKs for a table (2 params only)
+
 SCHEMA DISCOVERY:
 Use list_tables and describe_table for schema exploration.
-MCP resources available (client must request): schema, context, capabilities, relationships, query-patterns
+MCP resources available (client must request): schema, query-patterns
 
 SQL ERROR RECOVERY:
 When SQL fails, read error -> fix query -> retry. Check resource://database/query-patterns.
@@ -69,8 +77,13 @@ Before writing ANY SQL query, verify table and column names against the
 DATABASE SCHEMA section below. If a table or column is not listed there,
 call describe_table(table) to get full details. NEVER fabricate names.
 
-READ-ONLY MODE: This server only supports read operations.
-No DDL, batch writes, or transaction control available.
+READ-ONLY MODE — connected with OPENMODE=1. MANDATORY RULES:
+- NEVER generate INSERT, UPDATE, DELETE, MERGE, or TRUNCATE
+- NEVER generate CREATE, DROP, or ALTER (DDL)
+- NEVER call ddl_operation, batch_operation, or transaction tools
+- If the user requests a write operation, explain read-only mode is active
+  and suggest reconnecting with a read-write DSN
+- If a tool returns {"readonly": true}, do NOT retry
 
 TOOL SELECTION GUIDE:
 - SELECT queries -> execute_query (SELECT only)
@@ -93,9 +106,17 @@ ZEN SQL SYNTAX (Important!):
 * LEN() -> use CHAR_LENGTH() (auto-translated)
 * EXTRACT() -> use DATEPART()
 
+CATALOG FUNCTIONS (always 3 params — NEVER call with 0 or 2 args):
+* dbo.fSQLTables(NULL, NULL, NULL)           -- all tables; filter with WHERE TABLE_TYPE='TABLE'
+* dbo.fSQLColumns(NULL, 'TableName', NULL)   -- columns for a table
+* dbo.fSQLForeignKeys(NULL, NULL, 'Child')   -- FKs where Child is the FK table
+* dbo.fSQLForeignKeys(NULL, 'Parent', NULL)  -- FKs where Parent is the PK table
+* dbo.fSQLStatistics(NULL, 'TableName', 0)   -- indexes; 0=all, 1=unique only
+* dbo.fSQLPrimaryKeys(NULL, 'Table')         -- PKs for a table (2 params only)
+
 SCHEMA DISCOVERY:
 Use list_tables and describe_table for schema exploration.
-MCP resources available (client must request): schema, context, capabilities, relationships, query-patterns
+MCP resources available (client must request): schema, query-patterns
 
 SQL ERROR RECOVERY:
 When SQL fails, read error -> fix query -> retry. Check resource://database/query-patterns.
@@ -116,14 +137,15 @@ def _build_schema_summary(connection: ZenConnection) -> str:
         if not tables:
             return ""
 
-        lines = ["\nDATABASE SCHEMA (use describe_table for full details):"]
+        lines = ["\nDATABASE SCHEMA (verify names here before writing SQL):"]
         for table_name in tables:
             try:
                 columns = inspector.get_columns(table_name)
-                col_names = [col['name'] for col in columns]
+                pk = {c for c in (inspector.get_pk_constraint(table_name) or {}).get("constrained_columns", [])}
+                col_names = [f"{c['name']}*" if c['name'] in pk else c['name'] for c in columns]
                 lines.append(f"- {table_name} ({', '.join(col_names)})")
             except Exception:
-                lines.append(f"- {table_name} (columns unavailable)")
+                lines.append(f"- {table_name}")
         return "\n".join(lines)
     except Exception as e:
         logger.warning(f"Could not build schema summary: {e}")
@@ -139,7 +161,10 @@ def create_lifespan(config: ZenConfiguration, readonly: bool = False):
             conn_config = config.load_from_cli(args)
             logger.info(f"Connecting to {conn_config.dsn_name or 'custom string'} (source: {conn_config.source})")
 
-            connection = ZenConnection(conn_config.conn_string)
+            cs = conn_config.conn_string
+            if readonly:
+                cs += ";OPENMODE=1"  # engine-level backstop if Python guard bypassed
+            connection = ZenConnection(cs)
 
             orm = ZenORMManager(connection)
             ddl = ZenDDLManager(connection)
