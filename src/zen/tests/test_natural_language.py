@@ -6,7 +6,6 @@
 import os
 import json
 import pytest
-import pytest_asyncio
 from pathlib import Path
 from datetime import datetime
 
@@ -48,8 +47,12 @@ def _write_trace(path: str, record: dict):
 
 # --- setup/teardown from prompt file
 
-@pytest_asyncio.fixture(scope="module", loop_scope="session", autouse=True)
-async def setup_teardown_from_prompt_file(mcp_client, request):
+@pytest.fixture(scope="module", autouse=True)
+def setup_teardown_from_prompt_file(request):
+    # MCP server is readonly — setup must go through a direct connection
+    import pyodbc
+    from conftest import TEST_DSN
+
     md_path = _get_prompt_file(request.config)
     if not os.path.exists(md_path):
         yield
@@ -57,13 +60,24 @@ async def setup_teardown_from_prompt_file(mcp_client, request):
 
     setup_stmts, teardown_stmts = parse_setup_teardown(md_path)
 
-    if setup_stmts:
-        await _execute_sql_list(mcp_client, setup_stmts)
+    conn = pyodbc.connect(f"DSN={TEST_DSN}", autocommit=True)
+    cur = conn.cursor()
+    for sql in setup_stmts:
+        try:
+            cur.execute(sql)
+        except pyodbc.Error:
+            if not sql.strip().upper().startswith("DROP"):
+                raise
 
     yield
 
-    if teardown_stmts:
-        await _execute_sql_list(mcp_client, teardown_stmts)
+    for sql in teardown_stmts:
+        try:
+            cur.execute(sql)
+        except pyodbc.Error:
+            pass
+    cur.close()
+    conn.close()
 
 
 @pytest.mark.language

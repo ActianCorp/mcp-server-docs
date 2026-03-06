@@ -30,98 +30,12 @@ Current schema: departments, employees, sales, projects, project_assignments.
 ```sql
 DROP TABLE project_assignments;
 DROP TABLE projects;
-DROP TABLE sales;
-DROP TABLE employees;
-DROP TABLE departments;
-
-CREATE TABLE departments (
-    department_id IDENTITY,
-    department_name NVARCHAR(100) NOT NULL,
-    location NVARCHAR(100),
-    budget DECIMAL(15,2),
-    created_date DATE
-);
-
-CREATE TABLE employees (
-    employee_id IDENTITY,
-    first_name NVARCHAR(50) NOT NULL,
-    last_name NVARCHAR(50) NOT NULL,
-    email NVARCHAR(100),
-    hire_date DATE,
-    salary DECIMAL(15,2),
-    department_id INTEGER,
-    manager_id INTEGER,
-    birth_date DATE,
-    status NVARCHAR(20) DEFAULT 'active'
-);
-
-CREATE TABLE sales (
-    sale_id IDENTITY,
-    employee_id INTEGER,
-    sale_date DATE NOT NULL,
-    amount DECIMAL(15,2) NOT NULL,
-    product_category NVARCHAR(100),
-    quantity INTEGER DEFAULT 1,
-    discount_percent DECIMAL(5,2) DEFAULT 0
-);
-
-CREATE TABLE projects (
-    project_id IDENTITY,
-    project_name NVARCHAR(100) NOT NULL,
-    start_date DATE,
-    end_date DATE,
-    budget DECIMAL(15,2),
-    status NVARCHAR(20) DEFAULT 'active'
-);
-
-CREATE TABLE project_assignments (
-    assignment_id IDENTITY,
-    project_id INTEGER,
-    employee_id INTEGER,
-    assigned_date DATE,
-    hours_allocated DECIMAL(8,2),
-    role NVARCHAR(50)
-);
-
-INSERT INTO departments (department_name, location, budget, created_date) VALUES ('Engineering', 'New York', 500000, '2020-01-01');
-INSERT INTO departments (department_name, location, budget, created_date) VALUES ('Sales', 'Chicago', 300000, '2020-01-01');
-INSERT INTO departments (department_name, location, budget, created_date) VALUES ('Marketing', 'San Francisco', 200000, '2020-03-01');
-INSERT INTO departments (department_name, location, budget, created_date) VALUES ('HR', 'New York', 150000, '2020-06-01');
-INSERT INTO departments (department_name, location, budget, created_date) VALUES ('Finance', 'Chicago', 250000, '2020-06-01');
-
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('John', 'Smith', 'john.smith@company.com', '2020-03-15', 85000, 1, NULL, '1985-06-20', 'active');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('Sarah', 'Johnson', 'sarah.j@company.com', '2020-04-01', 92000, 1, 1, '1987-09-15', 'active');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('Mike', 'Williams', 'mike.w@company.com', '2020-05-10', 80000, 2, 1, '1990-03-22', 'active');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('Emily', 'Brown', 'emily.b@company.com', '2020-06-15', 88000, 2, 1, '1988-12-05', 'active');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('David', 'Davis', 'david.d@company.com', '2021-01-20', 95000, 1, 2, '1986-07-30', 'active');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('Lisa', 'Miller', 'lisa.m@company.com', '2021-03-01', 72000, 3, 1, '1992-04-18', 'active');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('James', 'Wilson', 'james.w@company.com', '2021-04-15', 81000, 4, 1, '1989-11-08', 'active');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('Jennifer', 'Moore', 'jennifer.m@company.com', '2021-07-01', 98000, 5, 1, '1984-02-25', 'active');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('Robert', 'Taylor', 'robert.t@company.com', '2022-01-10', 76000, 3, 6, '1991-08-12', 'active');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('Amanda', 'Anderson', 'amanda.a@company.com', '2022-03-15', 69000, 2, 3, '1993-05-30', 'on_leave');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('Chris', 'Thomas', 'chris.t@company.com', '2023-02-01', 65000, 1, 2, '1994-11-10', 'active');
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department_id, manager_id, birth_date, status) VALUES ('Maria', 'Garcia', 'maria.g@company.com', '2023-06-15', 71000, 2, 3, '1991-03-28', 'active');
-
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (3, '2023-01-15', 1500, 'Widgets', 5, 0);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (4, '2023-02-20', 2300, 'Electronics', 3, 5);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (3, '2023-03-10', 890, 'Gadgets', 2, 0);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (12, '2023-04-05', 4200, 'Widgets', 10, 10);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (4, '2023-05-18', 1750, 'Services', 7, 0);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (3, '2023-06-22', 3100, 'Electronics', 4, 5);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (12, '2023-07-08', 560, 'Gadgets', 1, 0);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (4, '2023-08-14', 2800, 'Widgets', 6, 0);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (3, '2023-09-25', 1200, 'Services', 3, 15);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (12, '2023-10-30', 5500, 'Electronics', 15, 0);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (4, '2023-11-12', 980, 'Gadgets', 2, 0);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (3, '2023-12-05', 3400, 'Widgets', 8, 10);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (10, '2023-01-28', 22000, 'Electronics', 20, 5);
-INSERT INTO sales (employee_id, sale_date, amount, product_category, quantity, discount_percent) VALUES (10, '2023-05-14', 31000, 'Services', 25, 10);
-
+CREATE TABLE projects (project_id IDENTITY, project_name NVARCHAR(100) NOT NULL, start_date DATE, end_date DATE, budget DECIMAL(15,2), status NVARCHAR(20) DEFAULT 'active');
+CREATE TABLE project_assignments (assignment_id IDENTITY, project_id INTEGER, employee_id INTEGER, assigned_date DATE, hours_allocated DECIMAL(8,2), role NVARCHAR(50));
 INSERT INTO projects (project_name, start_date, end_date, budget, status) VALUES ('Project Alpha', '2023-01-01', '2023-12-31', 100000, 'completed');
 INSERT INTO projects (project_name, start_date, end_date, budget, status) VALUES ('Project Beta', '2023-06-01', '2024-06-30', 200000, 'active');
 INSERT INTO projects (project_name, start_date, end_date, budget, status) VALUES ('Project Gamma', '2024-01-01', '2024-12-31', 150000, 'active');
 INSERT INTO projects (project_name, start_date, end_date, budget, status) VALUES ('Project Delta', '2024-03-01', NULL, 80000, 'planning');
-
 INSERT INTO project_assignments (project_id, employee_id, assigned_date, hours_allocated, role) VALUES (1, 1, '2023-01-15', 200, 'Lead');
 INSERT INTO project_assignments (project_id, employee_id, assigned_date, hours_allocated, role) VALUES (1, 2, '2023-02-01', 160, 'Developer');
 INSERT INTO project_assignments (project_id, employee_id, assigned_date, hours_allocated, role) VALUES (1, 5, '2023-03-01', 120, 'Developer');
@@ -141,9 +55,6 @@ INSERT INTO project_assignments (project_id, employee_id, assigned_date, hours_a
 ```sql
 DROP TABLE project_assignments;
 DROP TABLE projects;
-DROP TABLE sales;
-DROP TABLE employees;
-DROP TABLE departments;
 ```
 
 ────────────────────────────────────────────────────────────────────────────────
