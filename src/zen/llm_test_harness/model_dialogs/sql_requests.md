@@ -10,12 +10,14 @@ Run with: `pytest llm_test_harness -m sql -v`
 ## SETUP
 
 ```sql
+DROP TABLE invoices;
 DROP TABLE sales;
 DROP TABLE employees;
 DROP TABLE departments;
 CREATE TABLE departments (department_id IDENTITY, department_name NVARCHAR(100) NOT NULL, manager_id INTEGER, budget DECIMAL(15,2));
 CREATE TABLE employees (employee_id IDENTITY, first_name NVARCHAR(50) NOT NULL, last_name NVARCHAR(50) NOT NULL, email NVARCHAR(100), hire_date DATE, salary DECIMAL(15,2), department_id INTEGER, manager_id INTEGER, birth_date DATE, status NVARCHAR(20) DEFAULT 'active');
 CREATE TABLE sales (sale_id IDENTITY, sale_date DATE NOT NULL, amount DECIMAL(15,2) NOT NULL, employee_id INTEGER, product_name NVARCHAR(100), quantity INTEGER DEFAULT 1);
+CREATE TABLE invoices (invoice_id INTEGER PRIMARY KEY, employee_id INTEGER NOT NULL REFERENCES employees(employee_id), amount DECIMAL(15,2), invoice_date DATE);
 INSERT INTO departments (department_name, manager_id, budget) VALUES ('Engineering', NULL, 500000);
 INSERT INTO departments (department_name, manager_id, budget) VALUES ('Sales', NULL, 300000);
 INSERT INTO departments (department_name, manager_id, budget) VALUES ('Marketing', NULL, 200000);
@@ -45,6 +47,9 @@ INSERT INTO sales (sale_date, amount, employee_id, product_name, quantity) VALUE
 INSERT INTO sales (sale_date, amount, employee_id, product_name, quantity) VALUES ('2023-10-30', 5500, 12, 'Widget A', 15);
 INSERT INTO sales (sale_date, amount, employee_id, product_name, quantity) VALUES ('2023-11-12', 980, 4, 'Gadget Z', 2);
 INSERT INTO sales (sale_date, amount, employee_id, product_name, quantity) VALUES ('2023-12-05', 3400, 3, 'Widget C', 8);
+INSERT INTO invoices VALUES (1, 1, 1500.00, '2024-01-15');
+INSERT INTO invoices VALUES (2, 2, 2300.00, '2024-02-20');
+INSERT INTO invoices VALUES (3, 3, 890.00, '2024-03-10');
 ```
 
 ────────────────────────────────────────────────────────────────────────────────
@@ -391,6 +396,7 @@ ORDER BY s.amount DESC
 ## TEARDOWN
 
 ```sql
+DROP TABLE invoices;
 DROP TABLE sales;
 DROP TABLE employees;
 DROP TABLE departments;
