@@ -1,59 +1,13 @@
 # Copyright (C) 2025 Actian Corp.
 # All Rights Reserved.
 
-import logging
-import pyodbc
 from fastmcp import FastMCP
 import asyncio
 from actian_mcp_server.server_interfaces import MCPTools
-from actian_mcp_server.oauth import get_current_username
 from .instructions import query_instructions
-from typing import Annotated, Any, List, Dict
+from typing import Annotated
 from pydantic import Field
 import json
-
-logger = logging.getLogger(__name__)
-
-
-def _execute_as_user(query: str, actiandb: Any) -> str:
-    """Execute a query with SET SESSION AUTHORIZATION for the authenticated user.
-
-    If an OAuth token was verified upstream, impersonates that database user
-    for the duration of the query, then resets to the initial user.
-    Falls back to the pool's default credentials when no user is in context.
-    """
-    cur = None
-    db_user = None
-    try:
-        db_user = get_current_username()
-        with actiandb.get_cursor() as cur:
-            if db_user:
-                logger.info(f"Impersonating user: {db_user}")
-                cur.connection.commit()  # Ensure no active transaction before SET SESSION AUTHORIZATION
-                cur.execute(f'SET SESSION AUTHORIZATION "{db_user}"')
-
-            cur.execute(query)
-            results: List[Dict[str, Any]] = []
-            if cur.description:
-                columns = [column[0] for column in cur.description]
-                rows = cur.fetchall()
-                results = [dict(zip(columns, map(str, row))) for row in rows]
-
-            cur.connection.commit()  # Commit transaction before resetting session authorization
-
-            if db_user:
-                cur.execute("SET SESSION AUTHORIZATION INITIAL_USER")
-
-            return str(toons.dumps(results))
-    except pyodbc.Error as e:
-        if cur and db_user:
-            try:
-                cur.connection.rollback()
-                cur.execute("SET SESSION AUTHORIZATION INITIAL_USER")
-            except Exception:
-                logger.warning("Failed to reset session authorization after error")
-        return f"Error: {str(e)}"
-
 
 class VectorTools(MCPTools):
     async def execute_query(self, query: Annotated[str, Field(description=query_instructions)]) -> str:
@@ -78,7 +32,9 @@ class VectorTools(MCPTools):
                     success (false), error (str)
         """
         try:
-            return await asyncio.to_thread(_execute_as_user, query, self.actiandb)
+            columns, rows = await asyncio.to_thread(self.actiandb.execute_query, query)
+            ret = [dict(zip(columns, map(str, row))) for row in rows]
+            return str(toons.dumps(ret))
         except Exception as e:
             return json.dumps({
                 "success": False,
