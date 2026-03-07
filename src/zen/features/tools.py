@@ -7,6 +7,7 @@ import asyncio
 import json
 import re
 import logging
+import pyodbc
 from fastmcp import FastMCP
 from zen.core.connection import ZenConnection
 from zen.core.orm_manager import ZenORMManager
@@ -51,6 +52,31 @@ _IDENT_RE = re.compile(r'^[A-Za-z_][A-Za-z0-9_#]*$')
 def _validate_identifier(name: str, kind: str = "identifier"):
     if not name or not _IDENT_RE.match(name):
         raise ValueError(f"Invalid {kind}: {name!r}")
+
+
+# blocks string literals, comments, stacked statements, and DDL/DML keywords
+# that have no place in a WHERE clause
+_UNSAFE_WHERE_RE = re.compile(
+    r"""['"`]|--|/\*|;"""
+    r"""|\b(?:SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC(?:UTE)?|TRUNCATE)\b""",
+    re.IGNORECASE
+)
+
+def _db_error(e):
+    if isinstance(e, ValueError):
+        return {"error": str(e)}
+    if isinstance(e, pyodbc.Error):
+        _log.error("pyodbc error: %s", e)
+        code = e.args[0] if e.args else "unknown"
+        return {"error": f"database error [{code}]"}
+    _log.exception("unexpected error in tool")
+    return {"error": "internal error"}
+
+
+def _validate_where_clause(clause):
+    # tautology (1=1) not blocked — needs a full parser; string literals and stacked statements are
+    if clause and _UNSAFE_WHERE_RE.search(clause):
+        raise ValueError("where_clause contains disallowed characters or keywords")
 
 
 def strip_markdown_code_block(text: str) -> str:
@@ -232,7 +258,7 @@ def register_zen_tools(
             return response
 
         except Exception as e:
-            return _readonly_error(e) or {"error": str(e), "sql": sql if sql else None}
+            return _readonly_error(e) or _db_error(e)
 
     # --- ddl_operation (skipped in readonly mode) ---
 
@@ -452,7 +478,7 @@ def register_zen_tools(
             return {"error": f"Unknown DDL mode: {mode}. Use: ddl_create_table, ddl_drop_table, ddl_add_column, ddl_drop_column, ddl_create_index, ddl_drop_index, ddl_create_view, ddl_drop_view, ddl_create_procedure, ddl_drop_procedure, ddl_create_function, ddl_drop_function, ddl_create_trigger, ddl_drop_trigger, ddl_rename_table, ddl_alter_table, ddl_drop_fk"}
 
         except Exception as e:
-            return _readonly_error(e) or {"error": str(e)}
+            return _readonly_error(e) or _db_error(e)
 
     # --- batch_operation ---
 
@@ -508,6 +534,7 @@ def register_zen_tools(
                 _validate_identifier(table, "table name")
                 for col in updates.keys():
                     _validate_identifier(col, "column name")
+                _validate_where_clause(where_clause)
 
                 def _do_update():
                     conn = connection.get_odbc_connection()
@@ -531,6 +558,7 @@ def register_zen_tools(
                 if not table or not where_clause:
                     return {"error": "table and where_clause required for batch_delete mode"}
                 _validate_identifier(table, "table name")
+                _validate_where_clause(where_clause)
 
                 def _do_delete():
                     conn = connection.get_odbc_connection()
@@ -552,6 +580,8 @@ def register_zen_tools(
                 if not table:
                     return {"error": "table required for count mode"}
                 _validate_identifier(table, "table name")
+                if where_clause:
+                    _validate_where_clause(where_clause)
 
                 def _get_count():
                     conn = connection.get_odbc_connection()
@@ -571,7 +601,7 @@ def register_zen_tools(
             return {"error": f"Unknown batch mode: {mode}. Use: batch_insert, batch_update, batch_delete, count"}
 
         except Exception as e:
-            return _readonly_error(e) or {"error": str(e)}
+            return _readonly_error(e) or _db_error(e)
 
 
     @server.tool(name="list_tables")
@@ -595,7 +625,7 @@ def register_zen_tools(
             return {"tables": tables, "count": len(tables)}
 
         except Exception as e:
-            return {"error": str(e)}
+            return _db_error(e)
 
 
     @server.tool(name="describe_table")
@@ -661,7 +691,7 @@ def register_zen_tools(
             return await asyncio.to_thread(_run)
 
         except Exception as e:
-            return {"error": str(e)}
+            return _db_error(e)
 
     # --- orm_operation ---
 
@@ -737,7 +767,7 @@ def register_zen_tools(
 
         except Exception as e:
             return {
-                "error": str(e),
+                **_db_error(e),
                 "hint": "Check resource://database/schema for column names. Consider execute_query for complex queries.",
                 "alternative": "execute_query"
             }
@@ -809,7 +839,7 @@ def register_zen_tools(
                 return {"error": f"Unknown action: {action}. Use: upload, download, list, delete"}
 
         except Exception as e:
-            return {"error": str(e)}
+            return _db_error(e)
 
 
     @server.tool(name="database_manage")
@@ -853,9 +883,13 @@ def register_zen_tools(
             elif action == "switch":
                 if not dsn_name:
                     return {"error": "dsn_name required for switch action"}
+                _validate_identifier(dsn_name, "DSN name")
 
                 connection.release_all_locks()
-                connection.conn_string = f"DSN={dsn_name}"
+                cs = f"DSN={dsn_name}"
+                if readonly:
+                    cs += ";OPENMODE=1"  # preserve readonly backstop after switch
+                connection.conn_string = cs
 
                 def _test():
                     conn = connection.get_odbc_connection()
@@ -918,7 +952,7 @@ def register_zen_tools(
                 return {"error": f"Unknown action: {action}. Use: list, list_dsns, switch, capabilities, release_locks"}
 
         except Exception as e:
-            return {"error": str(e)}
+            return _db_error(e)
 
     # --- readonly mode: remove write-only tools ---
     if readonly:

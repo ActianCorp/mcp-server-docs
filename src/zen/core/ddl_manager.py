@@ -5,6 +5,8 @@ Modified for actian-zen: Uses ZenConnection for connection string,
 but creates separate NullPool engine for DDL safety.
 """
 
+import re
+
 from sqlalchemy import create_engine, MetaData, Table, Column, text
 from sqlalchemy.pool import NullPool
 from sqlalchemy_zen.ddl_elements import (
@@ -13,6 +15,12 @@ from sqlalchemy_zen.ddl_elements import (
     CreateFunction, DropFunction
 )
 from .type_mapper import ZenTypeMapper
+
+_IDENT_RE = re.compile(r'^[A-Za-z_][A-Za-z0-9_#]*$')
+
+def _validate_identifier(name, kind="identifier"):
+    if not name or not _IDENT_RE.match(name):
+        raise ValueError(f"Invalid {kind}: {name!r}")
 
 class ZenDDLManager:
     """Manage DDL operations for Zen database"""
@@ -345,6 +353,8 @@ class ZenDDLManager:
         Returns:
             Dict with constraint info and generated DDL
         """
+        _validate_identifier(table_name, "table name")
+        _validate_identifier(constraint_name, "constraint name")
         # Zen syntax: ALTER TABLE table_name DROP CONSTRAINT constraint_name
         ddl = f"ALTER TABLE {table_name} DROP CONSTRAINT {constraint_name}"
         
