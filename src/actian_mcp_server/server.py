@@ -102,12 +102,14 @@ def validate_config(config: dict):
             logger.critical(f"Transport '{config['transport']}' requires: {', '.join(missing)}")
             raise ValueError(f"Missing config for transport: {', '.join(missing)}")
 
-    if not config.get("username") or not config.get("password"):
-        logger.critical(
-            "Database username and password are required. "
-            "Pass --username/--password or set DATABASE_USER/DATABASE_PASSWORD."
-        )
-        raise ValueError("username and password are required")
+    # Zen uses DSN-based auth (no credentials needed at the framework level)
+    if config.get("dbms") != "zen":
+        if not config.get("username") or not config.get("password"):
+            logger.critical(
+                "Database username and password are required. "
+                "Pass --username/--password or set DATABASE_USER/DATABASE_PASSWORD."
+            )
+            raise ValueError("username and password are required")
 
 
 def main():
