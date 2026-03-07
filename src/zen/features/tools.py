@@ -716,8 +716,6 @@ def register_zen_tools(
                         query_spec["where"] = where
                     if order_by:
                         query_spec["order_by"] = order_by
-                    if limit:
-                        query_spec["limit"] = limit
                     if offset:
                         query_spec["offset"] = offset
                     if joins:
@@ -726,7 +724,13 @@ def register_zen_tools(
                         query_spec["group_by"] = group_by
                     if having:
                         query_spec["having"] = having
-                    return orm.query_builder(query_spec)
+                    # apply backstop — LLM limit capped at max_rows
+                    query_spec["limit"] = min(limit, max_rows) if limit else max_rows
+                    result = orm.query_builder(query_spec)
+                    if isinstance(result, dict) and len(result.get("results", [])) >= max_rows:
+                        result["truncated"] = True
+                        result["truncation_note"] = f"Results limited to {max_rows} rows. Use WHERE to narrow results."
+                    return result
 
                 elif operation == "insert":
                     if not data:
