@@ -138,7 +138,8 @@ def register_zen_tools(
     orm: ZenORMManager,
     ddl: ZenDDLManager,
     file_mgr: ZenFileManager,
-    readonly: bool = False
+    readonly: bool = False,
+    max_rows: int = 1000
 ):
     """Register Zen database tools with the MCP server.
 
@@ -152,12 +153,7 @@ def register_zen_tools(
     # --- execute_query ---
 
     @server.tool(name="execute_query")
-    async def execute_query(
-        sql: str,
-        params: list | None = None,
-        mode: str = "auto",
-        max_rows: int = 1000
-    ) -> dict:
+    async def execute_query(sql: str) -> dict:
         """
         Execute raw SQL with automatic Zen dialect translation.
 
@@ -166,13 +162,8 @@ def register_zen_tools(
         For schema changes, use ddl_operation.
         For bulk data, use batch_operation.
 
-        Write values directly in the SQL string — this is the expected usage.
-        The optional params argument exists for programmatic callers but is
-        not required. Inline values like WHERE salary > 50000 are fine.
-
-        Modes:
-        - auto: Execute any SQL (auto-detects SELECT vs DML)
-        - select_only: Only allow SELECT queries
+        Write values directly in the SQL string.
+        Inline values like WHERE salary > 50000 are fine.
 
         Auto-translations:
         - LEN() -> CHAR_LENGTH()
@@ -190,9 +181,6 @@ def register_zen_tools(
             if readonly and not sql.strip().upper().startswith("SELECT"):
                 return {"error": "Only SELECT queries allowed in readonly mode"}
 
-            if mode == "select_only" and not sql.strip().upper().startswith("SELECT"):
-                return {"error": "Only SELECT queries allowed in select_only mode"}
-
             original_sql = sql
             sql = _truncate_constraint_names_in_sql(sql)
             sql, was_translated, message = translate_to_zen_sql(sql)
@@ -207,10 +195,7 @@ def register_zen_tools(
                 conn = connection.get_odbc_connection()
                 cursor = conn.cursor()
                 try:
-                    if params:
-                        cursor.execute(sql, params)
-                    else:
-                        cursor.execute(sql)
+                    cursor.execute(sql)
 
                     if is_select:
                         rows = cursor.fetchmany(max_rows + 1)
@@ -241,7 +226,7 @@ def register_zen_tools(
                 }
                 if result["truncated"]:
                     response["truncated"] = True
-                    response["truncation_note"] = f"Results limited to {max_rows} rows. Add WHERE or use max_rows parameter."
+                    response["truncation_note"] = f"Results limited to {max_rows} rows. Use WHERE to narrow results."
             else:
                 response = {
                     "sql": sql,

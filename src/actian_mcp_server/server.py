@@ -61,6 +61,8 @@ def parse_args():
                         help="Database username (or set DATABASE_USER env var)")
     parser.add_argument("--password", default=os.getenv("DATABASE_PASSWORD"),
                         help="Database password (or set DATABASE_PASSWORD env var)")
+    parser.add_argument("--max-rows", type=int, default=None,
+                        help="Maximum rows returned per query (overrides conf file)")
     return parser.parse_args()
 
 
@@ -77,13 +79,19 @@ def load_config(cli_args) -> dict:
         logger.critical(f"Failed to parse configuration file: {conf_path}", exc_info=True)
         raise
 
-    return {
+    config = {
         **file_config,
         "dbms": cli_args.dbms,
         "transport": cli_args.transport,
         "username": cli_args.username,
         "password": cli_args.password,
     }
+    # CLI --max-rows overrides conf file value
+    if cli_args.max_rows is not None:
+        config["max_rows"] = cli_args.max_rows
+    elif "max_rows" not in config:
+        config["max_rows"] = 1000
+    return config
 
 
 def validate_config(config: dict):

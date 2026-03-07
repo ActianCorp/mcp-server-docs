@@ -45,6 +45,7 @@ class ZenPlugin(MCPPlugin):
         self.database = config.get("database", "")
         # Phase 1: readonly hardcoded regardless of config; revert in Phase 2
         self.readonly = True
+        self.max_rows = int(config.get("max_rows", 1000))
         self._conn: ZenConnection | None = None
         self._orm: ZenORMManager | None = None
         self._ddl: ZenDDLManager | None = None
@@ -65,7 +66,7 @@ class ZenPlugin(MCPPlugin):
     def register_tools(self, server: FastMCP):
         from zen.features.tools import register_zen_tools
         register_zen_tools(server, self._conn, self._orm, self._ddl, self._file_mgr,
-                           readonly=self.readonly)
+                           readonly=self.readonly, max_rows=self.max_rows)
 
     def register_resources(self, server: FastMCP):
         from zen.features.resources import initialize_zen_resources
