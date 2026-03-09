@@ -4,6 +4,7 @@
 from fastmcp import FastMCP
 import asyncio
 from actian_mcp_server.server_interfaces import MCPTools
+from actian_mcp_server.server_utils import validate_readonly_query
 from .instructions import query_instructions
 from typing import Annotated
 from pydantic import Field
@@ -32,9 +33,12 @@ class VectorTools(MCPTools):
                     success (false), error (str)
         """
         try:
-            columns, rows = await asyncio.to_thread(self.actiandb.execute_query, query)
-            ret = [dict(zip(columns, map(str, row))) for row in rows]
-            return str(toons.dumps(ret))
+            is_valid, error = validate_readonly_query(query)
+            if is_valid:
+                result = await asyncio.to_thread(self.actiandb.execute_query, query)
+            else:
+                raise Exception(error)
+            return result
         except Exception as e:
             return json.dumps({
                 "success": False,
