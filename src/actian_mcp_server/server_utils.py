@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 _WRITE_NODES = (
     exp.Insert, exp.Update, exp.Delete, exp.Create, exp.Drop,
     exp.Alter, exp.Grant, exp.Revoke, exp.Merge, exp.Command,
+    exp.TruncateTable
 )
 
 _WRITE_PATTERN = re.compile(
