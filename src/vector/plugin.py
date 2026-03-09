@@ -10,6 +10,7 @@ from dbutils.pooled_db import PooledDB
 from fastmcp import FastMCP
 from fastmcp.utilities.logging import get_logger
 from actian_mcp_server.plugin import MCPPlugin
+from actian_mcp_server.oauth import get_current_username
 from vector.features.tools import initialize_vector_tools
 from vector.features.resources import initialize_vector_resources
 from vector.features.prompts import initialize_vector_prompts
@@ -101,44 +102,54 @@ class VectorPlugin(MCPPlugin):
                 connection.close()
 
     def execute_query(self, query: str, params=None):
+        impersonate = self.config.get("oauth", {}).get("user_impersonation", True)
+        db_user = get_current_username() if impersonate else None
+
         try:
             with self.get_cursor() as cur:
-                if params:
-                    cur.execute(query, params)
-                else:
-                    cur.execute(query)
+                if db_user:
+                    logger.info(f"Impersonating user: {db_user}")
+                    cur.connection.commit()
+                    cur.execute(f'SET SESSION AUTHORIZATION "{db_user}"')
 
-                if cur.description:
-                    columns = [col[0] for col in cur.description]
-                    rows = cur.fetchmany(self.config["max_rows"] + 1)
+                query_succeeded = False
+                try:
+                    if params:
+                        cur.execute(query, params)
+                    else:
+                        cur.execute(query)
 
-                    # each row is a Row instance, so we convert it to a list (JSON serializable)
-                    rows = [list(row) for row in rows]
-
-                    # limit the number of result rows to max_rows
-                    trunc = False
-                    if len(rows) > self.config["max_rows"]:
-                        trunc = True
-                        del rows[-1]
-
-                    result: dict[str, Any] = {
-                        "success": True,
-                        "columns": columns,
-                        "rows": rows,
-                        "row_count": len(rows),
-                    }
-
-                    if trunc:
-                        result["truncated"] = True
-                        result["warning"] = f"Results were truncated to {self.config["max_rows"]} rows."
-                    
-                    return json.dumps(result, default=str)
-                return json.dumps({"success": True, "columns": [], "rows": [], "row_count": 0})
+                    if cur.description:
+                        columns = [col[0] for col in cur.description]
+                        rows = [list(row) for row in cur.fetchmany(self.config["max_rows"] + 1)]
+                        trunc = len(rows) > self.config["max_rows"]
+                        if trunc:
+                            del rows[-1]
+                        result: dict[str, Any] = {
+                            "success": True,
+                            "columns": columns,
+                            "rows": rows,
+                            "row_count": len(rows),
+                        }
+                        if trunc:
+                            result["truncated"] = True
+                            result["warning"] = f"Results were truncated to {self.config['max_rows']} rows."
+                        query_succeeded = True
+                        return json.dumps(result, default=str)
+                    query_succeeded = True
+                    return json.dumps({"success": True, "columns": [], "rows": [], "row_count": 0})
+                finally:
+                    if db_user:
+                        try:
+                            if query_succeeded:
+                                cur.connection.commit()
+                            else:
+                                cur.connection.rollback()
+                            cur.execute("SET SESSION AUTHORIZATION INITIAL_USER")
+                        except Exception:
+                            logger.warning("Failed to reset session authorization after error")
         except Exception as e:
-            return json.dumps({
-                "success": False,
-                "error": str(e)
-            }, default=str)
+            return json.dumps({"success": False, "error": str(e)}, default=str)
 
     def get_db_schema(self):
         query = """
