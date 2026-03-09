@@ -50,10 +50,6 @@ def validate_readonly_query(query: str) -> tuple[bool, str]:
 
         stmt = statements[0]
 
-        # SELECT INTO creates a table — block it explicitly
-        if isinstance(stmt, exp.Select) and stmt.args.get("into"):
-            return False, "SELECT INTO is not permitted"
-
         # walk every node in the AST and validate against the write nodes
         for node in stmt.walk():
             if isinstance(node, _WRITE_NODES):
