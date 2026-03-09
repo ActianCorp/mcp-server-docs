@@ -2,53 +2,35 @@
 # All Rights Reserved.
 
 from fastmcp import FastMCP
-import pyodbc
 import asyncio
 from actian_mcp_server.server_interfaces import MCPResources
 from typing import Dict, Any
-import toons
 
 class VectorResources(MCPResources):
     async def get_database_schema(self) -> str:
         """
-        Retrieves the database schema with information such as the table name and for each table
-        the column names and column datatypes respectively.
+        Retrieves the database schema with information such as the table name, keys, comments
+        and for each table the column name, column datatype, and column comment.
 
         Obtains a database cursor, executes the SQL query to retrieve the database schema
         and returns all results in a dictionary format.
 
         Returns
             str
-                On query success: database schema in the toon (token-oriented object notation) format:
+                On query success: JSON object where each key is a table name, with value:
+                    columns (dict): maps column_name -> {dtype (str), comment (str | null)}
+                    keys (list[str] | null): constraint definitions for the table
+                    comment (str | null): table-level comment
 
-                table_1[column_count]:
-                 - column_1: datatype_1
-                 - column_2: datatype_2
-                 - ...
-                table_2[column_count]:
-                 - column_1: datatype_1
-                 - column_2: datatype_1
-                 - ...
-                ...
-
-                On query error: error message containing the pyodbc.Error
+                On query error: str:
+                    The database schema could not be retrieved. Error: (error)
         """
 
-        query = """
-            SELECT trim(T.table_name), trim(column_name), trim(column_datatype)
-            FROM iitables T, iicolumns C
-            WHERE T.table_name=C.table_name AND system_use='U'
-        """
         try:
-            _, rows = await asyncio.to_thread(self.actiandb.execute_query, query)
-            schema: Dict[str, Any] = {}
-            for table, column, dtype in rows:
-                schema.setdefault(table, []).append({
-                    column: dtype
-                })
-            return str(toons.dumps(schema))
+            results = await asyncio.to_thread(self.actiandb.get_db_schema)
+            return results
         except Exception as e:
-            return f"Error: {str(e)}"
+            return f"The database schema could not be retrieved. Error: {str(e)}"
     
 def initialize_vector_resources(server: FastMCP, actiandb):
     resources = VectorResources(actiandb)

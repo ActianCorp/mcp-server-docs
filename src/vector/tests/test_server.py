@@ -1,12 +1,16 @@
 # Copyright (C) 2025 Actian Corp.
 # All Rights Reserved.
 
-import toons
 from pytest_unordered import unordered
+import json
 
 actual_tools = ["execute_query", "describe_table", "list_tables", "list_functions"]
 actual_resources = ["get_database_schema"]
 actual_prompts = ["ask_question"]
+
+def get_json_result(result):
+    content = result.content if hasattr(result, "content") else result
+    return json.loads(content[0].text)
 
 async def test_server_reachability(stdio_client):
     response = await stdio_client.ping()
@@ -34,45 +38,59 @@ async def test_prompts_list(stdio_client):
     assert prompt_names == unordered(actual_prompts)
 
 async def test_tool__execute_query(stdio_client):
-    expected_result = toons.dumps([{'total_amount': '45.99'}])
+    expected_result = {"columns": ["total_amount"], "rows": [["45.99"]]}
     result = await stdio_client.call_tool("execute_query", {"query": "SELECT total_amount FROM orders WHERE order_id=52"})
-    assert result.content[0].text == expected_result
+    result = get_json_result(result)
+    assert result["columns"] == expected_result["columns"]
+    assert result["rows"] == unordered(expected_result["rows"])
 
 async def test_tool__list_tables(stdio_client):
-    expected_result = [{'table_name': 'customers'}, {'table_name': 'orders'}]
+    expected_result = {"columns": ["table_name"], "rows": [["customers"], ["orders"]]}
     result = await stdio_client.call_tool("list_tables")
-    tables = toons.loads(result.content[0].text)
-    assert tables == unordered(expected_result)
+    result = get_json_result(result)
+    assert result["columns"] == expected_result["columns"]
+    assert result["rows"] == unordered(expected_result["rows"])
 
 async def test_tool__describe_table(stdio_client):
-    expected_result = [
-        {'column_name': 'customer_id', 'column_datatype': 'INTEGER', 'column_length': '4', 'column_scale': '0'},
-        {'column_name': 'email', 'column_datatype': 'VARCHAR', 'column_length': '50', 'column_scale': '0'}
-    ]
+    expected_result = {"columns": ["column_name", "column_datatype", "column_length", "column_scale", "column_comment"],
+                       "rows": [["customer_id", "INTEGER", "4", "0", None], ["email", "VARCHAR", "50", "0", None]]}
     result = await stdio_client.call_tool("describe_table", {"table_name": "customers"})
-    table_schema = toons.loads(result.content[0].text)
-    assert table_schema == unordered(expected_result)
+    result = get_json_result(result)
+    assert result["columns"] == expected_result["columns"]
+    assert result["rows"] == unordered(expected_result["rows"])
 
 async def test_tool__list_functions(stdio_client):
-    expected_result = [
-        {'function_name': 'is_date', 'function_ddl': 'create procedure  is_date(a VARCHAR(24)) RETURN (VARCHAR(24)) AS BEGIN return if(a IS DATE,\'YES\',\'NO\') END'},
-        {'function_name': 'sum_int', 'function_ddl': 'create function  sum_int(a INT, b INT) RETURN (INT) AS BEGIN return a+b END'}
-    ]
+    expected_result = {"columns": ["function_name", "function_ddl"],
+                       "rows": [["is_date", "create procedure  is_date(a VARCHAR(24)) RETURN (VARCHAR(24)) AS BEGIN return if(a IS DATE,\'YES\',\'NO\') END"],
+                                ["sum_int", "create function  sum_int(a INT, b INT) RETURN (INT) AS BEGIN return a+b END"]]}
     result = await stdio_client.call_tool("list_functions")
-    table_schema = toons.loads(result.content[0].text)
-    assert table_schema == unordered(expected_result)
+    result = get_json_result(result)
+    assert result["columns"] == expected_result["columns"]
+    assert result["rows"] == unordered(expected_result["rows"])
 
 async def test_resource__get_database_schema(stdio_client):
-    expected_schema = {
-        'customers': [{'customer_id': 'INTEGER'}, {'email': 'VARCHAR'}],
-        'orders': [{'total_amount': 'MONEY'}, {'order_date': 'ANSIDATE'}, {'customer_id': 'INTEGER'}, {'order_id': 'INTEGER'}]
+    expected_schema = \
+    {
+        "customers":
+        {
+            "columns": {"email": {"dtype": "VARCHAR", "comment": None},
+                        "customer_id": {"dtype": "INTEGER", "comment": None}},
+            "keys": [],
+            "comment": None
+        },
+        "orders":
+        {
+            "columns": {"order_id": {"dtype": "INTEGER", "comment": None},
+                        "order_date": {"dtype": "ANSIDATE", "comment": None},
+                        "customer_id": {"dtype": "INTEGER", "comment": None},
+                        "total_amount": {"dtype": "MONEY", "comment": None}},
+            "keys": [],
+            "comment": None
+        }
     }
     result = await stdio_client.read_resource("resource://database/schema")
-    schema = toons.loads(result[0].text)
-
-    assert expected_schema.keys() == schema.keys()
-    for table in expected_schema:
-        assert expected_schema[table] == unordered(schema[table])
+    result = get_json_result(result)
+    assert expected_schema == result
 
 async def test_prompt__ask_question(stdio_client):
     result = await stdio_client.get_prompt("ask_question", {"question": ""})
