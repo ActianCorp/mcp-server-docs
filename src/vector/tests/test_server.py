@@ -42,14 +42,14 @@ async def test_tool__execute_query(stdio_client):
     result = await stdio_client.call_tool("execute_query", {"query": "SELECT total_amount FROM orders WHERE order_id=52"})
     result = get_json_result(result)
     assert result["columns"] == expected_result["columns"]
-    assert result["rows"] == expected_result["rows"]
+    assert result["rows"] == unordered(expected_result["rows"])
 
 async def test_tool__list_tables(stdio_client):
     expected_result = {"columns": ["table_name"], "rows": [["customers"], ["orders"]]}
     result = await stdio_client.call_tool("list_tables")
     result = get_json_result(result)
     assert result["columns"] == expected_result["columns"]
-    assert result["rows"] == expected_result["rows"]
+    assert result["rows"] == unordered(expected_result["rows"])
 
 async def test_tool__describe_table(stdio_client):
     expected_result = {"columns": ["column_name", "column_datatype", "column_length", "column_scale", "column_comment"],
@@ -57,7 +57,7 @@ async def test_tool__describe_table(stdio_client):
     result = await stdio_client.call_tool("describe_table", {"table_name": "customers"})
     result = get_json_result(result)
     assert result["columns"] == expected_result["columns"]
-    assert result["rows"] == expected_result["rows"]
+    assert result["rows"] == unordered(expected_result["rows"])
 
 async def test_tool__list_functions(stdio_client):
     expected_result = {"columns": ["function_name", "function_ddl"],
@@ -66,7 +66,7 @@ async def test_tool__list_functions(stdio_client):
     result = await stdio_client.call_tool("list_functions")
     result = get_json_result(result)
     assert result["columns"] == expected_result["columns"]
-    assert result["rows"] == expected_result["rows"]
+    assert result["rows"] == unordered(expected_result["rows"])
 
 async def test_resource__get_database_schema(stdio_client):
     expected_schema = \

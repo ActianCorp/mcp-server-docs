@@ -38,14 +38,27 @@ class VectorPlugin(MCPPlugin):
         self._validate_config()
 
     def _validate_config(self):
-        required = ("driver", "database", "max_connections")
-        missing = [k for k in required if not self.config.get(k)]
-        if missing:
-            raise ValueError(f"VectorPlugin requires config keys: {', '.join(missing)}")
-        if not self.config.get("max_rows") or self.config["max_rows"] <= 0:
+        required = {"driver": str, "database": str, "max_connections": int, "max_rows": int, "username": str, "password": str}
+        missing = []
+        wrong_type = {}
+
+        if not self.config.get("max_rows"):
             self.config["max_rows"] = 1000
-        if not self.config.get("username") or not self.config.get("password"):
-            raise ValueError("VectorPlugin requires 'username' and 'password'")
+
+        for name, dtype in required.items():
+            if not self.config.get(name):
+                missing.append(name)
+            elif not isinstance(self.config[name], dtype):
+                wrong_type.update({name: dtype})
+
+        if missing:
+            raise ValueError(f"Vector MCP Server requires config keys: {', '.join(missing)}")
+
+        if wrong_type:
+            raise ValueError(f"Vector MCP Server requires the following config value types: {wrong_type}")
+        
+        if self.config["max_rows"] <= 0 or self.config["max_connections"] <= 0:
+            raise ValueError("Vector MCP Server config options 'max_rows' and 'max_connections' cannot be zero or negative")
 
     def _create_pool(self):
         logger.info("Initializing Vector database connection pool")
