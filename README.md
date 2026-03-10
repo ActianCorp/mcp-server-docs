@@ -22,6 +22,19 @@ The server supports OAuth 2.0 / OIDC authentication (Keycloak, Auth0) for HTTP, 
 When enabled, every incoming request must carry a valid JWT — unauthenticated requests are rejected
 before any tool or resource is invoked.
 
+#### How authentication works
+The MCP server's `OIDCProxy` handles the OAuth 2.0 flow directly:
+1. When a user connects to the MCP server, they are redirected to Auth0 (or Keycloak) to authenticate
+2. After successful login, Auth0 issues a JWT containing the user's identity claims
+3. The MCP server validates the JWT on every request — unauthenticated requests are rejected
+
+`client_id` and `client_secret` in the config are the MCP server's own credentials with Auth0
+(one set, shared by all users). End users authenticate with their own Auth0 accounts or via a
+federated identity provider (Keycloak, Google, corporate SSO) that Auth0 trusts.
+
+> NOTE: OAuth is only supported with `--transport sse`, `http`, or `streamable-http`.
+> `stdio` transport does not support OAuth.
+
 #### Enable OAuth
 Add an `oauth` block to your conf.json (see [src/conf_temp.json](src/conf_temp.json)):
 ```json
@@ -42,8 +55,6 @@ Add an `oauth` block to your conf.json (see [src/conf_temp.json](src/conf_temp.j
 OAuth is silently skipped if `FASTMCP_SERVER_AUTH_CONFIG_URL` or `FASTMCP_SERVER_AUTH_CLIENT_ID`
 are absent — the server starts without authentication.
 
-> NOTE: OAuth is not supported with `--transport stdio`.
-
 #### User impersonation (`user_impersonation`)
 Controls whether the authenticated end-user's identity is forwarded to the database.
 
@@ -53,8 +64,8 @@ Controls whether the authenticated end-user's identity is forwarded to the datab
 | `false` | JWT still verified (unauthenticated requests rejected), but all queries run under the service-account pool credentials. Use this when database accounts per end-user are not practical. |
 
 Username is extracted from the token in priority order: `username` → `preferred_username` →
-email prefix → sanitized `sub`. If no username can be extracted the query runs under the
-service-account credentials regardless of this flag.
+email prefix → sanitized `sub`. If no username can be extracted when `user_impersonation=true`, the query is rejected with an error.
+When `user_impersonation=false`, username extraction is skipped entirely.
 
 ---
 

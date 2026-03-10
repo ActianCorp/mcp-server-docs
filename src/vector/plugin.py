@@ -102,8 +102,11 @@ class VectorPlugin(MCPPlugin):
                 connection.close()
 
     def execute_query(self, query: str, params=None):
+        oauth_configured = bool(self.config.get("oauth", {}).get("FASTMCP_SERVER_AUTH_CONFIG_URL"))
         impersonate = self.config.get("oauth", {}).get("user_impersonation", True)
-        db_user = get_current_username() if impersonate else None
+        db_user = get_current_username() if (oauth_configured and impersonate) else None
+        if oauth_configured and impersonate and db_user is None:
+            return json.dumps({"success": False, "error": "Authenticated user identity could not be determined. Query rejected."})
 
         try:
             with self.get_cursor() as cur:
