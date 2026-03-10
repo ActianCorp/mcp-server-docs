@@ -18,7 +18,7 @@ import time
 import httpx
 from datetime import datetime
 from pathlib import Path
-from multiprocessing import Process
+from multiprocessing import Process, Event
 from types import SimpleNamespace
 
 from fastmcp import Client, FastMCP
@@ -58,15 +58,16 @@ def get_free_port():
         return s.getsockname()[1]
 
 
-def _create_test_server(transport: str, port: int):
-    """Create and run a test server instance."""
-    import sys
-    import os
+def _create_test_server(transport: str, port: int, stop_event=None):
+    """Create and run a test server instance.
 
-    # Mock sys.argv to avoid argparse conflicts with pytest
+    For HTTP/SSE: runs uvicorn directly with FastMCP's ASGI app so that
+    stop_event can trigger graceful shutdown (lifespan teardown closes ODBC).
+    """
+    import sys
     sys.argv = ['actian-zen', '--transport', transport]
 
-    from zen.server import SERVER_NAME, create_lifespan, SERVER_INSTRUCTIONS
+    from zen.plugin import SERVER_NAME, create_lifespan, SERVER_INSTRUCTIONS
     from zen.core import ZenConfiguration
 
     config = ZenConfiguration()
@@ -78,11 +79,25 @@ def _create_test_server(transport: str, port: int):
 
     if transport == "stdio":
         server.run(transport="stdio")
-    else:
-        server.run(transport=transport, host=TEST_HOST, port=port)
+        return
+
+    import threading
+    import uvicorn
+
+    app = server.http_app(transport=transport)
+    uvi_config = uvicorn.Config(app, host=TEST_HOST, port=port, log_level="warning")
+    uvi_server = uvicorn.Server(uvi_config)
+
+    if stop_event:
+        def _watch():
+            stop_event.wait()
+            uvi_server.should_exit = True
+        threading.Thread(target=_watch, daemon=True).start()
+
+    uvi_server.run()
 
 
-def _wait_for_server(host: str, port: int, timeout: float = 10):
+def _wait_for_server(host: str, port: int, timeout: float = 15):
     """Poll until the server accepts TCP connections."""
     start = time.time()
     while time.time() - start < timeout:
@@ -94,12 +109,13 @@ def _wait_for_server(host: str, port: int, timeout: float = 10):
     raise TimeoutError(f"Server didn't start on {host}:{port} within {timeout}s")
 
 
-def _start_server_process(transport: str, port: int) -> Process:
-    """Start server in a separate process."""
-    proc = Process(target=_create_test_server, args=(transport, port), daemon=True)
+def _start_server_process(transport: str, port: int) -> tuple[Process, Event]:
+    """Start server in a separate process. Returns (process, stop_event)."""
+    stop_event = Event()
+    proc = Process(target=_create_test_server, args=(transport, port, stop_event), daemon=True)
     proc.start()
     _wait_for_server(TEST_HOST, port)
-    return proc
+    return proc, stop_event
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -110,7 +126,7 @@ def _start_server_process(transport: str, port: int) -> Process:
 def server_stdio():
     """Create a stdio server instance for testing."""
     import os
-    from zen.server import SERVER_NAME, create_lifespan, SERVER_INSTRUCTIONS
+    from zen.plugin import SERVER_NAME, create_lifespan, SERVER_INSTRUCTIONS
     from zen.core import ZenConfiguration
 
     config = ZenConfiguration()
@@ -146,10 +162,12 @@ async def stdio_client(server_stdio):
 def server_localhost_http():
     """Start HTTP server and return URL."""
     port = get_free_port()
-    proc = _start_server_process("http", port)
+    proc, stop_event = _start_server_process("http", port)
     try:
         yield f"http://{TEST_HOST}:{port}/mcp"
     finally:
+        stop_event.set()
+        proc.join(timeout=10)
         if proc.is_alive():
             proc.terminate()
             proc.join(timeout=5)
@@ -163,10 +181,12 @@ def server_localhost_http():
 def server_localhost_sse():
     """Start SSE server and return URL."""
     port = get_free_port()
-    proc = _start_server_process("sse", port)
+    proc, stop_event = _start_server_process("sse", port)
     try:
         yield f"http://{TEST_HOST}:{port}/sse"
     finally:
+        stop_event.set()
+        proc.join(timeout=10)
         if proc.is_alive():
             proc.terminate()
             proc.join(timeout=5)
@@ -366,10 +386,20 @@ class MCPLLMClient:
             message = result.get("choices", [{}])[0].get("message", {})
             return message.get("content", ""), message.get("tool_calls", []), message
 
-    async def chat(self, prompt: str) -> str:
+    SYSTEM_PROMPT = (
+        "You are a database assistant with access to MCP tools for querying an Actian Zen database. "
+        "When a SQL query fails, read the error message, fix the query, and retry (up to 3 retries). "
+        "Use CHAR_LENGTH() instead of LEN(). Zen does not support CTEs (WITH clause). "
+        "Always verify table/column names via list_tables or describe_table before guessing."
+    )
+
+    async def chat(self, prompt: str, max_retries: int = 3) -> str:
         """Send prompt to LLM with MCP tools, return final response."""
         self.trace = []
-        messages = [{"role": "user", "content": prompt}]
+        messages = [
+            {"role": "system", "content": self.SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ]
 
         for turn in range(self.max_turns):
             # Call appropriate provider

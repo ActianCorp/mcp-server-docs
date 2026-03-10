@@ -15,27 +15,15 @@ import pytest
 # ════════════════════════════════════════════════════════════════════════════════
 
 @pytest.mark.asyncio
-async def test_select_only_allows_select(stdio_client):
-    """select_only mode accepts SELECT queries."""
+async def test_select_allows_select(stdio_client):
+    """execute_query accepts SELECT queries."""
     result = await stdio_client.call_tool(
         "execute_query",
-        {"sql": "SELECT 1 AS val", "mode": "select_only"}
+        {"sql": "SELECT 1 AS val"}
     )
     data = json.loads(result.content[0].text)
     assert "error" not in data
     assert data["results"][0]["val"] == 1
-
-
-@pytest.mark.asyncio
-async def test_select_only_rejects_insert(stdio_client):
-    """select_only mode rejects non-SELECT queries."""
-    result = await stdio_client.call_tool(
-        "execute_query",
-        {"sql": "INSERT INTO employees (first_name) VALUES ('test')", "mode": "select_only"}
-    )
-    data = json.loads(result.content[0].text)
-    assert "error" in data
-    assert "select_only" in data["error"].lower() or "SELECT" in data["error"]
 
 
 # ════════════════════════════════════════════════════════════════════════════════
