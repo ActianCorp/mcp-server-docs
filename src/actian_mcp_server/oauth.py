@@ -204,7 +204,7 @@ def configure_authentication(conf_file_args):
                 verifier_kwargs = {
                     'jwks_uri': jwks_uri,
                     'issuer': issuer,
-                    'audience': audience
+                    'audience': audience if audience else oauth_config['FASTMCP_SERVER_AUTH_CLIENT_ID']
                 }
                 if required_scopes:
                     verifier_kwargs['required_scopes'] = required_scopes
