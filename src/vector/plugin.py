@@ -108,7 +108,9 @@ class VectorPlugin(MCPPlugin):
         try:
             with self.get_cursor() as cur:
                 if db_user:
-                    logger.info(f"Impersonating user: {db_user}")
+                    if '"' in db_user or '\0' in db_user:
+                        raise ValueError(f"Invalid username for impersonation: {db_user!r}")
+                    logger.debug(f"Impersonating user: {db_user}")
                     cur.connection.commit()
                     cur.execute(f'SET SESSION AUTHORIZATION "{db_user}"')
 
@@ -145,9 +147,12 @@ class VectorPlugin(MCPPlugin):
                                 cur.connection.commit()
                             else:
                                 cur.connection.rollback()
+                        except Exception:
+                            logger.warning("Failed to commit/rollback before resetting session authorization")
+                        try:
                             cur.execute("SET SESSION AUTHORIZATION INITIAL_USER")
                         except Exception:
-                            logger.warning("Failed to reset session authorization after error")
+                            logger.warning("Failed to reset session authorization")
         except Exception as e:
             return json.dumps({"success": False, "error": str(e)}, default=str)
 

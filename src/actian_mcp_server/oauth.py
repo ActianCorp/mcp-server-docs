@@ -145,18 +145,20 @@ class TokenCapturingJWTVerifier(JWTVerifier):
                 logger.info("Userinfo fetch failed or username not found, falling back to token claims")
                 username = self._extract_username_from_claims(decoded, "token")
             
-            # Store username in ContextVar
-            if username:
-                current_username.set(username)
-                logger.info(f"Stored database username: {username}")
-            else:
-                logger.warning("Could not extract username from token or userinfo")
-                
         except Exception as e:
             logger.error(f"Error extracting username from token: {e}")
-        
-        # Call parent's verify_token to do actual validation
-        return await super().verify_token(token)
+
+        # Call parent's verify_token to do actual validation first
+        claims = await super().verify_token(token)
+
+        # Store username only after token is verified
+        if username:
+            current_username.set(username)
+            logger.info(f"Stored database username: {username}")
+        else:
+            logger.warning("Could not extract username from token or userinfo")
+
+        return claims
 
 
 def configure_authentication(conf_file_args):
