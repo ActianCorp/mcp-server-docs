@@ -67,6 +67,13 @@ Username is extracted from the token in priority order: `username` → `preferre
 email prefix → sanitized `sub`. If no username can be extracted when `user_impersonation=true`, the query is rejected with an error.
 When `user_impersonation=false`, username extraction is skipped entirely.
 
+| OAuth configured | `user_impersonation` | Username in JWT | Result |
+|---|---|---|---|
+| No | (any) | N/A | Queries run as service account |
+| Yes | `true` | Present | `SET SESSION AUTHORIZATION` applied |
+| Yes | `true` | Absent | Query rejected with error |
+| Yes | `false` | (any) | Queries run as service account |
+
 ---
 
 ### Instructions on supporting a new database
