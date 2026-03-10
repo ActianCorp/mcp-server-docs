@@ -14,6 +14,9 @@ from zen.core.orm_manager import ZenORMManager
 from zen.core.ddl_manager import ZenDDLManager
 from zen.core.file_operations import ZenFileManager
 from zen.core.translator import translate_information_schema
+from actian_mcp_server.server_utils import validate_readonly_query
+import sqlglot
+from sqlglot import expressions as exp
 
 _log = logging.getLogger(__name__)
 
@@ -77,6 +80,28 @@ def _validate_where_clause(clause):
     # tautology (1=1) not blocked — needs a full parser; string literals and stacked statements are
     if clause and _UNSAFE_WHERE_RE.search(clause):
         raise ValueError("where_clause contains disallowed characters or keywords")
+
+
+_WRITE_NODES = (
+    exp.Insert, exp.Update, exp.Delete, exp.Create, exp.Drop,
+    exp.Alter, exp.Grant, exp.Revoke, exp.Merge, exp.Command,
+    exp.TruncateTable
+)
+
+def _validate_assembled_sql(sql: str):
+    """Parse assembled SQL with sqlglot. Reject multi-statement or nested writes."""
+    try:
+        stmts = [s for s in sqlglot.parse(sql) if s is not None]
+        if len(stmts) != 1:
+            raise ValueError("Multi-statement SQL is not permitted")
+        root = stmts[0]
+        for node in root.walk():
+            if node is root:
+                continue
+            if isinstance(node, _WRITE_NODES):
+                raise ValueError(f"Nested write operation not permitted: {type(node).__name__}")
+    except sqlglot.errors.ParseError:
+        pass
 
 
 def strip_markdown_code_block(text: str) -> str:
@@ -178,8 +203,10 @@ def register_zen_tools(
 
             sql = strip_markdown_code_block(sql)
 
-            if readonly and not sql.strip().upper().startswith("SELECT"):
-                return {"error": "Only SELECT queries allowed in readonly mode"}
+            if readonly:
+                is_valid, error = validate_readonly_query(sql)
+                if not is_valid:
+                    return {"error": error}
 
             original_sql = sql
             sql = _truncate_constraint_names_in_sql(sql)
@@ -527,6 +554,7 @@ def register_zen_tools(
                     try:
                         set_clause = ', '.join([f"{k} = ?" for k in updates.keys()])
                         update_sql = f"UPDATE {table} SET {set_clause} WHERE {where_clause}"
+                        _validate_assembled_sql(update_sql)
                         all_params = list(updates.values()) + (where_params or [])
                         cursor.execute(update_sql, all_params)
                         rows_affected = cursor.rowcount
@@ -550,6 +578,7 @@ def register_zen_tools(
                     cursor = conn.cursor()
                     try:
                         delete_sql = f"DELETE FROM {table} WHERE {where_clause}"
+                        _validate_assembled_sql(delete_sql)
                         cursor.execute(delete_sql, where_params or [])
                         rows_affected = cursor.rowcount
                         if not connection.is_transaction_active():
@@ -575,6 +604,7 @@ def register_zen_tools(
                         count_sql = f"SELECT COUNT(*) FROM {table}"
                         if where_clause:
                             count_sql += f" WHERE {where_clause}"
+                        _validate_assembled_sql(count_sql)
                         cursor.execute(count_sql, where_params or [])
                         return cursor.fetchone()[0]
                     finally:

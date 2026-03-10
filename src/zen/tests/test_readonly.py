@@ -24,7 +24,7 @@ EXCLUDED_TOOLS = ["ddl_operation", "batch_operation", "transaction"]
 @pytest.fixture()
 def server_readonly():
     """Readonly server — OPENMODE=1 connection, 6 tools."""
-    from zen.server import SERVER_NAME, create_lifespan, SERVER_INSTRUCTIONS_READONLY
+    from zen.plugin import SERVER_NAME, create_lifespan, SERVER_INSTRUCTIONS_READONLY
     from zen.core import ZenConfiguration
 
     config = ZenConfiguration()
@@ -140,7 +140,7 @@ async def test_readonly_execute_query_rejects_insert(readonly_client):
         )).content[0].text
     )
     assert "error" in data
-    assert "readonly" in data["error"].lower()
+    assert "select" in data["error"].lower() or "readonly" in data["error"].lower()
 
 
 @pytest.mark.asyncio
@@ -152,7 +152,7 @@ async def test_readonly_execute_query_rejects_update(readonly_client):
         )).content[0].text
     )
     assert "error" in data
-    assert "readonly" in data["error"].lower()
+    assert "select" in data["error"].lower() or "readonly" in data["error"].lower()
 
 
 @pytest.mark.asyncio
@@ -164,7 +164,7 @@ async def test_readonly_execute_query_rejects_delete(readonly_client):
         )).content[0].text
     )
     assert "error" in data
-    assert "readonly" in data["error"].lower()
+    assert "select" in data["error"].lower() or "readonly" in data["error"].lower()
 
 
 @pytest.mark.asyncio
