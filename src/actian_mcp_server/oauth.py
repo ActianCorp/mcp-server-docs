@@ -171,7 +171,7 @@ def configure_authentication(conf_file_args):
         logger.info("OAuth authentication not configured - server will run without authentication")
         return None
     
-    logger.info("Configuring OIDCProxy with token capturing")
+    logger.info("Configuring OIDCProxy authentication")
     
     # Determine audience (Auth0 uses explicit audience, Keycloak uses client_id)
     audience = oauth_config.get("FASTMCP_SERVER_AUTH_AUDIENCE")
@@ -208,8 +208,12 @@ def configure_authentication(conf_file_args):
                     verifier_kwargs['required_scopes'] = required_scopes
                     logger.info(f"Token verifier scopes: {required_scopes}")
                 
-                token_verifier = TokenCapturingJWTVerifier(**verifier_kwargs)
-                logger.info(f"Created TokenCapturingJWTVerifier - audience: {audience}, issuer: {issuer}")
+                impersonate = oauth_config.get("user_impersonation", True)
+                if impersonate:
+                    token_verifier = TokenCapturingJWTVerifier(**verifier_kwargs)
+                    logger.info(f"Created TokenCapturingJWTVerifier - audience: {audience}, issuer: {issuer}")
+                else:
+                    logger.info("user_impersonation disabled - using default OIDCProxy token verifier")
             else:
                 logger.warning("No jwks_uri found in OIDC config")
             
