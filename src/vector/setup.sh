@@ -113,6 +113,7 @@ Commands:
   --stop-container    Stop and remove the Vector MCP server container
   --init-db           Recreate and initialize the Vector test database
   --all               Prepare the database, build the Vector MCP Server image and start the container
+  --help              Show this help message
 EOF
 }
 
