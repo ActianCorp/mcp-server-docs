@@ -58,7 +58,10 @@ def _validate_identifier(name: str, kind: str = "identifier"):
 
 
 # blocks string literals, comments, stacked statements, and DDL/DML keywords
-# that have no place in a WHERE clause
+# that have no place in a WHERE clause.
+# String literals ARE blocked intentionally — LLM must use parameterized values
+# via where_params (e.g. WHERE status = ? with params=['active']),
+# not inline literals (WHERE status = 'active')
 _UNSAFE_WHERE_RE = re.compile(
     r"""['"`]|--|/\*|;"""
     r"""|\b(?:SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC(?:UTE)?|TRUNCATE)\b""",
@@ -529,6 +532,7 @@ def register_zen_tools(
                             cols = ', '.join(row.keys())
                             placeholders = ', '.join(['?' for _ in row])
                             insert_sql = f"INSERT INTO {table} ({cols}) VALUES ({placeholders})"
+                            _validate_assembled_sql(insert_sql)
                             cursor.execute(insert_sql, list(row.values()))
                             inserted += 1
                         if not connection.is_transaction_active():

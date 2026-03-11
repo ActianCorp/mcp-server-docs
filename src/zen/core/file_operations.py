@@ -14,16 +14,32 @@ from sqlalchemy import create_engine, Table, Column, Integer, String, LargeBinar
 from sqlalchemy.orm import Session
 
 
+_DEFAULT_BLOB_ROOT = Path(os.environ.get("ZEN_BLOB_ROOT", os.path.join(os.path.expanduser("~"), "zen_blobs")))
+
+
+def _validate_file_path(file_path: Path, root: Path) -> Path:
+    """Resolve path and ensure it stays under the allowed root directory."""
+    resolved = file_path.resolve()
+    root_resolved = root.resolve()
+    if not str(resolved).startswith(str(root_resolved)):
+        raise ValueError(f"Path escapes allowed root directory: {file_path}")
+    return resolved
+
+
 class ZenFileManager:
     """Manager for file upload/download operations using Zen BLOB storage"""
 
-    def __init__(self, connection):
+    def __init__(self, connection, blob_root: Path = None):
         """
         Initialize file manager.
 
         Args:
             connection: ZenConnection instance (preferred) or connection string (legacy)
+            blob_root: Root directory for file operations (default: ~/zen_blobs)
         """
+        self.blob_root = (blob_root or _DEFAULT_BLOB_ROOT).resolve()
+        self.blob_root.mkdir(parents=True, exist_ok=True)
+
         # Import here to avoid circular import
         from .connection import ZenConnection
 
@@ -68,9 +84,8 @@ class ZenFileManager:
             dict with upload result and file info
         """
         try:
-            file_path = Path(file_path)
+            file_path = _validate_file_path(Path(file_path), self.blob_root)
 
-            # Check file exists
             if not file_path.exists():
                 return {
                     "uploaded": False,
@@ -141,7 +156,7 @@ class ZenFileManager:
             dict with download result and file info
         """
         try:
-            output_path = Path(output_path)
+            output_path = _validate_file_path(Path(output_path), self.blob_root)
 
             # Reflect table
             table = Table(table_name, self.metadata, autoload_with=self.engine)

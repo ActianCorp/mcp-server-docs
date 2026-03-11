@@ -202,6 +202,7 @@ class ZenPlugin(MCPPlugin):
         finally:
             if self._conn:
                 try:
+                    self._conn.dispose_engine()
                     self._conn.close_odbc_connection()
                 except Exception:
                     pass

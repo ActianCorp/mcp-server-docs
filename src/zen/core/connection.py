@@ -319,4 +319,11 @@ class ZenConnection:
         self.release_all_locks()
 
     def __repr__(self):
-        return f"ZenConnection(conn_string='{self.conn_string[:30]}...')"
+        # only show DSN name or driver, never uid/pwd
+        s = self.conn_string
+        for key in ("DSN=", "DRIVER="):
+            if key in s.upper():
+                start = s.upper().index(key)
+                end = s.index(";", start) if ";" in s[start:] else len(s)
+                return f"ZenConnection({s[start:end]})"
+        return "ZenConnection(***)"
