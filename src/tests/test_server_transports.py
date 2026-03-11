@@ -8,7 +8,7 @@ import pytest
 from fastmcp import Client
 
 
-async def _assert_client_features(client, expected_transport: str):
+async def _assert_client_features(client, expected_transport):
     await client.ping()
 
     tool_names = {tool.name for tool in await client.list_tools()}
@@ -33,7 +33,7 @@ async def _assert_client_features(client, expected_transport: str):
     assert resource_payload["is_running"] is True
 
 
-async def _connect_client_to_localhost_server(target, expected_transport: str):
+async def _connect_client_to_localhost_server(target, expected_transport):
     num_retries = 3
     last_error = None
     for _ in range(num_retries):

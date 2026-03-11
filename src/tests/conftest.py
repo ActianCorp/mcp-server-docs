@@ -22,8 +22,6 @@ MOCK_PASSWORD = "mock-password"
 _BASE_CONFIG = {
     "host": MOCK_HOST,
     "port": 0,
-    "username": MOCK_USERNAME,
-    "password": MOCK_PASSWORD,
     "driver": "ignored",
     "database": "ignored",
 }
@@ -35,6 +33,8 @@ def make_config(transport: str, port: int = 0) -> dict:
         "dbms": MOCK_DBMS,
         "transport": transport,
         "port": port,
+        "username": MOCK_USERNAME,
+        "password": MOCK_PASSWORD,
     }
 
 

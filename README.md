@@ -151,19 +151,51 @@ cp src/conf_temp.json src/<dbms>/conf.json
 # adjust the configuration parameters in conf.json
 ```
 
-### Testing with Vector
+### Testing the framework
+```
+uv run pytest src/tests [pytest args]
+```
+
+### Testing Vector
 Apply the steps under [Step 4 — Adapt the configuration file](#step-4--adapt-the-configuration-file) first.
 > NOTE: requires a Vector instance installation and ODBC setup.
 
+#### Step 0: Source the Vector environment and the ODBC driver required variables (ODBCSYSINI, ODBCINI and II_ODBC_WCHAR_SIZE).
 
+#### Step 1: Prepare the environment
 ```
+export II_INSTALLATION=<your_inst_id>
 export DATABASE_USER=<your_database_username>
 export DATABASE_PASSWORD=<your_database_password>
 
-cd src/vector/tests
-bash test_db_init.sh
-uv run pytest
+source src/vector/setup.sh
 ```
+
+#### Step 2: Prepare the database and container image
+The setup script at src/vector/setup.sh includes the following options (can bee displayed using `bash src/vector/setup.sh --help`):
+```
+Usage:
+  source src/vector/setup.sh
+  bash src/vector/setup.sh <command>
+
+Commands:
+  --i                 Interactive mode for --all command
+  --build-image       Build the Vector MCP server docker image
+  --start-container   Start the Vector MCP server container
+  --stop-container    Stop and remove the Vector MCP server container
+  --init-db           Recreate and initialize the Vector test database
+  --all               Prepare the database, build the Vector MCP Server image and start the container
+```
+Recommended for the first run:
+```
+bash src/vector/setup.sh --i
+```
+
+#### Step 3: Run the vector test suite
+```
+uv run pytest src/vector/tests
+```
+
 
 ### Docker deployment
 Apply the steps under [Step 4 — Adapt the configuration file](#step-4--adapt-the-configuration-file) first.
