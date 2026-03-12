@@ -2,8 +2,6 @@
 # Copyright (C) 2025 Actian Corp.
 # All Rights Reserved.
 
-DBMS="vector"
-
 echo
 echo "Building the Actian MCP Server docker image for $DBMS"
 echo
@@ -11,10 +9,10 @@ echo
 MCP_SERVER=$MCP_SERVER_ROOT/src/actian_mcp_server
 PYPROJECT_FILE=$MCP_SERVER_ROOT/pyproject.toml
 UVLOCK_FILE=$MCP_SERVER_ROOT/uv.lock
-ACTIAN_CLIENT=$MCP_SERVER_ROOT/src/$DBMS/actian-client.tgz
-MCP_SERVER_FEATURES=$MCP_SERVER_ROOT/src/$DBMS/features
-MCP_SERVER_DOCKER=$MCP_SERVER_ROOT/src/$DBMS/docker
-MCP_SERVER_PLUGIN=$MCP_SERVER_ROOT/src/$DBMS/plugin.py
+ACTIAN_CLIENT=$DBMS_ROOT/actian-client.tgz
+MCP_SERVER_FEATURES=$DBMS_ROOT/features
+MCP_SERVER_DOCKER=$DBMS_ROOT/docker
+MCP_SERVER_PLUGIN=$DBMS_ROOT/plugin.py
 
 if [[ ! -f "${MCP_SERVER}/server.py" ]]; then
     echo "Can't find the Actian MCP Server under ${MCP_SERVER}."
@@ -51,13 +49,13 @@ if [[ ! -f "${ACTIAN_CLIENT}" ]]; then
     exit 1
 fi
 
-if [[ -z "${CONTAINER_BASE_NAME_MCP_SERVER_LINUX}" ]]; then
-    echo "CONTAINER_BASE_NAME_MCP_SERVER_LINUX not set."
+if [[ -z "${MCP_SERVER_CONTAINER_IMAGE_NAME}" ]]; then
+    echo "MCP_SERVER_CONTAINER_IMAGE_NAME not set."
     exit 1
 fi
 
-if [[ -z "${CONTAINER_VERSION_MCP_SERVER_LINUX}" ]]; then
-    echo "CONTAINER_VERSION_MCP_SERVER_LINUX not set."
+if [[ -z "${MCP_SERVER_CONTAINER_VERSION}" ]]; then
+    echo "MCP_SERVER_CONTAINER_VERSION not set."
     exit 1
 fi
 
@@ -74,6 +72,7 @@ cp $MCP_SERVER/__init__.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER/oauth.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER/plugin.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER/server_interfaces.py $STAGE/src/actian_mcp_server
+cp $MCP_SERVER/server_utils.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER/server.py $STAGE/src/actian_mcp_server
 cp $MCP_SERVER_PLUGIN $STAGE/$DBMS/plugin.py
 cp $MCP_SERVER_FEATURES/tools.py $STAGE/$DBMS/features
@@ -87,5 +86,5 @@ cp $PYPROJECT_FILE $STAGE
 cp $UVLOCK_FILE $STAGE
 
 pushd $STAGE
-docker build . -f $DBMS/docker/Dockerfile-$DBMS -t $CONTAINER_BASE_NAME_MCP_SERVER_LINUX:$CONTAINER_VERSION_MCP_SERVER_LINUX
+docker build . -f $DBMS/docker/Dockerfile-$DBMS -t $MCP_SERVER_CONTAINER_IMAGE_NAME:$MCP_SERVER_CONTAINER_VERSION
 popd

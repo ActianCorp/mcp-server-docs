@@ -3,15 +3,15 @@
 
 services:
   actian-mcp-server:
-    image: actian/vector-mcp-server-linux:test
-    container_name: actian-mcp-server
+    image: ${MCP_SERVER_CONTAINER_IMAGE_NAME}:${MCP_SERVER_CONTAINER_VERSION}
+    container_name: ${MCP_SERVER_CONTAINER_NAME}
     environment:
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
     volumes:
-      - ${MCP_SERVER_ROOT}/src/vector/conf.json:/app/conf.json:ro
+      - ${CONF_FILE}:/app/conf.json:ro
     ports:
-      - "8000:8000"
+      - "${MCP_SERVER_PORT_OUTSIDE_CONTAINER}:${MCP_SERVER_PORT_INSIDE_CONTAINER}"
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "localhost:host-gateway"
     restart: unless-stopped
