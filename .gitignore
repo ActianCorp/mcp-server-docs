@@ -171,3 +171,7 @@ pyrightconfig.json
 
 # vscode
 .vscode
+
+# local config
+.mcp.json
+zen_config.json

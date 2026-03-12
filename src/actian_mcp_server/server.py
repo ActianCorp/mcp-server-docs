@@ -19,6 +19,7 @@ logger = get_logger(server_name)
 # Plugin registry — add new databases here
 PLUGINS = {
     "vector": "vector.plugin:VectorPlugin",
+    "zen": "zen.plugin:ZenPlugin",
     "example": "example.plugin:ExamplePlugin",
 }
 
@@ -38,10 +39,12 @@ def app_lifespan(config: dict):
     @asynccontextmanager
     async def lifespan(server: FastMCP) -> AsyncIterator[None]:
         plugin = load_plugin(config["dbms"], config)
-        plugin.register_tools(server)
-        plugin.register_resources(server)
-        plugin.register_prompts(server)
+        # lifespan must run first so plugin._init_connection() is called before
+        # tool/resource registration, which captures connection references
         async with plugin.lifespan(server):
+            plugin.register_tools(server)
+            plugin.register_resources(server)
+            plugin.register_prompts(server)
             yield
     return lifespan
 
@@ -58,6 +61,8 @@ def parse_args():
                         help="Database username (or set DATABASE_USER env var)")
     parser.add_argument("--password", default=os.getenv("DATABASE_PASSWORD"),
                         help="Database password (or set DATABASE_PASSWORD env var)")
+    parser.add_argument("--max-rows", type=int, default=None,
+                        help="Maximum rows returned per query (overrides conf file)")
     return parser.parse_args()
 
 
@@ -74,13 +79,19 @@ def load_config(cli_args) -> dict:
         logger.critical(f"Failed to parse configuration file: {conf_path}", exc_info=True)
         raise
 
-    return {
+    config = {
         **file_config,
         "dbms": cli_args.dbms,
         "transport": cli_args.transport,
         "username": cli_args.username,
         "password": cli_args.password,
     }
+    # CLI --max-rows overrides conf file value
+    if cli_args.max_rows is not None:
+        config["max_rows"] = cli_args.max_rows
+    elif "max_rows" not in config:
+        config["max_rows"] = 1000
+    return config
 
 
 def validate_config(config: dict):
@@ -91,12 +102,14 @@ def validate_config(config: dict):
             logger.critical(f"Transport '{config['transport']}' requires: {', '.join(missing)}")
             raise ValueError(f"Missing config for transport: {', '.join(missing)}")
 
-    if not config.get("username") or not config.get("password"):
-        logger.critical(
-            "Database username and password are required. "
-            "Pass --username/--password or set DATABASE_USER/DATABASE_PASSWORD."
-        )
-        raise ValueError("username and password are required")
+    # Zen uses DSN-based auth (no credentials needed at the framework level)
+    if config.get("dbms") != "zen":
+        if not config.get("username") or not config.get("password"):
+            logger.critical(
+                "Database username and password are required. "
+                "Pass --username/--password or set DATABASE_USER/DATABASE_PASSWORD."
+            )
+            raise ValueError("username and password are required")
 
 
 def main():
@@ -104,6 +117,7 @@ def main():
     config = load_config(cli_args)
     validate_config(config)
 
+    # Configure OAuth authentication if enabled (sse/http/streamable-http only)
     auth = None
     if config["transport"] in ("sse", "http", "streamable-http"):
         auth = configure_authentication(config)
