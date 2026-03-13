@@ -614,7 +614,7 @@ class ZenORMManager:
                     "Or check resource://database/schema to verify column names and types."
                 )
 
-            raise Exception(hint) from e
+            raise RuntimeError(hint) from e
 
         finally:
             session.close()
