@@ -16,7 +16,6 @@ def test_load_config_simple(config_file):
         transport="stdio",
         username="cli-username",
         password="cli-password",
-        max_rows=None,
     )
 
     config = load_config(cli_args)
@@ -41,7 +40,6 @@ def test_load_config_raises_for_missing_file(tmp_path):
         transport="stdio",
         username="cli-username",
         password="cli-password",
-        max_rows=None,
     )
 
     with pytest.raises(FileNotFoundError, match="Configuration file not found"):
@@ -57,7 +55,6 @@ def test_load_config_raises_for_invalid_json(tmp_path):
         transport="stdio",
         username="cli-username",
         password="cli-password",
-        max_rows=None,
     )
 
     with pytest.raises(json.JSONDecodeError):

@@ -35,7 +35,7 @@ dev = [
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-filterwarnings = ["ignore::pytest.PytestConfigWarning"]
+filterwarnings = ["ignore:Unknown config option.*sqla_testing:pytest.PytestConfigWarning"]
 
 [tool.uv.workspace]
 members = ["packages/*"]
