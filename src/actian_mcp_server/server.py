@@ -87,7 +87,7 @@ def load_config(cli_args) -> dict:
         "password": cli_args.password,
     }
     # CLI --max-rows overrides conf file value
-    if cli_args.max_rows is not None:
+    if config.get("max_rows") is not None:
         config["max_rows"] = cli_args.max_rows
     elif "max_rows" not in config:
         config["max_rows"] = 1000

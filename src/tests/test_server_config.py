@@ -29,6 +29,7 @@ def test_load_config_simple(config_file):
         "transport": "stdio",
         "username": "cli-username",
         "password": "cli-password",
+        "max_rows": 1000
     }
 
 

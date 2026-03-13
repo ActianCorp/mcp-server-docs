@@ -32,16 +32,16 @@ async def test_app_lifespan(monkeypatch):
 
     async with lifespan(FastMCP(MOCK_SERVER_NAME)):
         assert plugin.calls == [
+            "lifespan_enter",
             "register_tools",
             "register_resources",
             "register_prompts",
-            "lifespan_enter",
         ]
 
     assert plugin.calls == [
+        "lifespan_enter",
         "register_tools",
         "register_resources",
         "register_prompts",
-        "lifespan_enter",
         "lifespan_exit",
     ]
