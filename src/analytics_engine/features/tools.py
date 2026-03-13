@@ -10,7 +10,7 @@ from typing import Annotated
 from pydantic import Field
 import json
 
-class VectorTools(MCPTools):
+class AnalyticsEngineTools(MCPTools):
     async def execute_query(self, query: Annotated[str, Field(description=query_instructions)]) -> str:
         """
         Execute an SQL query (read query parameter description) and fetch all the results.
@@ -160,8 +160,8 @@ class VectorTools(MCPTools):
                 "error": str(e)
             }, default=str)
 
-def initialize_vector_tools(server: FastMCP, actiandb):
-    tools = VectorTools(actiandb)
+def initialize_analytics_engine_tools(server: FastMCP, actiandb):
+    tools = AnalyticsEngineTools(actiandb)
 
     server.tool(name="execute_query")(tools.execute_query)
     server.tool(name="list_tables")(tools.list_tables)

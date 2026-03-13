@@ -17,7 +17,7 @@ def get_json_result(result):
 
 
 @pytest.mark.parametrize("server", SERVER_MODES, indirect=True)
-async def test_vector_resources_list(client, server):
+async def test_analytics_engine_resources_list(client, server):
     resource_list = await client.list_resources()
     num_resources = len(resource_list)
     assert num_resources == len(EXPECTED_RESOURCES)
@@ -26,7 +26,7 @@ async def test_vector_resources_list(client, server):
 
 
 @pytest.mark.parametrize("server", SERVER_MODES, indirect=True)
-async def test_vector_resource__get_database_schema(client, server):
+async def test_analytics_engine_resource__get_database_schema(client, server):
     expected_schema = \
     {
         "customers":

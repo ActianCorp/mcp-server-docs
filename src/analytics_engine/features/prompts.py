@@ -3,7 +3,7 @@
 
 from fastmcp import FastMCP
 
-def initialize_vector_prompts(server: FastMCP):
+def initialize_analytics_engine_prompts(server: FastMCP):
     @server.prompt
     def ask_question(question: str) -> str:
         return f"You are a database expert. Answer the following question: {question} "

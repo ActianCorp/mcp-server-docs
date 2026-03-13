@@ -73,7 +73,7 @@ ENV PYTHONPATH="/app"
 
 USER mcpuser
 
-RUN chmod +x /app/vector/docker/entrypoint.sh
+RUN chmod +x /app/analytics_engine/docker/entrypoint.sh
 
-ENTRYPOINT ["/app/vector/docker/entrypoint.sh"]
-CMD ["actian-mcp-server", "--dbms", "vector", "--transport", "http", "--conf-file", "/app/conf.json"]
+ENTRYPOINT ["/app/analytics_engine/docker/entrypoint.sh"]
+CMD ["actian-mcp-server", "--dbms", "analytics_engine", "--transport", "http", "--conf-file", "/app/conf.json"]

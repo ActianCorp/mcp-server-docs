@@ -35,11 +35,11 @@ if [[ ! -f "${MCP_SERVER_FEATURES}/tools.py" ]]; then
 fi
 
 if [[ ! -f "${MCP_SERVER_PLUGIN}" ]]; then
-    echo "Can't find the Vector plugin under ${MCP_SERVER_PLUGIN}."
+    echo "Can't find the Analytics Engine plugin under ${MCP_SERVER_PLUGIN}."
     exit 1
 fi
 
-if [[ ! -f "${MCP_SERVER_DOCKER}/Dockerfile-${DBMS}" ]]; then
+if [[ ! -f "${MCP_SERVER_DOCKER}/Dockerfile-analytics-engine" ]]; then
     echo "Can't find the Actian MCP Server docker files under ${MCP_SERVER_DOCKER}."
     exit 1
 fi
@@ -79,12 +79,12 @@ cp $MCP_SERVER_FEATURES/tools.py $STAGE/$DBMS/features
 cp $MCP_SERVER_FEATURES/resources.py $STAGE/$DBMS/features
 cp $MCP_SERVER_FEATURES/prompts.py $STAGE/$DBMS/features
 cp $MCP_SERVER_FEATURES/instructions.py $STAGE/$DBMS/features
-cp $MCP_SERVER_DOCKER/Dockerfile-$DBMS $STAGE/$DBMS/docker
+cp $MCP_SERVER_DOCKER/Dockerfile-analytics-engine $STAGE/$DBMS/docker
 cp $MCP_SERVER_DOCKER/entrypoint.sh $STAGE/$DBMS/docker
 cp $ACTIAN_CLIENT $STAGE
 cp $PYPROJECT_FILE $STAGE
 cp $UVLOCK_FILE $STAGE
 
 pushd $STAGE
-docker build . -f $DBMS/docker/Dockerfile-$DBMS -t $MCP_SERVER_CONTAINER_IMAGE_NAME:$MCP_SERVER_CONTAINER_VERSION
+docker build . -f $DBMS/docker/Dockerfile-analytics-engine -t $MCP_SERVER_CONTAINER_IMAGE_NAME:$MCP_SERVER_CONTAINER_VERSION
 popd

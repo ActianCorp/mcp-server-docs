@@ -4,9 +4,8 @@
 from fastmcp import FastMCP
 import asyncio
 from actian_mcp_server.server_interfaces import MCPResources
-from typing import Dict, Any
 
-class VectorResources(MCPResources):
+class AnalyticsEngineResources(MCPResources):
     async def get_database_schema(self) -> str:
         """
         Retrieves the database schema with information such as the table name, keys, comments
@@ -32,7 +31,7 @@ class VectorResources(MCPResources):
         except Exception as e:
             return f"The database schema could not be retrieved. Error: {str(e)}"
     
-def initialize_vector_resources(server: FastMCP, actiandb):
-    resources = VectorResources(actiandb)
+def initialize_analytics_engine_resources(server: FastMCP, actiandb):
+    resources = AnalyticsEngineResources(actiandb)
 
     server.resource(uri="resource://database/schema")(resources.get_database_schema)

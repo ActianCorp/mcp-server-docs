@@ -134,13 +134,13 @@ class <DBMS>Plugin(MCPPlugin):
 ```
 
 See [src/example/plugin.py](src/example/plugin.py) for a complete working example and
-[src/vector/plugin.py](src/vector/plugin.py) for the production Vector implementation.
+[src/actian_analytics/plugin.py](src/actian_analytics/plugin.py) for the production Actian Analytics implementation.
 
 #### Step 3 — Register the plugin
 Add one line to the `PLUGINS` dict in [src/actian_mcp_server/server.py](src/actian_mcp_server/server.py):
 ```python
 PLUGINS = {
-    "vector": "vector.plugin:VectorPlugin",
+    "actian_analytics": "actian_analytics.plugin:AnalyticsEnginePlugin",
     "<dbms>": "<dbms>.plugin:<DBMS>Plugin",   # add this
 }
 ```
@@ -151,16 +151,16 @@ cp src/conf_temp.json src/<dbms>/conf.json
 # adjust the configuration parameters in conf.json
 ```
 
-### Testing the framework
+### Testing the shared framework
 ```
 uv run pytest src/tests [pytest args]
 ```
 
-### Testing Vector
+### Testing Actian Analytics
 Apply the steps under [Step 4 — Adapt the configuration file](#step-4--adapt-the-configuration-file) first.
-> NOTE: requires a Vector instance installation and ODBC setup.
+> NOTE: requires a Actian Analytics instance installation and ODBC setup.
 
-#### Step 0: Source the Vector environment and the ODBC driver required variables (ODBCSYSINI, ODBCINI and II_ODBC_WCHAR_SIZE).
+#### Step 0: Source the Actian Analytics environment and the ODBC driver required variables (ODBCSYSINI, ODBCINI and II_ODBC_WCHAR_SIZE).
 
 #### Step 1: Prepare the environment
 ```
@@ -168,54 +168,61 @@ export II_INSTALLATION=<your_inst_id>
 export DATABASE_USER=<your_database_username>
 export DATABASE_PASSWORD=<your_database_password>
 
-source src/vector/setup.sh
+source src/actian_analytics/setup.sh
 ```
 
 #### Step 2: Prepare the database and container image
-The setup script at src/vector/setup.sh includes the following options (can bee displayed using `bash src/vector/setup.sh --help`):
+The setup script at src/actian_analytics/setup.sh includes the following options (can bee displayed using `bash src/actian_analytics/setup.sh --help`):
 ```
 Usage:
-  source src/vector/setup.sh
-  bash src/vector/setup.sh <command>
+  source src/actian_analytics/setup.sh
+  bash src/actian_analytics/setup.sh <command>
 
 Commands:
   --i                 Interactive mode for --all command
-  --build-image       Build the Vector MCP server docker image
-  --start-container   Start the Vector MCP server container
-  --stop-container    Stop and remove the Vector MCP server container
-  --init-db           Recreate and initialize the Vector test database
-  --all               Prepare the database, build the Vector MCP Server image and start the container
+  --build-image       Build the Actian Analytics MCP server docker image
+  --start-container   Start the Actian Analytics MCP server container
+  --stop-container    Stop and remove the Actian Analytics MCP server container
+  --init-db           Recreate and initialize the Actian Analytics test database
+  --all               Prepare the database, build the Actian Analytics MCP Server image and start the container
   --help              Show this help message
 ```
 Recommended for the first run:
 ```
-bash src/vector/setup.sh --i
+bash src/actian_analytics/setup.sh --i
 ```
 
-#### Step 3: Run the vector test suite
+#### Step 3: Run the actian_analytics test suite
 ```
-uv run pytest src/vector/tests
+uv run pytest src/actian_analytics/tests
 ```
 
-
-### Docker deployment
+### Docker deployment (currently supported for Actian Analytics)
 Apply the steps under [Step 4 — Adapt the configuration file](#step-4--adapt-the-configuration-file) first.
-> NOTE: requires a DBMS instance installation and ODBC setup.
+> NOTE: requires the corresponding DBMS instance installation (ODBC driver is obtained automatically from Actian Client which is part of the image).
 
-#### Step 1: Setup the environment
+#### Step 1: Prepare the environment
 ```
-source set_env.sh
+export II_INSTALLATION=<your_inst_id>
+export DATABASE_USER=<your_database_username>
+export DATABASE_PASSWORD=<your_database_password>
+
+source src/<dbms>/setup.sh
 ```
 #### Step 2: Build the container image
 ```
-bash make-docker-<dbms>.sh
+bash src/<dbms>/setup.sh --build-image
 ```
 #### Step 3: Start the container
 ```
-docker compose -f src/<dbms>/docker/docker-compose.yml up -d
+bash src/<dbms>/setup.sh --start-container
 ```
 #### Step 4: Check the container status
 ```
-docker compose ps
-docker logs actian-mcp-server
+docker ps
+docker logs <container_name>
+```
+#### To stop the container
+```
+bash src/<dbms>/setup.sh --stop-container
 ```

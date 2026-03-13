@@ -13,7 +13,7 @@ Legend: ✅ covered  ⚠ partial  ❌ not covered
 | Auth with correct credentials | ⚠ | OAuth token logging tested; ODBC credential tests absent |
 | Auth with incorrect credentials (negative) | ⚠ | test_oauth.py covers JWT context vars, not bad-password rejection |
 | Container deployment (MCP + auth container) | ❌ | No container-based test environment |
-| Client ↔ DBMS: Vector, Ingres | ❌ | Zen only |
+| Client ↔ DBMS: Analytics Engine, Ingres | ❌ | Zen only |
 | OAuth — Auth0 / Keycloak | ⚠ | Middleware unit-tested; no end-to-end with real IdP |
 
 ---
@@ -113,7 +113,7 @@ Legend: ✅ covered  ⚠ partial  ❌ not covered
 ## Not in scope (noted for completeness)
 
 - Pen testing — Security Team
-- Actian Vector / Ingres client testing — separate product scope
+- Actian Analytics Engine / Ingres client testing — separate product scope
 - Container deployment CI — infrastructure work, not test code
 
 ---
