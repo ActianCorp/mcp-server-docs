@@ -9,7 +9,7 @@ import os
 import time
 import socket
 
-SERVER_NAME = "Vector MCP Server"
+SERVER_NAME = "Analytics Engine MCP Server"
 DBMS = os.getenv("DBMS")
 
 CONF_ARGS = {
@@ -32,7 +32,7 @@ def make_config(transport: str, port: int = 0) -> dict:
     return {
         **CONF_ARGS,
         "port": port,
-        "dbms": "vector",
+        "dbms": "analytics_engine",
         "transport": transport,
         "username": os.getenv("DATABASE_USER"),
         "password": os.getenv("DATABASE_PASSWORD"),

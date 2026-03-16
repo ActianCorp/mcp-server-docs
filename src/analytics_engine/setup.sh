@@ -13,15 +13,15 @@ require_env() {
 require_env II_INSTALLATION
 
 export MCP_SERVER_ROOT="$(dirname "$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")")"
-export DBMS="vector"
+export DBMS="analytics_engine"
 export DBMS_ROOT="$MCP_SERVER_ROOT/src/$DBMS"
 export CONF_FILE="${CONF_FILE:-$DBMS_ROOT/conf.json}"
-export MCP_SERVER_CONTAINER_IMAGE_NAME="${MCP_SERVER_CONTAINER_IMAGE_NAME:-actian/vector-mcp-server-linux}"
+export MCP_SERVER_CONTAINER_IMAGE_NAME="${MCP_SERVER_CONTAINER_IMAGE_NAME:-actian/analytics-engine-mcp-server-linux}"
 export MCP_SERVER_CONTAINER_VERSION="${MCP_SERVER_CONTAINER_VERSION:-1.0.0}"
-export MCP_SERVER_CONTAINER_NAME="${MCP_SERVER_CONTAINER_NAME:-actian-vector-mcp-server}"
+export MCP_SERVER_CONTAINER_NAME="${MCP_SERVER_CONTAINER_NAME:-actian-analytics-engine-mcp-server}"
 export MCP_SERVER_PORT_INSIDE_CONTAINER="${MCP_SERVER_PORT_INSIDE_CONTAINER:-"$(grep 'port' $CONF_FILE | sed -r 's/[^:]+: *(.*).*/\1/')"}"
 export MCP_SERVER_PORT_OUTSIDE_CONTAINER="${MCP_SERVER_PORT_INSIDE_CONTAINER}"
-export DOCKERFILE="${DOCKERFILE:-$DBMS_ROOT/docker/Dockerfile-vector}"
+export DOCKERFILE="${DOCKERFILE:-$DBMS_ROOT/docker/Dockerfile-analytics-engine}"
 export DOCKER_COMPOSE_FILE="${DOCKER_COMPOSE_FILE:-$DBMS_ROOT/docker/docker-compose.yml}"
 export TEST_DIR="${TEST_DIR:-$DBMS_ROOT/tests}"
 export TEST_DB_NAME="${TEST_DB_NAME:-"$(grep 'database' $CONF_FILE | sed -r 's/[^:]+: *\"(.*)\".*/\1/')"}"
@@ -48,7 +48,7 @@ EOF
 }
 
 build_image() {
-    bash "$MCP_SERVER_ROOT/make-docker-vector.sh"
+    bash "$DBMS_ROOT/docker/make-docker-analytics-engine.sh"
 }
 
 start_container() {
@@ -103,16 +103,16 @@ interactive() {
 usage() {
     cat <<'EOF'
 Usage:
-  source src/vector/setup.sh
-  bash src/vector/setup.sh <command>
+  source setup.sh
+  bash setup.sh <command>
 
 Commands:
   --i                 Interactive mode for --all command
-  --build-image       Build the Vector MCP server docker image
-  --start-container   Start the Vector MCP server container
-  --stop-container    Stop and remove the Vector MCP server container
-  --init-db           Recreate and initialize the Vector test database
-  --all               Prepare the database, build the Vector MCP Server image and start the container
+  --build-image       Build the Analytics Engine MCP server docker image
+  --start-container   Start the Analytics Engine MCP server container
+  --stop-container    Stop and remove the Analytics Engine MCP server container
+  --init-db           Recreate and initialize the Analytics Engine test database
+  --all               Prepare the database, build the Analytics Engine MCP Server image and start the container
   --help              Show this help message
 EOF
 }

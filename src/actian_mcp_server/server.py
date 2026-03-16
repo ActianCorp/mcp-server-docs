@@ -18,7 +18,7 @@ logger = get_logger(server_name)
 
 # Plugin registry — add new databases here
 PLUGINS = {
-    "vector": "vector.plugin:VectorPlugin",
+    "analytics_engine": "analytics_engine.plugin:AnalyticsEnginePlugin",
     "zen": "zen.plugin:ZenPlugin",
     "example": "example.plugin:ExamplePlugin",
 }

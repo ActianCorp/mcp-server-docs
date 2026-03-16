@@ -51,19 +51,19 @@ uv run actian-mcp-server --dbms=zen --conf-file=src/zen/conf.json
 uv run actian-mcp-server --dbms=zen --conf-file=path/to/your/conf.json
 ```
 
-## Zen SQL Differences from Vector
+## Zen SQL Differences from Analytics Engine
 
 ### System Catalogs
 
 ┌────────────────────────────────────────────────────────────┐
-│  Vector (Ingres)      │  Zen (Btrieve)                    │
-├───────────────────────┼───────────────────────────────────┤
-│ iitables              │ X$File                            │
-│ iicolumns             │ X$Field                           │
-│ iiindexes             │ X$Index                           │
-│                       │                                   │
-│ system_use='U'        │ Xf$Name NOT LIKE 'X$%'            │
-│ trim() required       │ No trim() needed                  │
+│  Analytics Engine (Ingres)      │  Zen (Btrieve)           │
+├─────────────────────────────────┼──────────────────────────┤
+│ iitables                        │ X$File                   │
+│ iicolumns                       │ X$Field                  │
+│ iiindexes                       │ X$Index                  │
+│                                 │                          │
+│ system_use='U'                  │ Xf$Name NOT LIKE 'X$%'   │
+│ trim() required                 │ No trim() needed         │
 └────────────────────────────────────────────────────────────┘
 
 ### Data Types
@@ -90,7 +90,7 @@ See `resources.py:_map_zen_datatype()` for full mapping.
 - No CHAR padding issues
 - Supports ANSI SQL with Zen extensions
 
-**Vector:**
+**Analytics Engine:**
 - Columnar RDBMS (Ingres-based)
 - ii* system tables
 - Requires trim() for CHAR fields
@@ -144,7 +144,7 @@ This matches the actian_mcp_server pattern: minimal proof-of-concept for databas
 
 ## Future Enhancements
 
-To match Vector implementation, could add:
+To match Analytics Engine implementation, could add:
 - Parameterized queries (SQL injection protection)
 - Transaction support (BEGIN/COMMIT/ROLLBACK)
 - More detailed schema info (indexes, constraints)
@@ -196,7 +196,7 @@ To match DB_MCP_PILOT functionality, could integrate:
 ### Schema Query Errors
 
 **Error:** "X$File not found"
-- **Solution:** Ensure connected to actual Zen database (not Vector or other DBMS)
+- **Solution:** Ensure connected to actual Zen database (not Analytics Engine or other DBMS)
 - **Note:** X$ tables are Zen system catalogs
 
 **Error:** "Invalid object name"

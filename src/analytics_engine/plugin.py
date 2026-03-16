@@ -11,17 +11,17 @@ from fastmcp import FastMCP
 from fastmcp.utilities.logging import get_logger
 from actian_mcp_server.plugin import MCPPlugin
 from actian_mcp_server.oauth import get_current_username
-from vector.features.tools import initialize_vector_tools
-from vector.features.resources import initialize_vector_resources
-from vector.features.prompts import initialize_vector_prompts
+from analytics_engine.features.tools import initialize_analytics_engine_tools
+from analytics_engine.features.resources import initialize_analytics_engine_resources
+from analytics_engine.features.prompts import initialize_analytics_engine_prompts
 from typing import Dict, Any
 
-logger = get_logger("VectorPlugin")
+logger = get_logger("AnalyticsEnginePlugin")
 
 
-class VectorPlugin(MCPPlugin):
+class AnalyticsEnginePlugin(MCPPlugin):
     """
-    Actian Vector DBMS plugin.
+    Actian Analytics Engine DBMS plugin.
 
     Manages a pyodbc connection pool and registers the standard
     SQL tools (execute_query, list_tables, describe_table),
@@ -53,16 +53,16 @@ class VectorPlugin(MCPPlugin):
                 wrong_type.update({name: dtype})
 
         if missing:
-            raise ValueError(f"Vector MCP Server requires config keys: {', '.join(missing)}")
+            raise ValueError(f"Analytics Engine MCP Server requires config keys: {', '.join(missing)}")
 
         if wrong_type:
-            raise ValueError(f"Vector MCP Server requires the following config value types: {wrong_type}")
+            raise ValueError(f"Analytics Engine MCP Server requires the following config value types: {wrong_type}")
         
         if self.config["max_rows"] <= 0 or self.config["max_connections"] <= 0:
-            raise ValueError("Vector MCP Server config options 'max_rows' and 'max_connections' cannot be zero or negative")
+            raise ValueError("Analytics Engine MCP Server config options 'max_rows' and 'max_connections' cannot be zero or negative")
 
     def _create_pool(self):
-        logger.info("Initializing Vector database connection pool")
+        logger.info("Initializing Analytics Engine database connection pool")
         try:
             pool = PooledDB(
                 creator=pyodbc,
@@ -77,11 +77,11 @@ class VectorPlugin(MCPPlugin):
                 database=self.config["database"],
                 readonly=True
             )
-            logger.info("Vector database connection established successfully")
+            logger.info("Analytics Engine database connection established successfully")
             return pool
         except Exception as e:
             logger.critical(f"Failed to create connection pool: {type(e).__name__}: {e}", exc_info=True)
-            raise RuntimeError("Failed to establish Vector database connection pool") from e
+            raise RuntimeError("Failed to establish Analytics Engine database connection pool") from e
 
     @contextmanager
     def get_cursor(self):
@@ -196,13 +196,13 @@ class VectorPlugin(MCPPlugin):
             return f"The database schema could not be retrieved. Error: {str(e)}"
 
     def register_tools(self, server: FastMCP):
-        initialize_vector_tools(server, self)
+        initialize_analytics_engine_tools(server, self)
 
     def register_resources(self, server: FastMCP):
-        initialize_vector_resources(server, self)
+        initialize_analytics_engine_resources(server, self)
 
     def register_prompts(self, server: FastMCP):
-        initialize_vector_prompts(server)
+        initialize_analytics_engine_prompts(server)
 
     @asynccontextmanager
     async def lifespan(self, server: FastMCP) -> AsyncIterator[None]:
@@ -211,8 +211,8 @@ class VectorPlugin(MCPPlugin):
             yield
         finally:
             if self.pool:
-                logger.info("Closing Vector database connection pool")
+                logger.info("Closing Analytics Engine database connection pool")
                 try:
                     await asyncio.to_thread(self.pool.close)
                 except Exception:
-                    logger.warning("Error closing Vector connection pool", exc_info=True)
+                    logger.warning("Error closing Analytics Engine connection pool", exc_info=True)
