@@ -37,7 +37,7 @@ class VectorTools(MCPTools):
             if is_valid:
                 result = await asyncio.to_thread(self.actiandb.execute_query, query)
             else:
-                raise Exception(error)
+                raise ValueError(error)
             return result
         except Exception as e:
             return json.dumps({
