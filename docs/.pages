@@ -1,0 +1,9 @@
+title: Actian MCP Server
+nav:
+  - index.md
+  - intro
+  - get_started
+  - develop_with_mcp
+  - configuration
+  - deployment
+  - APIs

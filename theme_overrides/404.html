@@ -1,0 +1,106 @@
+
+{% extends "main.html" %}
+
+<!-- Content -->
+{% block content %}
+<style>
+  .not-found-container {
+    text-align: center;
+    padding: 3rem 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .not-found-container h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--md-primary-fg-color);
+  }
+  .not-found-container p {
+    font-size: 1.1rem;
+    color: var(--md-default-fg-color--light);
+    margin-bottom: 1.5rem;
+  }
+  .not-found-search {
+    margin: 2rem 0;
+  }
+  .not-found-search input {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid var(--md-default-fg-color--lightest);
+    border-radius: 8px;
+    background: var(--md-default-bg-color);
+    color: var(--md-default-fg-color);
+    transition: border-color 0.2s ease;
+  }
+  .not-found-search input:focus {
+    outline: none;
+    border-color: var(--md-primary-fg-color);
+  }
+  .not-found-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  .not-found-links a {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid var(--md-default-fg-color--lightest);
+    color: var(--md-default-fg-color);
+  }
+  .not-found-links a:hover {
+    background: var(--md-primary-fg-color);
+    color: #fff;
+    border-color: var(--md-primary-fg-color);
+  }
+</style>
+
+<div class="not-found-container">
+  <h1>404</h1>
+  <p>The page you're looking for doesn't exist or has been moved.</p>
+  
+  <div class="not-found-search">
+    <input type="text" id="not-found-search-input" placeholder="Search documentation..." aria-label="Search documentation" autofocus />
+  </div>
+  
+  <p style="font-size: 0.95rem;">Or try one of these popular sections:</p>
+  
+  <div class="not-found-links">
+    <a href="{{ config.site_url }}">Home</a>
+    <a href="{{ config.site_url }}get_started/gettingstartedwithDX.html">Getting Started</a>
+    <a href="{{ config.site_url }}Zeenea/zeenea-intro.html">Platform Overview</a>
+    <a href="{{ config.site_url }}APIs/zeenea-public-apis.html">APIs</a>
+    <a href="{{ config.site_url }}Zeenea_Administration/zeenea-managing-users.html">Administration</a>
+  </div>
+</div>
+
+<script>
+  // Wire up the 404 search box to Material's built-in search
+  document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('not-found-search-input');
+    if (!input) return;
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && input.value.trim()) {
+        // Open Material search with the query
+        var searchInput = document.querySelector('.md-search__input');
+        var searchToggle = document.querySelector('[data-md-toggle="search"]');
+        if (searchToggle) searchToggle.checked = true;
+        if (searchInput) {
+          searchInput.value = input.value.trim();
+          searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+          searchInput.focus();
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

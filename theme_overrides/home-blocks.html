@@ -1,0 +1,56 @@
+<!-- Custom HTML site displayed as the Home chapter -->
+
+{% extends "main.html" %}
+
+{% block styles %}
+<!-- Include already-configured Styles custom styles -->
+{{ super() }}
+<!-- Add custom styles -->
+<link rel="stylesheet" href="assets/stylesheets/homepage-styles.css">
+
+{% endblock %}
+
+
+{% block tabs %}
+{{ super() }}
+
+<!-- Hero Banner-->
+<section class="dx-hero-container">
+    <div class="md-grid md-typeset">
+        <div class="section-flexbox-row flex-start align-center">
+            <div class="dx-hero__content">
+                <div class="hero-heading">
+                    <h1>Actian MCP Server Documentation</h1>
+                </div>
+                <div class="hero-body body-text white">
+                    <p>Connect AI agents to Actian data sources using the Model Context Protocol.
+                    </p>
+                    <p>Explore guides for installation, plugin development, configuration, and deployment.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+
+    {{ page.content }}
+
+{% endblock %}
+
+
+{% block footer %}
+
+<footer class="md-footer">
+    <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+            <!-- Copyright and theme information -->
+            <div class="md-footer-copyright">
+                <a href=" https://www.actian.com/ " title="Actian">{{ config.copyright }}</a>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}

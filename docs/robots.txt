@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://help.actian-software.com/digital-experience/9.5/latest/sitemap.xml

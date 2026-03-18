@@ -1,0 +1,144 @@
+#Project Information
+site_name: Actian MCP Server
+site_url: https://help.actian-software.com/digital-experience/9.5/latest/
+site_description: >-
+  Documentation for the Actian MCP Server — connect AI agents to Actian data sources via the Model Context Protocol.
+use_directory_urls: false
+docs_dir: docs
+site_dir: site 
+# Theme Configuration
+theme:
+  name: material
+  logo: assets/mcp_logo.png
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.top
+    - navigation.instant
+    - navigation.prune
+    - navigation.path
+    - search.highlight
+    - search.share
+    - search.suggest
+    - search.focus
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+  palette:
+    - scheme: slate
+      primary: custom
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: custom
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  custom_dir: theme_overrides/
+  icon:
+    repo: fontawesome/brands/github
+    edit: fontawesome/regular/pen-to-square
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/favicon.png
+  
+  # Static files
+  static_templates:
+    - 404.html
+
+# Markdown Extensions
+markdown_extensions:
+  - pymdownx.highlight:
+      use_pygments: true
+      pygments_lang_class: true
+      auto_title: false
+      linenums: false
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - plantuml_markdown:
+      server: https://www.plantuml.com/plantuml
+      format: svg
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - pymdownx.tabbed:
+      alternate_style: true 
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      title: On this page
+      permalink: true
+  - meta
+
+# Copyright
+copyright: >-
+  Copyright &copy; 2026, Actian
+
+extra:
+  version:
+    provider: mike
+  analytics: 
+    provider: custom
+    property: G-7LF0XY95M1
+
+
+# Repository
+repo_url: https://alm.actian.com/bitbucket/users/bpandey/repos/actian_mcp_server
+repo_name: actian_mcp_server
+edit_uri: "browse/docs"
+
+# Customization
+extra_css:
+  - assets/stylesheets/style.css?v=2
+  - stylesheets/minichat.css
+  - stylesheets/dx_style.css
+  - assets/stylesheets/actian-landing.css?v=4
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/marked/marked.min.js
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - javascripts/mermaid-init.js
+  - javascripts/search_enhancement.js
+  - javascripts/extra.js
+  - path: javascripts/current.js
+    defer: true
+  - path: javascripts/MiniChatJavaScript.js
+    defer: true
+
+plugins:
+  - search:
+      lang: en
+      separator: '[\s\-\.,:!=\[\]()\"/]+|(?!\d)\.(?!\d)|\.(?!\d)|[0-9]+'
+      jieba_dict: null
+      use_headings: true
+      indexing: 'full'
+      prebuild_index: true
+      min_search_length: 2
+  - awesome-pages
+  - tags:
+  - swagger-ui-tag
+  - mike:
+      canonical_version: latest
+      alias_type: redirect
+  - git-revision-date-localized:
+      type: date
+  - minify:
+      minify_html: true
+  - meta:
+      meta_file: .meta.yml
+  - meta-descriptions
+
+# Hooks
+hooks:
+  - hooks/bitbucket_edit_url.py
+  - hooks/custom_lexers.py

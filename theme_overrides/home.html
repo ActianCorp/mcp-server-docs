@@ -1,0 +1,267 @@
+<!-- Custom HTML site displayed as the Home chapter -->
+
+{% extends "main.html" %}
+
+{% block tabs %}
+{{ super() }}
+<link rel="stylesheet" href="assets/stylesheets/homepage-styles.css">
+
+<!-- Hero Banner-->
+<section class="dx-hero-container">
+    <div class="md-grid md-typeset">
+        <div class="section-flexbox-row flex-start align-center">
+            <div class="dx-hero__content">
+                <div class="hero-heading">
+                    <!-- <h3>Welcome to the Actian Digital Experience Help Center</h3> -->
+                    <h1>Become a Digital Experience expert!</h1>
+                </div>
+                <div class="hero-body body-text white">
+                    <p>Get to know DX and learn how to leverage its features to build your next-gen digital experience.
+                    </p>
+                    <p>Access our product documentation and stay up-to-date with the product's latest updates.
+                    </p>
+                </div>
+                <div class="hero-buttons">
+                    <p>
+                        <a href="{{ page.next_page.url | url }}" title="{{ page.next_page.title | striptags }}"
+                            class="md-button md-button--primary">
+                            Getting Started
+                        </a>
+                        <a href="whatsnew/cf20/newcf222.html" class="md-button">
+                            What's New?
+                        </a>
+                        <a href="early_access" class="md-button">
+                            Early Access
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- designed for you Banner-->
+<section class="section-designedforyou">
+    <div class="md-grid md-typeset">
+        <div class="section-flexbox-row space-around align-center">
+            <div class="dx-dfu__image">
+                <!-- computer image -->
+                <img src="assets/images/dx-computer.png" alt="An image of a computer showing DX" />
+            </div>
+            <div class="dx-dfu__content">
+                <div class="section-heading">
+                    <p class="black">Designed for YOU</p>
+                </div>
+                <div class="dfu-body body-text black">
+                    <p>Actian Digital Experience (DX) is the trusted solution for an enterprise's digital experience at the
+                        intersection of processes, content, and applications.</p>
+                    <p> Actian DX is architected to build more than just websites. It is built Cloud Native to serve your
+                        customers, employees, and partners and to deliver the functionality and stability that they need
+                        and expect.</p>
+                    <p> Customize Actian DX to meet the needs of your organization, users, and user groups. Adapt the look
+                        and feel of your sites to fit the standards of your organization and customize page content for
+                        users and groups in accordance with business rules and user profiles. Users, such as business
+                        partners, customers, or employees, can further customize their own views of the sites, as
+                        permitted. They can add applications to pages and arrange them as they want. By aggregating
+                        portlets in one place and giving users the power to customize their own desktops, Actian DX gives
+                        users a means for doing business efficiently and with high satisfaction.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-personas">
+    <div class="md-grid md-typeset">
+        <div class="section-flexbox-row space-around align-top">
+            <div class="section-heading">
+                <p class="black">Personalized Digital Experience</p>
+            </div>
+            <div class="flex-break"></div><!--force new row-->
+            <div class="persona-item">
+                <div class="persona-practitioner">
+                    <!-- persona image -->
+                </div>
+                <div class="persona-name black">
+                    <h2>
+                        For Practitioners
+                    </h2>
+                </div>
+                <div class="persona-body body-text black">
+                    <p>Managing content and maintain web and mobile digital experiences using powerful tools that can
+                        blend applications and content together, in a targeted way according to end users.</p>
+                    <p>Tools for practitioners include content management, asset management, site building via Design
+                        Studio and Site Manager, personalization management, and more.</p>
+						</br>
+                </div>
+                <div class="persona-button">
+                    <p><a href="build_sites/" class="md-button">
+                            Learn More
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="persona-item">
+                <div class="persona-developer">
+                    <!-- persona image -->
+                </div>
+                <div class="persona-name black">
+                    <h2>
+                        For Developers
+                    </h2>
+                </div>
+                <div class="persona-body body-text black">
+                    <p>Customize your digital experience using a wide range of APIs and tools. Use REST and Java APIs to
+                        access the many capabilities DX provides. Make use of Script Applications to produce
+                        JavaScript-based applications. Java Portlets written to the JSR168 or JSR286 specification can
+                        be deployed too.</p>
+                    <p>Deploy and manage applications using the DXClient tool, and manage servers.</p>
+                </div>
+                <div class="persona-button">
+                    <p><a href="extend_dx/" class="md-button">
+                            Develop DX
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="persona-item">
+                <div class="persona-administrator">
+                    <!-- persona image -->
+                </div>
+                <div class="persona-name black">
+                    <h2>
+                        For Administrators
+                    </h2>
+                </div>
+                <div class="persona-body body-text black">
+                    <p>Deploy DX using the multiple DX deployments options. Administer your multi-container Kubernetes deployment using Helm or a single-container deployment using Docker. Provide a range of scriptable interfaces to enable automation of your infrastructure. Leverage various tools to develop and deploy applications, and integrate with versatile applications for multi-channel delivery experiences.</p>
+                </div>
+                <div class="persona-button">
+
+                    <p><a href="deployment/" class="md-button">
+                            Deploy DX
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</section>
+
+<section class="section-academy">
+    <div class="md-grid md-typeset  ">
+        <div class="section-flexbox-row space-around align-center nowrap">
+            <div class="academy-hero__content">
+                <div class="dx-academy-logo">
+                    <img src="assets/images/ActianSoftware-U-logo-wht.png" />
+                </div>
+                <div class="dx-academy-heading white section-heading">
+                    Embark On Your Journey
+                </div>
+                <div class="dx-academy-body">
+                    <p>Realize the power of possibility for you and your business. Visit the ActianSoftware U for
+                        technical education on all products in the Actian Software portfolio. Start learning today!
+                    </p>
+                    <a href="https://hclsoftwareu.actian.com" title="ActianSoftware U"
+                        class="md-button md-button--primary">
+                        Visit ActianSoftware U
+                    </a>
+                    <a href="https://hclsoftwareu.actian.com/courses/course/actian-digital-experience-introduction" class="md-button">
+                        Introduction to DX
+                    </a>
+                </div>
+            </div>
+            <div class="academy-hero__image">
+                <!-- computer image -->
+                <img src="assets/images/dx-team.jpeg" />
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="section-links">
+    <div class="md-grid md-typeset">
+        <div class="section-flexbox-row space-around align-top">
+            <div class="link-item">
+                <h2>
+                    DX Legacy Help Center
+                </h2>
+                <p>The "legacy" DX Help Center, which contains documentation for all topics not covered in this site.
+                </p>
+                <p> <a href="https://help.actian.com/digital-experience/9.5/welcome/wp95_welcome.html">
+                        Go there
+                    </a>
+                </p>
+
+            </div>
+            <div class="link-item">
+                <h2>
+                    DX Support
+                </h2>
+                <p>DX Support landing page, which hosts the knowledge base and contains the support contact and software
+                    access details.
+                </p>
+                <p><a href="https://support.actian.com/csm?id=csm_index">Access support here</a>
+                </p>
+
+            </div>
+            <div class="link-item">
+                <h2>
+                    ActianSoftware U
+                </h2>
+                <p>Learning materials from product experts.</p>
+                <p> <a href="https://hclsoftwareu.actian.com/hcl-dx">
+                        Start learning
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}
+{% block content %}
+{% endblock %}
+
+
+
+
+{% block footer %}
+
+<footer class="md-footer">
+    <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+            <!-- Copyright and theme information -->
+            <div class="md-footer-copyright">
+                <a href=" https://www.actian.com/ " title="MkDocs">{{ config.copyright }}</a>
+                <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+                    Material for MkDocs
+                </a>
+            </div>
+            <div class="md-social">
+                <a href="https://github.com/ACTIAN-TECH-SOFTWARE" target="_blank" rel="noopener" title="github.com"
+                    class="md-social__link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+                        <path
+                            d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z">
+                        </path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}

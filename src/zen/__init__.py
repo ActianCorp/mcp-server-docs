@@ -1,1 +1,0 @@
-# Actian Zen MCP plugin
