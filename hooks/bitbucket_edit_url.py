@@ -17,8 +17,8 @@ def on_page_context(context, page, config, nav):
         file_path = page.file.src_uri
         
         # Construct Bitbucket edit URL
-        # Format: repo_url/browse/docs/file.md?mode=edit&at=refs%2Fheads%2Fmaster
-        edit_url = f"{repo_url}/browse/docs/{file_path}?mode=edit&at=refs%2Fheads%2Fmcpdocs"
+        # Format: repo_url/browse/docs/file.md?at=refs%2Fheads%2Fbranch&mode=edit
+        edit_url = f"{repo_url}/browse/docs/{file_path}?at=refs%2Fheads%2Fmcpdocs&mode=edit"
         
         # Override the edit_url in context
         context['page'].edit_url = edit_url

@@ -1,6 +1,6 @@
 #Project Information
 site_name: Actian MCP Server
-site_url: https://help.actian-software.com/digital-experience/9.5/latest/
+site_url: https://help.actian-software.com/actian-mcp-server/latest/
 site_description: >-
   Documentation for the Actian MCP Server — connect AI agents to Actian data sources via the Model Context Protocol.
 use_directory_urls: false
@@ -26,18 +26,18 @@ theme:
     - content.code.annotate
     - content.action.edit
   palette:
-    - scheme: slate
-      primary: custom
-      accent: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
     - scheme: default
       primary: custom
       accent: indigo
       toggle:
-        icon: material/brightness-7
+        icon: material/brightness-4
         name: Switch to dark mode
+    - scheme: slate
+      primary: custom
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
   custom_dir: theme_overrides/
   icon:
     repo: fontawesome/brands/github
@@ -93,14 +93,14 @@ extra:
 
 
 # Repository
-repo_url: https://alm.actian.com/bitbucket/users/bpandey/repos/actian_mcp_server
+repo_url: https://alm.actian.com/bitbucket/users/alokaj/repos/actian_mcp_server
 repo_name: actian_mcp_server
-edit_uri: "browse/docs"
+edit_uri: "browse"
 
 # Customization
 extra_css:
   - assets/stylesheets/style.css?v=2
-  - stylesheets/minichat.css
+  # - stylesheets/minichat.css  # disabled: Zeenea chatbot
   - stylesheets/dx_style.css
   - assets/stylesheets/actian-landing.css?v=4
 
@@ -112,8 +112,8 @@ extra_javascript:
   - javascripts/extra.js
   - path: javascripts/current.js
     defer: true
-  - path: javascripts/MiniChatJavaScript.js
-    defer: true
+  # - path: javascripts/MiniChatJavaScript.js  # disabled: Zeenea chatbot
+  #   defer: true
 
 plugins:
   - search:
