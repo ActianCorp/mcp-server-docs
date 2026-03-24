@@ -105,17 +105,13 @@ For production deployments, use SSE transport behind a reverse proxy.
     "transport": "sse",
     "host": "0.0.0.0",
     "port": 8080
-  },
-  "auth": {
-    "enabled": true,
-    "oauth": {
-      "issuer": "https://auth.example.com",
-      "audience": "actian-mcp-server",
-      "jwks_uri": "https://auth.example.com/.well-known/jwks.json"
-    }
   }
 }
 ```
+
+For OAuth-secured deployments, add an `oauth` block to your configuration.
+See [Authentication](../authentication/index.md) for the full configuration
+reference and provider setup guides (Auth0, Keycloak).
 
 ### nginx reverse proxy
 

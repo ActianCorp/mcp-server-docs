@@ -22,13 +22,12 @@ The Actian MCP Server is configured via a JSON configuration file. By default it
     "actian_mcp_server.zen.plugin.ZenPlugin",
     "actian_mcp_server.analytics_engine.plugin.AnalyticsEnginePlugin"
   ],
-  "auth": {
-    "enabled": false,
-    "oauth": {
-      "issuer": "https://your-auth-server.example.com",
-      "audience": "actian-mcp-server",
-      "jwks_uri": "https://your-auth-server.example.com/.well-known/jwks.json"
-    }
+  "oauth": {
+    "FASTMCP_SERVER_AUTH_CONFIG_URL": "https://your-auth-server/.well-known/openid-configuration",
+    "FASTMCP_SERVER_AUTH_CLIENT_ID": "your-client-id",
+    "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "your-client-secret",
+    "FASTMCP_SERVER_AUTH_BASE_URL": "http://127.0.0.1:8000",
+    "user_impersonation": true
   },
   "multitenancy": {
     "enabled": false
@@ -125,20 +124,15 @@ Each plugin may accept its own configuration block. See each plugin's documentat
 
 ## Authentication (OAuth 2.0)
 
-Enable OAuth 2.0 JWT validation for SSE transport:
+The MCP server supports OAuth 2.0 / OIDC authentication for `sse`, `http`, and
+`streamable-http` transports. When enabled, every request must carry a valid JWT.
 
-```json
-{
-  "auth": {
-    "enabled": true,
-    "oauth": {
-      "issuer": "https://auth.example.com",
-      "audience": "actian-mcp-server",
-      "jwks_uri": "https://auth.example.com/.well-known/jwks.json"
-    }
-  }
-}
-```
+Add an `oauth` block to your configuration file to enable authentication.
+See the [Authentication](../authentication/index.md) section for the full
+configuration reference and provider-specific setup guides (Auth0, Keycloak).
+
+!!! note "Transport requirement"
+    OAuth is not available with `stdio` transport.
 
 ---
 
@@ -166,4 +160,4 @@ Sensitive values can be provided via environment variables instead of the config
 | `MCP_ZEN_DSN` | `zen.dsn` |
 | `MCP_ZEN_PASSWORD` | `zen.password` |
 | `MCP_AE_PASSWORD` | `analytics_engine.password` |
-| `MCP_OAUTH_ISSUER` | `auth.oauth.issuer` |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | `oauth.FASTMCP_SERVER_AUTH_CONFIG_URL` |
