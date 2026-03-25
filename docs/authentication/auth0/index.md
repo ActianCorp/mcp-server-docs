@@ -135,19 +135,25 @@ All values are on the **Settings** tab of your Application:
 
 ### Why this is needed
 
-During the OAuth handshake, Auth0 checks whether the Application is authorized to request tokens for the specified API audience. Without explicit authorization, the token request fails with `invalid_request`.
+During the OAuth handshake:
+
+- **Client**: "I want a token for the API `http://127.0.0.1:8000/mcp`."
+- **Auth0**: "I know that API exists, but who are you? Oh, you are App `wNXUdrp9...`. Let me check if `wNXUdrp9...` is authorized for that API... **NOPE → Error: `invalid_request`**."
+
+You must explicitly authorize the Application for the API.
 
 ### Steps
 
 1. In the Auth0 Dashboard, go to **Applications → Applications**.
 2. Click on your Application (e.g. `Actian MCP Server App`).
 3. Click the **APIs** tab.
-4. Find your API (e.g. `mcp_server` with identifier `http://127.0.0.1:8000/mcp`).
+4. Find your API (e.g. `mcp_server` with identifier `http://127.0.0.1:8000/mcp`). It will show as **UNAUTHORIZED** initially.
 5. Click **Edit** next to your API. A permissions popup opens.
 6. In the popup:
 
    - **User Access** tab: Set the **Authorization** dropdown to **Authorized — Pick and choose permissions**. Select your scopes (e.g. `read:mcp_server`) or click **All**.
-   - **Client Access** tab: Verify it shows **AUTHORIZED**.
+     > A yellow warning _"You are about to create a grant with all permissions available"_ appears when **All** is selected. This is expected — it means the token will include all scopes you defined on the API.
+   - **Client Access** tab: This is typically already set to **Authorized** by default. Verify it shows **AUTHORIZED** before proceeding.
 
 7. Click **Update** to save.
 8. The Application row should show two **AUTHORIZED** badges — one for User Access and one for Client Access.
@@ -200,6 +206,8 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
 !!! important "Database username = email prefix"
     The MCP server extracts the database username from the **email prefix** (the part before `@`). For example, `jdoe@example.com` → `jdoe`. Ensure the email prefix matches the database account name exactly.
 
+    **Auth0 default behaviour**: Auth0's userinfo endpoint does not return a `username` or `preferred_username` claim by default. In practice, the server will use the **email prefix** as the database username. Always create database users to match this email prefix.
+
 !!! note "Case sensitivity"
     If the database is case-sensitive (e.g. `jdoe` ≠ `Jdoe`), ensure the email prefix exactly matches the database account name.
 
@@ -237,6 +245,13 @@ GRANT SELECT ON TABLE products TO jdoe;
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | API → **Identifier** | `http://127.0.0.1:8000/mcp` |
 | `FASTMCP_SERVER_AUTH_SCOPE` | Scopes you defined on the API | `openid email profile read:mcp_server` |
 | `user_impersonation` | Your choice | `true` or `false` |
+| `FASTMCP_SERVER_AUTH_REDIRECT_PATH` | (Optional) Custom OAuth callback path | `/auth/callback` (default) |
+
+> **Audience fallback**: If `FASTMCP_SERVER_AUTH_AUDIENCE` is omitted, the server uses `FASTMCP_SERVER_AUTH_CLIENT_ID` as the audience. This is common for Keycloak setups, but for Auth0 you should always set an explicit audience — the Client ID won't match the API Identifier.
+
+> **All-or-nothing**: Provide **all** required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, `BASE_URL`) or **none**. If only some fields are present, the server will fail to start with a `KeyError`.
+
+> **Note**: The `AUDIENCE` is a logical identifier used for token validation — it does **not** need to be a reachable HTTPS URL.
 
 ### Example `conf.json` (local development)
 
@@ -347,6 +362,8 @@ Auth0 tokens have a configurable lifetime:
 1. Go to **Applications → APIs → your API → Settings**.
 2. Check **Token Expiration (Seconds)** — default is 86400 (24 hours).
 3. Adjust as needed.
+
+> Token refresh is handled automatically by the OAuth flow when using browser-based authentication.
 
 ---
 

@@ -139,6 +139,7 @@ By default, Keycloak tokens only include internal audiences like `realm-manageme
 1. Go to **Clients** → click your client (e.g. `actian-mcp`).
 2. Click the **Client scopes** tab.
 3. Click the **`actian-mcp-dedicated`** link (listed as "Dedicated").
+   > If you don't see the dedicated scope, check the **Mappers** tab directly.
 4. Click **Configure a new mapper** (or "Add Mapper").
 5. Select **Audience** from the list (not **Audience Resolve**).
 
@@ -189,6 +190,20 @@ By default, Keycloak sets the `sub` claim to a UUID. You can override it to cont
 
 5. Click **Save**.
 
+### Verify
+
+After adding the mapper, your token will contain:
+
+```json
+{
+  "sub": "jdoe",
+  "iss": "http://localhost:8080/realms/actian-mcp",
+  "aud": ["realm-management", "account", "actian-mcp"],
+  "preferred_username": "jdoe",
+  "scope": "openid email profile"
+}
+```
+
 !!! warning "OIDC spec trade-off"
     The OIDC spec expects `sub` to be a stable, unique identifier (like a UUID). Overriding it with a username is fine for internal tools like the MCP Server, but if a user renames their account, database permissions tied to the old name will break.
 
@@ -235,6 +250,9 @@ GRANT SELECT ON TABLE products TO jdoe;
 !!! note "Why `profile` scope is required"
     Keycloak's userinfo endpoint only returns `preferred_username` when the token includes the `profile` scope. Without it, the endpoint returns only the `sub` claim (a UUID by default).
 
+!!! important "Keycloak does not produce a `username` claim automatically"
+    The MCP server's username extraction priority is: `username` → `preferred_username` → email prefix → sanitized `sub`. Keycloak does **not** produce a `username` claim by default — it only appears if you explicitly configure a User Attribute mapper. In practice, `preferred_username` (item 2 in the priority) is the reliable choice for Keycloak, and it works automatically when the `profile` scope is present.
+
 !!! note "Federated identity (LDAP / Social login)"
     If Keycloak federates users from an external LDAP or social provider, the `sub` claim may be a UUID that doesn't match a database account. Ensure federated users have `preferred_username` set, or add the sub override mapper ([Part 4](#part-4-add-the-sub-override-mapper-optional)), or set `user_impersonation: false`.
 
@@ -279,6 +297,7 @@ The MCP server requires at minimum `openid email profile` (added automatically).
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | Same as Client ID (after audience mapper) | `actian-mcp` |
 | `FASTMCP_SERVER_AUTH_SCOPE` | Scopes assigned to the client | `openid email profile read:mcp_server` |
 | `user_impersonation` | Your choice | `true` or `false` |
+| `FASTMCP_SERVER_AUTH_REDIRECT_PATH` | (Optional) Custom OAuth callback path | `/auth/callback` (default) |
 
 !!! info "Audience in Keycloak vs Auth0"
     In Auth0, the audience is a separate API Identifier (often a URL). In Keycloak, the audience is typically the **Client ID** itself — but only if you added the audience mapper in [Part 3](#part-3-add-the-audience-mapper-critical). If `FASTMCP_SERVER_AUTH_AUDIENCE` is omitted from config, the server falls back to `CLIENT_ID`, which is the correct behavior for Keycloak.
@@ -383,6 +402,7 @@ curl -s -X POST \
 Decode the `access_token` at [jwt.io](https://jwt.io) and verify:
 
 - `aud` contains your Client ID (e.g. `actian-mcp`)
+- `sub` contains the username (if you added the sub override mapper) or a UUID
 - `preferred_username` contains the login name
 
 ### Common errors
@@ -401,7 +421,7 @@ Decode the `access_token` at [jwt.io](https://jwt.io) and verify:
 | `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start | Set `SSL_CERTFILE`/`SSL_KEYFILE` before `docker compose up` |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN | Regenerate with `-addext "subjectAltName=IP:<ip>"` |
 | `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by Node.js | Trust cert + set `NODE_EXTRA_CA_CERTS` |
-| Token validation behaves unexpectedly | OIDC endpoint unreachable at startup | Restart server after endpoint is accessible |
+| Token validation behaves unexpectedly | OIDC endpoint unreachable at startup | The server falls back to default verification without `TokenCapturingJWTVerifier` — `user_impersonation` will not work even though the server appears to be running. Restart after endpoint is accessible. |
 
 ### Token expiration
 
