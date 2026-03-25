@@ -47,7 +47,7 @@ Add an `oauth` object to your `conf.json` to enable authentication. The server r
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL (e.g. `https://domain/.well-known/openid-configuration`). Must use HTTPS. |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL (e.g. `https://domain/.well-known/openid-configuration`). Use HTTPS in production; `http://` is acceptable for local Keycloak dev. |
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | Yes | OAuth client ID from your identity provider. |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | OAuth client secret. |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | Public URL of the MCP server (e.g. `http://127.0.0.1:8000`). Must be `https://` for non-localhost hosts. |
