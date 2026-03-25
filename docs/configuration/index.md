@@ -22,11 +22,13 @@ The Actian MCP Server is configured via a JSON configuration file. By default it
     "actian_mcp_server.zen.plugin.ZenPlugin",
     "actian_mcp_server.analytics_engine.plugin.AnalyticsEnginePlugin"
   ],
+  "ssl_certfile": "/path/to/server.crt",
+  "ssl_keyfile": "/path/to/server.key",
   "oauth": {
     "FASTMCP_SERVER_AUTH_CONFIG_URL": "https://your-auth-server/.well-known/openid-configuration",
     "FASTMCP_SERVER_AUTH_CLIENT_ID": "your-client-id",
     "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "your-client-secret",
-    "FASTMCP_SERVER_AUTH_BASE_URL": "http://127.0.0.1:8000",
+    "FASTMCP_SERVER_AUTH_BASE_URL": "https://your-server:8000",
     "user_impersonation": true
   },
   "multitenancy": {
@@ -48,6 +50,8 @@ The Actian MCP Server is configured via a JSON configuration file. By default it
 | `server.transport` | string | `"stdio"` | Transport mode: `stdio` or `sse` |
 | `read_only` | boolean | `false` | Restrict all plugins to read-only operations |
 | `log_level` | string | `"INFO"` | Logging level: `DEBUG`, `INFO`, `WARNING`, `ERROR` |
+| `ssl_certfile` | string | — | Path to TLS certificate file. Required for OAuth on non-localhost hosts. Must be provided together with `ssl_keyfile`. |
+| `ssl_keyfile` | string | — | Path to TLS private key file. Required for OAuth on non-localhost hosts. Must be provided together with `ssl_certfile`. |
 
 ---
 
@@ -133,6 +137,26 @@ configuration reference and provider-specific setup guides (Auth0, Keycloak).
 
 !!! note "Transport requirement"
     OAuth is not available with `stdio` transport.
+
+---
+
+## TLS / HTTPS
+
+For OAuth-secured deployments on non-localhost hosts, HTTPS is mandatory. Add `ssl_certfile` and `ssl_keyfile` at the top level of your configuration file:
+
+```json
+{
+  "ssl_certfile": "/path/to/server.crt",
+  "ssl_keyfile":  "/path/to/server.key",
+  "oauth": {
+    "FASTMCP_SERVER_AUTH_BASE_URL": "https://your-server:8000"
+  }
+}
+```
+
+Both fields must be provided together. The server validates at startup that the files exist and that `FASTMCP_SERVER_AUTH_BASE_URL` uses `https://` when SSL is active.
+
+See [HTTPS / TLS for Remote Deployments](../authentication/index.md#https-tls-for-remote-deployments) for certificate generation, Docker setup, and trusting self-signed certs in MCP clients.
 
 ---
 
