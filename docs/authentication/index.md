@@ -164,15 +164,17 @@ The server validates at startup that both paths exist and that `BASE_URL` uses `
 
 ### 3. Docker deployment
 
-Pass the certificate and key paths via environment variables before starting the container:
+Mount the certificate and key into the container using volume flags:
 
 ```bash
-export SSL_CERTFILE=/path/to/server.crt
-export SSL_KEYFILE=/path/to/server.key
-docker compose -f src/analytics_engine/docker/docker-compose.yml up -d
+docker run -p 8000:8000 \
+  -v /path/to/server.crt:/app/server.crt:ro \
+  -v /path/to/server.key:/app/server.key:ro \
+  -v /path/to/conf.json:/app/conf.json:ro \
+  actian/mcp-server:latest
 ```
 
-The compose file mounts these as `/app/server.crt` and `/app/server.key` inside the container. Reference those container paths in `conf.json`:
+Reference the container paths in `conf.json`:
 
 ```json
 {

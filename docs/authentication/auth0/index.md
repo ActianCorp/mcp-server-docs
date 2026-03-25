@@ -350,7 +350,7 @@ You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`,
 | `redirect_uri_mismatch` | Callback URL doesn't match `<BASE_URL>/auth/callback` | Fix **Allowed Callback URLs** in Auth0 (scheme + host + port must match exactly) |
 | `ValueError: Issuer URL must be HTTPS` | OAuth on non-localhost host without TLS | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL` |
 | `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://` | Update `BASE_URL` to `https://` |
-| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start | Set `SSL_CERTFILE`/`SSL_KEYFILE` before `docker compose up` |
+| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start | Mount cert/key as volumes when starting the container (see [Docker deployment](../index.md#3-docker-deployment)) |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN | Regenerate with `-addext "subjectAltName=IP:<ip>"` |
 | `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by Node.js | Trust cert + set `NODE_EXTRA_CA_CERTS` |
 | Token validation behaves unexpectedly | OIDC endpoint unreachable at startup | Restart server after endpoint is accessible |

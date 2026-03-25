@@ -418,7 +418,7 @@ Decode the `access_token` at [jwt.io](https://jwt.io) and verify:
 | `Client not enabled` / `Realm not found` | Realm or client is disabled | Ensure both are Enabled in admin console |
 | `ValueError: Issuer URL must be HTTPS` | OAuth on non-localhost host without TLS | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL` |
 | `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://` | Update `BASE_URL` to `https://` |
-| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start | Set `SSL_CERTFILE`/`SSL_KEYFILE` before `docker compose up` |
+| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start | Mount cert/key as volumes when starting the container (see [Docker deployment](../index.md#3-docker-deployment)) |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN | Regenerate with `-addext "subjectAltName=IP:<ip>"` |
 | `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by Node.js | Trust cert + set `NODE_EXTRA_CA_CERTS` |
 | Token validation behaves unexpectedly | OIDC endpoint unreachable at startup | The server falls back to default verification without `TokenCapturingJWTVerifier` — `user_impersonation` will not work even though the server appears to be running. Restart after endpoint is accessible. |
