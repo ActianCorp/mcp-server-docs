@@ -62,23 +62,6 @@ This keeps the user experience simple: each server endpoint represents one Actia
 
 ---
 
-## Architecture Overview
-
-```
-┌─────────────────────┐        MCP Protocol          ┌─────────────────────────┐
-│   AI Client / Agent │ ◄──────────────────────────► │  Actian MCP Server      │
-│  (Any MCP Client)   │                              │  (One DBMS per        │
-└─────────────────────┘                              │   server/container)   │
-                                                     └───────────┼─────────────┘
-                                                                 │
-                                                     ┌───────────▼─────────────┐
-                                                     │   Actian Data Sources   │
-                                                     │   (Target Actian DBMS)  │
-                                                     └─────────────────────────┘
-```
-
----
-
 ## Why It Matters
 
 The Actian MCP Server makes it easier to connect AI-driven workflows to Actian environments without designing a separate integration for each use case. It gives teams a standard way to expose trusted database capabilities to MCP clients while keeping deployment and control in the server layer.
