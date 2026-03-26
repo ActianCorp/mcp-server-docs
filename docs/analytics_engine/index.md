@@ -27,7 +27,7 @@ With the Analytics Engine server, AI clients can:
 
 When the server is provided as a Docker container, the main user-provided input is a JSON configuration file that is mounted into the container.
 
-The Analytics Engine container starts the MCP Server in **HTTP transport** mode by default, so the configuration should include the network settings the container will use.
+The Analytics Engine container starts the MCP Server in **HTTP transport** mode, so the configuration should include the network settings the container will use.
 
 Create a file such as `conf.json` with the following structure:
 
@@ -60,25 +60,18 @@ Use these fields as follows:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `driver` | `str` | Yes | ODBC driver name used to connect to Actian Analytics Engine |
+| `driver` | `str` | Yes | ODBC driver name used to connect to the Analytics Engine |
 | `server` | `str` | Yes | Host or connection target for the Analytics Engine database |
 | `database` | `str` | Yes | Name of the database the MCP Server connects to |
 | `max_connections` | `int` | Yes | Maximum number of concurrent database connections the server keeps in its pool |
 | `max_rows` | `int` | No | Maximum number of rows returned for a single query response; defaults to `1000` |
 | `host` | `str` | Yes | Host address the MCP Server listens on inside the container |
 | `port` | `str` | Yes | Port the MCP Server listens on inside the container |
-| `database_user` | `str` | Yes | Database user name used to authenticate to Analytics Engine |
-| `database_password` | `str` | Yes | Database password used to authenticate to Analytics Engine |
-| `ssl_certfile` | `str` | No | Path to the TLS certificate file inside the deployment |
-| `ssl_keyfile` | `str` | No | Path to the TLS private key file inside the deployment |
-| `oauth` | `object` | No | OAuth configuration block for protected MCP server deployments |
-| `oauth.FASTMCP_SERVER_AUTH_CONFIG_URL` | `str` | No | OIDC discovery URL used by the MCP Server |
-| `oauth.FASTMCP_SERVER_AUTH_CLIENT_ID` | `str` | No | OAuth client ID for the MCP Server |
-| `oauth.FASTMCP_SERVER_AUTH_CLIENT_SECRET` | `str` | No | OAuth client secret for the MCP Server |
-| `oauth.FASTMCP_SERVER_AUTH_BASE_URL` | `str` | No | Public base URL of the MCP Server |
-| `oauth.FASTMCP_SERVER_AUTH_AUDIENCE` | `str` | No | OAuth audience value expected by the server |
-| `oauth.FASTMCP_SERVER_AUTH_SCOPE` | `str` | No | OAuth scopes requested for client access |
-| `oauth.user_impersonation` | `bool` | No | Controls whether the authenticated user identity is forwarded to the database |
+| `database_user` | `str` | Yes | Database user name |
+| `database_password` | `str` | Yes | Database password |
+| `ssl_certfile` | `str` | No | Path to the TLS certificate file |
+| `ssl_keyfile` | `str` | No | Path to the TLS private key file |
+| `oauth` | `object` | No | OAuth configuration block for protected MCP server deployments. See [The `oauth` Configuration Block](../authentication/index.md#the-oauth-configuration-block) for the required fields in the `oauth` block |
 
 ---
 
