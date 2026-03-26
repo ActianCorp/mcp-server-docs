@@ -585,6 +585,26 @@ pre code .hljs-literal {
   color: #bd93f9 !important;
 }
 
+/* Catch-all for unclassed text in code blocks */
+.highlight .n,
+.highlight .ne,
+.highlight .ni,
+.highlight .nl,
+.highlight .no,
+.highlight .nd,
+.highlight .ow,
+.highlight .w,
+.highlight .x,
+.highlight .fm,
+.highlight .vm,
+.highlight .vc,
+.highlight .vg,
+.highlight .vi,
+.highlight span:not([class]),
+pre code span:not([class]) {
+  color: #e3e8ef !important;
+}
+
 /* MkDocs Material specific overrides */
 .md-typeset code {
   font-size: 15px !important;

@@ -1,8 +1,8 @@
 #Project Information
-site_name: Actian MCP Server
+site_name: Actian Zen MCP Server
 site_url: https://help.actian-software.com/actian-mcp-server/latest/
 site_description: >-
-  Documentation for the Actian MCP Server — connect AI agents to Actian data sources via the Model Context Protocol.
+  Documentation for the Actian Zen MCP Server — connect AI agents to Actian Zen databases via the Model Context Protocol.
 use_directory_urls: false
 docs_dir: docs
 site_dir: site 

@@ -1,108 +1,143 @@
 ---
 title: Get Started
-description: Install, configure, and run your first Actian MCP Server in minutes.
+description: Install, configure, and run the Actian Zen MCP Server.
 ---
 
-# Get started
+# Get Started
 
-Get the Actian MCP Server running in your environment quickly.
+Get the Actian Zen MCP Server running in your environment.
+
+---
 
 ## Prerequisites
 
-- **Python 3.10+**
-- Access to an **Actian Zen** database or **Actian Analytics Engine**
-- An MCP-compatible AI client (Claude Desktop, Cursor, or any MCP client)
+- **Python 3.12+** and **uv** package manager
+- **Actian Zen** engine running with ODBC configured
+- An MCP-compatible AI client (Claude Desktop, Cursor, VS Code)
 
-Verify Python:
+Verify:
 
 ```bash
-python --version   # 3.10 or later
-pip --version
+python --version   # 3.12 or later
+uv --version
 ```
+
+---
 
 ## Installation
 
 ```bash
-pip install actian-mcp-server
+git clone https://alm.actian.com/bitbucket/scm/~alokaj/actian_mcp_server.git
+cd actian_mcp_server
+uv sync
 ```
 
-Verify the installation:
+---
 
-```bash
-actian-mcp-server --version
-```
+## Quick Configuration
 
-## Quick configuration
-
-Create a `conf.json` file:
+Create `zen_config.json` in the project root:
 
 ```json
 {
-  "server": {
-    "name": "actian-mcp-server",
+    "database": "DEMODATA",
+    "readonly": true,
     "transport": "stdio"
-  },
-  "plugins": [
-    "actian_mcp_server.zen.plugin.ZenPlugin"
-  ],
-  "zen": {
-    "dsn": "MyDatabase",
-    "host": "localhost",
-    "port": 1583,
-    "username": "admin",
-    "password": "yourpassword"
-  }
 }
 ```
+
+Or use a DSN name directly via CLI:
+
+```bash
+uv run actian-mcp-server --dbms zen --dsn DEMODATA
+```
+
+---
+
+## Start the Server
+
+### stdio (for IDE integration)
+
+```bash
+uv run actian-mcp-server --dbms zen --transport stdio
+```
+
+### HTTP (for container / remote access)
+
+```bash
+uv run actian-mcp-server --dbms zen --transport streamable-http
+```
+
+Server listens on `http://localhost:8000/mcp`.
+
+---
 
 ## Connect to Claude Desktop
 
-Add the server to Claude Desktop's configuration file at  
-`~/Library/Application Support/Claude/claude_desktop_config.json`:
+Add to `claude_desktop_config.json`:
 
 ```json
 {
-  "mcpServers": {
-    "actian": {
-      "command": "actian-mcp-server",
-      "args": ["--config", "/path/to/conf.json"]
+    "mcpServers": {
+        "actian-zen": {
+            "command": "uv",
+            "args": ["run", "actian-mcp-server", "--dbms", "zen", "--dsn", "DEMODATA"]
+        }
     }
-  }
 }
 ```
 
-Restart Claude Desktop. You should see the Actian MCP tools available.
+Restart Claude Desktop.
 
-## Connect to Cursor
+---
 
-In Cursor settings, add the following under **MCP Servers**:
+## Connect to Cursor / VS Code
+
+For stdio (local):
 
 ```json
 {
-  "actian": {
-    "command": "actian-mcp-server",
-    "args": ["--config", "/path/to/conf.json"]
-  }
+    "mcpServers": {
+        "actian-zen": {
+            "command": "uv",
+            "args": ["run", "actian-mcp-server", "--dbms", "zen", "--dsn", "DEMODATA"]
+        }
+    }
 }
 ```
 
-## Test the connection
+For container (HTTP):
 
-Start the server manually to confirm that it works:
+```json
+{
+    "mcpServers": {
+        "actian-zen": {
+            "url": "http://localhost:8000/mcp"
+        }
+    }
+}
+```
+
+---
+
+## Test the Connection
 
 ```bash
-actian-mcp-server --config conf.json --transport stdio
+uv run actian-mcp-server --dbms zen --dsn DEMODATA --transport stdio
 ```
 
 You should see:
 
 ```
-INFO  Actian MCP Server 1.0.0 starting...
-INFO  Loaded plugin: ZenPlugin
-INFO  Server ready. Waiting for MCP client...
+INFO  Schema summary injected into server instructions
+INFO  Uvicorn running on http://0.0.0.0:8000
 ```
 
-## Next steps
+---
 
-- [Configuration](configuration.md) — All server and plugin options
-- [Deployment](deployment.md) — Deploy with Docker or in production
+## Next Steps
+
+- [Configuration](../configuration/index.md) — Connection options, readonly mode, CLI arguments
+- [Deployment](../deployment/index.md) — Podman container deployment
+- [Testing](../testing/index.md) — QA test plan and results
+- [Develop with MCP](../develop_with_mcp/index.md) — Build custom tools and plugins
