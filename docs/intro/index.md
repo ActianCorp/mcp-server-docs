@@ -43,7 +43,7 @@ The server handles the surrounding concerns such as transport, configuration, au
 - **MCP-native capabilities** — Expose tools, resources, and prompts in a standard format
 - **Container-friendly deployment** — Run a server instance for a specific Actian DBMS in its own container
 - **OAuth 2.0 support** — Secure authentication for MCP clients
-- **Transport** — Server runs in `streamable-http` transport mode
+- **Transport** — Server runs in `http` transport mode
 - **Read-only mode** — Restrict AI agents to read-only database operations
 - **Schema discovery** — Let AI agents inspect database structure and metadata
 
@@ -51,14 +51,14 @@ The server handles the surrounding concerns such as transport, configuration, au
 
 ## How It Works
 
-In a typical deployment, each Actian DBMS is served by its own Actian MCP Server instance.
+Each Actian DBMS is served by its own Actian MCP Server instance.
 
-- A server instance starts with the selected transport and configuration
+- A server instance starts with the user selected configuration
 - The server connects to one target Actian DBMS
 - The server exposes database tools, resources, and prompts through MCP
 - An AI client uses those MCP capabilities to query data and inspect metadata
 
-This keeps the user experience simple: each server endpoint represents one Actian database environment that an MCP client can connect to directly.
+This keeps the user experience simple: each server instance represents one Actian database environment that an MCP client can connect to directly.
 
 ---
 
@@ -71,5 +71,4 @@ The Actian MCP Server makes it easier to connect AI-driven workflows to Actian e
 ## Next Steps
 
 - [Get Started](../get_started/index.md) — Install and run your first MCP server
-- [Develop with MCP](../develop_with_mcp/index.md) — Build tools, resources, and prompts
 - [Configuration](../configuration/index.md) — Configure the server for your environment

@@ -45,8 +45,6 @@ You are a database expert. Answer the following question: <question>
 }
 ```
 
-### Success Response Example
-
 ```text
 You are a database expert. Answer the following question: What are the top 5 customers by revenue this quarter?
 ```
