@@ -5,9 +5,7 @@ description: Deploy the Actian MCP Server in different environments — local, D
 
 # Deployment
 
-The Actian MCP Server can be deployed in multiple ways depending on your use case.
-
----
+You can deploy the Actian MCP Server in multiple ways depending on your use case.
 
 ## Local (stdio)
 
@@ -15,7 +13,7 @@ The simplest deployment — ideal for desktop AI tools like **Claude Desktop** o
 
 ### Prerequisites
 
-- Python 3.10+
+- Python 3.10 or later
 - Actian Zen or Analytics Engine accessible from the machine
 
 ### Install
@@ -26,7 +24,7 @@ pip install actian-mcp-server
 
 ### Configure Claude Desktop
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+Add the following to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
 {
@@ -41,7 +39,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ### Configure Cursor
 
-Add to Cursor's MCP settings:
+Add the following to Cursor's MCP settings:
 
 ```json
 {
@@ -52,13 +50,11 @@ Add to Cursor's MCP settings:
 }
 ```
 
----
-
 ## Docker
 
 Run the server as a Docker container with SSE transport for remote access.
 
-### Using the pre-built image
+### Using the prebuilt image
 
 ```bash
 docker run -p 8080:8080 \
@@ -85,13 +81,11 @@ services:
     restart: unless-stopped
 ```
 
-Start with:
+Start the service:
 
 ```bash
 docker compose up -d
 ```
-
----
 
 ## Production (SSE)
 
@@ -111,7 +105,7 @@ For production deployments, use SSE transport behind a reverse proxy.
 
 For OAuth-secured deployments, add an `oauth` block to your configuration.
 See [Authentication](../authentication/index.md) for the full configuration
-reference and provider setup guides (Auth0, Keycloak).
+reference and provider setup guides (Auth0 and Keycloak).
 
 ### nginx reverse proxy
 
@@ -131,9 +125,7 @@ server {
 }
 ```
 
----
-
-## Health Check
+## Health check
 
 The SSE server exposes a health endpoint:
 
@@ -141,8 +133,6 @@ The SSE server exposes a health endpoint:
 curl http://localhost:8080/health
 # {"status": "ok", "version": "1.0.0"}
 ```
-
----
 
 ## Updating
 
@@ -157,9 +147,6 @@ docker pull actian/mcp-server:latest
 docker compose up -d
 ```
 
----
+## Next steps
 
-## Next Steps
-
-- [Configuration](../configuration/index.md) — Full configuration reference
-- [API Reference](../APIs/index.md) — Server and plugin API
+- [Configuration](configuration.md) — Full configuration reference

@@ -1,3 +1,64 @@
+/* Table header styling */
+.md-typeset table:not([class]) th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+    background-color: #2e303e;
+}
+
+/* ── Footer navigation (prev / next) inside content column ── */
+.md-content-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-default-bg-color);
+}
+
+.md-content-footer__link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--md-default-fg-color);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.md-content-footer__link:hover {
+  color: var(--md-typeset-a-color);
+}
+
+.md-content-footer__link--next {
+  margin-left: auto;
+}
+
+.md-content-footer__direction {
+  display: block;
+  font-size: 0.64rem;
+  color: var(--md-default-fg-color--light);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.md-content-footer__title .md-ellipsis {
+  color: var(--md-typeset-a-color);
+}
+
+.md-content-footer__button svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: var(--md-default-fg-color--light);
+}
+
+/* Hide the original full-width footer nav */
+.md-footer__inner {
+  display: none;
+}
+
 .md-tabs__link--active {
     border-bottom: 2px solid #FFF;
     font-weight: 600;

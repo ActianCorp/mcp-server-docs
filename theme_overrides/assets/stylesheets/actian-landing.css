@@ -206,6 +206,94 @@
 }
 
 /* ===================
+   Supported Databases Section
+   =================== */
+
+.databases-section {
+  max-width: 1600px;
+  margin: 4rem auto 0;
+  padding: 0 3rem 3rem;
+}
+
+.databases-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.databases-header h3.jumbo-heading {
+  font-family: var(--serif-font);
+  font-size: 43px;
+  line-height: 52px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0;
+}
+
+.databases-subtitle {
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--md-default-fg-color);
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 0;
+}
+
+.databases-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+}
+
+.database-card {
+  display: block;
+  text-decoration: none !important;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.database-card:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.database-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0;
+  color: var(--md-default-fg-color);
+}
+
+.database-description {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--md-default-fg-color--light);
+  margin: 0;
+  padding-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .databases-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .databases-header h3.jumbo-heading {
+    font-size: 36px;
+    line-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .databases-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===================
    Features Section
    =================== */
 

@@ -7,17 +7,13 @@ description: Overview of the prompts available when using the Actian MCP Server 
 
 The Actian MCP Server for **Actian Analytics Engine** exposes a built-in prompt for general database questions.
 
----
-
-## Available Prompts
+## Available prompts
 
 The Analytics Engine integration provides the following prompt:
 
 | Prompt | Purpose |
 |--------|---------|
-| `ask_question` | Generate a database-oriented prompt from a user question |
-
----
+| `ask_question` | Generates a database-oriented prompt from a user question. |
 
 ## ask_question
 
@@ -29,7 +25,7 @@ Renders a database expert prompt from a supplied question and returns the result
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `question` | `string` | Yes | User question to be inserted into the prompt |
+| `question` | `string` | Yes | User question to insert into the prompt. |
 
 ### Output Schema
 
@@ -49,8 +45,7 @@ You are a database expert. Answer the following question: <question>
 You are a database expert. Answer the following question: What are the top 5 customers by revenue this quarter?
 ```
 
----
+## Next steps
 
-## Next Steps
 - [Tools](../tools/index.md) — Learn about Analytics Engine tools
 - [Resources](../resources/index.md) — Learn about Analytics Engine resources

@@ -7,17 +7,13 @@ description: Overview of the resources available when using the Actian MCP Serve
 
 The Actian MCP Server for **Actian Analytics Engine** exposes a built-in resource for database schema discovery.
 
----
-
-## Available Resources
+## Available resources
 
 The Analytics Engine integration provides the following resource:
 
 | Resource URI | Purpose |
 |-----|-------------|
-| `resource://database/schema` | Return database schema metadata for the connected database |
-
----
+| `resource://database/schema` | Returns database schema metadata for the connected database. |
 
 ## resource://database/schema
 
@@ -27,7 +23,7 @@ Returns the database schema as JSON, including tables, columns, comments, and co
 
 ### Input Parameters
 
-This resource does not require any input parameters.
+This resource doesn't require any input parameters.
 
 ### Output Schema
 
@@ -97,8 +93,7 @@ resource://database/schema
 }
 ```
 
----
+## Next steps
 
-## Next Steps
 - [Tools](../tools/index.md) — Learn about Analytics Engine tools
 - [Prompts](../prompts/index.md) — Learn about Analytics Engine prompts

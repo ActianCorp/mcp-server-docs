@@ -8,11 +8,9 @@ description: Enable OAuth 2.0 / OIDC authentication for the Actian MCP Server �
 The Actian MCP Server supports **OAuth 2.0 / OpenID Connect (OIDC)** authentication. When enabled, every client request must carry a valid JWT (JSON Web Token) issued by a trusted identity provider (IdP).
 
 !!! note "Transport requirement"
-    OAuth is only available with network transports: `sse`, `http`, and `streamable-http`. The `stdio` transport (used for IDE integrations like Claude Desktop and Cursor) does **not** support OAuth.
+    OAuth is only available with network transports: `sse`, `http`, and `streamable-http`. The `stdio` transport (used for IDE integrations like Claude Desktop and Cursor) doesn't support OAuth.
 
----
-
-## How OAuth Works
+## How OAuth works
 
 The MCP server acts as an **OIDC Relying Party**. When a client connects for the first time, the server redirects the user's browser to the identity provider's login page. After successful authentication, the IdP issues a token that the client includes in every subsequent request.
 
@@ -39,22 +37,20 @@ sequenceDiagram
     end
 ```
 
----
-
-## The `oauth` Configuration Block
+## The `oauth` configuration block
 
 Add an `oauth` object to your `conf.json` to enable authentication. The server reads these fields at startup:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL (e.g. `https://domain/.well-known/openid-configuration`). Use HTTPS in production; `http://` is acceptable for local Keycloak dev. |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL (for example, `https://domain/.well-known/openid-configuration`). Use HTTPS in production; `http://` is acceptable for local Keycloak development. |
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | Yes | OAuth client ID from your identity provider. |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | OAuth client secret. |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | Public URL of the MCP server (e.g. `http://127.0.0.1:8000`). Must be `https://` for non-localhost hosts. |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | Public URL of the MCP server (for example, `http://127.0.0.1:8000`). Must be `https://` for non-localhost hosts. |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | No | Token audience. Falls back to `CLIENT_ID` if omitted (standard for Keycloak). Auth0 requires an explicit audience. |
-| `FASTMCP_SERVER_AUTH_SCOPE` | No | Space-separated scopes (e.g. `read:mcp_server`). `openid`, `email`, and `profile` are always auto-appended. |
+| `FASTMCP_SERVER_AUTH_SCOPE` | No | Space-separated scopes (for example, `read:mcp_server`). The scopes `openid`, `email`, and `profile` are always auto-appended. |
 | `FASTMCP_SERVER_AUTH_REDIRECT_PATH` | No | Custom OAuth callback path. Defaults to `/auth/callback`. |
-| `user_impersonation` | No | Boolean. When `true` (default), the server runs each query as the authenticated user via `SET SESSION AUTHORIZATION`. |
+| `user_impersonation` | No | Boolean. When `true` (default), the server runs each query as the authenticated user through `SET SESSION AUTHORIZATION`. |
 
 ### Example
 
@@ -73,28 +69,26 @@ Add an `oauth` object to your `conf.json` to enable authentication. The server r
 ```
 
 !!! warning "All-or-nothing configuration"
-    Provide **all** required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, `BASE_URL`) or **none**. If `CONFIG_URL` and `CLIENT_ID` are present but `CLIENT_SECRET` or `BASE_URL` is missing, the server will fail to start with a `KeyError`. To disable OAuth, remove the entire `oauth` block.
+    Provide **all** required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or **none**. If `CONFIG_URL` and `CLIENT_ID` are present but `CLIENT_SECRET` or `BASE_URL` is missing, the server fails to start with a `KeyError`. To disable OAuth, remove the entire `oauth` block.
 
 !!! info "Scope auto-append"
-    The scopes `openid`, `email`, and `profile` are always included automatically, even if you don't specify `FASTMCP_SERVER_AUTH_SCOPE`. You only need to add custom scopes (e.g. `read:mcp_server`).
+    The scopes `openid`, `email`, and `profile` are always included automatically, even if you don't specify `FASTMCP_SERVER_AUTH_SCOPE`. You only need to add custom scopes (for example, `read:mcp_server`).
 
----
+## User impersonation
 
-## User Impersonation
+When `user_impersonation` is `true` (the default), the server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before each database query. This ensures that each user operates under their own database permissions.
 
-When `user_impersonation` is `true` (the default), the server extracts a username from the authenticated user's JWT and executes `SET SESSION AUTHORIZATION "<username>"` before each database query. This ensures that each user operates under their own database permissions.
+### Behavior
 
-### Behaviour
-
-| `user_impersonation` | Behaviour |
+| `user_impersonation` | Behavior |
 |----------------------|-----------|
 | `true` (default) | JWT verified + `SET SESSION AUTHORIZATION "<user>"` per query. Every OAuth user needs a matching database account. |
 | `false` | JWT still verified (unauthenticated requests are rejected), but all queries run under the service-account pool credentials. |
 
-!!! warning "Zen does not support user impersonation"
-    Actian Zen does not support `SET SESSION AUTHORIZATION`. If you are using the Zen plugin, set `user_impersonation` to `false` in the `oauth` block. The server will still enforce JWT authentication — only the per-user database switching is skipped.
+!!! warning "Zen doesn't support user impersonation"
+    Actian Zen doesn't support `SET SESSION AUTHORIZATION`. If you're using the Zen plugin, set `user_impersonation` to `false` in the `oauth` block. The server still enforces JWT authentication—only the per-user database switching is skipped.
 
-### Username Extraction Priority
+### Username extraction priority
 
 The server extracts the database username from the token using the following priority order. It first queries the IdP's **userinfo endpoint**; if that fails, it falls back to the **token claims** directly.
 
@@ -117,16 +111,14 @@ flowchart TD
     L --> M[Execute query]
 ```
 
-!!! tip "Provider-specific behaviour"
-    - **Auth0**: Does not return `username` or `preferred_username` by default. In practice, the **email prefix** is used. Create database users matching the email prefix (e.g. `jdoe@example.com` → database user `jdoe`).
+!!! tip "Provider-specific behavior"
+    - **Auth0**: Doesn't return `username` or `preferred_username` by default. In practice, the **email prefix** is used. Create database users matching the email prefix (for example, `jdoe@example.com` → database user `jdoe`).
     - **Keycloak**: Returns `preferred_username` by default when the `profile` scope is present. Create database users matching the Keycloak login name.
-    - **Federated identity** (Google, SAML, corporate SSO): The `sub` claim may be a provider-specific ID (e.g. `google-oauth2|12345`) that doesn't match a database account. For SSO setups, set `user_impersonation` to `false` or ensure the IdP profile contains a `username` that matches the database account.
+    - **Federated identity** (Google, SAML, and corporate SSO): The `sub` claim may be a provider-specific ID (for example, `google-oauth2|12345`) that doesn't match a database account. For SSO setups, set `user_impersonation` to `false` or ensure the IdP profile contains a `username` that matches the database account.
 
----
+## HTTPS / TLS for remote deployments
 
-## HTTPS / TLS for Remote Deployments
-
-OAuth 2.0 requires HTTPS for non-localhost hosts. When OAuth is configured and the server runs on a non-localhost address (e.g. a VM or container), HTTPS is **mandatory** — the server will refuse to start without `ssl_certfile` and `ssl_keyfile`.
+OAuth 2.0 requires HTTPS for non-localhost hosts. When OAuth is configured and the server runs on a non-localhost address (for example, a VM or container), HTTPS is **mandatory**—the server refuses to start without `ssl_certfile` and `ssl_keyfile`.
 
 ### 1. Generate a certificate
 
@@ -192,7 +184,7 @@ Reference the container paths in `conf.json`:
 
 ### 4. Trust the certificate in your MCP client
 
-Self-signed certificates are rejected by Node.js-based MCP clients (VS Code, Cursor) by default. Copy the cert to your development machine first:
+Self-signed certificates are rejected by Node.js-based MCP clients (VS Code and Cursor) by default. Copy the certificate to your development machine first:
 
 ```bash
 scp user@<your-vm>:/path/to/server.crt ~/server.crt
@@ -243,21 +235,17 @@ scp user@<your-vm>:/path/to/server.crt ~/server.crt
     # Fully restart VS Code after setting the variable
     ```
 
----
-
-## Security Best Practices
+## Security best practices
 
 !!! danger "Protect your secrets"
     The `conf.json` file contains `CLIENT_SECRET` in plaintext. Follow these practices:
 
     - **Restrict file permissions**: `chmod 600 conf.json`
-    - **Never commit to version control**: Add `conf.json` to `.gitignore`
+    - **Never commit to version control**: Add `conf.json` to `.gitignore`.
     - **Use HTTPS for `BASE_URL` in production**: Tokens sent over plain HTTP can be intercepted. The `http://127.0.0.1` examples are for local development only.
-    - **Production secrets management**: Consider injecting secrets via environment variables or a secrets manager.
+    - **Production secrets management**: Consider injecting secrets through environment variables or a secrets manager.
 
----
-
-## Provider Setup Guides
+## Provider setup guides
 
 Choose your identity provider for step-by-step setup instructions:
 
@@ -269,7 +257,7 @@ Choose your identity provider for step-by-step setup instructions:
 
     Cloud-hosted identity provider. Ideal for teams that want a managed service with no infrastructure to maintain.
 
-    [:octicons-arrow-right-24: Auth0 Setup Guide](auth0/index.md)
+    [:octicons-arrow-right-24: Auth0 setup guide](auth0/index.md)
 
 -   **Keycloak**
 
@@ -277,6 +265,6 @@ Choose your identity provider for step-by-step setup instructions:
 
     Open-source, self-hosted identity provider. Ideal for teams that need full control over their authentication infrastructure.
 
-    [:octicons-arrow-right-24: Keycloak Setup Guide](keycloak/index.md)
+    [:octicons-arrow-right-24: Keycloak setup guide](keycloak/index.md)
 
 </div>

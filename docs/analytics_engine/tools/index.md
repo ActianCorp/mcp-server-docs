@@ -7,20 +7,16 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 The Actian MCP Server for **Actian Analytics Engine** exposes a set of built-in tools for database discovery and read-only query execution.
 
----
-
-## Available Tools
+## Available tools
 
 The Analytics Engine integration provides the following tools:
 
 | Tool | Purpose |
 |------|---------|
-| `execute_query` | Run a read-only SQL query against the connected database |
-| `list_tables` | List available user tables and views |
-| `describe_table` | Show column definitions and comments for a table |
-| `list_functions` | List available user-defined functions and procedures |
-
----
+| `execute_query` | Runs a read-only SQL query against the connected database. |
+| `list_tables` | Lists available user tables and views. |
+| `describe_table` | Shows column definitions and comments for a table. |
+| `list_functions` | Lists available user-defined functions and procedures. |
 
 ## execute_query
 
@@ -32,7 +28,7 @@ Executes a read-only SQL query against Actian Analytics Engine and returns the r
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `query` | `string` | Yes | Read-only SQL query to execute |
+| `query` | `string` | Yes | Read-only SQL query to execute. |
 
 ### Output Schema
 
@@ -42,11 +38,13 @@ Executes a read-only SQL query against Actian Analytics Engine and returns the r
 	"columns": ["<result_columns>"],
 	"rows": [["<result_rows>"]],
 	"row_count": "<num_rows>",
-    // optional args below: only if the number of table rows is bigger than max_rows configuration
 	"truncated": true,
 	"warning": "Results were truncated to <max_rows> rows."
 }
 ```
+
+!!! note
+    The `truncated` and `warning` fields appear only when the number of result rows exceeds the `max_rows` configuration.
 
 On error:
 
@@ -60,7 +58,7 @@ On error:
 ### Example
 
 ```
-Show me all the rows in the custumers table
+Show me all the rows in the customers table
 ```
 
 ```json
@@ -83,8 +81,6 @@ Show me all the rows in the custumers table
 }
 ```
 
----
-
 ## list_tables
 
 ### Description
@@ -93,7 +89,7 @@ Returns all user tables and views available in the connected database as structu
 
 ### Input Parameters
 
-This tool does not require any input parameters.
+This tool doesn't require any input parameters.
 
 ### Output Schema
 
@@ -137,8 +133,6 @@ This tool takes no input.
 }
 ```
 
----
-
 ## describe_table
 
 ### Description
@@ -149,7 +143,7 @@ Returns schema details for a table, including column names, data types, lengths,
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `table_name` | `string` | Yes | Name of the table to describe |
+| `table_name` | `string` | Yes | Name of the table to describe. |
 
 ### Output Schema
 
@@ -218,8 +212,6 @@ Show me schema information about the customers table
 }
 ```
 
----
-
 ## list_functions
 
 ### Description
@@ -228,7 +220,7 @@ Returns user-defined functions and procedures, including their stored definition
 
 ### Input Parameters
 
-This tool does not require any input parameters.
+This tool doesn't require any input parameters.
 
 ### Output Schema
 
@@ -272,8 +264,7 @@ This tool takes no input.
 }
 ```
 
----
+## Next steps
 
-## Next Steps
 - [Resources](../resources/index.md) — Learn about Analytics Engine resources
 - [Prompts](../prompts/index.md) — Learn about Analytics Engine prompts

@@ -3,11 +3,9 @@ title: Get Started
 description: Install, configure, and run your first Actian MCP Server in minutes.
 ---
 
-# Get Started
+# Get started
 
 Get the Actian MCP Server running in your environment quickly.
-
----
 
 ## Prerequisites
 
@@ -22,8 +20,6 @@ python --version   # 3.10 or later
 pip --version
 ```
 
----
-
 ## Installation
 
 ```bash
@@ -36,9 +32,7 @@ Verify the installation:
 actian-mcp-server --version
 ```
 
----
-
-## Quick Configuration
+## Quick configuration
 
 Create a `conf.json` file:
 
@@ -61,11 +55,9 @@ Create a `conf.json` file:
 }
 ```
 
----
-
 ## Connect to Claude Desktop
 
-Add the server to Claude Desktop's config at  
+Add the server to Claude Desktop's configuration file at  
 `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
@@ -81,11 +73,9 @@ Add the server to Claude Desktop's config at
 
 Restart Claude Desktop. You should see the Actian MCP tools available.
 
----
-
 ## Connect to Cursor
 
-In Cursor settings, add under **MCP Servers**:
+In Cursor settings, add the following under **MCP Servers**:
 
 ```json
 {
@@ -96,11 +86,9 @@ In Cursor settings, add under **MCP Servers**:
 }
 ```
 
----
+## Test the connection
 
-## Test the Connection
-
-Start the server manually to confirm it works:
+Start the server manually to confirm that it works:
 
 ```bash
 actian-mcp-server --config conf.json --transport stdio
@@ -114,10 +102,7 @@ INFO  Loaded plugin: ZenPlugin
 INFO  Server ready. Waiting for MCP client...
 ```
 
----
+## Next steps
 
-## Next Steps
-
-- [Configuration](../configuration/index.md) — All server and plugin options
-- [Develop with MCP](../develop_with_mcp/index.md) — Build custom tools and plugins
-- [Deployment](../deployment/index.md) — Deploy with Docker or in production
+- [Configuration](configuration.md) — All server and plugin options
+- [Deployment](deployment.md) — Deploy with Docker or in production

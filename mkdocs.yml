@@ -13,11 +13,13 @@ theme:
   language: en
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.indexes
     - navigation.top
     - navigation.instant
     - navigation.prune
     - navigation.path
+    - navigation.footer
     - search.highlight
     - search.share
     - search.suggest
@@ -26,18 +28,18 @@ theme:
     - content.code.annotate
     - content.action.edit
   palette:
-    - scheme: default
-      primary: custom
-      accent: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to dark mode
     - scheme: slate
       primary: custom
       accent: indigo
       toggle:
         icon: material/brightness-7
         name: Switch to light mode
+    - scheme: default
+      primary: custom
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
   custom_dir: theme_overrides/
   icon:
     repo: fontawesome/brands/github

@@ -3,8 +3,6 @@ nav:
   - index.md
   - intro
   - get_started
-  - analytics_engine
-  - configuration
-  - authentication
-  - deployment
   - mcp_clients
+  - authentication
+  - analytics_engine

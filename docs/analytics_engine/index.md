@@ -9,25 +9,21 @@ This page explains how to use the **Actian MCP Server** with **Actian Analytics 
 
 When configured for Analytics Engine, the server gives an MCP-compatible client a simple way to explore schema information and run read-only database queries through a standard interface.
 
----
-
-## What You Can Do
+## What you can do
 
 With the Analytics Engine server, AI clients can:
 
-- Run **read-only SQL queries**
-- List available tables and views
-- Inspect the structure of a specific table
-- Read database schema metadata
-- List user-defined functions and procedures
-
----
+- Run **read-only SQL queries**.
+- List available tables and views.
+- Inspect the structure of a specific table.
+- Read database schema metadata.
+- List user-defined functions and procedures.
 
 ## Configuration
 
-When the server is provided as a Docker container, the main user-provided input is a JSON configuration file that is mounted into the container.
+When the server is provided as a Docker container, the main user-provided input is a JSON configuration file that's mounted into the container.
 
-The Analytics Engine container starts the MCP Server in **HTTP transport** mode, so the configuration should include the network settings the container will use.
+The Analytics Engine container starts the MCP Server in **HTTP transport** mode, so the configuration should include the network settings that the container will use.
 
 Create a file such as `conf.json` with the following structure:
 
@@ -60,22 +56,20 @@ Use these fields as follows:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `driver` | `str` | Yes | ODBC driver name used to connect to the Analytics Engine |
-| `server` | `str` | Yes | Host or connection target for the Analytics Engine database |
-| `database` | `str` | Yes | Name of the database the MCP Server connects to |
-| `max_connections` | `int` | Yes | Maximum number of concurrent database connections the server keeps in its pool |
-| `max_rows` | `int` | No | Maximum number of rows returned for a single query response; defaults to `1000` |
-| `host` | `str` | Yes | Host address the MCP Server listens on inside the container |
-| `port` | `str` | Yes | Port the MCP Server listens on inside the container |
-| `database_user` | `str` | Yes | Database user name |
-| `database_password` | `str` | Yes | Database password |
-| `ssl_certfile` | `str` | No | Path to the TLS certificate file |
-| `ssl_keyfile` | `str` | No | Path to the TLS private key file |
-| `oauth` | `object` | No | OAuth configuration block for protected MCP server deployments. See [The `oauth` Configuration Block](../authentication/index.md#the-oauth-configuration-block) for the required fields in the `oauth` block |
+| `driver` | `str` | Yes | ODBC driver name used to connect to Analytics Engine. |
+| `server` | `str` | Yes | Host or connection target for the Analytics Engine database. |
+| `database` | `str` | Yes | Name of the database that the MCP Server connects to. |
+| `max_connections` | `int` | Yes | Maximum number of concurrent database connections the server keeps in its pool. |
+| `max_rows` | `int` | No | Maximum number of rows returned for a single query response. Defaults to `1000`. |
+| `host` | `str` | Yes | Host address that the MCP Server listens on inside the container. |
+| `port` | `str` | Yes | Port that the MCP Server listens on inside the container. |
+| `database_user` | `str` | Yes | Database username. |
+| `database_password` | `str` | Yes | Database password. |
+| `ssl_certfile` | `str` | No | Path to the TLS certificate file. |
+| `ssl_keyfile` | `str` | No | Path to the TLS private key file. |
+| `oauth` | `object` | No | OAuth configuration block for protected MCP server deployments. See [The `oauth` configuration block](../authentication/index.md#the-oauth-configuration-block) for the required fields. |
 
----
-
-## Starting the Server
+## Starting the server
 
 Once your configuration file is ready, start the Analytics Engine MCP Server container and mount the file into the container as `/app/conf.json`.
 
@@ -89,31 +83,27 @@ docker run -d \
 
 This example assumes:
 
-- your local configuration file is named `conf.json`
-- the container image reads its configuration from `/app/conf.json`
+- Your local configuration file is named `conf.json`.
+- The container image reads its configuration from `/app/conf.json`.
 
 The container image starts the server with `/app/conf.json`, so the mounted file path inside the container should remain `/app/conf.json`.
 
 After the container starts, connect your MCP client to the exposed server endpoint using the transport configured for your deployment.
 
----
-
-## What Users Should Expect
+## What users should expect
 
 Once the container is running and connected to Analytics Engine, an MCP client can discover the available server capabilities automatically.
 
 In practice, this means a user can ask the client to:
 
-- inspect database structure before writing a query
-- run a read-only query and summarize the results
-- look up details for a specific table
-- review available database functions
+- Inspect database structure before writing a query.
+- Run a read-only query and summarize the results.
+- Look up details for a specific table.
+- Review available database functions.
 
 This keeps Analytics Engine access available through a consistent MCP workflow while the server manages the database connection and response formatting.
 
----
-
-## Next Steps
+## Next steps
 
 - [Tools](tools/index.md) — Learn about Analytics Engine tools
 - [Resources](resources/index.md) — Learn about Analytics Engine resources

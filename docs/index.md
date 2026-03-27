@@ -10,7 +10,7 @@ hide:
 <!-- Hero Section -->
 <div class="actian-hero">
   <blockquote class="hero-quote">
-    Connect AI agents to your Actian data sources with the Model Context Protocol.
+    Connect AI agents to your Actian databases with the Model Context Protocol.
   </blockquote>
 
   <div class="hero-cta">
@@ -23,7 +23,7 @@ hide:
   <div class="value-props-grid">
     <div class="value-prop-item">
       <h3 class="jumbo-heading">Connect</h3>
-      <p class="value-prop-text">Bridge any MCP-compatible AI client — Claude, Cursor, or your own agent — directly to Actian Zen and Analytics Engine.</p>
+      <p class="value-prop-text">Bridge any MCP-compatible AI client directly to Ingres, Analytics Engine, Informix, NoSQL, and Zen.</p>
     </div>
     <div class="value-prop-item">
       <h3 class="jumbo-heading">Extend</h3>
@@ -33,6 +33,43 @@ hide:
       <h3 class="jumbo-heading">Trust</h3>
       <p class="value-prop-text">Secure every connection with OAuth 2.0, read-only mode, and multi-tenant isolation built into the core.</p>
     </div>
+  </div>
+</div>
+
+<!-- Supported Databases Section -->
+<div class="databases-section">
+  <div class="databases-header">
+    <h3 class="jumbo-heading">One server, every Actian database</h3>
+    <p class="databases-subtitle">
+      The Actian MCP Server provides a unified MCP interface across the full Actian database portfolio. Each database has its own tools, resources, and prompts tailored to its capabilities.
+    </p>
+  </div>
+
+  <div class="databases-grid">
+    <a class="database-card" href="./analytics_engine/index.html">
+      <h4 class="database-name">Analytics Engine</h4>
+      <p class="database-description">Column-store analytics database optimized for complex queries, large-scale aggregations, and data warehousing workloads.</p>
+    </a>
+
+    <a class="database-card" href="./ingres/index.html">
+      <h4 class="database-name">Ingres</h4>
+      <p class="database-description">Enterprise relational database with full ACID compliance, robust SQL support, and proven scalability for mission-critical applications.</p>
+    </a>
+
+    <a class="database-card" href="./informix/index.html">
+      <h4 class="database-name">Informix&reg;</h4>
+      <p class="database-description">High-performance relational database designed for OLTP workloads, time-series data, and IoT applications.</p>
+    </a>
+
+    <a class="database-card" href="./nosql/index.html">
+      <h4 class="database-name">NoSQL</h4>
+      <p class="database-description">Flexible document and key-value store for schema-free data models, JSON documents, and rapid application development.</p>
+    </a>
+
+    <a class="database-card" href="./zen/index.html">
+      <h4 class="database-name">Zen</h4>
+      <p class="database-description">Edge-to-cloud embedded database with zero-administration deployment, local and remote data access, and minimal resource requirements.</p>
+    </a>
   </div>
 </div>
 
@@ -72,21 +109,21 @@ hide:
 
   <div class="features-grid">
     <div class="feature-item">
-      <h4 class="feature-title">Tools & Resources</h4>
+      <h4 class="feature-title">Tools & resources</h4>
       <p class="feature-description">Expose SQL execution, schema discovery, and data operations as MCP-native tools and resources.</p>
-      <a href="./develop_with_mcp/index.html" class="primary-link">Develop with MCP →</a>
+      <a href="./analytics_engine/tools/index.html" class="primary-link">Explore tools →</a>
     </div>
 
     <div class="feature-item">
-      <h4 class="feature-title">Plugin Architecture</h4>
-      <p class="feature-description">Extend the server with custom plugins for any Actian product or third-party data source.</p>
-      <a href="./develop_with_mcp/plugins/index.html" class="primary-link">Build a plugin →</a>
+      <h4 class="feature-title">Authentication & security</h4>
+      <p class="feature-description">OAuth 2.0 with Keycloak or Auth0, TLS encryption, read-only mode, and user impersonation out of the box.</p>
+      <a href="./authentication/index.html" class="primary-link">Set up authentication →</a>
     </div>
 
     <div class="feature-item">
-      <h4 class="feature-title">Secure by Default</h4>
-      <p class="feature-description">OAuth 2.0 authentication, read-only mode, and multi-tenancy support out of the box.</p>
-      <a href="./configuration/index.html" class="primary-link">Configure security →</a>
+      <h4 class="feature-title">Flexible deployment</h4>
+      <p class="feature-description">Run locally with stdio, expose over HTTP/SSE for remote clients, or deploy as a Docker container.</p>
+      <a href="./get_started/deployment.html" class="primary-link">Deploy the server →</a>
     </div>
   </div>
 </div>

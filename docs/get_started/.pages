@@ -1,4 +1,5 @@
 title: Get Started
 nav:
   - index.md
-  - ...
+  - configuration.md
+  - deployment.md

@@ -5,11 +5,9 @@ description: Configure the Actian MCP Server for your environment — transports
 
 # Configuration
 
-The Actian MCP Server is configured via a JSON configuration file. By default it looks for `conf.json` in the working directory.
+The Actian MCP Server is configured through a JSON configuration file. By default, it looks for `conf.json` in the working directory.
 
----
-
-## Configuration File
+## Configuration file
 
 ```json
 {
@@ -39,27 +37,23 @@ The Actian MCP Server is configured via a JSON configuration file. By default it
 }
 ```
 
----
-
-## Server Options
+## Server options
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `server.name` | string | `"actian-mcp-server"` | Server name reported to clients |
-| `server.version` | string | `"1.0.0"` | Server version |
-| `server.transport` | string | `"stdio"` | Transport mode: `stdio` or `sse` |
-| `read_only` | boolean | `false` | Restrict all plugins to read-only operations |
-| `log_level` | string | `"INFO"` | Logging level: `DEBUG`, `INFO`, `WARNING`, `ERROR` |
-| `ssl_certfile` | string | — | Path to TLS certificate file. Required for OAuth on non-localhost hosts. Must be provided together with `ssl_keyfile`. |
-| `ssl_keyfile` | string | — | Path to TLS private key file. Required for OAuth on non-localhost hosts. Must be provided together with `ssl_certfile`. |
+| `server.name` | string | `"actian-mcp-server"` | Server name reported to clients. |
+| `server.version` | string | `"1.0.0"` | Server version. |
+| `server.transport` | string | `"stdio"` | Transport mode: `stdio` or `sse`. |
+| `read_only` | boolean | `false` | Restricts all plugins to read-only operations. |
+| `log_level` | string | `"INFO"` | Logging level: `DEBUG`, `INFO`, `WARNING`, or `ERROR`. |
+| `ssl_certfile` | string | — | Path to the TLS certificate file. Required for OAuth on non-localhost hosts. Must be provided together with `ssl_keyfile`. |
+| `ssl_keyfile` | string | — | Path to the TLS private key file. Required for OAuth on non-localhost hosts. Must be provided together with `ssl_certfile`. |
 
----
-
-## Transport Modes
+## Transport modes
 
 ### stdio (default)
 
-Best for IDE integrations (Cursor, VS Code, Claude Desktop). The client launches the server as a subprocess.
+Best for IDE integrations (Cursor, VS Code, and Claude Desktop). The client launches the server as a subprocess.
 
 ```json
 { "server": { "transport": "stdio" } }
@@ -79,11 +73,9 @@ Best for web-based or remote MCP clients.
 }
 ```
 
----
+## Plugin configuration
 
-## Plugin Configuration
-
-List the fully-qualified class paths of plugins to load:
+List the fully qualified class paths of plugins to load:
 
 ```json
 {
@@ -94,9 +86,9 @@ List the fully-qualified class paths of plugins to load:
 }
 ```
 
-Each plugin may accept its own configuration block. See each plugin's documentation for its specific options.
+Each plugin can accept its own configuration block. See each plugin's documentation for its specific options.
 
-### Zen Plugin Options
+### Zen plugin options
 
 ```json
 {
@@ -110,7 +102,7 @@ Each plugin may accept its own configuration block. See each plugin's documentat
 }
 ```
 
-### Analytics Engine Plugin Options
+### Analytics Engine plugin options
 
 ```json
 {
@@ -124,8 +116,6 @@ Each plugin may accept its own configuration block. See each plugin's documentat
 }
 ```
 
----
-
 ## Authentication (OAuth 2.0)
 
 The MCP server supports OAuth 2.0 / OIDC authentication for `sse`, `http`, and
@@ -133,12 +123,10 @@ The MCP server supports OAuth 2.0 / OIDC authentication for `sse`, `http`, and
 
 Add an `oauth` block to your configuration file to enable authentication.
 See the [Authentication](../authentication/index.md) section for the full
-configuration reference and provider-specific setup guides (Auth0, Keycloak).
+configuration reference and provider-specific setup guides (Auth0 and Keycloak).
 
 !!! note "Transport requirement"
-    OAuth is not available with `stdio` transport.
-
----
+    OAuth isn't available with `stdio` transport.
 
 ## TLS / HTTPS
 
@@ -158,11 +146,9 @@ Both fields must be provided together. The server validates at startup that the 
 
 See [HTTPS / TLS for Remote Deployments](../authentication/index.md#https-tls-for-remote-deployments) for certificate generation, Docker setup, and trusting self-signed certs in MCP clients.
 
----
-
 ## Multi-tenancy
 
-When multi-tenancy is enabled, the server uses request context to route each call to the appropriate tenant's data source:
+When multi-tenancy is enabled, the server uses the request context to route each call to the appropriate tenant's data source:
 
 ```json
 {
@@ -173,11 +159,9 @@ When multi-tenancy is enabled, the server uses request context to route each cal
 }
 ```
 
----
+## Environment variables
 
-## Environment Variables
-
-Sensitive values can be provided via environment variables instead of the config file:
+You can provide sensitive values through environment variables instead of the configuration file:
 
 | Variable | Overrides |
 |----------|-----------|
