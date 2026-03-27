@@ -3,7 +3,7 @@ nav:
   - index.md
   - intro
   - get_started
-  - develop_with_mcp
+  - analytics_engine
   - configuration
   - deployment
-  - APIs
+  - mcp_clients
