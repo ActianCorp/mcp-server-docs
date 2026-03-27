@@ -5,5 +5,6 @@ nav:
   - get_started
   - analytics_engine
   - configuration
+  - authentication
   - deployment
   - mcp_clients
