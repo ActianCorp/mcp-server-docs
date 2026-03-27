@@ -1,12 +1,9 @@
-title: Actian Zen MCP Server
+title: Actian MCP Server
 nav:
   - index.md
   - intro
   - get_started
   - mcp_clients
   - authentication
-  - develop_with_mcp
-  - configuration
-  - deployment
-  - testing
-  - APIs
+  - analytics_engine
+  - zen

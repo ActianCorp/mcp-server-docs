@@ -1,173 +1,152 @@
 ---
-title: Zen Deployment
-description: Deploy the Zen MCP Server locally, in a Podman container, or connect from MCP clients like Claude Desktop and Cursor.
+title: Deployment
+description: Deploy the Actian MCP Server in different environments — local, Docker, and production.
 ---
 
-# Zen Deployment
+# Deployment
 
-The Zen MCP Server can run locally via stdio or inside a Podman container with HTTP transport.
-
----
+You can deploy the Actian MCP Server in multiple ways depending on your use case.
 
 ## Local (stdio)
 
-### Install dependencies
+The simplest deployment — ideal for desktop AI tools like **Claude Desktop** or **Cursor**.
+
+### Prerequisites
+
+- Python 3.10 or later
+- Actian Zen or Analytics Engine accessible from the machine
+
+### Install
 
 ```bash
-uv sync
+pip install actian-mcp-server
 ```
 
-### Run the server
+### Configure Claude Desktop
 
-```bash
-uv run actian-mcp-server --dbms zen --dsn DEMODATA
-```
-
-This starts the server in stdio mode. The MCP client (Claude Desktop, Cursor) launches it as a subprocess.
-
----
-
-## Podman Container
-
-### Build the image
-
-```bash
-podman build -f src/zen/docker/Dockerfile-zen -t zen-mcp-server .
-```
-
-### Run via start script
-
-The `start-zen-mcp.ps1` PowerShell script handles networking, IP detection, and port mapping automatically:
-
-```powershell
-.\start-zen-mcp.ps1
-```
-
-### Manual podman run
-
-```bash
-podman run -d --name zen-mcp \
-  -p 8000:8000 \
-  --add-host=host.docker.internal:<host_ip> \
-  actian/zen-mcp-server:latest
-```
-
-Port 8000 serves the MCP HTTP transport.
-
-### Load from a tar archive
-
-If you received the image as a tar file:
-
-```bash
-podman load -i zen-mcp-server.tar
-```
-
-Then run with the commands above.
-
----
-
-## Container Networking
-
-The container needs to reach the Zen engine on the host machine (port 1583). On Windows with WSL:
-
-- The start script probes `host.docker.internal` and detected WSL IP addresses for port 1583 connectivity.
-- Once a reachable IP is found, it is passed to the container as an environment variable.
-- If the Zen engine runs on a different host, set the `ZEN_HOST` environment variable manually.
-
-### WSL IP detection
-
-The `start-zen-mcp.ps1` script discovers the WSL virtual adapter IP and tests whether port 1583 is open before launching the container.
-
----
-
-## Verify the Container
-
-Check container logs:
-
-```bash
-podman logs zen-mcp
-```
-
-Verify the MCP HTTP endpoint is listening:
-
-```bash
-netstat -an | grep 8000
-```
-
----
-
-## MCP Client Configuration
-
-### Claude Desktop
-
-#### stdio mode
-
-Add to `claude_desktop_config.json`:
+Add the following to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
-    "zen": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--directory", "/path/to/actian_mcp_server",
-        "actian-mcp-server",
-        "--dbms", "zen",
-        "--dsn", "DEMODATA"
-      ]
+    "actian": {
+      "command": "actian-mcp-server",
+      "args": ["--config", "/path/to/conf.json"]
     }
   }
 }
 ```
 
-#### HTTP mode (container)
+### Configure Cursor
+
+Add the following to Cursor's MCP settings:
 
 ```json
 {
-  "mcpServers": {
-    "zen": {
-      "url": "http://localhost:8000/mcp"
+  "actian": {
+    "command": "actian-mcp-server",
+    "args": ["--config", "/path/to/conf.json"]
+  }
+}
+```
+
+## Docker
+
+Run the server as a Docker container with SSE transport for remote access.
+
+### Using the prebuilt image
+
+```bash
+docker run -p 8080:8080 \
+  -e MCP_ZEN_DSN=MyDatabase \
+  -e MCP_ZEN_PASSWORD=secret \
+  -v /path/to/conf.json:/app/conf.json \
+  actian/mcp-server:latest
+```
+
+### docker-compose
+
+```yaml
+version: "3.9"
+services:
+  actian-mcp:
+    image: actian/mcp-server:latest
+    ports:
+      - "8080:8080"
+    environment:
+      MCP_ZEN_DSN: MyDatabase
+      MCP_ZEN_PASSWORD: secret
+    volumes:
+      - ./conf.json:/app/conf.json
+    restart: unless-stopped
+```
+
+Start the service:
+
+```bash
+docker compose up -d
+```
+
+## Production (SSE)
+
+For production deployments, use SSE transport behind a reverse proxy.
+
+### Server configuration
+
+```json
+{
+  "server": {
+    "transport": "sse",
+    "host": "0.0.0.0",
+    "port": 8080
+  }
+}
+```
+
+For OAuth-secured deployments, add an `oauth` block to your configuration.
+See [Authentication](../authentication/index.md) for the full configuration
+reference and provider setup guides (Auth0 and Keycloak).
+
+### nginx reverse proxy
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name mcp.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Connection '';
+        proxy_set_header Host $host;
+        proxy_buffering off;
+        proxy_cache off;
     }
-  }
 }
 ```
 
-### Cursor
+## Health check
 
-#### stdio mode
+The SSE server exposes a health endpoint:
 
-Add to Cursor's MCP settings:
-
-```json
-{
-  "zen": {
-    "command": "uv",
-    "args": [
-      "run",
-      "--directory", "/path/to/actian_mcp_server",
-      "actian-mcp-server",
-      "--dbms", "zen",
-      "--dsn", "DEMODATA"
-    ]
-  }
-}
+```bash
+curl http://localhost:8080/health
+# {"status": "ok", "version": "1.0.0"}
 ```
 
-#### HTTP mode (container)
+## Updating
 
-```json
-{
-  "zen": {
-    "url": "http://localhost:8000/mcp"
-  }
-}
+```bash
+pip install --upgrade actian-mcp-server
 ```
 
----
+For Docker:
 
-## Next Steps
+```bash
+docker pull actian/mcp-server:latest
+docker compose up -d
+```
+
+## Next steps
 
 - [Configuration](../configuration/index.md) — Full configuration reference
-- [Tools](../develop_with_mcp/tools/index.md) — Available Zen MCP tools
-- [Testing](../testing/index.md) — QA test plan and results

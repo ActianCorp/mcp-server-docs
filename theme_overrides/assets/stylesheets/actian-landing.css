@@ -571,6 +571,25 @@ pre code .hljs-operator {
   color: #f8f8f2 !important;
 }
 
+/* Plain names and unclassed tokens — catch-all for dark-on-dark readability */
+.highlight .n,
+.highlight .w,
+.highlight .ne,
+.highlight .ni,
+.highlight .nl,
+.highlight .no,
+.highlight .nd,
+.highlight .ow,
+.highlight .x,
+.highlight .fm,
+.highlight .vm,
+.highlight .vc,
+.highlight .vg,
+.highlight .vi,
+.highlight span:not([class]) {
+  color: #e3e8ef !important;
+}
+
 /* Built-ins and Constants */
 .highlight .nb,
 .highlight .bp,
@@ -583,26 +602,6 @@ pre code .hljs-type {
 .highlight .kc,
 pre code .hljs-literal {
   color: #bd93f9 !important;
-}
-
-/* Catch-all for unclassed text in code blocks */
-.highlight .n,
-.highlight .ne,
-.highlight .ni,
-.highlight .nl,
-.highlight .no,
-.highlight .nd,
-.highlight .ow,
-.highlight .w,
-.highlight .x,
-.highlight .fm,
-.highlight .vm,
-.highlight .vc,
-.highlight .vg,
-.highlight .vi,
-.highlight span:not([class]),
-pre code span:not([class]) {
-  color: #e3e8ef !important;
 }
 
 /* MkDocs Material specific overrides */
