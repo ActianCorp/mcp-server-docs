@@ -218,8 +218,5 @@ text-align: center;
     color: #238ffb !important;
 }
 
-/* Giscus feedback component - hide by default until checkbox is selected */
-.custom-style {
-    display: none;
-}
+
 

@@ -59,6 +59,73 @@
   display: none;
 }
 
+/* ── Text feedback form ── */
+.feedback-text-form {
+  margin-top: 0.75rem;
+}
+
+.feedback-text-prompt {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color);
+}
+
+.feedback-optional {
+  color: var(--md-default-fg-color--light);
+}
+
+.feedback-textarea {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  padding: 0.5rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.2rem;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  font-family: inherit;
+  font-size: 0.72rem;
+  resize: vertical;
+}
+
+.feedback-textarea:focus {
+  outline: 2px solid var(--md-accent-fg-color);
+  border-color: transparent;
+}
+
+.feedback-text-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.feedback-submit {
+  font-size: 0.7rem;
+  padding: 0.3rem 1rem;
+  cursor: pointer;
+}
+
+.feedback-skip {
+  background: none;
+  border: none;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.feedback-skip:hover {
+  color: var(--md-default-fg-color);
+}
+
+.feedback-thanks {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color--light);
+}
+
 .md-tabs__link--active {
     border-bottom: 2px solid #FFF;
     font-weight: 600;

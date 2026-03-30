@@ -91,7 +91,20 @@ extra:
     provider: mike
   analytics: 
     provider: custom
-    property: G-7LF0XY95M1
+    property: G-NHC5CN295F
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/thumb-up-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/thumb-down-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback!
 
 
 # Repository
