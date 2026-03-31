@@ -17,10 +17,12 @@ By the end, you'll have all the values needed to populate the `oauth` block in y
 For experienced Auth0 users — the full walkthrough follows below.
 
 1. **Create an API** (Applications → APIs → + Create API). The **Identifier** becomes `FASTMCP_SERVER_AUTH_AUDIENCE`.
-2. **Create an Application** (Applications → Applications → + Create Application → Regular Web Application). Copy the **Client ID** and **Client Secret**.
-3. **Authorize the Application for the API** (APIs → your API → Machine to Machine Applications → toggle your app). _Skip this and you get `invalid_request`._
-4. **Fill `conf.json`** with the values from steps 1–3 plus your Auth0 domain.
-5. **Start the server** with `--transport sse` (or `http` / `streamable-http`).
+2. **Create an Application** (Applications → Applications → + Create Application → **Machine to Machine**). Authorize it for the API when prompted. Copy the **Client ID** and **Client Secret**.
+3. **Authorize the Application for the API** — ensure both **User Access** and **Client Access** show AUTHORIZED (APIs → your API → Application Access → Edit). _Skip this and you get `invalid_request`._
+4. **Enable Authorization Code grant** (Application → Settings → Advanced Settings → Grant Types → check **Authorization Code**).
+5. **Configure Callback URLs** (Application → Settings → Allowed Callback URLs → `<BASE_URL>/auth/callback`).
+6. **Fill `conf.json`** with the values from steps 1–2 plus your Auth0 domain.
+7. **Start the server** with `--transport sse` (or `http` / `streamable-http`).
 
 
 ## Prerequisites
@@ -63,8 +65,10 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
 
 The **Application** represents the MCP server's OAuth client — it holds the `client_id` and `client_secret` used during the OAuth handshake.
 
-!!! note "About the auto-created Test Application"
-    When you created the API in Part 1, Auth0 automatically created a **Machine to Machine (Test Application)**. You _can_ use it for quick local testing, but for production use a **Regular Web Application** as described below — M2M applications have different defaults for token lifetimes, refresh tokens, and grant types.
+!!! note "Why Machine to Machine?"
+    The MCP server's OAuth proxy (OIDCProxy) acts as a **confidential client** — it authenticates with Auth0 using a `CLIENT_ID` + `CLIENT_SECRET` pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients (VS Code, Claude Desktop, etc.) and the OIDCProxy itself — MCP clients never talk to Auth0 directly.
+
+    **Do not use "Regular Web Application"** — Auth0 enforces PKCE validation differently for web apps, which conflicts with how the OIDCProxy forwards authorization requests. This causes `code_challenge: Field required` errors.
 
 ### Steps
 
@@ -75,12 +79,11 @@ The **Application** represents the MCP server's OAuth client — it holds the `c
      | Field | Value |
      |-------|-------|
      | **Name** | `Actian MCP Server App` |
-     | **Application Type** | **Regular Web Applications** |
-
-     > Choose **Regular Web Applications** because the MCP server is a backend that can securely store a client secret.
+     | **Application Type** | **Machine to Machine Applications** |
 
 4. Click **Create**.
-5. You are taken to the application's **Settings** tab.
+5. Auth0 will prompt you to authorize the application for an API — select your **Actian MCP Server** API and grant all scopes. (You can also do this later in [Part 3](#part-3-authorize-the-application-for-the-api).)
+6. You are taken to the application's **Settings** tab.
 
 ### Configure application settings
 
@@ -99,14 +102,17 @@ Click **Save Changes**.
 
 ### Configure grant types
 
+Machine to Machine applications should have **Authorization Code** enabled by default, but always verify — some tenants or configurations may differ.
+
 1. On the **Settings** tab, scroll to the bottom and click **Show Advanced Settings**.
 2. Click the **Grant Types** tab.
-3. Ensure **Authorization Code** is checked (required for the browser-based OAuth login flow).
-4. Optionally enable **Refresh Token** for token refresh support.
-5. Click **Save Changes**.
+3. Enable **Authorization Code** (required for the browser-based OAuth login flow).
+4. Keep **Client Credentials** enabled.
+5. Optionally enable **Refresh Token** for token refresh support.
+6. Click **Save Changes**.
 
-!!! warning "Authorization Code grant is required"
-    Without **Authorization Code** enabled, the OAuth flow fails — Auth0 won't issue an authorization code during the login redirect, even though the login page appears to work normally.
+!!! danger "Authorization Code grant is required"
+    Without **Authorization Code** enabled, Auth0 returns `Grant type 'authorization_code' not allowed for the client`. M2M apps should have this grant type enabled by default, but always verify — if it was disabled, re-enable it here.
 
 ### What you get from this step
 
@@ -137,21 +143,32 @@ During the OAuth handshake:
 
 You must explicitly authorize the Application for the API.
 
-### Steps
+You can authorize from either direction — the Application's APIs tab or the API's Application Access tab:
 
-1. In the Auth0 Dashboard, go to **Applications → Applications**.
-2. Click on your Application (for example, `Actian MCP Server App`).
-3. Click the **APIs** tab.
-4. Find your API (for example, `mcp_server` with identifier `http://127.0.0.1:8000/mcp`). It will show as **UNAUTHORIZED** initially.
-5. Click **Edit** next to your API. A permissions popup opens.
-6. In the popup:
+**Option A — From the Application:**
 
-   - **User Access** tab: Set the **Authorization** dropdown to **Authorized — Pick and choose permissions**. Select your scopes (for example, `read:mcp_server`) or click **All**.
-     > A yellow warning _"You are about to create a grant with all permissions available"_ appears when **All** is selected. This is expected — it means the token includes all scopes you defined on the API.
-   - **Client Access** tab: This is typically already set to **Authorized** by default. Verify it shows **AUTHORIZED** before proceeding.
+1. Go to **Applications → Applications → your app** (for example, `Actian MCP Server App`).
+2. Click the **APIs** tab.
+3. Find your API (for example, `mcp_server` with identifier `http://127.0.0.1:8000/mcp`).
+4. Click **Edit** next to your API.
+5. Authorize both access types:
 
-7. Click **Update** to save.
-8. The Application row should show two **AUTHORIZED** badges — one for User Access and one for Client Access.
+   - **User Access**: Set to **Authorized** and select your scopes (for example, `read:mcp_server`). This is required for the browser-based login flow and user impersonation.
+   - **Client Access**: Set to **Authorized**. This may already be authorized if you selected the API during M2M app creation.
+
+6. Click **Update** to save.
+
+**Option B — From the API:**
+
+1. Go to **Applications → APIs → your API** (for example, `mcp_server`).
+2. Click the **Application Access** tab.
+3. Find your Application and click **Edit**.
+4. Authorize both **User Access** and **Client Access** as above.
+
+After saving, the Application should show two **AUTHORIZED** badges — one for User Access and one for Client Access.
+
+!!! important "User Access is required for user impersonation"
+    If you plan to use `user_impersonation: true`, the **User Access** column must show AUTHORIZED. Without it, Auth0 won't issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server won't be able to extract a database username.
 
 
 ## Part 4 — configure scopes (optional)
@@ -331,6 +348,8 @@ You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`,
 
 | Error | Cause | Fix |
 |-------|-------|-----|
+| `code_challenge: Field required` | Auth0 Application type is "Regular Web Application" | Recreate as **Machine to Machine** application — Auth0 does not allow changing app type after creation. See [Part 2](#part-2-create-an-auth0-application). |
+| `Grant type 'authorization_code' not allowed` | M2M app missing Authorization Code grant | Enable **Authorization Code** in Advanced Settings → Grant Types. See [Configure Grant Types](#configure-grant-types). |
 | `invalid_request` when requesting a token | Application not authorized for the API | [Part 3](#part-3-authorize-the-application-for-the-api) — authorize the Application |
 | `audience mismatch` | `FASTMCP_SERVER_AUTH_AUDIENCE` doesn't match the API Identifier | Ensure they are identical strings |
 | `invalid_client` | Wrong `client_id` or `client_secret` | Re-copy from Application → Settings |
@@ -342,8 +361,48 @@ You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`,
 | `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://` | Update `BASE_URL` to `https://` |
 | `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start | Mount cert/key as volumes when starting the container (see [Docker deployment](../index.md#3-docker-deployment)) |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN | Regenerate with `-addext "subjectAltName=IP:<ip>"` |
-| `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by Node.js | Trust cert + set `NODE_EXTRA_CA_CERTS` |
+| `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by Node.js | Launch VS Code with `NODE_EXTRA_CA_CERTS=/path/to/server.crt code .` |
+| `Client Not Registered` (VS Code) | Server's Docker container was recreated, wiping client registrations, but VS Code caches the old client ID | Quit VS Code, then delete stale registrations from the state DB (see [Clearing VS Code OAuth cache](#clearing-vs-code-oauth-cache) below) and reopen VS Code. To prevent recurrence, mount a Docker volume for `/root/.local/share/fastmcp`. |
+| `Service not found: https://...` / `access_denied` | `AUDIENCE` mismatch between client request and server config (often `http` vs `https`) | Ensure `FASTMCP_SERVER_AUTH_AUDIENCE` in `conf.json` exactly matches the Auth0 API Identifier |
 | Token validation behaves unexpectedly | OIDC endpoint unreachable at startup | Restart server after endpoint is accessible |
+
+### Clearing VS Code OAuth cache
+
+If the MCP server's Docker container is recreated, VS Code's cached OAuth client registration becomes stale. To clear it:
+
+1. **Quit VS Code completely** (Cmd+Q on macOS, or close all windows on Linux/Windows).
+2. Run the appropriate command for your OS:
+
+    === "macOS"
+
+        ```bash
+        sqlite3 ~/Library/"Application Support"/Code/User/globalStorage/state.vscdb \
+          "DELETE FROM ItemTable WHERE key LIKE '%dynamicAuth%<your-server-host>%';"
+        ```
+
+    === "Linux"
+
+        ```bash
+        sqlite3 ~/.config/Code/User/globalStorage/state.vscdb \
+          "DELETE FROM ItemTable WHERE key LIKE '%dynamicAuth%<your-server-host>%';"
+        ```
+
+    === "Windows"
+
+        ```powershell
+        sqlite3 "$env:APPDATA\Code\User\globalStorage\state.vscdb" `
+          "DELETE FROM ItemTable WHERE key LIKE '%dynamicAuth%<your-server-host>%';"
+        ```
+
+3. Reopen VS Code. It will re-register with the server automatically.
+
+Replace `<your-server-host>` with your server's IP or hostname (for example, `35.185.60.76`). This only clears the registration for that specific server.
+
+!!! tip "Prevent recurrence"
+    Mount a Docker volume for the server's OAuth state so client registrations survive container recreation:
+    ```bash
+    docker run ... -v mcp-auth-data:/root/.local/share/fastmcp ...
+    ```
 
 ### Token expiration
 
