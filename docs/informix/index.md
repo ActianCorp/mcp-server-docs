@@ -94,6 +94,12 @@ The container image starts the server with `/app/conf.json`, so the mounted file
 
 After the container starts, connect your MCP client to the exposed server endpoint using the transport configured for your deployment.
 
+Inside the container cd /app and then start the server with the following command
+
+```bash
+actian-mcp-server --dbms=informix --transport=sse --conf-file=/app/conf.json --username=USERNAME --password=PASSWORD
+```
+
 ## What users should expect
 
 Once the container is running and connected to Informix database, an MCP client can discover the available server capabilities automatically.
