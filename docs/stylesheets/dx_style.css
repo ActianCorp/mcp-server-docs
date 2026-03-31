@@ -4,6 +4,11 @@
     font-weight: 600;
 }
 
+/* Font stack */
+:root {
+  --md-text-font: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
 [data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
     background-color: #2e303e;
 }
@@ -57,6 +62,22 @@
 /* Hide the original full-width footer nav */
 .md-footer__inner {
   display: none;
+}
+
+/* Remove announcement banner completely */
+.md-banner {
+  display: none;
+}
+
+/* Header logo sizing */
+.md-header__button.md-logo img {
+  height: 1.2rem;
+  width: auto;
+}
+
+/* Dark theme header adjustments */
+[data-md-color-scheme="slate"] .md-header .md-header__button.md-logo img {
+  filter: brightness(0) invert(1);
 }
 
 /* ── Text feedback form ── */
@@ -140,7 +161,7 @@
 }
 
 [dir=ltr] .md-header__title {
-	margin-left: 0;
+	margin-left: 1.2rem;
 }
 
 [dir=rtl] .md-header__title {

@@ -9,7 +9,7 @@ site_dir: site
 # Theme Configuration
 theme:
   name: material
-  logo: assets/mcp_logo.png
+  logo: https://www.actian.com/wp-content/themes/hcl-actian/images/actian-logo.svg
   language: en
   features:
     - navigation.tabs
@@ -45,7 +45,7 @@ theme:
     repo: fontawesome/brands/github
     edit: fontawesome/regular/pen-to-square
   font:
-    text: Roboto
+    text: Inter
     code: Roboto Mono
   favicon: assets/favicon.png
   
