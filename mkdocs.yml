@@ -9,7 +9,7 @@ site_dir: site
 # Theme Configuration
 theme:
   name: material
-  logo: https://www.actian.com/wp-content/themes/hcl-actian/images/actian-logo.svg
+  logo: assets/images/actian-logo-white.svg
   language: en
   features:
     - navigation.tabs
@@ -28,18 +28,18 @@ theme:
     - content.code.annotate
     - content.action.edit
   palette:
-    - scheme: slate
-      primary: custom
-      accent: indigo
-      toggle:
-        icon: material/brightness-7
-        name: Switch to light mode
     - scheme: default
       primary: custom
       accent: indigo
       toggle:
         icon: material/brightness-4
         name: Switch to dark mode
+    - scheme: slate
+      primary: custom
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
   custom_dir: theme_overrides/
   icon:
     repo: fontawesome/brands/github

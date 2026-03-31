@@ -75,11 +75,6 @@
   width: auto;
 }
 
-/* Dark theme header adjustments */
-[data-md-color-scheme="slate"] .md-header .md-header__button.md-logo img {
-  filter: brightness(0) invert(1);
-}
-
 /* ── Text feedback form ── */
 .feedback-text-form {
   margin-top: 0.75rem;

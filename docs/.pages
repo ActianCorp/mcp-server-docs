@@ -7,3 +7,5 @@ nav:
   - authentication
   - analytics_engine
   - zen
+  - informix
+  - nosql
