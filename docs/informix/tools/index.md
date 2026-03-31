@@ -266,5 +266,5 @@ This tool takes no input.
 
 ## Next steps
 
-- [Resources](../resources/index.md) — Learn about Analytics Engine resources
-- [Prompts](../prompts/index.md) — Learn about Analytics Engine prompts
+- [Resources](../resources/index.md) — Learn about Informix MCP server resources
+- [Prompts](../prompts/index.md) — Learn about Informix MCP server prompts

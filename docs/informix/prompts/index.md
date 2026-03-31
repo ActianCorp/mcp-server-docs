@@ -47,5 +47,5 @@ You are a database expert. Answer the following question: What are the top 5 cus
 
 ## Next steps
 
-- [Tools](../tools/index.md) — Learn about Analytics Engine tools
-- [Resources](../resources/index.md) — Learn about Analytics Engine resources
+- [Tools](../tools/index.md) — Learn about Informix MCP server tools
+- [Resources](../resources/index.md) — Learn about Informix MCP server resources

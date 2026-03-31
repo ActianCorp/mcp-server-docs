@@ -105,7 +105,7 @@ In practice, this means a user can ask the client to:
 - Look up details for a specific table.
 - Review available database functions.
 
-This keeps Analytics Engine access available through a consistent MCP workflow while the server manages the database connection and response formatting.
+This keeps Informix MCP server access available through a consistent MCP workflow while the server manages the database connection and response formatting.
 
 ## Next steps
 

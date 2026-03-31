@@ -75,5 +75,5 @@ resource://database/schema
 
 ## Next steps
 
-- [Tools](../tools/index.md) — Learn about Analytics Engine tools
-- [Prompts](../prompts/index.md) — Learn about Analytics Engine prompts
+- [Tools](../tools/index.md) — Learn about Informix MCP server tools
+- [Prompts](../prompts/index.md) — Learn about Informix MCP server prompts
