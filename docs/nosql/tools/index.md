@@ -31,15 +31,7 @@ The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for d
 
 -->
 
-## Tool reference
-
-<!-- TODO: For each tool, add a section with:
-- Description
-- Input parameters (table)
-- Output schema
-- Example prompt
-- Example response
--->
+# Tool reference
 
 ---
 
