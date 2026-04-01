@@ -58,5 +58,4 @@ The Actian MCP Server makes it easier to connect AI-driven workflows to Actian e
 
 ## Next steps
 
-- [Get Started](../get_started/index.md) — Install and run your first MCP server
-- [Configuration](../get_started/configuration.md) — Configure the server for your environment
+- [Get Started](../get_started/index.md) — Deploy and connect your first MCP server

@@ -1,108 +1,121 @@
 ---
 title: Get Started
-description: Install, configure, and run your first Actian MCP Server in minutes.
+description: Get the Actian MCP Server running in your environment with Docker.
 ---
 
 # Get started
 
-Get the Actian MCP Server running in your environment quickly.
+The Actian MCP Server is distributed as Docker container images — one image per supported Actian database. This page walks you through the steps to get a server running and connected to an MCP client.
 
 ## Prerequisites
 
-- **Python 3.10+**
-- Access to an **Actian Zen** database or **Actian Analytics Engine**
-- An MCP-compatible AI client (Claude Desktop, Cursor, or any MCP client)
+- **Docker** (or Podman)
+- Network access to an Actian database (Analytics Engine, Ingres, Informix, Zen, or NoSQL)
+- An MCP-compatible AI client (Claude Desktop, Cursor, GitHub Copilot, Codex, or any MCP client)
 
-Verify Python:
+## Step 1 — Choose your database image
 
-```bash
-python --version   # 3.10 or later
-pip --version
-```
+Each Actian database has its own container image with the required drivers pre-installed:
 
-## Installation
+| Database | Container image |
+|----------|----------------|
+| Analytics Engine | [`actian/analytics-engine-mcp-server`](https://hub.docker.com/r/actian/analytics-engine-mcp-server) |
+| Ingres | [`actian/ingres-mcp-server`](https://hub.docker.com/r/actian/ingres-mcp-server) |
+| Informix | [`actian/informix-mcp-server`](https://hub.docker.com/r/actian/informix-mcp-server) |
+| Zen | [`actian/zen-mcp-server`](https://hub.docker.com/r/actian/zen-mcp-server) |
+| NoSQL | [`actian/nsql-mcp-server`](https://hub.docker.com/r/actian/nsql-mcp-server) |
 
-```bash
-pip install actian-mcp-server
-```
+## Step 2 — Create a configuration file
 
-Verify the installation:
+Create a `conf.json` file with the connection details for your database. Each database has its own configuration format — see the database-specific page for the full field reference:
 
-```bash
-actian-mcp-server --version
-```
+- [Analytics Engine configuration](../analytics_engine/index.md#configuration)
+- [Zen configuration](../zen/index.md#configuration)
+- [Ingres configuration](../ingres/index.md#configuration)
+- [Informix configuration](../informix/index.md#configuration)
+- [NoSQL configuration](../nosql/index.md#configuration)
 
-## Quick configuration
+All database configurations share these common fields for the MCP server:
 
-Create a `conf.json` file:
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `database_user` | `str` | Yes | Database username. |
+| `database_password` | `str` | Yes | Database password. |
+| `host` | `str` | Yes | Host address the MCP server listens on inside the container. |
+| `port` | `str` | Yes | Port the MCP server listens on inside the container. |
+| `ssl_certfile` | `str` | No | Path to the TLS certificate file. |
+| `ssl_keyfile` | `str` | No | Path to the TLS private key file. |
+| `oauth` | `object` | No | OAuth 2.0 configuration. See [Authentication](../authentication/index.md). |
 
-```json
-{
-  "server": {
-    "name": "actian-mcp-server",
-    "transport": "stdio"
-  },
-  "plugins": [
-    "actian_mcp_server.zen.plugin.ZenPlugin"
-  ],
-  "zen": {
-    "dsn": "MyDatabase",
-    "host": "localhost",
-    "port": 1583,
-    "username": "admin",
-    "password": "yourpassword"
-  }
-}
-```
+!!! warning "Protect your configuration file"
+    The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control. The `:ro` flag in the mount command ensures the file cannot be modified from inside the container.
 
-## Connect to Claude Desktop
+## Step 3 — Start the container
 
-Add the server to Claude Desktop's configuration file at  
-`~/Library/Application Support/Claude/claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "actian": {
-      "command": "actian-mcp-server",
-      "args": ["--config", "/path/to/conf.json"]
-    }
-  }
-}
-```
-
-Restart Claude Desktop. You should see the Actian MCP tools available.
-
-## Connect to Cursor
-
-In Cursor settings, add the following under **MCP Servers**:
-
-```json
-{
-  "actian": {
-    "command": "actian-mcp-server",
-    "args": ["--config", "/path/to/conf.json"]
-  }
-}
-```
-
-## Test the connection
-
-Start the server manually to confirm that it works:
+Mount your configuration file into the container as `/app/conf.json`:
 
 ```bash
-actian-mcp-server --config conf.json --transport stdio
+docker run -d \
+    -v $(pwd)/conf.json:/app/conf.json:ro \
+    -p 8000:8000 \
+    actian/analytics-engine-mcp-server
 ```
 
-You should see:
+Replace the image name with the one for your database.
+
+## Step 4 — Connect an MCP client
+
+The server runs in **HTTP transport** mode. Clients connect to:
 
 ```
-INFO  Actian MCP Server 1.0.0 starting...
-INFO  Loaded plugin: ZenPlugin
-INFO  Server ready. Waiting for MCP client...
+http://localhost:<port>/mcp
 ```
+
+See [Connecting to MCP Clients](../mcp_clients/index.md) for configuration examples for Claude Desktop, Cursor, GitHub Copilot, fast-agent, and Codex.
+
+## Step 5 — Verify the connection
+
+**Check the container is running:**
+
+```bash
+docker ps
+```
+
+You should see your container listed with a status of `Up`.
+
+**Check the MCP endpoint is reachable:**
+
+```bash
+curl -s http://localhost:8000/mcp
+```
+
+A response (rather than "connection refused") confirms the server is listening.
+
+**Test from your MCP client:**
+
+Open your MCP client (configured in Step 4). The client should detect the Actian MCP Server and list its available tools. Ask a question like:
+
+> "List all tables in the database"
+
+The client will invoke the server's `list_tables` tool. If you see table names, the full chain — client, server, and database — is working.
+
+For the complete list of available tools per database, see:
+
+- [Analytics Engine tools](../analytics_engine/tools/index.md)
+- [Ingres tools](../ingres/tools/index.md)
+- [Zen tools](../zen/tools/index.md)
+- [Informix tools](../informix/tools/index.md)
+- [NoSQL tools](../nosql/tools/index.md)
+
+## Optional — Add authentication
+
+For deployments outside a trusted local environment, enable OAuth 2.0 authentication with Keycloak or Auth0:
+
+- [Authentication overview](../authentication/index.md)
+- [Keycloak setup](../authentication/keycloak/index.md)
+- [Auth0 setup](../authentication/auth0/index.md)
 
 ## Next steps
 
-- [Configuration](configuration.md) — All server and plugin options
-- [Deployment](deployment.md) — Deploy with Docker or in production
+- [Connecting to MCP Clients](../mcp_clients/index.md) — Client configuration for Claude Desktop, Cursor, and more
+- [Authentication](../authentication/index.md) — Secure your deployment with OAuth 2.0
