@@ -13,32 +13,15 @@ This page explains how to use the **Actian MCP Server** with **Actian NoSQL**.
 
 With the NoSQL server, AI clients can:
 
-<!-- TODO: List the capabilities of the NoSQL plugin, for example:
-- Query NoSQL collections.
-- Insert, update, and delete documents.
-- Discover available collections and their structure.
--->
+!!! info "Coming soon"
+    This section is being developed.
 
 ## Configuration
 
-<!-- TODO: Describe the configuration file format and required fields for NoSQL. Example:
-
-```json
-{
-  "plugins": [
-    "actian_mcp_server.nosql.plugin.NoSQLPlugin"
-  ],
-  "nosql": {
-    "host": "localhost",
-    "port": 27017,
-    "database": "mydb",
-    "username": "admin",
-    "password": "secret"
-  }
-}
-```
--->
+!!! info "Coming soon"
+    This section is being developed.
 
 ## Quick start
 
-<!-- TODO: Provide a step-by-step quick start for connecting an MCP client to NoSQL. -->
+!!! info "Coming soon"
+    This section is being developed.

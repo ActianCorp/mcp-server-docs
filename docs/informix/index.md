@@ -1,5 +1,5 @@
 ---
-title: Informix 
+title: Informix
 description: Use the Actian MCP Server to connect MCP clients to Informix Database.
 ---
 # Informix

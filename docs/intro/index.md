@@ -32,6 +32,128 @@ Depending on how it's configured, the server can help AI clients:
 
 The server handles the surrounding concerns, such as transport, configuration, authentication, and secure access to the target database.
 
+<!-- MCP Workflow Diagrams -->
+
+## Architecture Overview
+
+```mermaid
+flowchart TB
+    subgraph Clients["MCP Clients"]
+        claude["Claude Desktop"]
+        cursor["Cursor"]
+        copilot["GitHub Copilot"]
+        fastagent["fast-agent"]
+        codex["Codex"]
+        custom["Custom AI Agents"]
+    end
+
+    subgraph Transport["Transport Layer"]
+        http["HTTP / SSE
+(Network)"]
+    end
+
+    subgraph Auth["Authentication"]
+        idp["Identity Provider
+(Keycloak / Auth0)"]
+        oauth["OAuth 2.0 / OIDC
+JWT Validation"]
+    end
+
+    subgraph MCP["Actian MCP Server"]
+        direction TB
+        core["MCP Protocol Handler"]
+        tools["Tools
+─────────────
+• Run SQL Queries
+• List Tables & Views
+• Describe Table Schema
+• List Functions"]
+        resources["Resources
+─────────────
+• Schema Metadata
+• Table Definitions"]
+        plugins["Database Plugins"]
+        pool["Connection Pool
+(ODBC)"]
+    end
+
+    subgraph Databases["Actian Databases"]
+        ae["Analytics Engine"]
+        ingres["Ingres"]
+        zen["Zen"]
+        informix["Informix"]
+        nosql["NoSQL"]
+    end
+
+    subgraph Security["Security Controls"]
+        readonly["Read-Only Mode"]
+        impersonation["User Impersonation
+(SET SESSION AUTHORIZATION)"]
+        tls["TLS / HTTPS"]
+    end
+
+    claude & cursor & copilot & fastagent & codex & custom --> http
+
+    http --> oauth
+    oauth <--> idp
+    oauth --> core
+
+    core --> tools & resources
+    tools & resources --> plugins
+    plugins --> pool
+
+    pool --> ae & ingres & zen & informix & nosql
+
+    Security -.-> MCP
+
+    classDef clientStyle fill:#4A90D9,stroke:#2C5F8A,color:#fff
+    classDef transportStyle fill:#F5A623,stroke:#C17D15,color:#fff
+    classDef authStyle fill:#D0021B,stroke:#8B0000,color:#fff
+    classDef serverStyle fill:#7ED321,stroke:#4A7A12,color:#fff
+    classDef dbStyle fill:#9013FE,stroke:#5A0A9E,color:#fff
+    classDef secStyle fill:#607D8B,stroke:#37474F,color:#fff
+
+    class claude,cursor,copilot,fastagent,codex,custom clientStyle
+    class http transportStyle
+    class idp,oauth authStyle
+    class core,tools,resources,plugins,pool serverStyle
+    class ae,ingres,zen,informix,nosql dbStyle
+    class readonly,impersonation,tls secStyle
+```
+
+## End-to-End Request Flow
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Client as MCP Client (Claude/Cursor/Codex)
+    participant Transport as HTTP / SSE Transport
+    participant Auth as OAuth 2.0 (Keycloak/Auth0)
+    participant Server as Actian MCP Server
+    participant Plugin as Database Plugin
+    participant DB as Actian Database (Analytics Engine/Ingres/Zen/Informix/NoSQL)
+
+    User->>Client: Natural language query
+    Client->>Transport: MCP request
+
+    Transport->>Auth: Validate JWT token
+    Auth-->>Transport: Token valid
+
+    Transport->>Server: Forward request
+    Server->>Server: Route to tool/resource
+
+    opt User Impersonation enabled
+        Server->>Plugin: SET SESSION AUTHORIZATION
+    end
+
+    Plugin->>DB: Execute read-only SQL (ODBC)
+    DB-->>Plugin: Query results
+    Plugin-->>Server: Formatted response
+    Server-->>Transport: MCP response
+    Transport-->>Client: Results
+    Client-->>User: Natural language answer
+```
+
 ## Key features
 
 - **MCP-native capabilities** — Exposes tools, resources, and prompts in a standard format.

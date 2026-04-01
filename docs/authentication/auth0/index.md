@@ -9,7 +9,8 @@ This guide walks through creating and configuring an Auth0 **Application** and *
 
 By the end, you'll have all the values needed to populate the `oauth` block in your `conf.json`. See the [Authentication overview](../index.md) for the full configuration reference and shared concepts (TLS, user impersonation, security practices).
 
-> **Reference**: [FastMCP Auth0 Integration](https://gofastmcp.com/integrations/auth0)
+!!! info "Reference"
+    [FastMCP Auth0 Integration](https://gofastmcp.com/integrations/auth0)
 
 
 ## Quick-start checklist
@@ -256,11 +257,14 @@ GRANT SELECT ON TABLE products TO jdoe;
 | `user_impersonation` | Your choice | `true` or `false` |
 | `FASTMCP_SERVER_AUTH_REDIRECT_PATH` | (optional) Custom OAuth callback path | `/auth/callback` (default) |
 
-> **Audience fallback**: If `FASTMCP_SERVER_AUTH_AUDIENCE` is omitted, the server uses `FASTMCP_SERVER_AUTH_CLIENT_ID` as the audience. This is common for Keycloak setups, but for Auth0 you should always set an explicit audience — the Client ID won't match the API Identifier.
+!!! info "Audience fallback"
+    If `FASTMCP_SERVER_AUTH_AUDIENCE` is omitted, the server uses `FASTMCP_SERVER_AUTH_CLIENT_ID` as the audience. This is common for Keycloak setups, but for Auth0 you should always set an explicit audience — the Client ID won't match the API Identifier.
 
-> **All-or-nothing**: Provide **all** required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, `BASE_URL`) or **none**. If only some fields are present, the server fails to start with a `KeyError`.
+!!! warning "All-or-nothing configuration"
+    Provide **all** required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, `BASE_URL`) or **none**. If only some fields are present, the server fails to start with a `KeyError`.
 
-> **Note**: The `AUDIENCE` is a logical identifier used for token validation — it doesn't need to be a reachable HTTPS URL.
+!!! note
+    The `AUDIENCE` is a logical identifier used for token validation — it doesn't need to be a reachable HTTPS URL.
 
 ### Example `conf.json` (local development)
 

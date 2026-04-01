@@ -7,21 +7,12 @@ description: Overview of the prompts available when using the Actian MCP Server 
 
 The Actian MCP Server for **Actian NoSQL** exposes built-in prompts to assist AI clients.
 
-<!-- TODO: List all available prompts. Use the format below.
-
 ## Available prompts
 
-| Prompt | Purpose |
-|--------|---------|
-| `ask_question` | Generates a NoSQL database expert prompt from a user question. |
-
--->
+!!! info "Coming soon"
+    This section is being developed.
 
 ## Prompt reference
 
-<!-- TODO: For each prompt, add a section with:
-- Description
-- Input parameters
-- Example usage
-- Example output
--->
+!!! info "Coming soon"
+    This section is being developed.

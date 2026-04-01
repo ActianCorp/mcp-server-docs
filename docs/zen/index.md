@@ -28,48 +28,48 @@ In **full mode** (default), 9 tools are registered. In **read-only mode** (`read
 
 The Zen MCP Server reads its configuration from a JSON file named `zen_config.json`. Three formats are supported:
 
-### Minimal (DSN only)
+=== "Minimal (DSN only)"
 
-```json
-{
-	"conn_string": "DSN=demodata"
-}
-```
+    ```json
+    {
+    	"conn_string": "DSN=demodata"
+    }
+    ```
 
-### Standard
+=== "Standard"
 
-```json
-{
-	"database": "demodata",
-	"readonly": false,
-	"transport": "stdio",
-	"max_rows": 1000,
-	"conn_string": "DSN=demodata"
-}
-```
+    ```json
+    {
+    	"database": "demodata",
+    	"readonly": false,
+    	"transport": "stdio",
+    	"max_rows": 1000,
+    	"conn_string": "DSN=demodata"
+    }
+    ```
 
-### Full (with OAuth and network settings)
+=== "Full (with OAuth and network settings)"
 
-```json
-{
-	"database": "demodata",
-	"readonly": false,
-	"transport": "http",
-	"max_rows": 1000,
-	"conn_string": "DSN=demodata",
-	"host": "0.0.0.0",
-	"port": "8000",
-	"oauth": {
-		"FASTMCP_SERVER_AUTH_CONFIG_URL": "<oidc_discovery_url>",
-		"FASTMCP_SERVER_AUTH_CLIENT_ID": "<client_id>",
-		"FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<client_secret>",
-		"FASTMCP_SERVER_AUTH_BASE_URL": "<server_base_url>",
-		"FASTMCP_SERVER_AUTH_AUDIENCE": "<audience>",
-		"FASTMCP_SERVER_AUTH_SCOPE": "<scopes>",
-		"user_impersonation": false
-	}
-}
-```
+    ```json
+    {
+    	"database": "demodata",
+    	"readonly": false,
+    	"transport": "http",
+    	"max_rows": 1000,
+    	"conn_string": "DSN=demodata",
+    	"host": "0.0.0.0",
+    	"port": "8000",
+    	"oauth": {
+    		"FASTMCP_SERVER_AUTH_CONFIG_URL": "<oidc_discovery_url>",
+    		"FASTMCP_SERVER_AUTH_CLIENT_ID": "<client_id>",
+    		"FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<client_secret>",
+    		"FASTMCP_SERVER_AUTH_BASE_URL": "<server_base_url>",
+    		"FASTMCP_SERVER_AUTH_AUDIENCE": "<audience>",
+    		"FASTMCP_SERVER_AUTH_SCOPE": "<scopes>",
+    		"user_impersonation": false
+    	}
+    }
+    ```
 
 Use these fields as follows:
 
