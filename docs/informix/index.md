@@ -58,17 +58,17 @@ Use these fields as follows:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `servername` | `str` | Yes | Informix database server name
-| `service` | `int` | Yes | Informix server port number
-| `dsn` | `str` | Yes | Data source name
+| `servername` | `str` | Yes | Informix database server name. |
+| `service` | `int` | Yes | Informix server port number. |
+| `dsn` | `str` | Yes | Data source name. |
 | `server` | `str` | Yes | Host address for the Informix database. |
 | `database` | `str` | Yes | Name of the database that the MCP Server connects to. |
 | `max_connections` | `int` | Yes | Maximum number of concurrent database connections the server keeps in its pool. |
 | `max_rows` | `int` | No | Maximum number of rows returned for a single query response. Defaults to `1000`. |
 | `host` | `str` | Yes | Host address that the MCP Server listens on inside the container. |
 | `port` | `str` | Yes | Port that the MCP Server listens on inside the container. |
-| `database_user` | `str` | Yes | Database username, can also be provided in commandline. |
-| `database_password` | `str` | Yes | Database password, can also be provided in commandline. |
+| `database_user` | `str` | Yes | Database username, can also be provided on the command line. |
+| `database_password` | `str` | Yes | Database password, can also be provided on the command line. |
 | `ssl_certfile` | `str` | No | Path to the TLS certificate file. |
 | `ssl_keyfile` | `str` | No | Path to the TLS private key file. |
 | `oauth` | `object` | No | OAuth configuration block for protected MCP server deployments. See [The `oauth` configuration block](../authentication/index.md#the-oauth-configuration-block) for the required fields. |
@@ -94,24 +94,24 @@ The container image starts the server with `/app/conf.json`, so the mounted file
 
 After the container starts, connect your MCP client to the exposed server endpoint using the transport configured for your deployment.
 
-Inside the container cd /app and then start the server with the following command
+Inside the container, run `cd /app`, then start the server with the following command:
 
 ```bash
 actian-mcp-server --dbms=informix --transport=sse --conf-file=/app/conf.json --username=USERNAME --password=PASSWORD
 ```
 
-## What users should expect
+## What you can expect
 
-Once the container is running and connected to Informix database, an MCP client can discover the available server capabilities automatically.
+Once the container is running and connected to Informix database, your MCP client can discover the available server capabilities automatically.
 
-In practice, this means a user can ask the client to:
+In practice, you can ask the client to:
 
 - Inspect database structure before writing a query.
 - Run a read-only query and summarize the results.
 - Look up details for a specific table.
 - Review available database functions.
 
-This keeps Informix MCP server access available through a consistent MCP workflow while the server manages the database connection and response formatting.
+The server manages the database connection and response formatting so you can focus on your queries.
 
 ## Next steps
 

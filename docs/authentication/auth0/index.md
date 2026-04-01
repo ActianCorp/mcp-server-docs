@@ -19,7 +19,10 @@ For experienced Auth0 users — the full walkthrough follows below.
 
 1. **Create an API** (Applications → APIs → + Create API). The **Identifier** becomes `FASTMCP_SERVER_AUTH_AUDIENCE`.
 2. **Create an Application** (Applications → Applications → + Create Application → **Machine to Machine**). Authorize it for the API when prompted. Copy the **Client ID** and **Client Secret**.
-3. **Authorize the Application for the API** — ensure both **User Access** and **Client Access** show AUTHORIZED (APIs → your API → Application Access → Edit). _Skip this and you get `invalid_request`._
+3. **Authorize the Application for the API** — ensure both **User Access** and **Client Access** show AUTHORIZED (APIs → your API → Application Access → Edit).
+
+    !!! warning
+        Skipping this step causes Auth0 to reject token requests with `invalid_request`.
 4. **Enable Authorization Code grant** (Application → Settings → Advanced Settings → Grant Types → check **Authorization Code**).
 5. **Configure Callback URLs** (Application → Settings → Allowed Callback URLs → `<BASE_URL>/auth/callback`).
 6. **Fill `conf.json`** with the values from steps 1–2 plus your Auth0 domain.
@@ -35,13 +38,13 @@ For experienced Auth0 users — the full walkthrough follows below.
 
 ## Part 1 — create an Auth0 API
 
-The **API** represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 includes the API's identifier as the `audience` claim.
+The **API** represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 include the API's identifier as the `audience` claim.
 
 ### Steps
 
 1. Log in to the [Auth0 Dashboard](https://manage.auth0.com/).
 2. In the left sidebar, navigate to **Applications → APIs**.
-3. Click **+ Create API**.
+1. Select **+ Create API**.
 4. Fill in the form:
 
      | Field | Value | Notes |
@@ -50,7 +53,7 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
      | **Identifier (Audience)** | `http://127.0.0.1:8000/mcp` | This becomes your `FASTMCP_SERVER_AUTH_AUDIENCE`. Use your actual MCP server URL + path. This is a logical identifier — it doesn't need to be a reachable URL. |
      | **Signing Algorithm** | `RS256` | Default; leave as-is |
 
-5. Click **Create**.
+5. Select **Create**.
 
 ### What you get from this step
 
@@ -74,7 +77,7 @@ The **Application** represents the MCP server's OAuth client — it holds the `c
 ### Steps
 
 1. In the Auth0 Dashboard, go to **Applications → Applications**.
-2. Click **+ Create Application**.
+2. Select **+ Create Application**.
 3. Fill in:
 
      | Field | Value |
@@ -82,9 +85,9 @@ The **Application** represents the MCP server's OAuth client — it holds the `c
      | **Name** | `Actian MCP Server App` |
      | **Application Type** | **Machine to Machine Applications** |
 
-4. Click **Create**.
-5. Auth0 will prompt you to authorize the application for an API — select your **Actian MCP Server** API and grant all scopes. (You can also do this later in [Part 3](#part-3-authorize-the-application-for-the-api).)
-6. You are taken to the application's **Settings** tab.
+4. Select **Create**.
+5. When prompted, select your **Actian MCP Server** API and grant all scopes. (You can also do this later in [Part 3](#part-3-authorize-the-application-for-the-api).)
+6. The application's **Settings** tab opens.
 
 ### Configure application settings
 
@@ -99,18 +102,18 @@ On the **Settings** tab, scroll down and configure:
 !!! warning "Callback URL must match exactly"
     The **Allowed Callback URLs** value must match `<FASTMCP_SERVER_AUTH_BASE_URL>/auth/callback` exactly — including scheme (`http` vs `https`), host, and port. A mismatch causes Auth0 to reject the login with a `redirect_uri_mismatch` error.
 
-Click **Save Changes**.
+Select **Save Changes**.
 
 ### Configure grant types
 
 Machine to Machine applications should have **Authorization Code** enabled by default, but always verify — some tenants or configurations may differ.
 
-1. On the **Settings** tab, scroll to the bottom and click **Show Advanced Settings**.
-2. Click the **Grant Types** tab.
+1. On the **Settings** tab, scroll to the bottom and select **Show Advanced Settings**.
+2. Select the **Grant Types** tab.
 3. Enable **Authorization Code** (required for the browser-based OAuth login flow).
 4. Keep **Client Credentials** enabled.
 5. Optionally enable **Refresh Token** for token refresh support.
-6. Click **Save Changes**.
+6. Select **Save Changes**.
 
 !!! danger "Authorization Code grant is required"
     Without **Authorization Code** enabled, Auth0 returns `Grant type 'authorization_code' not allowed for the client`. M2M apps should have this grant type enabled by default, but always verify — if it was disabled, re-enable it here.
@@ -133,7 +136,7 @@ All values are on the **Settings** tab of your Application:
 ## Part 3 — authorize the application for the API
 
 !!! danger "This step is critical"
-    Without it, Auth0 rejects token requests with `invalid_request` because your Application is not authorized for the API.
+    Without it, Auth0 rejects token requests with `invalid_request` because your Application isn't authorized for the API.
 
 ### Why this is needed
 
@@ -149,21 +152,21 @@ You can authorize from either direction — the Application's APIs tab or the AP
 **Option A — From the Application:**
 
 1. Go to **Applications → Applications → your app** (for example, `Actian MCP Server App`).
-2. Click the **APIs** tab.
+2. Select the **APIs** tab.
 3. Find your API (for example, `mcp_server` with identifier `http://127.0.0.1:8000/mcp`).
-4. Click **Edit** next to your API.
+4. Select **Edit** next to your API.
 5. Authorize both access types:
 
    - **User Access**: Set to **Authorized** and select your scopes (for example, `read:mcp_server`). This is required for the browser-based login flow and user impersonation.
    - **Client Access**: Set to **Authorized**. This may already be authorized if you selected the API during M2M app creation.
 
-6. Click **Update** to save.
+6. Select **Update** to save.
 
 **Option B — From the API:**
 
 1. Go to **Applications → APIs → your API** (for example, `mcp_server`).
-2. Click the **Application Access** tab.
-3. Find your Application and click **Edit**.
+2. Select the **Application Access** tab.
+3. Find your Application and select **Edit**.
 4. Authorize both **User Access** and **Client Access** as above.
 
 After saving, the Application should show two **AUTHORIZED** badges — one for User Access and one for Client Access.
@@ -185,7 +188,7 @@ Scopes restrict what actions a token allows. The MCP server requires at minimum 
      |---|---|
      | `read:mcp_server` | Read access to MCP server tools and resources |
 
-3. Click **Add**.
+3. Select **Add**.
 
 ### Config value
 
@@ -203,7 +206,7 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
 ### Step 5.1 — create the user in Auth0
 
 1. In the Auth0 Dashboard, go to **User Management → Users**.
-2. Click **+ Create User**.
+2. Select **+ Create User**.
 3. Fill in:
 
      | Field | Value | Notes |
@@ -212,7 +215,7 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
      | **Password** | A secure password | Used for Auth0 login |
      | **Connection** | `Username-Password-Authentication` | Default database connection |
 
-4. Click **Create**.
+4. Select **Create**.
 
 !!! important "Database username = email prefix"
     The MCP server extracts the database username from the **email prefix** (the part before `@`). For example, `jdoe@example.com` → `jdoe`. Ensure the email prefix matches the database account name exactly.
@@ -352,7 +355,7 @@ You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`,
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| `code_challenge: Field required` | Auth0 Application type is "Regular Web Application" | Recreate as **Machine to Machine** application — Auth0 does not allow changing app type after creation. See [Part 2](#part-2-create-an-auth0-application). |
+| `code_challenge: Field required` | Auth0 Application type is "Regular Web Application" | Recreate as **Machine to Machine** application — Auth0 doesn't allow changing app type after creation. See [Part 2](#part-2-create-an-auth0-application). |
 | `Grant type 'authorization_code' not allowed` | M2M app missing Authorization Code grant | Enable **Authorization Code** in Advanced Settings → Grant Types. See [Configure Grant Types](#configure-grant-types). |
 | `invalid_request` when requesting a token | Application not authorized for the API | [Part 3](#part-3-authorize-the-application-for-the-api) — authorize the Application |
 | `audience mismatch` | `FASTMCP_SERVER_AUTH_AUDIENCE` doesn't match the API Identifier | Ensure they are identical strings |
@@ -416,7 +419,8 @@ Auth0 tokens have a configurable lifetime:
 2. Check **Token Expiration (Seconds)** — default is 86400 (24 hours).
 3. Adjust as needed.
 
-> Token refresh is handled automatically by the OAuth flow when using browser-based authentication.
+!!! note
+    Token refresh is handled automatically by the OAuth flow when using browser-based authentication.
 
 
 ## Staging vs. production

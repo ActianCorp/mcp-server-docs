@@ -90,18 +90,18 @@ The container image starts the server with `/app/conf.json`, so the mounted file
 
 After the container starts, connect your MCP client to the exposed server endpoint using the transport configured for your deployment.
 
-## What users should expect
+## What you can expect
 
-Once the container is running and connected to Analytics Engine, an MCP client can discover the available server capabilities automatically.
+Once the container is running and connected to Analytics Engine, your MCP client can discover the available server capabilities automatically.
 
-In practice, this means a user can ask the client to:
+In practice, you can ask the client to:
 
 - Inspect database structure before writing a query.
 - Run a read-only query and summarize the results.
 - Look up details for a specific table.
 - Review available database functions.
 
-This keeps Analytics Engine access available through a consistent MCP workflow while the server manages the database connection and response formatting.
+The server manages the database connection and response formatting so you can focus on your queries.
 
 ## Next steps
 

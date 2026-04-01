@@ -5,7 +5,7 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 # Tools
 
-The Actian MCP Server for **Actian Zen** exposes 9 tools in full mode. In read-only mode (`readonly=true`), 6 read-only tools are registered and write operations are blocked.
+The Actian MCP Server for **Actian Zen** exposes nine tools in full mode. In read-only mode (`readonly=true`), six read-only tools are registered and write operations are blocked.
 
 ## Available tools
 
@@ -38,20 +38,20 @@ Executes raw SQL against Actian Zen with automatic dialect translation. Suitable
 
 Auto-translations applied:
 
-- `LEN()` is translated to `CHAR_LENGTH()` (Zen does not support `LEN()`).
+- `LEN()` is translated to `CHAR_LENGTH()` (Zen doesn't support `LEN()`).
 - `INFORMATION_SCHEMA` queries are translated to `dbo.fSQL*()` catalog functions.
 - `ALTER TABLE ... RENAME TO` is translated to Zen syntax.
 - Constraint names are truncated to 20 characters (Zen limit).
 
 In read-only mode, only SELECT queries are allowed.
 
-### Input Parameters
+### Input parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `sql` | `string` | Yes | SQL query to execute. |
 
-### Output Schema
+### Output schema
 
 ```json
 {
@@ -117,7 +117,7 @@ Show me all employees with a salary above 50000
 }
 ```
 
-### Success Response Example
+### Success response example
 
 ```json
 {
@@ -141,11 +141,11 @@ Returns all user tables in the connected database by querying the Zen `dbo.fSQLT
 !!! note
     Zen uses `dbo.fSQLTables()` for catalog access, not `ii*` system tables used by other Actian products.
 
-### Input Parameters
+### Input parameters
 
 This tool doesn't require any input parameters.
 
-### Output Schema
+### Output schema
 
 ```json
 {
@@ -170,7 +170,7 @@ Show me all the tables in my database
 
 This tool takes no input.
 
-### Success Response Example
+### Success response example
 
 ```json
 {
@@ -188,15 +188,15 @@ This tool takes no input.
 Returns column metadata for a table, including column names, types, precision, scale, nullability, defaults, primary keys, and foreign keys. Uses `dbo.fSQLColumns()`, `dbo.fSQLPrimaryKeys()`, and `dbo.fSQLForeignKeys()` catalog functions internally.
 
 !!! note
-    Zen translates `INFORMATION_SCHEMA` queries to `dbo.fSQL*()` catalog functions automatically. Direct use of `X$File` and `X$Field` system tables is not required.
+    Zen translates `INFORMATION_SCHEMA` queries to `dbo.fSQL*()` catalog functions automatically. Direct use of `X$File` and `X$Field` system tables isn't required.
 
-### Input Parameters
+### Input parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `table` | `string` | Yes | Name of the table to describe. |
 
-### Output Schema
+### Output schema
 
 ```json
 {
@@ -237,7 +237,7 @@ Show me the structure of the Person table
 }
 ```
 
-### Success Response Example
+### Success response example
 
 ```json
 {
@@ -264,7 +264,7 @@ For JOINs, subqueries, and aggregations, use `execute_query` with raw SQL instea
 
 In read-only mode, only `select` operations are allowed.
 
-### Input Parameters
+### Input parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -281,7 +281,7 @@ In read-only mode, only `select` operations are allowed.
 | `data` | `dict` | No | Row data for `insert` and `update` operations. |
 | `entity_id` | `int` | No | Primary key value for `update` and `delete` operations. |
 
-### Output Schema
+### Output schema
 
 For `select`:
 
@@ -337,7 +337,7 @@ Show me all employees in the Sales department ordered by last name
 
 File and blob data operations. In read-only mode, only `list` and `download` actions are available; `upload` and `delete` are blocked.
 
-### Input Parameters
+### Input parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -350,7 +350,7 @@ File and blob data operations. In read-only mode, only `list` and `download` act
 | `id_column` | `string` | No | Name of the ID column. Defaults to `id`. |
 | `blob_column` | `string` | No | Name of the blob column. Defaults to `file_data`. |
 
-### Output Schema
+### Output schema
 
 For `list`:
 
@@ -400,14 +400,14 @@ List all files in the documents table
 
 Database management operations: list available databases, list DSNs with details, query server capabilities, and release locks.
 
-### Input Parameters
+### Input parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `action` | `string` | Yes | One of: `list`, `list_dsns`, `capabilities`, `release_locks`. |
 | `dsn_name` | `string` | No | DSN name (used by some actions). |
 
-### Output Schema
+### Output schema
 
 For `list`:
 
@@ -458,7 +458,7 @@ Schema change operations (DDL). Only available when `readonly=false`.
 
 Constraint names are automatically truncated to 20 characters (Zen limit).
 
-### Supported Modes
+### Supported modes
 
 | Mode | Required Parameters | Description |
 |------|---------------------|-------------|
@@ -509,7 +509,7 @@ Constraint names are automatically truncated to 20 characters (Zen limit).
 | `returns` | `string` | Varies | Return type for `ddl_create_function`. |
 | `select_clause` | `string` | Varies | SELECT statement for `ddl_create_view`. |
 
-### Output Schema
+### Output schema
 
 ```json
 {
@@ -553,7 +553,7 @@ Create a table called test_reports with id, title, and created_at columns
 
 Bulk data operations and row counting. Only available when `readonly=false`.
 
-### Supported Modes
+### Supported modes
 
 | Mode | Required Parameters | Description |
 |------|---------------------|-------------|
@@ -573,7 +573,7 @@ Bulk data operations and row counting. Only available when `readonly=false`.
 | `where_clause` | `string` | Varies | WHERE condition (without the `WHERE` keyword). |
 | `where_params` | `list` | No | Parameterized values for the WHERE clause. |
 
-### Output Schema
+### Output schema
 
 For `batch_insert`:
 
@@ -628,13 +628,13 @@ Insert 3 new employees into the Person table
 
 Transaction control. Only available when `readonly=false`. Transactions have a configurable timeout (default 300 seconds); if exceeded, the transaction is automatically rolled back.
 
-### Input Parameters
+### Input parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `action` | `string` | Yes | One of: `begin`, `commit`, `rollback`. |
 
-### Output Schema
+### Output schema
 
 ```json
 {

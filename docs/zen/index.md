@@ -15,14 +15,14 @@ With the Zen server, AI clients can:
 
 - Run **read-only or read-write SQL queries** with automatic Zen dialect translation.
 - List available tables and inspect their structure.
-- Perform **ORM operations** with JOINs (up to 3 tables), WHERE, ORDER BY, and LIMIT.
+- Perform **ORM operations** with JOINs (up to three tables), WHERE, ORDER BY, and LIMIT.
 - Execute **DDL operations**: create/drop tables, columns, indexes, views, procedures, functions, and triggers.
 - Manage **blob/file data**: upload, download, list, and delete.
 - Control **transactions**: BEGIN, COMMIT, and ROLLBACK with timeout.
 - List DSNs, query server capabilities, and release locks.
 - Read database schema metadata as a resource.
 
-In **full mode** (default), 9 tools are registered. In **read-only mode** (`readonly=true`), 6 read-only tools are available and write operations are blocked at both the tool and database level.
+In **full mode** (default), nine tools are registered. In **read-only mode** (`readonly=true`), six read-only tools are available and write operations are blocked at both the tool and database level.
 
 ## Configuration
 
@@ -85,7 +85,7 @@ Use these fields as follows:
 | `oauth` | `object` | No | OAuth configuration block for protected MCP server deployments. See [The `oauth` configuration block](../authentication/index.md#the-oauth-configuration-block) for the required fields. |
 
 !!! note
-    Zen does not support `SET SESSION AUTHORIZATION`. When using OAuth, set `user_impersonation: false` in the `oauth` block. The authenticated user is logged but not enforced at the database level.
+    Zen doesn't support `SET SESSION AUTHORIZATION`. When using OAuth, set `user_impersonation: false` in the `oauth` block. The authenticated user is logged but not enforced at the database level.
 
 ## Starting the server
 

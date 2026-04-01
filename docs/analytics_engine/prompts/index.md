@@ -21,13 +21,13 @@ The Analytics Engine integration provides the following prompt:
 
 Renders a database expert prompt from a supplied question and returns the resulting prompt text.
 
-### Input Parameters
+### Input parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
+|-------|------|----------|--------------|
 | `question` | `string` | Yes | User question to insert into the prompt. |
 
-### Output Schema
+### Output schema
 
 ```text
 You are a database expert. Answer the following question: <question>

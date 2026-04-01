@@ -21,11 +21,11 @@ The Informix database integration provides the following resource:
 
 Returns the database schema as JSON, including tables, columns, comments, and constraint information.
 
-### Input Parameters
+### Input parameters
 
 This resource doesn't require any input parameters.
 
-### Output Schema
+### Output schema
 
 ```json
 {
@@ -54,7 +54,7 @@ The database schema could not be retrieved. Error: <error_message>
 resource://database/schema
 ```
 
-### Success Response Example
+### Success response example
 
 ```json
 {

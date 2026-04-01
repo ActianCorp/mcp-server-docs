@@ -34,7 +34,7 @@ The server handles the surrounding concerns, such as transport, configuration, a
 
 <!-- MCP Workflow Diagrams -->
 
-## Architecture Overview
+## Architecture overview
 
 ```mermaid
 flowchart TB
@@ -121,7 +121,7 @@ JWT Validation"]
     class readonly,impersonation,tls secStyle
 ```
 
-## End-to-End Request Flow
+## End-to-end request flow
 
 ```mermaid
 sequenceDiagram
