@@ -57,7 +57,7 @@ docker run -d \
 ```
 
 !!! note "Container networking"
-    When the container connects to a Zen engine on the host machine, you must provide the host's reachable IP address (not `localhost`). On Windows with Podman/WSL, the `start-zen-mcp.ps1` helper script automates IP detection and container startup.
+    When the container connects to a Zen engine on the host machine, you must provide the host's reachable IP address (not `localhost`). Docker Desktop handles `host.docker.internal` automatically. On Windows, the `start-zen-mcp.ps1` helper script automates container startup.
 
 After the container starts, connect your MCP client to the exposed server endpoint using the transport configured for your deployment.
 
