@@ -7,41 +7,15 @@ hide:
   - feedback
 ---
 
-<!-- Hero Section -->
-<div class="actian-hero">
-  <blockquote class="hero-quote">
-    Connect AI agents to your Actian databases with the Model Context Protocol.
-  </blockquote>
-
-  <div class="hero-cta">
-    <a href="./get_started/index.html" class="primary-link">Get started →</a>
-  </div>
-</div>
-
-<!-- Value Propositions -->
-<div class="value-props-section">
-  <div class="value-props-grid">
-    <div class="value-prop-item">
-      <h3 class="jumbo-heading">Connect</h3>
-      <p class="value-prop-text">Bridge any MCP-compatible AI client directly to Ingres, Analytics Engine, Informix, NoSQL, and Zen.</p>
-    </div>
-    <div class="value-prop-item">
-      <h3 class="jumbo-heading">Extend</h3>
-      <p class="value-prop-text">Build custom tools, resources, and prompts using the plugin architecture. Add new Actian data sources in minutes.</p>
-    </div>
-    <div class="value-prop-item">
-      <h3 class="jumbo-heading">Trust</h3>
-      <p class="value-prop-text">Secure every connection with OAuth 2.0, read-only mode, and multi-tenant isolation built into the core.</p>
-    </div>
-  </div>
-</div>
+<blockquote class="hero-quote">
+  Connect AI agents to your Actian databases with the Model Context Protocol.
+</blockquote>
 
 <!-- Supported Databases Section -->
 <div class="databases-section">
   <div class="databases-header">
-    <h3 class="jumbo-heading">One server, every Actian database</h3>
     <p class="databases-subtitle">
-      The Actian MCP Server provides a unified MCP interface across the full Actian database portfolio. Each database has its own tools, resources, and prompts tailored to its capabilities.
+      The Actian MCP Server provides a unified MCP interface across the full Actian database portfolio. Each database has its own tools, resources, and prompts tailored to its capabilities. Whether you're running analytics workloads, managing mission-critical OLTP systems, or deploying at the edge, there's a plugin built for it.
     </p>
   </div>
 
@@ -109,13 +83,13 @@ hide:
 
   <div class="features-grid">
     <div class="feature-item">
-      <h4 class="feature-title">Tools & resources</h4>
+      <h4 class="feature-title">Tools and resources</h4>
       <p class="feature-description">Expose SQL execution, schema discovery, and data operations as MCP-native tools and resources.</p>
       <a href="./analytics_engine/tools/index.html" class="primary-link">Explore tools →</a>
     </div>
 
     <div class="feature-item">
-      <h4 class="feature-title">Authentication & security</h4>
+      <h4 class="feature-title">Authentication and security</h4>
       <p class="feature-description">OAuth 2.0 with Keycloak or Auth0, TLS encryption, read-only mode, and user impersonation out of the box.</p>
       <a href="./authentication/index.html" class="primary-link">Set up authentication →</a>
     </div>
