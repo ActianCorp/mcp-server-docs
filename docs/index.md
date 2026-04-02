@@ -53,7 +53,7 @@ hide:
     <div class="content-side">
       <h2 class="jumbo-heading">Up and running in minutes</h2>
       <p class="section-description">
-        Install the server, drop in a config file, and your AI agent can query Actian databases, explore schemas, and run analytics — all through natural language.
+        Pull the container image, drop in a config file, and your AI agent can query Actian databases, explore schemas, and run analytics — all through natural language.
       </p>
       <div class="section-cta">
         <a href="./get_started/index.html" class="primary-link">Read the quickstart →</a>
@@ -61,12 +61,10 @@ hide:
     </div>
     <div class="code-side">
       <div class="code-block">
-        <pre><code>pip install actian-mcp-server</code></pre>
-      </div>
-      <div class="code-block">
-        <pre><code>actian-mcp-server \
-  --config conf.json \
-  --transport stdio</code></pre>
+        <pre><code>docker run -d \
+  -v $(pwd)/conf.json:/app/conf.json:ro \
+  -p 8000:8000 \
+  actian/analytics-engine-mcp-server</code></pre>
       </div>
     </div>
   </div>
@@ -96,8 +94,8 @@ hide:
 
     <div class="feature-item">
       <h4 class="feature-title">Flexible deployment</h4>
-      <p class="feature-description">Run locally with stdio, expose over HTTP/SSE for remote clients, or deploy as a Docker container.</p>
-      <a href="./get_started/deployment.html" class="primary-link">Deploy the server →</a>
+      <p class="feature-description">Deploy as a Docker container with HTTP/SSE transport for local or remote MCP clients.</p>
+      <a href="./get_started/index.html" class="primary-link">Deploy the server →</a>
     </div>
   </div>
 </div>
