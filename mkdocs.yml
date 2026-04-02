@@ -9,7 +9,7 @@ site_dir: site
 # Theme Configuration
 theme:
   name: material
-  logo: assets/images/actian-logo-white.svg
+  logo: assets/images/actian-logo.svg
   language: en
   features:
     - navigation.tabs
@@ -44,9 +44,7 @@ theme:
   icon:
     repo: fontawesome/brands/github
     edit: fontawesome/regular/pen-to-square
-  font:
-    text: Inter
-    code: Roboto Mono
+  font: false
   favicon: assets/favicon.png
   
   # Static files
@@ -118,6 +116,7 @@ extra_css:
   # - stylesheets/minichat.css  # disabled: Zeenea chatbot
   - stylesheets/dx_style.css
   - assets/stylesheets/actian-landing.css?v=4
+  - stylesheets/extra.css
 
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/marked/marked.min.js
