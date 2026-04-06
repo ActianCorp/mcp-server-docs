@@ -88,12 +88,24 @@ For the OAuth example, also install `httpx`:
 pip install httpx
 ```
 
+### Parameter differences by plugin
+
+Most tools share the same interface, but parameter names differ slightly between plugins:
+
+| Tool | Ingres / Analytics Engine / Informix | Zen |
+|------|--------------------------------------|-----|
+| `execute_query` | `query` | `sql` |
+| `describe_table` | `table_name` | `table` |
+
+The examples below use the Ingres / Analytics Engine / Informix parameter names. For Zen, substitute the parameter names from the table above.
+
 ### Basic usage
 
 ```python
 """Actian MCP Server — Python client example."""
 
 import asyncio
+import json
 from fastmcp import Client
 from fastmcp.client.transports import StreamableHttpTransport
 
@@ -106,11 +118,17 @@ async def main():
 
     async with Client(transport, timeout=60) as client:
 
-        # 1. Discover available tools
+        # 1. Discover available tools and their parameters
         tools = await client.list_tools()
         print("Available tools:")
         for tool in tools:
             print(f"  - {tool.name}")
+
+        # Print parameter schema for a specific tool
+        for tool in tools:
+            if tool.name == "execute_query":
+                print(f"\nexecute_query parameters:")
+                print(json.dumps(tool.model_dump()["parameters"], indent=2))
 
         # 2. List tables in the connected database
         result = await client.call_tool("list_tables", {})
@@ -118,6 +136,7 @@ async def main():
 
         # 3. Describe a specific table
         # Replace "customers" with a table from your database
+        # For Zen, use {"table": "customers"} instead
         result = await client.call_tool(
             "describe_table", {"table_name": "customers"}
         )
@@ -125,6 +144,7 @@ async def main():
 
         # 4. Execute a read-only SQL query
         # Replace table and column names to match your schema
+        # For Zen, use {"sql": "..."} instead of {"query": "..."}
         result = await client.call_tool(
             "execute_query",
             {"query": "SELECT name, email FROM customers WHERE status = 'active'"},
@@ -172,8 +192,7 @@ async def main():
         print(f"Connected — {len(tools)} tools available")
 
         # Verify the authenticated database user
-        # Note: SELECT CURRENT_USER is supported by Ingres, Analytics Engine,
-        # and Informix. For Zen, use a table query instead.
+        # For Zen, use {"sql": "..."} instead of {"query": "..."}
         result = await client.call_tool(
             "execute_query", {"query": "SELECT CURRENT_USER"}
         )
