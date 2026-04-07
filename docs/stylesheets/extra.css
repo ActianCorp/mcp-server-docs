@@ -498,3 +498,77 @@ pre code {
 .primary-link {
   font-family: var(--md-text-font);
 }
+
+/* ═══════════════════════════════════════════════
+   STEPS COMPONENT (Mintlify-style)
+   ═══════════════════════════════════════════════ */
+.steps-container {
+  margin: 2rem 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step-counter;
+}
+
+.step-item {
+  position: relative;
+  padding-left: 2rem;
+  padding-bottom: 1rem;
+  counter-increment: step-counter;
+}
+
+.step-item:last-child {
+  padding-bottom: 0;
+}
+
+/* Connecting line between steps */
+.step-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 0.4rem;
+  top: 1.5rem;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-border);
+}
+
+/* Numbered circle - no background */
+.step-item::after {
+  content: counter(step-counter) ".";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-weight: 400;
+  font-size: 16px;
+  display: inline;
+  z-index: 1;
+}
+
+.step-title {
+  font-family: var(--md-text-font);
+  font-size: 16px;
+  line-height: 1.65;
+  font-weight: 400;
+  color: var(--color-text);
+  margin: 0 0 0.25rem 0;
+  padding: 0;
+}
+
+.step-description {
+  font-family: var(--md-text-font);
+  font-size: 16px;
+  line-height: 1.65;
+  font-weight: 400;
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+}
+
+/* Dark mode adjustments */
+[data-md-color-scheme="slate"] .step-item:not(:last-child)::before {
+  background: var(--color-border);
+}
