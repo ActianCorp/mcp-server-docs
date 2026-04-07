@@ -631,3 +631,14 @@ Explanation:
 }
 ```
 
+## Next steps
+
+<div class="grid cards" markdown>
+
+- :material-folder-open: **[Resources](../resources/index.md)**  
+  Explore the resource types available through the NoSQL server.
+
+- :material-chat-processing: **[Prompts](../prompts/index.md)**  
+  Discover pre-built prompt templates for common NoSQL workflows.
+  
+</div>

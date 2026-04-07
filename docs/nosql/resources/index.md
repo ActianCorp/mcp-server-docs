@@ -162,3 +162,14 @@ Prefer this resource when you need a complete picture of the data model upfront.
 }
 ```
 
+## Next steps
+
+<div class="grid cards" markdown>
+
+- :material-tools: **[Tools](../tools/index.md)**  
+  Learn about the query and schema tools exposed by the NoSQL server.
+
+- :material-chat-processing: **[Prompts](../prompts/index.md)**  
+  Discover pre-built prompt templates for common NoSQL workflows.
+
+</div>

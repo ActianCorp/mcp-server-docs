@@ -48,9 +48,25 @@ configure the NSQL MCP Server.
 ```
 -->
 
-## Quick start
+## Start the server
 
 In order to start the MCP Server, you just need to run the docker image by providing the parameters specified above.
 
 `docker run --name NSQL-MCP -e NSQL_CONNECTIONURL=cars@localhost -p 8080:8080 actian/nsql-mcp-server`
 
+---
+
+## Next steps
+
+<div class="grid cards" markdown>
+
+- :material-tools: **[Tools](tools/index.md)**  
+  Explore the available MCP tools for NoSQL database operations.
+
+- :material-folder-open: **[Resources](resources/index.md)**  
+  Learn about schema metadata resources.
+
+- :material-chat-processing: **[Prompts](prompts/index.md)**  
+  Discover pre-built prompt templates for common workflows.
+
+</div>

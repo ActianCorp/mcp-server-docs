@@ -5,14 +5,54 @@ description: Overview of the prompts available when using the Actian MCP Server 
 
 # Prompts
 
-The Actian MCP Server for **Actian NoSQL** exposes built-in prompts to assist AI clients.
+The Actian MCP Server for **Actian NoSQL** provides a built-in prompt that transforms natural-language questions into structured, database-expert queries.
 
 ## Available prompts
 
-!!! info "Coming soon"
-    This section is being developed.
+| Prompt | Description |
+|--------|-------------|
+| [`ask_question`](#ask_question) | Wraps a user question in a database expert prompt template. |
 
-## Prompt reference
+## ask_question
 
-!!! info "Coming soon"
-    This section is being developed.
+Renders a database expert prompt from a plain-language question and returns the formatted prompt text ready for use.
+
+### Parameters
+
+| Field | Type | Required | Description |
+|-------|------|:--------:|-------------|
+| `question` | `string` | ✓ | The question to insert into the prompt template. |
+
+### Output template
+
+```text
+You are an Actian NoSQL database expert. Answer the following question: <question>
+```
+
+### Example
+
+**Input**
+
+```json
+{
+  "question": "What are the top 5 customers by revenue this quarter?"
+}
+```
+
+**Output**
+
+```text
+You are an Actian NoSQL database expert. Answer the following question: What are the top 5 customers by revenue this quarter?
+```
+
+## Next steps
+
+<div class="grid cards" markdown>
+
+- :material-tools: **[Tools](../tools/index.md)**  
+  Learn about the query and schema tools exposed by the NoSQL server.
+
+- :material-folder-open: **[Resources](../resources/index.md)**  
+  Explore the resource types available through the NoSQL server.
+
+</div>
