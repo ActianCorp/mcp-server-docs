@@ -24,7 +24,9 @@ With the Zen server, AI clients can:
 
 The container image is pre-configured to connect to a Zen database. The main user-provided input is a JSON configuration file that is mounted into the container.
 
-Create a file such as `conf.json` with the following structure:
+Create a file such as `conf.json` and mount it into the container. Two connection formats are supported:
+
+**Using the built-in DSN (no credentials):**
 
 ```json
 {
@@ -34,12 +36,24 @@ Create a file such as `conf.json` with the following structure:
 }
 ```
 
+**Using a full driver connection string (with credentials):**
+
+```json
+{
+    "database": "demodata",
+    "conn_string": "Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA;UID=myuser;PWD=mypassword",
+    "max_rows": 1000
+}
+```
+
+The full driver string connects directly to the Zen engine without relying on the container's built-in `odbc.ini`. Use this format when the database requires authentication.
+
 Use these fields as follows:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `database` | `str` | No | Logical database name, used for display purposes. |
-| `conn_string` | `str` | Yes | ODBC connection string. Typically `DSN=<dsn_name>`. |
+| `conn_string` | `str` | Yes | ODBC connection string. Use `DSN=<name>` for the built-in DSN, or a full driver string with `UID` and `PWD` for authenticated connections. |
 | `max_rows` | `int` | No | Maximum number of rows returned for a single query response. Defaults to `1000`. |
 | `oauth` | `object` | No | OAuth configuration block for protected deployments. See [Authentication](../authentication/index.md) for details. |
 
