@@ -7,20 +7,17 @@ description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Da
 
 This page explains how to use the **Actian MCP Server** with **Actian NoSQL Database**.
 
-<!-- TODO: Describe what the NoSQL plugin does and what AI clients can do with it. -->
+## Overview
 
-## What you can do
+The Actian NoSQL MCP Server acts as a bridge between any MCP client and your Actian NoSQL Database. Once configured, clients can explore schema metadata, run read-only JPQL queries and access all details of the persistent objects retrieved.
 
-With the NoSQL server, AI clients can:
+### Capabilities
 
-- Discover the Schema of an Actian NoSQL Database
-	- List classes
-	- Explore details of persistent classes
-- Run queries on database objects
-	- Use Filter, Projections, Navigation
-	- Implements optimized load for direct References
-- Read Objects by ID
-	- Including optimizations for collections of Object IDs
+| Action | Description |
+|--------|-------------|
+| **Discover the Schema of a NoSQL Database** | List classes, Explore details of persistent classes |
+| **Run queries on database objects** | Use Filter, Projections, Navigation |
+| **Retrieve Objects by ID** | Including optimizations for collections of Object IDs |
 
 ## Configuration
 
