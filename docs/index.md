@@ -10,7 +10,6 @@ hide:
 <!-- What is MCP? -->
 <div class="databases-section">
   <div class="features-header">
-    <h3 class="jumbo-heading">What is MCP?</h3>
     <p class="databases-subtitle">
       The Model Context Protocol (MCP) is an open standard that enables Large Language Models (LLMs) to securely access and interact with external data sources and tools. Think of MCP as a <strong>"USB-C port for AI."</strong> Instead of building fragile, custom integrations for every database, MCP provides a standardized way for an AI model to "plug in" to your infrastructure. This allows the model to understand schemas, execute queries, and retrieve real-time context without the data ever leaving your secure environment.
     </p>
@@ -38,7 +37,7 @@ hide:
 
     <div class="feature-item">
       <h4 class="feature-title">Grounding and Truth</h4>
-      <p class="feature-description">By querying Actian Ingres or HCL Informix in real-time, agents provide answers grounded in your latest business facts, eliminating "hallucinations."</p>
+      <p class="feature-description">By querying Actian Ingres or HCL Informix® in real-time, agents provide answers grounded in your latest business facts, eliminating "hallucinations."</p>
     </div>
 
     <div class="feature-item">
@@ -92,7 +91,7 @@ hide:
         <td>Edge-based AI and zero-admin mobile applications.</td>
       </tr>
       <tr>
-        <td><a href="./informix/index.html">HCL Informix</a></td>
+        <td><a href="./informix/index.html">HCL Informix®</a></td>
         <td><code>actian/mcp-server-informix</code></td>
         <td>Time-series, IoT, and high-availability spatial data.</td>
       </tr>
@@ -146,7 +145,7 @@ hide:
     </div>
     <div class="code-side">
       <div class="code-block">
-        <pre><code># Example: Launch the HCL Informix MCP Server
+        <pre><code># Example: Launch the HCL Informix® MCP Server
 docker pull actian/mcp-server-informix:latest
 
 # Run with your secure environment variables
@@ -187,7 +186,7 @@ docker run -e INFORMIXSERVER=myserver \
 
 <!-- Footer CTA -->
 <div class="cta-section">
-  <h2>Empower your agents with the world's most reliable data.</h2>
+  <h4>Empower your agents with the world's most reliable data.</h4>
   <div class="cta-buttons">
     <a href="https://hub.docker.com/u/actian" class="primary-link">Visit the Actian Docker Hub →</a>
     <a href="https://www.actian.com/contact/" class="primary-link" style="margin-left:1.5rem;">Contact an AI Architect →</a>

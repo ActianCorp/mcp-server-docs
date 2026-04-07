@@ -16,63 +16,63 @@ The server inside the container runs in **HTTP** transport mode, and clients con
 
 The standard endpoint used for the server deployment is `/mcp`.
 
-## Claude Desktop
+=== ":material-brain: Claude Desktop"
 
-Add the following server entry to `claude_desktop_config.json`:
+    Add the following server entry to `claude_desktop_config.json`:
 
-```json
-{
-	"mcpServers": {
-		"actian-mcp-server": {
-			"url": "http://localhost:<port>/mcp"
-		}
-	}
-}
-```
+    ```json
+    {
+        "mcpServers": {
+            "actian-mcp-server": {
+                "url": "http://localhost:<port>/mcp"
+            }
+        }
+    }
+    ```
 
-For a remote deployment, replace `localhost` and `<port>` with the public host and port of the Actian MCP Server.
+    For a remote deployment, replace `localhost` and `<port>` with the public host and port of the Actian MCP Server.
 
-## Cursor
+=== ":material-cursor-default-click: Cursor"
 
-Add the following server entry to `~/.cursor/mcp.json`:
+    Add the following server entry to `~/.cursor/mcp.json`:
 
-```json
-{
-	"mcpServers": {
-		"actian-mcp-server": {
-			"url": "http://localhost:<port>/mcp"
-		}
-	}
-}
-```
+    ```json
+    {
+        "mcpServers": {
+            "actian-mcp-server": {
+                "url": "http://localhost:<port>/mcp"
+            }
+        }
+    }
+    ```
 
-For a remote deployment, replace `localhost` and `<port>` with the public host and port of the Actian MCP Server.
+    For a remote deployment, replace `localhost` and `<port>` with the public host and port of the Actian MCP Server.
 
-## fast-agent
+=== ":material-lightning-bolt: fast-agent"
 
-Add the following server entry to `fastagent.config.yaml`:
+    Add the following server entry to `fastagent.config.yaml`:
 
-```yaml
-mcp:
-	servers:
-		actian-mcp-server:
-			url: "http://localhost:<port>/mcp"
-```
+    ```yaml
+    mcp:
+        servers:
+            actian-mcp-server:
+                url: "http://localhost:<port>/mcp"
+    ```
 
-## Codex
+=== ":material-code-braces: Codex"
 
-Add the following server entry to `~/.codex/config.toml`:
+    Add the following server entry to `~/.codex/config.toml`:
 
-```toml
-[mcp_servers.actian-mcp-server]
-url = "http://localhost:<port>/mcp"
-```
+    ```toml
+    [mcp_servers.actian-mcp-server]
+    url = "http://localhost:<port>/mcp"
+    ```
 
-For a remote deployment, replace `localhost` and `<port>` with the public host and port of the Actian MCP Server.
+    For a remote deployment, replace `localhost` and `<port>` with the public host and port of the Actian MCP Server.
 
 ## Python client
 
-The following example demonstrates how to connect to a running Actian MCP Server instance using the [FastMCP](https://pypi.org/project/fastmcp/) Python client. It works with any supported database plugin (Ingres, Analytics Engine, Informix, or Zen).
+The following example demonstrates how to connect to a running Actian MCP Server instance using the [FastMCP](https://pypi.org/project/fastmcp/) Python client. It works with any supported database plugin (Ingres, Analytics Engine, HCL Informix®, or Zen).
 
 ### Prerequisites
 
@@ -92,12 +92,12 @@ pip install httpx
 
 Most tools share the same interface, but parameter names differ slightly between plugins:
 
-| Tool | Ingres / Analytics Engine / Informix | Zen |
+| Tool | Ingres / Analytics Engine / HCL Informix® | Zen |
 |------|--------------------------------------|-----|
 | `execute_query` | `query` | `sql` |
 | `describe_table` | `table_name` | `table` |
 
-The examples below use the Ingres / Analytics Engine / Informix parameter names. For Zen, substitute the parameter names from the table above.
+The examples below use the Ingres / Analytics Engine / HCL Informix® parameter names. For Zen, substitute the parameter names from the table above.
 
 ### Basic usage
 

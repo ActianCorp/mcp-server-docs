@@ -5,29 +5,25 @@ description: Overview of the prompts available when using the Actian MCP Server 
 
 # Prompts
 
-The Actian MCP Server for **Actian Ingres** exposes a built-in prompt for general database questions.
+The Actian MCP Server for **Actian Ingres** provides a built-in prompt that transforms natural-language questions into structured, database-expert queries.
 
 ## Available prompts
 
-The Ingres integration provides the following prompt:
-
-| Prompt | Purpose |
-|--------|---------|
-| `ask_question` | Generates a database-oriented prompt from a user question. |
+| Prompt | Description |
+|--------|-------------|
+| [`ask_question`](#ask_question) | Wraps a user question in a database expert prompt template. |
 
 ## ask_question
 
-### Description
+Renders a database expert prompt from a plain-language question and returns the formatted prompt text ready for use.
 
-Renders a database expert prompt from a supplied question and returns the resulting prompt text.
-
-### Input Parameters
+### Parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `question` | `string` | Yes | User question to insert into the prompt. |
+|-------|------|:--------:|-------------|
+| `question` | `string` | ✓ | The question to insert into the prompt template. |
 
-### Output Schema
+### Output template
 
 ```text
 You are a database expert. Answer the following question: <question>
@@ -35,11 +31,15 @@ You are a database expert. Answer the following question: <question>
 
 ### Example
 
+**Input**
+
 ```json
 {
   "question": "What are the top 5 customers by revenue this quarter?"
 }
 ```
+
+**Output**
 
 ```text
 You are a database expert. Answer the following question: What are the top 5 customers by revenue this quarter?
@@ -47,5 +47,12 @@ You are a database expert. Answer the following question: What are the top 5 cus
 
 ## Next steps
 
-- [Tools](../tools/index.md) — Learn about Ingres tools
-- [Resources](../resources/index.md) — Learn about Ingres resources
+<div class="grid cards" markdown>
+
+- :material-tools: **[Tools](../tools/index.md)**  
+  Learn about the SQL and schema tools exposed by the Ingres server.
+
+- :material-folder-open: **[Resources](../resources/index.md)**  
+  Explore the resource types available through the Ingres server.
+
+</div>

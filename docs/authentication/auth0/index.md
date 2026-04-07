@@ -36,7 +36,7 @@ For experienced Auth0 users — the full walkthrough follows below.
 - The Actian MCP Server installed and ready to run
 
 
-## Part 1 — create an Auth0 API
+## Part 1 Create an Auth0 API
 
 The **API** represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 include the API's identifier as the `audience` claim.
 
@@ -65,7 +65,7 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
     Unlike Keycloak (where the audience defaults to the Client ID), Auth0 requires you to create a separate API and use its Identifier as the audience. If you omit `FASTMCP_SERVER_AUTH_AUDIENCE` from your config, the server falls back to `CLIENT_ID` — which won't match the API Identifier, causing `audience mismatch` errors.
 
 
-## Part 2 — create an Auth0 application
+## Part 2 Create an Auth0 application
 
 The **Application** represents the MCP server's OAuth client — it holds the `client_id` and `client_secret` used during the OAuth handshake.
 
@@ -133,7 +133,7 @@ All values are on the **Settings** tab of your Application:
     The **Domain** is shown at the top of the Settings tab (for example, `dev-abc123.us.auth0.com`). The OIDC discovery URL is always `https://<domain>/.well-known/openid-configuration`.
 
 
-## Part 3 — authorize the application for the API
+## Part 3 authorize the application for the API
 
 !!! danger "This step is critical"
     Without it, Auth0 rejects token requests with `invalid_request` because your Application isn't authorized for the API.
@@ -199,7 +199,7 @@ Scopes are **space-separated** (not comma-separated):
 ```
 
 
-## Part 5 — create Auth0 users (if using user impersonation)
+## Part 5 Create Auth0 users (if using user impersonation)
 
 If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database via `SET SESSION AUTHORIZATION`. Each OAuth user must have a matching database account. See [User Impersonation](../index.md#user-impersonation) for full details.
 
@@ -225,7 +225,7 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
 !!! note "Case sensitivity"
     If the database is case-sensitive (for example, `jdoe` ≠ `Jdoe`), ensure the email prefix exactly matches the database account name.
 
-### Step 5.2 — create the matching database user
+### Step 5.2 Create the matching database user
 
 Auth0 handles authentication, but the Actian database still needs the user to exist for impersonation to work:
 
@@ -245,7 +245,7 @@ GRANT SELECT ON TABLE products TO jdoe;
     If users sign in via Google, Microsoft Entra, SAML, or corporate SSO through Auth0, the `sub` claim will look like `google-oauth2|12345` — the server strips the provider prefix, leaving `12345`, which is unlikely to match a database account. For SSO setups, set `user_impersonation` to `false` unless you can ensure the Auth0 user profile contains a matching username.
 
 
-## Part 6 — assemble the final configuration
+## Part 6 Assemble the final configuration
 
 ### Mapping summary
 

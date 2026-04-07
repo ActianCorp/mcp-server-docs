@@ -1,95 +1,127 @@
 ---
 title: Actian Zen
-description: Use the Actian MCP Server to connect MCP clients to Actian Zen.
+description: Connect MCP clients to Actian Zen for database exploration and read-only SQL queries.
 ---
 
 # Actian Zen
 
-This page explains how to use the **Actian MCP Server** with **Actian Zen**.
+Connect your MCP-compatible client to **Actian Zen** using the Actian MCP Server. Once configured, clients can explore schema metadata, execute read-only SQL queries, and perform ORM operations through a standard MCP interface — with automatic Zen dialect translation handled by the server.
 
-When configured for Zen, the server gives an MCP-compatible client a set of tools for database exploration and read-only query execution through a standard MCP interface.
 
-## What you can do
+## Overview
 
-With the Zen server, AI clients can:
+### Capabilities
 
-- Run **read-only SQL queries** with automatic Zen dialect translation.
-- List available tables and inspect their structure.
-- Perform **ORM operations** with JOINs, WHERE, ORDER BY, GROUP BY, and LIMIT.
-- List and download **blob/file data**.
-- Query server capabilities, list DSNs, and release locks.
-- Read database schema metadata as a resource.
+| Action | Description |
+|--------|-------------|
+| **Run SQL queries** | Execute read-only SQL with automatic Zen dialect translation. |
+| **List tables and views** | Discover available objects and inspect their structure. |
+| **ORM operations** | Query with JOINs, WHERE, ORDER BY, GROUP BY, and LIMIT clauses. |
+| **Blob and file data** | List and download blob or file data stored in the database. |
+| **Server management** | Query server capabilities, list DSNs, and release locks. |
+| **Schema metadata** | Read database schema as a structured resource. |
+
+
+
+## Prerequisites
+
+- Docker installed and running
+- A running Actian Zen instance reachable from the container
+- (Optional) Database credentials if your Zen database requires authentication
+- (Optional) An OIDC provider if using OAuth authentication
+
+
 
 ## Configuration
 
-The container image is pre-configured to connect to a Zen database. The main user-provided input is a JSON configuration file that is mounted into the container.
+The Zen MCP Server is configured via a single JSON file mounted into the container at `/app/conf.json`. Two connection formats are supported depending on whether your database requires credentials.
 
-Create a file such as `conf.json` and mount it into the container. Two connection formats are supported:
+### Connection formats
 
-**Using the built-in DSN (no credentials):**
+**DSN connection (no credentials)**
 
-```json
-{
-    "database": "demodata",
-    "conn_string": "DSN=demodata",
-    "max_rows": 1000
-}
-```
-
-**Using a full driver connection string (with credentials):**
+Use this format when the built-in `odbc.ini` DSN is sufficient.
 
 ```json
 {
-    "database": "demodata",
-    "conn_string": "Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA;UID=myuser;PWD=mypassword",
-    "max_rows": 1000
+  "database": "demodata",
+  "conn_string": "DSN=demodata",
+  "max_rows": 1000
 }
 ```
 
-The full driver string connects directly to the Zen engine without relying on the container's built-in `odbc.ini`. Use this format when the database requires authentication.
+**Full driver connection (with credentials)**
 
-Use these fields as follows:
+Use this format when the database requires authentication. This bypasses the container's built-in `odbc.ini` and connects directly to the Zen engine.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `database` | `str` | No | Logical database name, used for display purposes. |
-| `conn_string` | `str` | Yes | ODBC connection string. Use `DSN=<name>` for the built-in DSN, or a full driver string with `UID` and `PWD` for authenticated connections. |
-| `max_rows` | `int` | No | Maximum number of rows returned for a single query response. Defaults to `1000`. |
-| `oauth` | `object` | No | OAuth configuration block for protected deployments. See [Authentication](../authentication/index.md) for details. |
+```json 
+{
+  "database": "demodata",
+  "conn_string": "Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA;UID=myuser;PWD=mypassword",
+  "max_rows": 1000
+}
+```
 
-!!! note
+### Configuration reference
+
+**Required fields**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `conn_string` | `string` | ODBC connection string. Use `DSN=<name>` for the built-in DSN, or a full driver string with `UID` and `PWD` for authenticated connections. |
+
+**Optional fields**
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `database` | `string` | — | Logical database name used for display purposes. |
+| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments. See [Authentication](../authentication/index.md). |
+
+!!! note "OAuth and user impersonation"
     Zen does not support `SET SESSION AUTHORIZATION`. When using OAuth, set `user_impersonation: false` in the `oauth` block. The authenticated user is logged but not enforced at the database level.
 
-## Starting the server
+---
 
-The Zen MCP Server is deployed as a container image.
+## Start the server
+
+With your `conf.json` ready, start the container and mount the configuration file:
 
 ```bash
 docker run -d \
-    -v $(pwd)/conf.json:/app/conf.json:ro \
-    actian/zen-mcp-server:1.0.0
+  -v $(pwd)/conf.json:/app/conf.json:ro \
+  actian/zen-mcp-server:1.0.0
 ```
 
 !!! note "Container networking"
-    When the container connects to a Zen engine on the host machine, you must provide the host's reachable IP address (not `localhost`). Docker Desktop handles `host.docker.internal` automatically. On Windows, the `start-zen-mcp.ps1` helper script automates container startup.
+    When connecting to a Zen engine running on the host machine, use the host's reachable IP address — not `localhost`. Docker Desktop resolves `host.docker.internal` automatically. On Windows, use the `start-zen-mcp.ps1` helper script to automate container startup.
 
-After the container starts, connect your MCP client to the exposed server endpoint using the transport configured for your deployment.
+Once the container is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration.
 
-## What users should expect
+---
 
-Once the container is running and connected to Zen, an MCP client can discover the available server capabilities automatically.
+## Usage
 
-In practice, this means a user can ask the client to:
+After connecting, your MCP client automatically discovers the server's capabilities. Common tasks include:
 
-- Inspect database structure before writing a query.
-- Run a read-only query and summarize the results.
-- Look up details for a specific table.
-- Explore relationships between tables.
+- **Inspect before querying** — List tables and review structure before writing SQL.
+- **Run a query** — Execute a read-only SQL statement and receive formatted results.
+- **Explore relationships** — Traverse foreign keys and related tables using ORM operations.
+- **Summarize results** — Ask the client to interpret or summarize query output.
 
-This keeps Zen access available through a consistent MCP workflow while the server manages the database connection, SQL dialect translation, and response formatting.
+---
 
 ## Next steps
 
-- [Tools](tools/index.md) — Learn about Zen tools
-- [Resources](resources/index.md) — Learn about Zen resources
-- [Prompts](prompts/index.md) — Learn about Zen prompts
+<div class="grid cards" markdown>
+
+- :material-tools: **[Tools](tools/index.md)**  
+  Learn about the SQL, ORM, and blob tools exposed by the Zen server.
+
+- :material-folder-open: **[Resources](resources/index.md)**  
+  Explore the resource types available through the server.
+
+- :material-message-text: **[Prompts](prompts/index.md)**  
+  Review the built-in prompt templates for common workflows.
+
+</div>

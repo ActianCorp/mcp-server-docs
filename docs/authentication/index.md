@@ -248,20 +248,10 @@ Choose your identity provider for step-by-step setup instructions:
 
 <div class="grid cards" markdown>
 
--   :material-cloud:{ style="color: #1E88E5" } **Auth0**
+- :material-cloud: **[Auth0](auth0/index.md)**  
+  Cloud-hosted identity provider. Ideal for teams that want a managed service with no infrastructure to maintain.
 
-    ---
-
-    Cloud-hosted identity provider. Ideal for teams that want a managed service with no infrastructure to maintain.
-
-    [:octicons-arrow-right-24: Auth0 setup guide](auth0/index.md)
-
--   :material-key:{ style="color: #1E88E5" } **Keycloak**
-
-    ---
-
-    Open-source, self-hosted identity provider. Ideal for teams that need full control over their authentication infrastructure.
-
-    [:octicons-arrow-right-24: Keycloak setup guide](keycloak/index.md)
+- :material-key: **[Keycloak](keycloak/index.md)**  
+  Open-source, self-hosted identity provider. Ideal for teams that need full control over their authentication infrastructure.
 
 </div>

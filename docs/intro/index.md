@@ -5,32 +5,29 @@ description: A simple overview of the Actian MCP Server, its purpose, and the co
 
 # Introduction to Actian MCP Server
 
-The **Actian MCP Server** is a configurable server that implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) so AI applications can work with Actian data in a consistent and controlled way.
+The **Actian MCP Server** is a configurable server that implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) to enable AI applications to work with Actian data in a consistent and controlled way. The Actian MCP Server acts as a bridge between an MCP-compatible client and an Actian data source. It allows AI agents to discover available capabilities, access metadata, and perform database tasks through a standard protocol instead of custom integrations.
 
-At a high level, it acts as a bridge between an MCP-compatible client and an Actian data source. It helps AI agents discover available capabilities, access metadata, and perform database tasks through a standard protocol rather than custom integrations.
-
-## What is MCP?
 
 The **Model Context Protocol (MCP)** is an open standard for connecting AI models to external systems, such as tools, data sources, and services. An MCP server exposes a small set of building blocks that AI clients can use:
 
 | Primitive | Description |
-| :-------- | :---------- |
-| **Tools** | Callable functions the AI can invoke — for example, run a SQL query |
-| **Resources** | Read-only data sources the AI can access — for example, schema information |
+|-----------|-------------|
+| **Tools** | Callable functions the AI can invoke (for example, run a SQL query) |
+| **Resources** | Read-only data sources the AI can access (for example, schema information) |
 | **Prompts** | Pre-built prompt templates for common workflows |
 
-## What does the Actian MCP Server do?
+## What Does the Actian MCP Server Do?
 
-The Actian MCP Server provides a common MCP layer for **Actian DBMS platforms**. Instead of building separate integrations for each client or workflow, you can expose database capabilities through one server interface.
+The Actian MCP Server provides a common MCP layer for **Actian DBMS platforms**. Instead of building separate integrations for each client or workflow, you can expose database capabilities through a single server interface.
 
-Depending on configuration, the server enables AI clients to:
+Depending on how it's configured, the server helps AI clients to:
 
-- Run database queries through MCP tools
-- Discover tables and other database objects
-- Inspect schema details and metadata
-- Use reusable prompts for database-oriented tasks
+- Run database queries through MCP tools.
+- Discover tables and other database objects.
+- Inspect schema details and metadata.
+- Use reusable prompts for database-oriented tasks.
 
-The server handles surrounding concerns such as transport, configuration, authentication, and secure access to the target database.
+The server handles the surrounding concerns, such as transport, configuration, authentication, and secure access to the target database.
 
 ## Architecture overview
 ```mermaid
@@ -78,7 +75,7 @@ JWT Validation"]
         ae["Analytics Engine"]
         ingres["Ingres"]
         zen["Zen"]
-        informix["Informix"]
+        informix["HCL Informix®"]
         nosql["NoSQL"]
     end
 
@@ -115,7 +112,7 @@ sequenceDiagram
     participant Auth as OAuth 2.0 (Keycloak/Auth0)
     participant Server as Actian MCP Server
     participant Plugin as Database Plugin
-    participant DB as Actian Database (Analytics Engine/Ingres/Zen/Informix/NoSQL)
+    participant DB as Actian Database (Analytics Engine/Ingres/Zen/HCL Informix®/NoSQL)
 
     User->>Client: Natural language query
     Client->>Transport: MCP request
@@ -142,41 +139,23 @@ sequenceDiagram
 
 <div class="grid cards" markdown>
 
--   :material-connection:{ style="color: #1E88E5" } **MCP-native capabilities**
+- :material-connection: **MCP-native capabilities**  
+  Exposes tools, resources, and prompts in a standard MCP format usable by any compatible client.
 
-    ---
+- :material-docker: **Container-friendly deployment**  
+  Runs a server instance for a specific Actian DBMS in its own container for clean isolation.
 
-    Exposes tools, resources, and prompts in a standard MCP format usable by any compatible client.
+- :material-shield-lock: **OAuth 2.0 support**  
+  Provides secure, standards-based authentication for all MCP clients.
 
--   :material-docker:{ style="color: #1E88E5" } **Container-friendly deployment**
+- :material-transit-connection-horizontal: **HTTP transport**  
+  Runs in `http` transport mode for straightforward network connectivity.
 
-    ---
+- :material-eye-lock: **Read-only mode**  
+  Restricts AI agents to read-only database operations to prevent unintended data changes.
 
-    Runs a server instance for a specific Actian DBMS in its own container for clean isolation.
-
--   :material-shield-lock:{ style="color: #1E88E5" } **OAuth 2.0 support**
-
-    ---
-
-    Provides secure, standards-based authentication for all MCP clients.
-
--   :material-transit-connection-horizontal:{ style="color: #1E88E5" } **HTTP transport**
-
-    ---
-
-    Runs in `http` transport mode for straightforward network connectivity.
-
--   :material-eye-lock:{ style="color: #1E88E5" } **Read-only mode**
-
-    ---
-
-    Restricts AI agents to read-only database operations to prevent unintended data changes.
-
--   :material-database-search:{ style="color: #1E88E5" } **Schema discovery**
-
-    ---
-
-    Lets AI agents inspect database structure and metadata before querying.
+- :material-database-search: **Schema discovery**  
+  Lets AI agents inspect database structure and metadata before querying.
 
 </div>
 
@@ -217,11 +196,6 @@ The Actian MCP Server removes the need to build separate integrations for each A
 
 <div class="grid cards" markdown>
 
--   :material-rocket-launch:{ style="color: #1E88E5" } **Get Started**
-
-    ---
-
-    Follow our quickstart guide to deploy your first Actian MCP Server instance and connect it to an AI client.
-
-    [Get Started →](../get_started/index.md)
+- :material-rocket-launch: **[Get Started](../get_started/index.md)**  
+  Follow our quickstart guide to deploy your first Actian MCP Server instance and connect it to an AI client.
 </div>

@@ -1,48 +1,48 @@
 ---
 title: Resources
-description: Overview of the resources available when using the Actian MCP Server with Actian Analytics Engine.
+description: Built-in resources available when using the Actian MCP Server with Actian Analytics Engine.
 ---
 
 # Resources
 
-The Actian MCP Server for **Actian Analytics Engine** exposes a built-in resource for database schema discovery.
+The Actian MCP Server for **Actian Analytics Engine** provides a built-in resource that returns live schema metadata for the connected database.
+
 
 ## Available resources
 
-The Analytics Engine integration provides the following resource:
+| Resource URI | Description |
+|--------------|-------------|
+| [`resource://database/schema`](#resourcedatabaseschema) | Returns schema metadata including tables, columns, constraints, and comments. |
 
-| Resource URI | Purpose |
-|-----|-------------|
-| `resource://database/schema` | Returns database schema metadata for the connected database. |
 
 ## resource://database/schema
 
-### Description
+Fetches the full database schema as a structured JSON object. Use this resource to inspect table and column definitions before writing queries.
 
-Returns the database schema as JSON, including tables, columns, comments, and constraint information.
+### Parameters
 
-### Input parameters
-
-This resource doesn't require any input parameters.
+This resource takes no input parameters.
 
 ### Output schema
 
+**On success**
+
 ```json
 {
-    "<table_name>": {
-        "columns": {
-            "<column_name>": {
-                "dtype": "<column_datatype>",
-                "comment": "<column_comment>"
-            }
-        },
-        "keys": ["<constraint_definition>"],
-        "comment": "<table_comment>"
-    }
+  "<table_name>": {
+    "columns": {
+      "<column_name>": {
+        "dtype": "<column_datatype>",
+        "comment": "<column_comment>"
+      }
+    },
+    "keys": ["<constraint_definition>"],
+    "comment": "<table_comment>"
+  }
 }
 ```
 
-On error:
+**On error**
 
 ```text
 The database schema could not be retrieved. Error: <error_message>
@@ -50,50 +50,57 @@ The database schema could not be retrieved. Error: <error_message>
 
 ### Example
 
+**Request**
+
 ```text
 resource://database/schema
 ```
 
-### Success response example
+**Response**
 
 ```json
 {
-    "customers": {
-        "columns": {
-            "customer_id": {
-                "dtype": "integer",
-                "comment": "Primary key"
-            },
-            "customer_name": {
-                "dtype": "varchar",
-                "comment": "Customer display name"
-            }
-        },
-        "keys": [
-            "PRIMARY KEY (customer_id)"
-        ],
-        "comment": "Customer master data"
+  "customers": {
+    "columns": {
+      "customer_id": {
+        "dtype": "integer",
+        "comment": "Primary key"
+      },
+      "customer_name": {
+        "dtype": "varchar",
+        "comment": "Customer display name"
+      }
     },
-    "orders": {
-        "columns": {
-            "order_id": {
-                "dtype": "integer",
-                "comment": "Primary key"
-            },
-            "customer_id": {
-                "dtype": "integer",
-                "comment": "Customer reference"
-            }
-        },
-        "keys": [
-            "PRIMARY KEY (order_id)"
-        ],
-        "comment": "Sales orders"
-    }
+    "keys": ["PRIMARY KEY (customer_id)"],
+    "comment": "Customer master data"
+  },
+  "orders": {
+    "columns": {
+      "order_id": {
+        "dtype": "integer",
+        "comment": "Primary key"
+      },
+      "customer_id": {
+        "dtype": "integer",
+        "comment": "Customer reference"
+      }
+    },
+    "keys": ["PRIMARY KEY (order_id)"],
+    "comment": "Sales orders"
+  }
 }
 ```
 
+---
+
 ## Next steps
 
-- [Tools](../tools/index.md) — Learn about Analytics Engine tools
-- [Prompts](../prompts/index.md) — Learn about Analytics Engine prompts
+<div class="grid cards" markdown>
+
+- :material-tools: **[Tools](../tools/index.md)**  
+  Learn about the SQL and schema tools exposed by the Analytics Engine server.
+
+- :material-message-text: **[Prompts](../prompts/index.md)**  
+  Review the built-in prompt templates for common workflows.
+
+</div>
