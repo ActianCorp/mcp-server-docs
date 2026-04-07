@@ -1,11 +1,11 @@
 ---
 title: Testing
-description: Test coverage and results for the Actian Informix MCP Server plugin.
+description: Test coverage and results for the Actian HCL Informix® MCP Server plugin.
 ---
 
 # Testing
 
-This page describes the test coverage plan for the Actian Informix MCP Server plugin.
+This page describes the test coverage plan for the Actian HCL Informix® MCP Server plugin.
 
 <!-- TODO: Define the test groups, test count, estimated effort, and dependencies. Use the format below.
 
@@ -13,7 +13,7 @@ This page describes the test coverage plan for the Actian Informix MCP Server pl
 
 | Test Group | Tests | Effort | Dependencies |
 |------------|-------|--------|--------------|
-| G1: Connection | 3 | 0.5 day | Informix instance |
+| G1: Connection | 3 | 0.5 day | HCL Informix® instance |
 | G2: Query Execution | 5 | 1 day | write access |
 | G3: Schema Discovery | 4 | 0.5 day | DEMODATA |
 | G4: Error Handling | 4 | 0.5 day | none |

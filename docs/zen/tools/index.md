@@ -1,98 +1,105 @@
 ---
 title: Tools
-description: Overview of the tools available when using the Actian MCP Server with Actian Zen.
+description: Built-in tools available when using the Actian MCP Server with Actian Zen.
 ---
 
 # Tools
 
-The Actian MCP Server for **Actian Zen** exposes 6 tools for read-only database access.
+The Actian MCP Server for **Actian Zen** provides 6 built-in tools for read-only database access, ORM operations, blob handling, and server management.
+
+---
 
 ## Available tools
 
-| Tool | Purpose |
-|------|---------|
-| `execute_query` | Run read-only SQL with automatic Zen dialect translation. |
-| `list_tables` | List user tables from the Zen catalog. |
-| `describe_table` | Get column metadata, primary keys, and foreign keys for a table. |
-| `orm_operation` | Structured queries via SQLAlchemy with JOINs, WHERE, ORDER BY, GROUP BY, LIMIT. |
-| `blob_operation` | List and download file/blob data. |
-| `database_manage` | Server capabilities, list DSNs, release locks. |
+| Tool | Description |
+|------|-------------|
+| [`execute_query`](#execute_query) | Runs read-only SQL with automatic Zen dialect translation. |
+| [`list_tables`](#list_tables) | Lists all user tables from the Zen catalog. |
+| [`describe_table`](#describe_table) | Returns column metadata, primary keys, and foreign keys for a table. |
+| [`orm_operation`](#orm_operation) | Executes structured queries via SQLAlchemy with JOINs, WHERE, ORDER BY, GROUP BY, and LIMIT. |
+| [`blob_operation`](#blob_operation) | Lists and downloads file and blob data. |
+| [`database_manage`](#database_manage) | Queries server capabilities, lists DSNs, and releases locks. |
 
 ---
 
 ## execute_query
 
-### Description
+Executes a read-only SQL query against Actian Zen with automatic dialect translation. Suitable for complex queries including JOINs, subqueries, aggregations, and UNION.
 
-Executes read-only SQL against Actian Zen with automatic dialect translation. Suitable for complex queries including JOINs, subqueries, aggregations, and UNION.
+!!! note "Auto-translations"
+    The following translations are applied automatically before execution:
 
-Auto-translations applied:
+    - `LEN()` → `CHAR_LENGTH()` (Zen does not support `LEN()`)
+    - `INFORMATION_SCHEMA` queries → `dbo.fSQL*()` catalog functions
+    - Constraint names are truncated to 20 characters (Zen limit)
 
-- `LEN()` is translated to `CHAR_LENGTH()` (Zen does not support `LEN()`).
-- `INFORMATION_SCHEMA` queries are translated to `dbo.fSQL*()` catalog functions.
-- Constraint names are truncated to 20 characters (Zen limit).
+    Only `SELECT` queries are permitted.
 
-Only SELECT queries are allowed.
-
-### Input Parameters
+### Parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `sql` | `string` | Yes | SQL query to execute. |
+|-------|------|:--------:|-------------|
+| `sql` | `string` | ✓ | Read-only SQL query to execute. |
 
-### Output Schema
+### Output schema
+
+**On success**
 
 ```json
 {
-    "results": [{"column": "value"}],
-    "row_count": 2,
-    "method": "execute_query"
+  "results": [{"column": "value"}],
+  "row_count": 2,
+  "method": "execute_query"
 }
 ```
 
-When the result set exceeds `max_rows` (default 1000):
+**When results are truncated**
+
+Returned when the result set exceeds `max_rows` (default: `1000`).
 
 ```json
 {
-    "results": [{"column": "value"}],
-    "row_count": 1000,
-    "truncated": true,
-    "truncation_note": "Results limited to 1000 rows. Use WHERE to narrow results.",
-    "method": "execute_query"
+  "results": [{"column": "value"}],
+  "row_count": 1000,
+  "truncated": true,
+  "truncation_note": "Results limited to 1000 rows. Use WHERE to narrow results.",
+  "method": "execute_query"
 }
 ```
 
-When dialect translation is applied:
+**When dialect translation is applied**
 
 ```json
 {
-    "results": [],
-    "row_count": 0,
-    "translated": true,
-    "translation_note": "Translated LEN() to CHAR_LENGTH() for Zen compatibility",
-    "original_sql": "SELECT LEN(name) FROM customers",
-    "method": "execute_query"
+  "results": [],
+  "row_count": 0,
+  "translated": true,
+  "translation_note": "Translated LEN() to CHAR_LENGTH() for Zen compatibility",
+  "original_sql": "SELECT LEN(name) FROM customers",
+  "method": "execute_query"
 }
 ```
 
 ### Example
 
+**Request**
+
 ```json
 {
-    "sql": "SELECT * FROM Person WHERE Last_Name LIKE 'S%' ORDER BY First_Name"
+  "sql": "SELECT * FROM Person WHERE Last_Name LIKE 'S%' ORDER BY First_Name"
 }
 ```
 
-### Success Response Example
+**Response**
 
 ```json
 {
-    "results": [
-        {"ID": 101, "First_Name": "Alice", "Last_Name": "Smith"},
-        {"ID": 102, "First_Name": "Bob", "Last_Name": "Sanders"}
-    ],
-    "row_count": 2,
-    "method": "execute_query"
+  "results": [
+    {"ID": 101, "First_Name": "Alice", "Last_Name": "Smith"},
+    {"ID": 102, "First_Name": "Bob", "Last_Name": "Sanders"}
+  ],
+  "row_count": 2,
+  "method": "execute_query"
 }
 ```
 
@@ -100,29 +107,31 @@ When dialect translation is applied:
 
 ## list_tables
 
-### Description
-
 Returns all user tables in the connected database by querying the Zen `dbo.fSQLTables()` catalog function. System tables are excluded.
 
-### Input Parameters
+### Parameters
 
-This tool doesn't require any input parameters.
+This tool takes no input parameters.
 
-### Output Schema
+### Output schema
+
+**On success**
 
 ```json
 {
-    "tables": ["table_name"],
-    "count": 1
+  "tables": ["<table_name>"],
+  "count": "<num_tables>"
 }
 ```
 
-### Success Response Example
+### Example
+
+**Response**
 
 ```json
 {
-    "tables": ["Person", "Department", "Billing", "Student", "Class", "Tuition", "Faculty"],
-    "count": 7
+  "tables": ["Person", "Department", "Billing", "Student", "Class", "Tuition", "Faculty"],
+  "count": 7
 }
 ```
 
@@ -130,42 +139,65 @@ This tool doesn't require any input parameters.
 
 ## describe_table
 
-### Description
+Returns column metadata for a table, including names, types, precision, scale, nullability, defaults, primary keys, and foreign keys. Internally uses the `dbo.fSQLColumns()`, `dbo.fSQLPrimaryKeys()`, and `dbo.fSQLForeignKeys()` catalog functions.
 
-Returns column metadata for a table, including column names, types, precision, scale, nullability, defaults, primary keys, and foreign keys. Uses `dbo.fSQLColumns()`, `dbo.fSQLPrimaryKeys()`, and `dbo.fSQLForeignKeys()` catalog functions internally.
-
-### Input Parameters
+### Parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `table` | `string` | Yes | Name of the table to describe. |
+|-------|------|:--------:|-------------|
+| `table` | `string` | ✓ | Name of the table to describe. |
 
-### Output Schema
+### Output schema
+
+**On success**
 
 ```json
 {
-    "table_name": "Person",
-    "columns": [
-        {
-            "name": "ID",
-            "type": "BIGIDENTITY",
-            "precision": 19,
-            "scale": 0,
-            "nullable": false,
-            "default": null,
-            "primary_key": true
-        }
-    ],
-    "primary_keys": ["ID"],
-    "foreign_keys": []
+  "table_name": "<table_name>",
+  "columns": [
+    {
+      "name": "<column_name>",
+      "type": "<column_type>",
+      "precision": "<precision>",
+      "scale": "<scale>",
+      "nullable": "<true|false>",
+      "default": "<default_value>",
+      "primary_key": "<true|false>"
+    }
+  ],
+  "primary_keys": ["<primary_key_column>"],
+  "foreign_keys": []
 }
 ```
 
 ### Example
 
+**Request**
+
 ```json
 {
-    "table": "Person"
+  "table": "Person"
+}
+```
+
+**Response**
+
+```json
+{
+  "table_name": "Person",
+  "columns": [
+    {
+      "name": "ID",
+      "type": "BIGIDENTITY",
+      "precision": 19,
+      "scale": 0,
+      "nullable": false,
+      "default": null,
+      "primary_key": true
+    }
+  ],
+  "primary_keys": ["ID"],
+  "foreign_keys": []
 }
 ```
 
@@ -173,43 +205,54 @@ Returns column metadata for a table, including column names, types, precision, s
 
 ## orm_operation
 
-### Description
+Performs structured read queries via SQLAlchemy with dynamic model creation. Handles the Zen SQL dialect automatically.
 
-Performs structured read queries via SQLAlchemy with dynamic model creation. Handles Zen SQL dialect automatically. Supports JOINs (up to 3 tables), WHERE conditions, ORDER BY, GROUP BY, HAVING, LIMIT, OFFSET, and aggregate functions (COUNT, SUM, AVG, MIN, MAX).
+Supports JOINs (up to 3 tables), WHERE conditions, ORDER BY, GROUP BY, HAVING, LIMIT, OFFSET, and aggregate functions (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`).
 
-### Input Parameters
+### Parameters
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `operation` | `string` | Yes | Must be `select`. |
-| `table` | `string` | Yes | Target table name. |
-| `columns` | `list` | No | Columns to return. Supports aggregates like `COUNT(*) AS total`. Defaults to all. |
-| `where` | `dict` | No | Filter conditions, e.g. `{"field": "salary", "operator": ">", "value": 50000}`. |
-| `order_by` | `list` | No | Column names to sort by. |
-| `limit` | `int` | No | Maximum rows to return. Capped at `max_rows`. |
-| `offset` | `int` | No | Number of rows to skip. |
-| `joins` | `list` | No | Join specifications: `[{"table": "dept", "on": "p.dept_id = dept.id", "type": "LEFT"}]`. |
-| `group_by` | `list` | No | Columns to group by. |
-| `having` | `dict` | No | HAVING conditions for grouped queries. |
+**Required**
 
-### Output Schema
+| Field | Type | Description |
+|-------|------|-------------|
+| `operation` | `string` | Must be `select`. |
+| `table` | `string` | Target table name. |
+
+**Optional**
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `columns` | `list` | All columns | Columns to return. Supports aggregates like `COUNT(*) AS total`. |
+| `where` | `dict` | — | Filter conditions, e.g. `{"field": "salary", "operator": ">", "value": 50000}`. |
+| `order_by` | `list` | — | Column names to sort by. |
+| `limit` | `integer` | `max_rows` | Maximum rows to return. Capped at `max_rows`. |
+| `offset` | `integer` | — | Number of rows to skip. |
+| `joins` | `list` | — | Join specs: `[{"table": "dept", "on": "p.dept_id = dept.id", "type": "LEFT"}]`. |
+| `group_by` | `list` | — | Columns to group by. |
+| `having` | `dict` | — | HAVING conditions for grouped queries. |
+
+### Output schema
+
+**On success**
 
 ```json
 {
-    "results": [{"column": "value"}],
-    "row_count": 2,
-    "method": "orm_operation"
+  "results": [{"column": "value"}],
+  "row_count": 2,
+  "method": "orm_operation"
 }
 ```
 
 ### Example
 
+**Request**
+
 ```json
 {
-    "operation": "select",
-    "table": "Person",
-    "columns": ["COUNT(*) AS total"],
-    "where": {"field": "Last_Name", "operator": "LIKE", "value": "S%"}
+  "operation": "select",
+  "table": "Person",
+  "columns": ["COUNT(*) AS total"],
+  "where": {"field": "Last_Name", "operator": "LIKE", "value": "S%"}
 }
 ```
 
@@ -217,48 +260,64 @@ Performs structured read queries via SQLAlchemy with dynamic model creation. Han
 
 ## blob_operation
 
-### Description
+Lists and downloads file or blob data from tables that store binary content.
 
-List and download file/blob data from tables that store binary content.
+### Parameters
 
-### Input Parameters
+**Required**
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `action` | `string` | Yes | One of: `list`, `download`. |
-| `table_name` | `string` | Yes | Table that stores blob data. |
-| `file_id` | `int` | No | Row identifier (required for `download`). |
-| `output_path` | `string` | No | Destination path (required for `download`). |
-| `id_column` | `string` | No | Name of the ID column. Defaults to `id`. |
-| `blob_column` | `string` | No | Name of the blob column. Defaults to `file_data`. |
+| Field | Type | Description |
+|-------|------|-------------|
+| `action` | `string` | One of: `list`, `download`. |
+| `table_name` | `string` | Table that stores blob data. |
 
-### Output Schema
+**Optional**
 
-For `list`:
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `file_id` | `integer` | — | Row identifier. Required when `action` is `download`. |
+| `output_path` | `string` | — | Destination file path. Required when `action` is `download`. |
+| `id_column` | `string` | `id` | Name of the ID column. |
+| `blob_column` | `string` | `file_data` | Name of the blob column. |
+
+### Output schema
+
+**For `list`**
 
 ```json
 {
-    "files": [{"id": 1, "filename": "report.pdf"}],
-    "count": 1
+  "files": [{"id": "<row_id>", "filename": "<filename>"}],
+  "count": "<num_files>"
 }
 ```
 
-For `download`:
+**For `download`**
 
 ```json
 {
-    "success": true,
-    "output_path": "/tmp/report.pdf",
-    "size": 102400
+  "success": true,
+  "output_path": "<destination_path>",
+  "size": "<file_size_bytes>"
 }
 ```
 
 ### Example
 
+**Request**
+
 ```json
 {
-    "action": "list",
-    "table_name": "documents"
+  "action": "list",
+  "table_name": "documents"
+}
+```
+
+**Response**
+
+```json
+{
+  "files": [{"id": 1, "filename": "report.pdf"}],
+  "count": 1
 }
 ```
 
@@ -266,42 +325,53 @@ For `download`:
 
 ## database_manage
 
-### Description
+Provides server management operations: list available databases, list DSNs with details, query server capabilities, and release locks.
 
-Database management operations: list available databases, list DSNs with details, query server capabilities, and release locks.
-
-### Input Parameters
+### Parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `action` | `string` | Yes | One of: `list`, `list_dsns`, `capabilities`, `release_locks`. |
+|-------|------|:--------:|-------------|
+| `action` | `string` | ✓ | One of: `list`, `list_dsns`, `capabilities`, `release_locks`. |
 
-### Output Schema
+### Output schema
 
-For `capabilities`:
+**For `capabilities`**
 
 ```json
 {
-    "server": "Actian Zen",
-    "features": ["sql", "blobs"]
+  "server": "Actian Zen",
+  "features": ["sql", "blobs"]
 }
 ```
 
-For `list_dsns`:
+**For `list_dsns`**
 
 ```json
 {
-    "current_dsn": "demodata",
-    "available_dsns": {"demodata": {"driver": "Pervasive ODBC Interface"}},
-    "count": 1
+  "current_dsn": "<active_dsn>",
+  "available_dsns": {
+    "<dsn_name>": {"driver": "<driver_name>"}
+  },
+  "count": "<num_dsns>"
 }
 ```
 
 ### Example
 
+**Request**
+
 ```json
 {
-    "action": "capabilities"
+  "action": "capabilities"
+}
+```
+
+**Response**
+
+```json
+{
+  "server": "Actian Zen",
+  "features": ["sql", "blobs"]
 }
 ```
 
@@ -309,5 +379,12 @@ For `list_dsns`:
 
 ## Next steps
 
-- [Resources](../resources/index.md) — Learn about Zen resources
-- [Prompts](../prompts/index.md) — Learn about Zen prompts
+<div class="grid cards" markdown>
+
+- :material-folder-open: **[Resources](../resources/index.md)**  
+  Explore the resource types available through the Zen server.
+
+- :material-message-text: **[Prompts](../prompts/index.md)**  
+  Review the built-in prompt templates for common workflows.
+
+</div>

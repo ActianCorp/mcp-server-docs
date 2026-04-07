@@ -9,23 +9,21 @@ The Actian MCP Server for **Actian Ingres** exposes a built-in resource for data
 
 ## Available resources
 
-The Ingres integration provides the following resource:
-
-| Resource URI | Purpose |
-|-----|-------------|
-| `resource://database/schema` | Returns database schema metadata for the connected database. |
+| Resource URI | Description |
+|--------------|-------------|
+| [`resource://database/schema`](#resourcedatabaseschema) | Returns database schema metadata for the connected database. |
 
 ## resource://database/schema
 
-### Description
-
 Returns the database schema as JSON, including tables, columns, comments, and constraint information.
 
-### Input Parameters
+### Parameters
 
-This resource doesn't require any input parameters.
+This resource takes no input parameters.
 
-### Output Schema
+### Output schema
+
+**On success**
 
 ```json
 {
@@ -42,7 +40,7 @@ This resource doesn't require any input parameters.
 }
 ```
 
-On error:
+**On error**
 
 ```text
 The database schema could not be retrieved. Error: <error_message>
@@ -50,11 +48,13 @@ The database schema could not be retrieved. Error: <error_message>
 
 ### Example
 
+**Request**
+
 ```text
 resource://database/schema
 ```
 
-### Success Response Example
+**Response**
 
 ```json
 {
@@ -95,5 +95,12 @@ resource://database/schema
 
 ## Next steps
 
-- [Tools](../tools/index.md) — Learn about Ingres tools
-- [Prompts](../prompts/index.md) — Learn about Ingres prompts
+<div class="grid cards" markdown>
+
+- :material-tools: **[Tools](../tools/index.md)**  
+  Learn about the SQL and schema tools exposed by the Ingres server.
+
+- :material-chat-processing: **[Prompts](../prompts/index.md)**  
+  Discover pre-built prompt templates for common Ingres workflows.
+
+</div>

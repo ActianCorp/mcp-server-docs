@@ -42,7 +42,7 @@ For experienced Keycloak users — the full walkthrough follows below.
     If your Keycloak instance still uses the default `admin` / `admin` credentials, change them immediately via **Users → admin → Credentials** in the `master` realm.
 
 
-## Part 1 — create a Keycloak realm
+## Part 1 Create a Keycloak realm
 
 A **Realm** is the top-level container in Keycloak that holds users, clients, roles, and configuration.
 
@@ -66,7 +66,7 @@ A **Realm** is the top-level container in Keycloak that holds users, clients, ro
 | `FASTMCP_SERVER_AUTH_CONFIG_URL` | `http://localhost:8080/realms/actian-mcp/.well-known/openid-configuration` |
 
 
-## Part 2 — create a Keycloak client
+## Part 2 Create a Keycloak client
 
 The **Client** represents the MCP server's OAuth credentials — it holds the `client_id` and `client_secret`.
 
@@ -120,7 +120,7 @@ The **Client** represents the MCP server's OAuth credentials — it holds the `c
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Your MCP server's public URL (for example, `http://localhost:8000`) |
 
 
-## Part 3 — add the audience mapper (critical)
+## Part 3 Add the audience mapper (critical)
 
 !!! danger "This step is critical"
     Without it, Keycloak won't include the Client ID in the token's `aud` (audience) claim, and the MCP server rejects tokens with an `audience mismatch` error.
@@ -162,7 +162,7 @@ Audience: ['realm-management', 'account', 'actian-mcp']
 ```
 
 
-## Part 4 — add the sub override mapper (optional)
+## Part 4 Add the sub override mapper (optional)
 
 By default, Keycloak sets the `sub` claim to a UUID. You can override it to contain the login name for easier `user_impersonation` mapping.
 
@@ -205,7 +205,7 @@ After adding the mapper, your token will contain:
     Instead of overriding `sub`, you can rely on the `preferred_username` claim (included by default when the `profile` scope is present). The MCP server's username extraction priority uses `preferred_username` before `sub`, so this works automatically without any mapper changes.
 
 
-## Part 5 — create Keycloak users (if using user impersonation)
+## Part 5 Create Keycloak users (if using user impersonation)
 
 If `user_impersonation` is `true`, each Keycloak user must have a matching database account. See [User Impersonation](../index.md#user-impersonation) for full details.
 
@@ -275,7 +275,7 @@ The MCP server requires at minimum `openid email profile` (added automatically).
 ```
 
 
-## Part 7 — assemble the final configuration
+## Part 7 Assemble the final configuration
 
 ### Mapping summary
 
