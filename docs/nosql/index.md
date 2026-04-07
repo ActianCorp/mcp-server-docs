@@ -56,3 +56,4 @@ configure the NSQL MCP Server.
 In order to start the MCP Server, you just need to run the docker image by providing the parameters specified above.
 
 `docker run --name NSQL-MCP -e NSQL_CONNECTIONURL=cars@localhost -p 8080:8080 actian/nsql-mcp-server`
+

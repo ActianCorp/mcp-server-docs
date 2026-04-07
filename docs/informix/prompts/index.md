@@ -1,27 +1,51 @@
 ---
 title: Prompts
-description: Overview of the prompts available when using the Actian MCP Server with Actian Informix.
+description: Overview of the prompts available when using the Actian MCP Server with Informix Database.
 ---
 
 # Prompts
 
-The Actian MCP Server for **Actian Informix** exposes built-in prompts to assist AI clients.
-
-<!-- TODO: List all available prompts. Use the format below.
+The Actian MCP Server for **Informix Database** exposes a built-in prompt for general database questions.
 
 ## Available prompts
 
+The Informix Database integration provides the following prompt:
+
 | Prompt | Purpose |
 |--------|---------|
-| `ask_question` | Generates an Informix database expert prompt from a user question. |
+| `ask_question` | Generates a database-oriented prompt from a user question. |
 
--->
+## ask_question
 
-## Prompt reference
+### Description
 
-<!-- TODO: For each prompt, add a section with:
-- Description
-- Input parameters
-- Example usage
-- Example output
--->
+Renders a database expert prompt from a supplied question and returns the resulting prompt text.
+
+### Input parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|--------------|
+| `question` | `string` | Yes | User question to insert into the prompt. |
+
+### Output schema
+
+```text
+You are a database expert. Answer the following question: <question>
+```
+
+### Example
+
+```json
+{
+  "question": "What are the top 5 customers by revenue this quarter?"
+}
+```
+
+```text
+You are a database expert. Answer the following question: What are the top 5 customers by revenue this quarter?
+```
+
+## Next steps
+
+- [Tools](../tools/index.md) — Learn about Informix MCP server tools
+- [Resources](../resources/index.md) — Learn about Informix MCP server resources

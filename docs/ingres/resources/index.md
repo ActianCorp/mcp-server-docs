@@ -1,15 +1,15 @@
 ---
 title: Resources
-description: Overview of the resources available when using the Actian MCP Server with Actian Analytics Engine.
+description: Overview of the resources available when using the Actian MCP Server with Actian Ingres.
 ---
 
 # Resources
 
-The Actian MCP Server for **Actian Analytics Engine** exposes a built-in resource for database schema discovery.
+The Actian MCP Server for **Actian Ingres** exposes a built-in resource for database schema discovery.
 
 ## Available resources
 
-The Analytics Engine integration provides the following resource:
+The Ingres integration provides the following resource:
 
 | Resource URI | Purpose |
 |-----|-------------|
@@ -21,11 +21,11 @@ The Analytics Engine integration provides the following resource:
 
 Returns the database schema as JSON, including tables, columns, comments, and constraint information.
 
-### Input parameters
+### Input Parameters
 
 This resource doesn't require any input parameters.
 
-### Output schema
+### Output Schema
 
 ```json
 {
@@ -54,7 +54,7 @@ The database schema could not be retrieved. Error: <error_message>
 resource://database/schema
 ```
 
-### Success response example
+### Success Response Example
 
 ```json
 {
@@ -95,5 +95,5 @@ resource://database/schema
 
 ## Next steps
 
-- [Tools](../tools/index.md) — Learn about Analytics Engine tools
-- [Prompts](../prompts/index.md) — Learn about Analytics Engine prompts
+- [Tools](../tools/index.md) — Learn about Ingres tools
+- [Prompts](../prompts/index.md) — Learn about Ingres prompts

@@ -164,4 +164,3 @@ Prefer this resource when you need a complete picture of the data model upfront.
 }
 ```
 
-

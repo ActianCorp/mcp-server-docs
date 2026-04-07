@@ -24,13 +24,13 @@ The Analytics Engine integration provides the following tools:
 
 Executes a read-only SQL query against Actian Analytics Engine and returns the result set as structured JSON.
 
-### Input Parameters
+### Input parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `query` | `string` | Yes | Read-only SQL query to execute. |
 
-### Output Schema
+### Output schema
 
 ```json
 {
@@ -67,7 +67,7 @@ Show me all the rows in the customers table
 }
 ```
 
-### Success Response Example
+### Success response example
 
 ```json
 {
@@ -87,11 +87,11 @@ Show me all the rows in the customers table
 
 Returns all user tables and views available in the connected database as structured JSON.
 
-### Input Parameters
+### Input parameters
 
 This tool doesn't require any input parameters.
 
-### Output Schema
+### Output schema
 
 ```json
 {
@@ -119,7 +119,7 @@ Show me all the tables in my database
 
 This tool takes no input.
 
-### Success Response Example
+### Success response example
 
 ```json
 {
@@ -139,13 +139,13 @@ This tool takes no input.
 
 Returns schema details for a table, including column names, data types, lengths, scales, and column comments.
 
-### Input Parameters
+### Input parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `table_name` | `string` | Yes | Name of the table to describe. |
 
-### Output Schema
+### Output schema
 
 ```json
 {
@@ -183,7 +183,7 @@ Show me schema information about the customers table
 }
 ```
 
-### Success Response Example
+### Success response example
 
 ```json
 {
@@ -203,7 +203,7 @@ Show me schema information about the customers table
 }
 ```
 
-### Error Response Example
+### Error response example
 
 ```json
 {
@@ -218,11 +218,11 @@ Show me schema information about the customers table
 
 Returns user-defined functions and procedures, including their stored definitions, as structured JSON.
 
-### Input Parameters
+### Input parameters
 
 This tool doesn't require any input parameters.
 
-### Output Schema
+### Output schema
 
 ```json
 {
@@ -250,7 +250,7 @@ Show me all the functions in my database
 
 This tool takes no input.
 
-### Success Response Example
+### Success response example
 
 ```json
 {

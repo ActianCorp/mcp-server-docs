@@ -23,11 +23,11 @@ Returns the complete database schema as JSON, including tables, columns, types, 
 
 The schema is built using SQLAlchemy introspection over the Zen ODBC connection, with Zen-specific type mapping applied to each column.
 
-### Input Parameters
+### Input parameters
 
 This resource doesn't require any input parameters.
 
-### Output Schema
+### Output schema
 
 ```json
 {
@@ -84,7 +84,7 @@ On error:
 resource://database/schema
 ```
 
-### Success Response Example
+### Success response example
 
 ```json
 {

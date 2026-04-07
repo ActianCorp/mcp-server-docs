@@ -1,15 +1,15 @@
 ---
 title: Tools
-description: Overview of the tools available when using the Actian MCP Server with Informix database.
+description: Overview of the tools available when using the Actian MCP Server with Actian Ingres.
 ---
 
 # Tools
 
-The Actian MCP Server for **Informix Database** exposes a set of built-in tools for database discovery and read-only query execution.
+The Actian MCP Server for **Actian Ingres** exposes a set of built-in tools for database discovery and read-only query execution.
 
 ## Available tools
 
-The Informix database integration provides the following tools:
+The Ingres integration provides the following tools:
 
 | Tool | Purpose |
 |------|---------|
@@ -22,15 +22,15 @@ The Informix database integration provides the following tools:
 
 ### Description
 
-Executes a read-only SQL query against Informix database and returns the result set as structured JSON.
+Executes a read-only SQL query against Actian Ingres and returns the result set as structured JSON.
 
-### Input parameters
+### Input Parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `query` | `string` | Yes | Read-only SQL query to execute. |
 
-### Output schema
+### Output Schema
 
 ```json
 {
@@ -67,15 +67,15 @@ Show me all the rows in the customers table
 }
 ```
 
-### Success response example
+### Success Response Example
 
 ```json
 {
 	"success": true,
-	"columns": ["customer_id", "customer_email"],
+	"columns": ["customer_id", "customer_name"],
 	"rows": [
-		[101, "alice@tech.com"],
-		[102, "bob@corp.net"]
+		[101, "Acme Retail"],
+		[102, "Northwind Stores"]
 	],
 	"row_count": 2
 }
@@ -87,11 +87,11 @@ Show me all the rows in the customers table
 
 Returns all user tables and views available in the connected database as structured JSON.
 
-### Input parameters
+### Input Parameters
 
 This tool doesn't require any input parameters.
 
-### Output schema
+### Output Schema
 
 ```json
 {
@@ -119,7 +119,7 @@ Show me all the tables in my database
 
 This tool takes no input.
 
-### Success response example
+### Success Response Example
 
 ```json
 {
@@ -139,13 +139,13 @@ This tool takes no input.
 
 Returns schema details for a table, including column names, data types, lengths, scales, and column comments.
 
-### Input parameters
+### Input Parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `table_name` | `string` | Yes | Name of the table to describe. |
 
-### Output schema
+### Output Schema
 
 ```json
 {
@@ -154,10 +154,10 @@ Returns schema details for a table, including column names, data types, lengths,
 		"column_name",
 		"column_datatype",
 		"column_length",
-		"null_column",
-		"key_type"
+		"column_scale",
+		"column_comment"
 	],
-	"rows": [["<column_name>", "<column_datatype>", "<column_length>", "<null_column>", "<key_type>"]],
+	"rows": [["<column_name>", "<column_datatype>", "<column_length>", "<column_scale>", "<column_comment>"]],
 	"row_count": "<num_rows>"
 }
 ```
@@ -183,7 +183,7 @@ Show me schema information about the customers table
 }
 ```
 
-### Success response example
+### Success Response Example
 
 ```json
 {
@@ -196,19 +196,19 @@ Show me schema information about the customers table
 		"column_comment"
 	],
 	"rows": [
-		["customer_id", "integer", "4", "YES", "P"],
-		["email", "varchar", "50", "NO", "None"]
+		["customer_id", "integer", "4", "0", "Primary key"],
+		["customer_name", "varchar", "100", "0", "Customer display name"]
 	],
 	"row_count": 2
 }
 ```
 
-### Error response example
+### Error Response Example
 
 ```json
 {
 	"success": false,
-	"error": "No permission to access table 'table name'"
+	"error": "No permission to access table 'ii_tables'"
 }
 ```
 
@@ -218,17 +218,17 @@ Show me schema information about the customers table
 
 Returns user-defined functions and procedures, including their stored definitions, as structured JSON.
 
-### Input parameters
+### Input Parameters
 
 This tool doesn't require any input parameters.
 
-### Output schema
+### Output Schema
 
 ```json
 {
 	"success": true,
-	"columns": ["function_name","type", "function_ddl"],
-	"rows": [["<function_name>", "<type>","<function_ddl>"]],
+	"columns": ["function_name", "function_ddl"],
+	"rows": [["<function_name>", "<function_ddl>"]],
 	"row_count": 1
 }
 ```
@@ -250,15 +250,15 @@ Show me all the functions in my database
 
 This tool takes no input.
 
-### Success response example
+### Success Response Example
 
 ```json
 {
 	"success": true,
 	"columns": ["function_name", "function_ddl"],
 	"rows": [
-		["calculate_discount","FUNCTION", "CREATE FUNCTION calculate_discount(...) ..."],
-		["refresh_sales_summary","PROCEDURE", "CREATE PROCEDURE refresh_sales_summary() ..."]
+		["calculate_discount", "CREATE FUNCTION calculate_discount(...) ..."],
+		["refresh_sales_summary", "CREATE PROCEDURE refresh_sales_summary() ..."]
 	],
 	"row_count": 2
 }
@@ -266,5 +266,5 @@ This tool takes no input.
 
 ## Next steps
 
-- [Resources](../resources/index.md) — Learn about Informix MCP server resources
-- [Prompts](../prompts/index.md) — Learn about Informix MCP server prompts
+- [Resources](../resources/index.md) — Learn about Ingres resources
+- [Prompts](../prompts/index.md) — Learn about Ingres prompts

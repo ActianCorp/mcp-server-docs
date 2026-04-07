@@ -15,7 +15,7 @@ By the end, you'll have all the values needed to populate the `oauth` block in y
 
 ## Quick-start checklist
 
-For experienced Keycloak users—the full walkthrough follows below.
+For experienced Keycloak users — the full walkthrough follows below.
 
 1. **Create a realm** (or use an existing one).
 2. **Create a client** with _Client authentication_ enabled (confidential). Copy the **Client ID** and **Client Secret**.
@@ -49,7 +49,7 @@ A **Realm** is the top-level container in Keycloak that holds users, clients, ro
 ### Steps
 
 1. Log in to the [Keycloak Admin Console](http://localhost:8080/admin).
-2. In the top-left dropdown (showing `master`), click **Create Realm**.
+2. In the top-left dropdown (showing `master`), select **Create Realm**.
 3. Fill in:
 
     | Field | Value | Notes |
@@ -57,7 +57,7 @@ A **Realm** is the top-level container in Keycloak that holds users, clients, ro
     | **Realm name** | `actian-mcp` | Any descriptive name. Appears in all OIDC URLs. |
     | **Enabled** | `On` | |
 
-4. Click **Create**.
+4. Select **Create**.
 
 ### What you get from this step
 
@@ -73,8 +73,8 @@ The **Client** represents the MCP server's OAuth credentials — it holds the `c
 ### Steps
 
 1. In the Admin Console, select your realm from the dropdown.
-2. Click **Clients** in the left sidebar.
-3. Click **Create client**.
+2. Select **Clients** in the left sidebar.
+3. Select **Create client**.
 4. Fill in:
 
     | Field | Value | Notes |
@@ -82,7 +82,7 @@ The **Client** represents the MCP server's OAuth credentials — it holds the `c
     | **Client type** | `OpenID Connect` | Default |
     | **Client ID** | `actian-mcp` | Becomes both `FASTMCP_SERVER_AUTH_CLIENT_ID` and `FASTMCP_SERVER_AUTH_AUDIENCE` (after audience mapper). |
 
-5. Click **Next**.
+5. Select **Next**.
 6. On the **Capability config** screen:
 
     | Setting | Value | Notes |
@@ -95,7 +95,7 @@ The **Client** represents the MCP server's OAuth credentials — it holds the `c
     !!! warning "Disable direct access grants in production"
        The `password` grant (direct access grants) is insecure for production use and only intended for local debugging with `curl`.
 
-7. Click **Next**.
+7. Select **Next**.
 8. On the **Login settings** screen:
 
     | Setting | Value | Notes |
@@ -104,11 +104,11 @@ The **Client** represents the MCP server's OAuth credentials — it holds the `c
     | **Valid redirect URIs** | `http://localhost:8000/*` | For remote hosts, add `https://<ip>:8000/*` |
     | **Web origins** | `http://localhost:8000` | For CORS |
 
-9. Click **Save**.
+9. Select **Save**.
 
 ### Get the client secret
 
-1. After creating the client, click the **Credentials** tab.
+1. After creating the client, select the **Credentials** tab.
 2. Copy the **Client secret** value.
 
 ### What you get from this step
@@ -131,11 +131,11 @@ By default, Keycloak tokens only include internal audiences like `realm-manageme
 
 ### Steps
 
-1. Go to **Clients** → click your client (for example, `actian-mcp`).
-2. Click the **Client scopes** tab.
-3. Click the **`actian-mcp-dedicated`** link (listed as "Dedicated").
+1. Go to **Clients** → select your client (for example, `actian-mcp`).
+2. Select the **Client scopes** tab.
+3. Select the **`actian-mcp-dedicated`** link (listed as "Dedicated").
     > If you don't see the dedicated scope, check the **Mappers** tab directly.
-4. Click **Configure a new mapper** (or "Add Mapper").
+4. Select **Configure a new mapper** (or "Add Mapper").
 5. Select **Audience** from the list (not **Audience Resolve**).
 
     !!! note "Audience vs Audience Resolve"
@@ -150,7 +150,7 @@ By default, Keycloak tokens only include internal audiences like `realm-manageme
     | **Add to ID token** | `Off` | Not required |
     | **Add to access token** | `On` | **Required** — the MCP server checks the access token |
 
-7. Click **Save**.
+7. Select **Save**.
 
 ### Verify
 
@@ -169,8 +169,8 @@ By default, Keycloak sets the `sub` claim to a UUID. You can override it to cont
 ### Steps
 
 1. Go to **Clients** → your client → **Client scopes** tab.
-2. Click the **`actian-mcp-dedicated`** link.
-3. Click **Configure a new mapper** → select **User Property**.
+2. Select the **`actian-mcp-dedicated`** link.
+3. Select **Configure a new mapper** → select **User Property**.
 4. Configure it:
 
     | Field | Value | Notes |
@@ -182,7 +182,7 @@ By default, Keycloak sets the `sub` claim to a UUID. You can override it to cont
     | **Add to ID token** | `On` | |
     | **Add to access token** | `On` | |
 
-5. Click **Save**.
+5. Select **Save**.
 
 ### Verify
 
@@ -212,7 +212,7 @@ If `user_impersonation` is `true`, each Keycloak user must have a matching datab
 ### Steps
 
 1. Go to **Users** in the left sidebar.
-2. Click **Add user**.
+2. Select **Add user**.
 3. Fill in:
 
     | Field | Value | Notes |
@@ -223,7 +223,7 @@ If `user_impersonation` is `true`, each Keycloak user must have a matching datab
     | **Last Name** | `Doe` | Optional |
     | **Enabled** | `On` | |
 
-4. Click **Create**.
+4. Select **Create**.
 5. Go to the **Credentials** tab → **Set password** → enter a password, toggle **Temporary** to `Off` → **Save**.
 
 ### Create the matching database user
@@ -265,7 +265,7 @@ The MCP server requires at minimum `openid email profile` (added automatically).
     | **Protocol** | `OpenID Connect` |
     | **Type** | `Optional` |
 
-3. Click **Save**.
+3. Select **Save**.
 4. Go to **Clients** → your client → **Client scopes** tab → **Add client scope** → select `read:mcp_server` → **Add** as "Default".
 
 ### Config value
@@ -410,7 +410,7 @@ Decode the `access_token` at [jwt.io](https://jwt.io) and verify:
 | `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start | Mount cert/key as volumes when starting the container (see [Docker deployment](../index.md#3-docker-deployment)) |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN | Regenerate with `-addext "subjectAltName=IP:<ip>"` |
 | `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by Node.js | Trust cert + set `NODE_EXTRA_CA_CERTS` |
-| Token validation behaves unexpectedly | OIDC endpoint unreachable at startup | The server falls back to default verification without `TokenCapturingJWTVerifier` — `user_impersonation` will not work even though the server appears to be running. Restart after endpoint is accessible. |
+| Token validation behaves unexpectedly | OIDC endpoint unreachable at startup | The server falls back to default verification without `TokenCapturingJWTVerifier` — `user_impersonation` won't work even though the server appears to be running. Restart after endpoint is accessible. |
 
 ### Token expiration
 
@@ -425,7 +425,7 @@ Keycloak tokens have a configurable lifetime:
     | **SSO Session Idle** | 30 minutes | How long before an idle session expires |
     | **SSO Session Max** | 10 hours | Maximum session duration |
 
-3. Adjust as needed and click **Save**.
+3. Adjust as needed and select **Save**.
 
 
 ## Keycloak vs. Auth0 — key differences

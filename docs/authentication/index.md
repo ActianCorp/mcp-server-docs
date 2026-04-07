@@ -203,9 +203,11 @@ scp user@<your-vm>:/path/to/server.crt ~/server.crt
     # Fully restart VS Code (Cmd+Q, then reopen)
     ```
 
-    > To persist across reboots, add `export NODE_EXTRA_CA_CERTS="$HOME/server.crt"` to `~/.zprofile`.
+    !!! tip "Persist across reboots"
+        Add `export NODE_EXTRA_CA_CERTS="$HOME/server.crt"` to `~/.zprofile`.
 
-    > To remove the certificate later: `sudo security delete-certificate -c "<CN>" /Library/Keychains/System.keychain`
+    !!! tip "Remove the certificate"
+        Run `sudo security delete-certificate -c "<CN>" /Library/Keychains/System.keychain`
 
 === "Linux"
 

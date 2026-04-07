@@ -1,17 +1,17 @@
 ---
-title: Actian Analytics Engine
-description: Use the Actian MCP Server to connect MCP clients to Actian Analytics Engine.
+title: Actian Ingres
+description: Use the Actian MCP Server to connect MCP clients to Actian Ingres.
 ---
 
-# Actian Analytics Engine
+# Actian Ingres
 
-This page explains how to use the **Actian MCP Server** with **Actian Analytics Engine**.
+This page explains how to use the **Actian MCP Server** with **Actian Ingres**.
 
-When configured for Analytics Engine, the server gives an MCP-compatible client a simple way to explore schema information and run read-only database queries through a standard interface.
+When configured for Ingres, the server gives an MCP-compatible client a simple way to explore schema information and run read-only database queries through a standard interface.
 
 ## What you can do
 
-With the Analytics Engine server, AI clients can:
+With the Ingres server, AI clients can:
 
 - Run **read-only SQL queries**.
 - List available tables and views.
@@ -23,7 +23,7 @@ With the Analytics Engine server, AI clients can:
 
 When the server is provided as a Docker container, the main user-provided input is a JSON configuration file that's mounted into the container.
 
-The Analytics Engine container starts the MCP Server in **HTTP transport** mode, so the configuration should include the network settings that the container will use.
+The Ingres container starts the MCP Server in **HTTP transport** mode, so the configuration should include the network settings that the container will use.
 
 Create a file such as `conf.json` with the following structure:
 
@@ -56,8 +56,8 @@ Use these fields as follows:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `driver` | `str` | Yes | ODBC driver name used to connect to Analytics Engine. |
-| `server` | `str` | Yes | Host or connection target for the Analytics Engine database. |
+| `driver` | `str` | Yes | ODBC driver name used to connect to Ingres. |
+| `server` | `str` | Yes | Host or connection target for the Ingres database. |
 | `database` | `str` | Yes | Name of the database that the MCP Server connects to. |
 | `max_connections` | `int` | Yes | Maximum number of concurrent database connections the server keeps in its pool. |
 | `max_rows` | `int` | No | Maximum number of rows returned for a single query response. Defaults to `1000`. |
@@ -71,14 +71,14 @@ Use these fields as follows:
 
 ## Starting the server
 
-Once your configuration file is ready, start the Analytics Engine MCP Server container and mount the file into the container as `/app/conf.json`.
+Once your configuration file is ready, start the Ingres MCP Server container and mount the file into the container as `/app/conf.json`.
 
 Example:
 
 ```bash
 docker run -d \
 	-v $(pwd)/conf.json:/app/conf.json:ro \
-	actian/analytics-engine-mcp-server:1.0.0
+	actian/ingres-mcp-server:1.0.0
 ```
 
 This example assumes:
@@ -90,21 +90,21 @@ The container image starts the server with `/app/conf.json`, so the mounted file
 
 After the container starts, connect your MCP client to the exposed server endpoint using the transport configured for your deployment.
 
-## What you can expect
+## What users should expect
 
-Once the container is running and connected to Analytics Engine, your MCP client can discover the available server capabilities automatically.
+Once the container is running and connected to Ingres, an MCP client can discover the available server capabilities automatically.
 
-In practice, you can ask the client to:
+In practice, this means a user can ask the client to:
 
 - Inspect database structure before writing a query.
 - Run a read-only query and summarize the results.
 - Look up details for a specific table.
 - Review available database functions.
 
-The server manages the database connection and response formatting so you can focus on your queries.
+This keeps Ingres access available through a consistent MCP workflow while the server manages the database connection and response formatting.
 
 ## Next steps
 
-- [Tools](tools/index.md) — Learn about Analytics Engine tools
-- [Resources](resources/index.md) — Learn about Analytics Engine resources
-- [Prompts](prompts/index.md) — Learn about Analytics Engine prompts
+- [Tools](tools/index.md) — Learn about Ingres tools
+- [Resources](resources/index.md) — Learn about Ingres resources
+- [Prompts](prompts/index.md) — Learn about Ingres prompts
