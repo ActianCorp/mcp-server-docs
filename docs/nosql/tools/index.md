@@ -31,8 +31,6 @@ The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for d
 
 -->
 
-# Tool reference
-
 ---
 
 ## execute_query
