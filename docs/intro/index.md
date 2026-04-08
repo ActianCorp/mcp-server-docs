@@ -31,6 +31,7 @@ The server handles the surrounding concerns, such as transport, configuration, a
 
 ## Architecture overview
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
 flowchart TB
     subgraph Clients["MCP Clients"]
         claude["Claude Desktop"]
@@ -104,7 +105,7 @@ JWT Validation"]
 ## End-to-end request flow
 
 ```mermaid
-%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '20px'}}}%%
+%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '20px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     actor User
     participant Client as MCP Client (Claude/Cursor/Codex)

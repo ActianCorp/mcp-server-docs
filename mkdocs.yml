@@ -17,9 +17,10 @@ theme:
     - navigation.indexes
     - navigation.top
     - navigation.instant
-    - navigation.prune
+    - navigation.expand
     - navigation.path
     - navigation.footer
+    - navigation.sections
     - search.highlight
     - search.share
     - search.suggest
@@ -28,18 +29,18 @@ theme:
     - content.code.annotate
     - content.action.edit
   palette:
-    - scheme: default
-      primary: custom
-      accent: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to dark mode
     - scheme: slate
       primary: custom
       accent: indigo
       toggle:
         icon: material/brightness-7
         name: Switch to light mode
+    - scheme: default
+      primary: custom
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
   custom_dir: theme_overrides/
   icon:
     repo: fontawesome/brands/github
@@ -117,6 +118,7 @@ extra_css:
   - stylesheets/dx_style.css
   - assets/stylesheets/actian-landing.css?v=4
   - stylesheets/extra.css
+  - stylesheets/comprehensive-nav.css
 
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -124,6 +126,7 @@ extra_javascript:
   - javascripts/mermaid-init.js
   - javascripts/search_enhancement.js
   - javascripts/extra.js
+  - javascripts/comprehensive-nav.js
   - path: javascripts/current.js
     defer: true
   # - path: javascripts/MiniChatJavaScript.js  # disabled: Zeenea chatbot

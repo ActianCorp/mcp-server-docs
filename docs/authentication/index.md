@@ -14,7 +14,7 @@ The Actian MCP Server supports **OAuth 2.0 / OpenID Connect (OIDC)** authenticat
 
 The MCP server acts as an **OIDC Relying Party**. When a client connects for the first time, the server redirects the user's browser to the identity provider's login page. After successful authentication, the IdP issues a token that the client includes in every subsequent request.
 ```mermaid
-%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '20px'}}}%%
+%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     participant Client as MCP Client
     participant Server as MCP Server (OIDCProxy)
@@ -91,6 +91,7 @@ When `user_impersonation` is `true` (the default), the server extracts a usernam
 
 The server extracts the database username from the token using the following priority order. It first queries the IdP's **userinfo endpoint**; if that fails, it falls back to **token claims** directly.
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 flowchart TD
     A[Incoming Request with JWT] --> B{user_impersonation?}
     B -- false --> C[Run query as service account]
