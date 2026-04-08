@@ -7,11 +7,10 @@ hide:
   - feedback
 ---
 
-<!-- What is MCP? -->
 <div class="databases-section">
   <div class="features-header">
     <p class="databases-subtitle">
-      The Model Context Protocol (MCP) is an open standard that enables Large Language Models (LLMs) to securely access and interact with external data sources and tools. Think of MCP as a <strong>"USB-C port for AI."</strong> Instead of building fragile, custom integrations for every database, MCP provides a standardized way for an AI model to "plug in" to your infrastructure. This allows the model to understand schemas, execute queries, and retrieve real-time context without the data ever leaving your secure environment.
+      The Model Context Protocol (MCP) is an open standard that enables large language models (LLMs) to securely access and interact with external data sources and tools. Think of MCP as a <strong>“USB-C port for AI.”</strong> Instead of building fragile, custom integrations for every database, MCP provides a standardized way for an artificial intelligence (AI) model to plug into your infrastructure. This allows the model to understand schemas, execute queries, and retrieve real-time context without the data ever leaving your secure environment.
     </p>
     <div class="hero-cta">
       <a href="https://hub.docker.com/u/actian" class="primary-link">Browse the Actian MCP Hub →</a>
@@ -20,12 +19,11 @@ hide:
   </div>
 </div>
 
-<!-- Why MCP for Agentic AI? -->
 <div class="features-section">
   <div class="features-header">
     <h3 class="jumbo-heading">Why MCP for Agentic AI?</h3>
     <p class="features-subtitle">
-      We are moving beyond simple chatbots to <strong>Agentic AI</strong> — systems that can reason, plan, and execute tasks autonomously. To be effective, these agents require more than just a training set; they need "eyes and hands" inside your data estate.
+      We are moving beyond simple chatbots to <strong>agentic AI</strong>—systems that can reason, plan, and execute tasks autonomously. To be effective, these agents require more than just a training set; they need “eyes and hands” inside your data estate.
     </p>
   </div>
 
@@ -37,27 +35,26 @@ hide:
 
     <div class="feature-item">
       <h4 class="feature-title">Grounding and Truth</h4>
-      <p class="feature-description">By querying Actian Ingres or HCL Informix® in real-time, agents provide answers grounded in your latest business facts, eliminating "hallucinations."</p>
+      <p class="feature-description">By querying Actian Ingres or HCL Informix® in real time, agents provide answers grounded in your latest business facts, eliminating “hallucinations.”</p>
     </div>
 
     <div class="feature-item">
       <h4 class="feature-title">Tool-Use Capabilities</h4>
-      <p class="feature-description">MCP transforms database functions (like a complex Join in the Analytics Engine or a search in NoSQL) into "Tools" the agent can choose to use when appropriate.</p>
+      <p class="feature-description">MCP transforms database functions (like a complex join in the Analytics Engine or a search in NoSQL) into tools the agent can choose to use when appropriate.</p>
     </div>
 
     <div class="feature-item">
       <h4 class="feature-title">Contextual Memory</h4>
-      <p class="feature-description">Agents can use databases like Actian Zen at the edge to store and retrieve long-term state across different user sessions.</p>
+      <p class="feature-description">Agents can use databases like Actian Zen at the edge to store and retrieve long-term states across different user sessions.</p>
     </div>
   </div>
 </div>
 
-<!-- The Actian MCP Hub: Specialized Connectors -->
 <div class="databases-section" style="text-align: center;">
   <div class="databases-header" style="text-align: center;">
     <h3 class="jumbo-heading">The Actian MCP Hub: Specialized Connectors</h3>
     <p class="databases-subtitle" style="max-width: 700px; margin: 0 auto;">
-      While MCP is a universal protocol, the performance must be native. We provide a centralized repository on Docker Hub containing optimized, dedicated images for our entire portfolio.
+      While MCP is a universal protocol, its performance must be native. We provide a centralized repository on Docker Hub containing optimized, dedicated images for our entire portfolio.
     </p>
   </div>
 
@@ -73,7 +70,7 @@ hide:
       <tr>
         <td><a href="./analytics_engine/index.html">Actian Analytics Engine</a></td>
         <td><code>actian/mcp-server-ae</code></td>
-        <td>Large-scale RAG and high-performance vector analysis.</td>
+        <td>Large-scale retrieval-augmented generation (RAG) and high-performance vector analysis.</td>
       </tr>
       <tr>
         <td><a href="./ingres/index.html">Actian Ingres</a></td>
@@ -93,45 +90,43 @@ hide:
       <tr>
         <td><a href="./informix/index.html">HCL Informix®</a></td>
         <td><code>actian/mcp-server-informix</code></td>
-        <td>Time-series, IoT, and high-availability spatial data.</td>
+        <td>Time-series, Internet of Things (IoT), and high-availability spatial data.</td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<!-- Enterprise Architecture -->
 <div class="features-section">
   <div class="features-header">
     <h3 class="jumbo-heading">Enterprise Architecture</h3>
     <p class="features-subtitle">
-      The Actian MCP Server acts as a stateless security proxy between your Agent and your Database.
+      The Actian MCP Server acts as a stateless security proxy between your agent and your database.
     </p>
   </div>
 
   <div class="features-grid">
     <div class="feature-item">
       <h4 class="feature-title">1. Agent Request</h4>
-      <p class="feature-description">The Agent (for example, Claude, GPT-4o) requests a specific tool or data point.</p>
+      <p class="feature-description">The agent (for example, Claude or GPT-4o) requests a specific tool or data point.</p>
     </div>
 
     <div class="feature-item">
       <h4 class="feature-title">2. Native Translation</h4>
-      <p class="feature-description">The MCP Server (running in your Docker environment) translates that request into native DB syntax.</p>
+      <p class="feature-description">The MCP Server (running in your Docker environment) translates that request into native database syntax.</p>
     </div>
 
     <div class="feature-item">
       <h4 class="feature-title">3. Secure Execution</h4>
-      <p class="feature-description">The Database executes the request and returns only the necessary context.</p>
+      <p class="feature-description">The database executes the request and returns only the necessary context.</p>
     </div>
 
     <div class="feature-item">
       <h4 class="feature-title">4. Agentic Action</h4>
-      <p class="feature-description">The Agent uses that context to complete its task or plan its next move.</p>
+      <p class="feature-description">The agent uses that context to complete its task or plan its next move.</p>
     </div>
   </div>
 </div>
 
-<!-- Get Started in Minutes -->
 <div class="get-started-section">
   <div class="side-by-side">
     <div class="content-side">
@@ -140,7 +135,7 @@ hide:
         All MCP server images are available at <strong>hub.docker.com/u/actian</strong>. You can spin up a specific server using standard container orchestration.
       </p>
       <div class="section-cta">
-        <a href="./get_started/index.html" class="primary-link">Read the quickstart →</a>
+        <a href="./get_started/index.html" class="primary-link">Read the quick-start guide →</a>
       </div>
     </div>
     <div class="code-side">
@@ -157,7 +152,6 @@ docker run -e INFORMIXSERVER=myserver \
   </div>
 </div>
 
-<!-- Security & Governance -->
 <div class="features-section" style="border-top: none;">
   <div class="features-header">
     <h3 class="jumbo-heading">Security and Governance</h3>
@@ -166,7 +160,7 @@ docker run -e INFORMIXSERVER=myserver \
   <div class="features-grid" style="grid-template-columns: repeat(3, 1fr);">
     <div class="feature-item">
       <h4 class="feature-title">Identity-Aware</h4>
-      <p class="feature-description">Supports modern authentication to ensure agents only see the data they are authorized to access.</p>
+      <p class="feature-description">Supports modern authentication to ensure agents see only the data they are authorized to access.</p>
       <a href="./authentication/index.html" class="primary-link">Set up authentication →</a>
     </div>
 
@@ -184,7 +178,6 @@ docker run -e INFORMIXSERVER=myserver \
   </div>
 </div>
 
-<!-- Footer CTA -->
 <div class="cta-section">
   <h4>Empower your agents with the world's most reliable data.</h4>
   <div class="cta-buttons">
