@@ -7,7 +7,7 @@ description: Overview of the resources available when using the Actian MCP Serve
 
 The Actian MCP Server for **Actian Ingres** exposes a built-in resource for database schema discovery.
 
-## Available resources
+## Available Resources
 
 | Resource URI | Description |
 |--------------|-------------|
@@ -21,9 +21,9 @@ Returns the database schema as JSON, including tables, columns, comments, and co
 
 This resource takes no input parameters.
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -40,7 +40,7 @@ This resource takes no input parameters.
 }
 ```
 
-**On error**
+**On Error**
 
 ```text
 The database schema could not be retrieved. Error: <error_message>
@@ -93,7 +93,7 @@ resource://database/schema
 }
 ```
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

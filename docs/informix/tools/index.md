@@ -7,7 +7,7 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 The Actian MCP Server for **HCL Informix® Database** exposes a set of built-in tools for database discovery and read-only query execution.
 
-## Available tools
+## Available Tools
 
 | Tool | Description |
 |------|-------------|
@@ -29,9 +29,9 @@ Executes a read-only SQL query against HCL Informix® database and returns the r
 |-------|------|:--------:|-------------|
 | `query` | `string` | ✓ | Read-only SQL query to execute. |
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -44,7 +44,7 @@ Executes a read-only SQL query against HCL Informix® database and returns the r
 }
 ```
 
-**On error**
+**On Error**
 
 ```json
 {
@@ -55,7 +55,7 @@ Executes a read-only SQL query against HCL Informix® database and returns the r
 
 ### Example
 
-**User request**
+**User Request**
 
 ```
 Show me all the rows in the customers table
@@ -91,9 +91,9 @@ Returns all user tables and views available in the connected database as structu
 
 This tool takes no input parameters.
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -104,7 +104,7 @@ This tool takes no input parameters.
 }
 ```
 
-**On error**
+**On Error**
 
 ```json
 {
@@ -115,7 +115,7 @@ This tool takes no input parameters.
 
 ### Example
 
-**User request**
+**User Request**
 
 ```
 Show me all the tables in my database
@@ -145,9 +145,9 @@ Returns schema details for a table, including column names, data types, lengths,
 |-------|------|:--------:|-------------|
 | `table_name` | `string` | ✓ | Name of the table to describe. |
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -164,7 +164,7 @@ Returns schema details for a table, including column names, data types, lengths,
 }
 ```
 
-**On error**
+**On Error**
 
 ```json
 {
@@ -175,7 +175,7 @@ Returns schema details for a table, including column names, data types, lengths,
 
 ### Example
 
-**User request**
+**User Request**
 
 ```
 Show me schema information about the customers table
@@ -189,7 +189,7 @@ Show me schema information about the customers table
 }
 ```
 
-**Success response**
+**Success Response**
 
 ```json
 {
@@ -209,7 +209,7 @@ Show me schema information about the customers table
 }
 ```
 
-**Error response**
+**Error Response**
 
 ```json
 {
@@ -226,9 +226,9 @@ Returns user-defined functions and procedures, including their stored definition
 
 This tool takes no input parameters.
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -239,7 +239,7 @@ This tool takes no input parameters.
 }
 ```
 
-**On error**
+**On Error**
 
 ```json
 {
@@ -250,7 +250,7 @@ This tool takes no input parameters.
 
 ### Example
 
-**User request**
+**User Request**
 
 ```
 Show me all the functions in my database
@@ -270,7 +270,7 @@ Show me all the functions in my database
 }
 ```
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

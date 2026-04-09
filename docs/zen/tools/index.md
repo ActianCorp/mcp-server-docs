@@ -9,7 +9,7 @@ The Actian MCP Server for **Actian Zen** provides 6 built-in tools for read-only
 
 ---
 
-## Available tools
+## Available Tools
 
 | Tool | Description |
 |------|-------------|
@@ -41,9 +41,9 @@ Executes a read-only SQL query against Actian Zen with automatic dialect transla
 |-------|------|:--------:|-------------|
 | `sql` | `string` | ✓ | Read-only SQL query to execute. |
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -113,9 +113,9 @@ Returns all user tables in the connected database by querying the Zen `dbo.fSQLT
 
 This tool takes no input parameters.
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -147,9 +147,9 @@ Returns column metadata for a table, including names, types, precision, scale, n
 |-------|------|:--------:|-------------|
 | `table` | `string` | ✓ | Name of the table to describe. |
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -223,7 +223,7 @@ Supports JOINs (up to 3 tables), WHERE conditions, ORDER BY, GROUP BY, HAVING, L
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `columns` | `list` | All columns | Columns to return. Supports aggregates like `COUNT(*) AS total`. |
-| `where` | `dict` | — | Filter conditions, e.g. `{"field": "salary", "operator": ">", "value": 50000}`. |
+| `where` | `dict` | — | Filter conditions, for example, `{"field": "salary", "operator": ">", "value": 50000}`. |
 | `order_by` | `list` | — | Column names to sort by. |
 | `limit` | `integer` | `max_rows` | Maximum rows to return. Capped at `max_rows`. |
 | `offset` | `integer` | — | Number of rows to skip. |
@@ -231,9 +231,9 @@ Supports JOINs (up to 3 tables), WHERE conditions, ORDER BY, GROUP BY, HAVING, L
 | `group_by` | `list` | — | Columns to group by. |
 | `having` | `dict` | — | HAVING conditions for grouped queries. |
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -280,7 +280,7 @@ Lists and downloads file or blob data from tables that store binary content.
 | `id_column` | `string` | `id` | Name of the ID column. |
 | `blob_column` | `string` | `file_data` | Name of the blob column. |
 
-### Output schema
+### Output Schema
 
 **For `list`**
 
@@ -333,7 +333,7 @@ Provides server management operations: list available databases, list DSNs with 
 |-------|------|:--------:|-------------|
 | `action` | `string` | ✓ | One of: `list`, `list_dsns`, `capabilities`, `release_locks`. |
 
-### Output schema
+### Output Schema
 
 **For `capabilities`**
 
@@ -377,7 +377,7 @@ Provides server management operations: list available databases, list DSNs with 
 
 ---
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

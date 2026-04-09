@@ -8,7 +8,7 @@ description: Built-in resources available when using the Actian MCP Server with 
 The Actian MCP Server for **Actian Analytics Engine** provides a built-in resource that returns live schema metadata for the connected database.
 
 
-## Available resources
+## Available Resources
 
 | Resource URI | Description |
 |--------------|-------------|
@@ -17,15 +17,15 @@ The Actian MCP Server for **Actian Analytics Engine** provides a built-in resour
 
 ## resource://database/schema
 
-Fetches the full database schema as a structured JSON object. Use this resource to inspect table and column definitions before writing queries.
+Retrieves the full database schema as a structured `JSON` object. Use this resource to inspect table and column definitions before writing queries.
 
 ### Parameters
 
 This resource takes no input parameters.
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -42,7 +42,7 @@ This resource takes no input parameters.
 }
 ```
 
-**On error**
+**On Error**
 
 ```text
 The database schema could not be retrieved. Error: <error_message>
@@ -93,7 +93,7 @@ resource://database/schema
 
 ---
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

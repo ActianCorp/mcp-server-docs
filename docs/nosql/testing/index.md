@@ -5,19 +5,19 @@ description: Test coverage and results for the Actian NoSQL MCP Server plugin.
 
 # Testing
 
-This page describes the test coverage plan for the Actian NoSQL MCP Server plugin.
+This section describes the test coverage plan for the Actian NoSQL MCP Server plugin.
 
 ## Overview
 
 !!! info "Coming soon"
     This section is being developed.
 
-## Test groups
+## Test Groups
 
 !!! info "Coming soon"
     This section is being developed.
 
-## Running the tests
+## Running the Tests
 
 !!! info "Coming soon"
     This section is being developed.

@@ -3,13 +3,13 @@ title: Connecting to MCP Clients
 description: Connect MCP-compatible clients to a running Actian MCP Server instance.
 ---
 
-# Connecting to MCP clients
+# Connecting to MCP Clients
 
 Once the Actian MCP Server is running in a container, MCP-compatible clients can connect to it over the configured network transport.
 
 The server inside the container runs in **HTTP** transport mode, and clients connect to the server endpoint exposed by the container.
 
-## Connection URL format
+## Connection URL Format
 
 - Local deployment: `http://localhost:<port>/mcp`
 - Remote deployment: `http://<hostname>:<port>/mcp`
@@ -70,7 +70,7 @@ The standard endpoint used for the server deployment is `/mcp`.
 
     For a remote deployment, replace `localhost` and `<port>` with the public host and port of the Actian MCP Server.
 
-## Python client
+## Python Client
 
 The following example demonstrates how to connect to a running Actian MCP Server instance using the [FastMCP](https://pypi.org/project/fastmcp/) Python client. It works with any supported database plugin (Ingres, Analytics Engine, HCL Informix®, or Zen).
 
@@ -88,7 +88,7 @@ For the OAuth example, also install `httpx`:
 pip install httpx
 ```
 
-### Parameter differences by plugin
+### Parameter Differences by Plugin
 
 Most tools share the same interface, but parameter names differ slightly between plugins:
 
@@ -97,9 +97,9 @@ Most tools share the same interface, but parameter names differ slightly between
 | `execute_query` | `query` | `sql` |
 | `describe_table` | `table_name` | `table` |
 
-The examples below use the Ingres / Analytics Engine / HCL Informix® parameter names. For Zen, substitute the parameter names from the table above.
+The following examples use the Ingres / Analytics Engine / HCL Informix® parameter names. For Zen, substitute the parameter names from the table above.
 
-### Basic usage
+### Basic Usage
 
 ```python
 """Actian MCP Server — Python client example."""
@@ -159,7 +159,7 @@ if __name__ == "__main__":
         print(f"Error: {e}")
 ```
 
-### Connecting with OAuth authentication
+### Connecting with OAuth Authentication
 
 When the server is deployed with OAuth enabled over HTTPS, provide authentication and SSL parameters:
 
@@ -209,10 +209,10 @@ if __name__ == "__main__":
 !!! tip
     When using OAuth, the FastMCP client automatically handles the browser-based login flow. Ensure a browser is available on the machine running the client.
 
-## Connection notes
+## Connection Notes
 
 - Use the port configured for the MCP Server container.
 - For production deployments, prefer **HTTPS** and configure authentication when you expose the server outside a trusted local environment.
 - When OAuth is enabled on a non-localhost deployment, the server requires **TLS** and a public `https://` base URL.
-  See [HTTPS / TLS for remote deployments](../authentication/index.md#https-tls-for-remote-deployments) for certificate generation, Docker setup, and trusting self-signed certificates in MCP clients.
+  For certificate generation, Docker setup, and trusting self-signed certificates in MCP clients, see [HTTPS / TLS for remote deployments](../authentication/index.md#https-tls-for-remote-deployments).
 

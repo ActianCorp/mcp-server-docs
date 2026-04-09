@@ -7,7 +7,7 @@ description: Overview of the prompts available when using the Actian MCP Server 
 
 The Actian MCP Server for **Actian Zen** provides a built-in prompt that transforms natural-language questions into structured, database-expert queries.
 
-## Available prompts
+## Available Prompts
 
 | Prompt | Description |
 |--------|-------------|
@@ -23,7 +23,7 @@ Renders a database expert prompt from a plain-language question and returns the 
 |-------|------|:--------:|-------------|
 | `question` | `string` | ✓ | The question to insert into the prompt template. |
 
-### Output template
+### Output Template
 
 ```text
 You are a Zen (Actian PSQL) database expert. Answer the following question: <question>
@@ -45,7 +45,7 @@ You are a Zen (Actian PSQL) database expert. Answer the following question: <que
 You are a Zen (Actian PSQL) database expert. Answer the following question: What are the top 5 departments by employee count?
 ```
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

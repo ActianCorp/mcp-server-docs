@@ -10,7 +10,7 @@ The Actian MCP Server supports **OAuth 2.0 / OpenID Connect (OIDC)** authenticat
 !!! note "Transport requirement"
     OAuth is only available with network transports: `sse`, `http`, and `streamable-http`. The `stdio` transport — used for IDE integrations like Claude Desktop and Cursor — does not support OAuth.
 
-## How OAuth works
+## How OAuth Works
 
 The MCP server acts as an **OIDC Relying Party**. When a client connects for the first time, the server redirects the user's browser to the identity provider's login page. After successful authentication, the IdP issues a token that the client includes in every subsequent request.
 ```mermaid
@@ -37,7 +37,7 @@ sequenceDiagram
     end
 ```
 
-## The `oauth` configuration block
+## The `oauth` Configuration Block
 
 Add an `oauth` object to your `conf.json` to enable authentication. The server reads these fields at startup.
 
@@ -73,7 +73,7 @@ Add an `oauth` object to your `conf.json` to enable authentication. The server r
 !!! info "Scope auto-append"
     The scopes `openid`, `email`, and `profile` are always included automatically, even if you don't specify `FASTMCP_SERVER_AUTH_SCOPE`. Only add custom scopes such as `read:mcp_server` when needed.
 
-## User impersonation
+## User Impersonation
 
 When `user_impersonation` is `true` (the default), the server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before each database query. This ensures every user operates under their own database permissions.
 
@@ -87,7 +87,7 @@ When `user_impersonation` is `true` (the default), the server extracts a usernam
 !!! warning "Zen does not support user impersonation"
     Actian Zen does not support `SET SESSION AUTHORIZATION`. If you are using the Zen plugin, set `user_impersonation` to `false` in the `oauth` block. The server still enforces JWT authentication — only per-user database switching is skipped.
 
-### Username extraction priority
+### Username Extraction Priority
 
 The server extracts the database username from the token using the following priority order. It first queries the IdP's **userinfo endpoint**; if that fails, it falls back to **token claims** directly.
 ```mermaid
@@ -115,11 +115,11 @@ flowchart TD
     - **Keycloak** — Returns `preferred_username` by default when the `profile` scope is present. Create database users matching the Keycloak login name.
     - **Federated identity** (Google, SAML, corporate SSO) — The `sub` claim may be a provider-specific ID (for example, `google-oauth2|12345`) that does not match a database account. For SSO setups, set `user_impersonation` to `false` or ensure the IdP profile contains a `username` that matches the database account.
 
-## HTTPS / TLS for remote deployments
+## HTTPS / TLS for Remote Deployments
 
 OAuth 2.0 requires HTTPS for non-localhost hosts. When OAuth is configured and the server runs on a non-localhost address — for example, a VM or container — HTTPS is **mandatory**. The server refuses to start without `ssl_certfile` and `ssl_keyfile`.
 
-### 1. Generate a certificate
+### Step 1: Generate a Certificate
 
 For testing on a remote host, generate a self-signed certificate with a Subject Alternative Name (SAN):
 ```bash
@@ -136,7 +136,7 @@ chmod 600 server.key
 !!! tip "Production certificates"
     For production, use a certificate issued by a trusted CA — Let's Encrypt or your corporate CA.
 
-### 2. Configure TLS in conf.json
+### Step 2: Configure TLS in `conf.json`
 
 Add `ssl_certfile` and `ssl_keyfile` at the **top level** (not inside the `oauth` block) and update `BASE_URL` to `https://`:
 ```json
@@ -151,7 +151,7 @@ Add `ssl_certfile` and `ssl_keyfile` at the **top level** (not inside the `oauth
 
 The server validates at startup that both paths exist and that `BASE_URL` uses `https://` when SSL is active.
 
-### 3. Docker deployment
+### Step 3: Docker Deployment
 
 Mount the certificate and key into the container using volume flags:
 ```bash
@@ -173,11 +173,11 @@ Reference the container paths in `conf.json`:
 !!! note "Docker key permissions"
     If mounting the key as a volume, the container user must be able to read it:
 
-    - **Dev only** — `chmod 644 server.key` (world-readable; acceptable for local testing only)
-    - **Production** — `sudo chown <container-uid>:<container-gid> server.key` to match the container user's UID/GID, keeping `chmod 600`
-    - **Best practice** — Terminate TLS at a reverse proxy (nginx, Traefik) so the private key stays outside the container entirely
+    - **Dev only**: `chmod 644 server.key` (world-readable; acceptable for local testing only)
+    - **Production**: `sudo chown <container-uid>:<container-gid> server.key` to match the container user's UID/GID, keeping `chmod 600`
+    - **Best practice**: Terminate TLS at a reverse proxy (nginx, Traefik) so the private key stays outside the container entirely
 
-### 4. Trust the certificate in your MCP client
+### Step 4: Trust the Certificate in Your MCP Client
 
 Self-signed certificates are rejected by Node.js-based MCP clients (VS Code and Cursor) by default. Copy the certificate to your development machine first:
 ```bash
@@ -233,17 +233,17 @@ Then trust it for your operating system:
     # Fully restart VS Code after setting the variable
     ```
 
-## Security best practices
+## Security Best Practices
 
 !!! danger "Protect your secrets"
     The `conf.json` file contains `CLIENT_SECRET` in plaintext. Follow these practices:
 
-    - **Restrict file permissions** — `chmod 600 conf.json`
-    - **Never commit to version control** — Add `conf.json` to `.gitignore`
-    - **Use HTTPS for `BASE_URL` in production** — Tokens sent over plain HTTP can be intercepted. The `http://127.0.0.1` examples are for local development only
-    - **Production secrets management** — Inject secrets through environment variables or a secrets manager
+    - **Restrict file permissions**: `chmod 600 conf.json`
+    - **Never commit to version control**: Add `conf.json` to `.gitignore`
+    - **Use HTTPS for `BASE_URL` in production**: Tokens sent over plain HTTP can be intercepted. The `http://127.0.0.1` examples are for local development only
+    - **Production secrets management**: Inject secrets through environment variables or a secrets manager
 
-## Provider setup guides
+## Provider Setup Guides
 
 Choose your identity provider for step-by-step setup instructions:
 

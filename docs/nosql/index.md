@@ -5,7 +5,7 @@ description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Da
 
 # Actian NoSQL Database
 
-This page explains how to use the **Actian MCP Server** with **Actian NoSQL Database**.
+This section describes how to use the **Actian MCP Server** with **Actian NoSQL Database**.
 
 ## Overview
 
@@ -15,17 +15,16 @@ The Actian NoSQL MCP Server acts as a bridge between any MCP client and your Act
 
 | Action | Description |
 |--------|-------------|
-| **Discover the Schema of a NoSQL Database** | List classes, Explore details of persistent classes |
-| **Run queries on database objects** | Use Filter, Projections, Navigation |
-| **Retrieve Objects by ID** | Including optimizations for collections of Object IDs |
+| **Discover the Schema of a NoSQL Database** | List classes, Explore details of persistent classes. |
+| **Run queries on database objects** | Use Filter, Projections, Navigation. |
+| **Retrieve Objects by ID** | Including optimizations for collections of Object IDs. |
 
 ## Configuration
 
-There are basically just two settings you need to define in order to
-configure the NSQL MCP Server.
+There are two settings you need to define to configure the NSQL MCP Server.
 
-1. The port which you want to use to connect to the MCP Server
-2. The database url you want to explore with the MCP Server<br>
+1. The port which you want to use to connect to the MCP Server.
+2. The database url you want to explore with the MCP Server.<br>
 	The database url looks like `database@server:port#user:password`.<br>
 	`port`, `user` and `password` are optional.
 
@@ -48,15 +47,15 @@ configure the NSQL MCP Server.
 ```
 -->
 
-## Start the server
+## Start the Server
 
-In order to start the MCP Server, you just need to run the docker image by providing the parameters specified above.
+To start the MCP Server, run the docker image by providing the parameters specified above.
 
 `docker run --name NSQL-MCP -e NSQL_CONNECTIONURL=cars@localhost -p 8080:8080 actian/nsql-mcp-server`
 
 ---
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

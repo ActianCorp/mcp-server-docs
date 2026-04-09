@@ -8,7 +8,7 @@ description: Overview of the resources available when using the Actian MCP Serve
 The Actian MCP Server for **Actian Zen** exposes a built-in resource for database schema discovery.
 
 
-## Available resources
+## Available Resources
 
 | Resource URI | Description |
 |--------------|-------------|
@@ -27,9 +27,9 @@ Returns the complete database schema as JSON, including tables, columns, types, 
 
 This resource takes no input parameters.
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -72,7 +72,7 @@ This resource takes no input parameters.
 }
 ```
 
-**On error**
+**On Error**
 
 ```json
 {
@@ -126,7 +126,7 @@ resource://database/schema
 
 
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

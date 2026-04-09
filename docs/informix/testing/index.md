@@ -5,7 +5,7 @@ description: Test coverage and results for the Actian HCL Informix® MCP Server 
 
 # Testing
 
-This page describes the test coverage plan for the Actian HCL Informix® MCP Server plugin.
+This section describes the test coverage plan for the Actian HCL Informix® MCP Server plugin.
 
 <!-- TODO: Define the test groups, test count, estimated effort, and dependencies. Use the format below.
 
@@ -20,13 +20,13 @@ This page describes the test coverage plan for the Actian HCL Informix® MCP Ser
 
 -->
 
-## Test groups
+## Test Groups
 
 <!-- TODO: For each test group, add a section with:
 - Group name and ID
 - Test cases (name, steps, expected result, pass/fail)
 -->
 
-## Running the tests
+## Running the Tests
 
 <!-- TODO: Describe how to run the test suite, required environment variables, and how to interpret results. -->

@@ -3,7 +3,7 @@ title: Get Started
 description: Get the Actian MCP Server running in your environment with Docker.
 ---
 
-# Get started
+# Get Started
 
 The Actian MCP Server is distributed as Docker container images-one image per supported Actian database. This section describes how to start the Actian MCP Server and connect it to an MCP-compatible client.
 
@@ -13,7 +13,7 @@ The Actian MCP Server is distributed as Docker container images-one image per su
 - Network access to an Actian database (Analytics Engine, Ingres, HCL Informix®, Zen, or NoSQL)
 - An MCP-compatible AI client (Claude Desktop, Cursor, GitHub Copilot, Codex, or any MCP client)
 
-## Step 1: Choose your database image
+## Step 1: Choose Your Database Image
 
 Each Actian database has its own container image with the required drivers pre-installed:
 
@@ -25,9 +25,9 @@ Each Actian database has its own container image with the required drivers pre-i
 | Zen | [`actian/zen-mcp-server`](https://hub.docker.com/r/actian/zen-mcp-server) |
 | NoSQL | [`actian/nsql-mcp-server`](https://hub.docker.com/r/actian/nsql-mcp-server) |
 
-## Step 2: Create a configuration file
+## Step 2: Create a Configuration File
 
-Create a `conf.json` file with the connection details for your database. Each database has its own configuration format. See the database-specific documentation for the full field reference:
+Create a `conf.json` file with the connection details for your database. Each database has its own configuration format. For the full field reference, see the database-specific documentation:
 
 - [Analytics Engine configuration](../analytics_engine/index.md#configuration)
 - [Zen configuration](../zen/index.md#configuration)
@@ -48,9 +48,9 @@ All database configurations share these common fields for the MCP server:
 | `oauth` | `object` | No | OAuth 2.0 configuration. See [Authentication](../authentication/index.md). |
 
 !!! warning "Protect your configuration file"
-    he configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control. The `:ro` flag in the mount command ensures the file cannot be modified from inside the container.
+    The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control. The `:ro` flag in the mount command ensures the file cannot be modified from inside the container.
 
-## Step 3: Start the container
+## Step 3: Start the Container
 
 Mount your configuration file into the container as `/app/conf.json`:
 
@@ -63,7 +63,7 @@ docker run -d \
 
 Replace the image name with the one for your database.
 
-## Step 4: Connect an MCP client
+## Step 4: Connect an MCP Client
 
 The server runs in **HTTP transport** mode. Clients connect to:
 
@@ -74,7 +74,7 @@ http://localhost:<port>/mcp
 For configuration examples for Claude Desktop, Cursor, GitHub Copilot, fast-agent, and Codex, see [Connecting to MCP Clients](../mcp_clients/index.md).
 
 
-## Step 5: Verify the connection
+## Step 5: Verify the Connection
 
 **1. Check the container is running:**
 ```bash
@@ -106,7 +106,7 @@ For the complete list of available tools per database, see database-specific doc
 - [HCL Informix® tools](../informix/tools/index.md)
 - [NoSQL tools](../nosql/tools/index.md)
 
-## Optional: Add authentication
+## Optional: Add Authentication
 
 For deployments outside a trusted local environment, enable OAuth 2.0 authentication with Keycloak or Auth0:
 
@@ -114,7 +114,7 @@ For deployments outside a trusted local environment, enable OAuth 2.0 authentica
 - [Keycloak setup](../authentication/keycloak/index.md)
 - [Auth0 setup](../authentication/auth0/index.md)
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

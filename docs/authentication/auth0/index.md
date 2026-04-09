@@ -3,19 +3,19 @@ title: Auth0 Setup Guide
 description: Step-by-step guide to configure Auth0 as the OAuth identity provider for the Actian MCP Server.
 ---
 
-# Auth0 setup guide
+# Auth0 Setup Guide
 
-This guide walks through creating and configuring an Auth0 **Application** and **API** so the Actian MCP Server can authenticate users via OAuth 2.0 / OIDC.
+This section describes how to create and configure an Auth0 **Application** and **API** for OAuth 2.0 / OIDC authentication with the Actian MCP Server.
 
-By the end, you'll have all the values needed to populate the `oauth` block in your `conf.json`. See the [Authentication overview](../index.md) for the full configuration reference and shared concepts (TLS, user impersonation, security practices).
+By the end, you will have all the values needed to populate the `oauth` block in your `conf.json`. For the full configuration reference and shared concepts, such as TLS, user impersonation, and security practices, see the [Authentication overview](../index.md).
 
 !!! info "Reference"
     [FastMCP Auth0 Integration](https://gofastmcp.com/integrations/auth0)
 
 
-## Quick-start checklist
+## Quick-Start Checklist
 
-For experienced Auth0 users — the full walkthrough follows below.
+For experienced Auth0 users, the full walkthrough follows below.
 
 1. **Create an API** (Applications → APIs → + Create API). The **Identifier** becomes `FASTMCP_SERVER_AUTH_AUDIENCE`.
 2. **Create an Application** (Applications → Applications → + Create Application → **Machine to Machine**). Authorize it for the API when prompted. Copy the **Client ID** and **Client Secret**.
@@ -31,12 +31,12 @@ For experienced Auth0 users — the full walkthrough follows below.
 
 ## Prerequisites
 
-- An Auth0 account ([sign up free](https://auth0.com/signup))
-- An Auth0 **Tenant** (created automatically on signup, for example, `dev-abc123`)
-- The Actian MCP Server installed and ready to run
+- An Auth0 account ([sign up free](https://auth0.com/signup)).
+- An Auth0 **Tenant** (created automatically on signup, for example, `dev-abc123`).
+- The Actian MCP Server installed and ready to run.
 
 
-## Part 1 Create an Auth0 API
+## Part 1: Create an Auth0 API
 
 The **API** represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 include the API's identifier as the `audience` claim.
 
@@ -49,28 +49,28 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
 
      | Field | Value | Notes |
      |-------|-------|-------|
-     | **Name** | `Actian MCP Server` | Display name (any descriptive string) |
-     | **Identifier (Audience)** | `http://127.0.0.1:8000/mcp` | This becomes your `FASTMCP_SERVER_AUTH_AUDIENCE`. Use your actual MCP server URL + path. This is a logical identifier — it doesn't need to be a reachable URL. |
+     | **Name** | `Actian MCP Server` | Display name (any descriptive string). |
+     | **Identifier (Audience)** | `http://127.0.0.1:8000/mcp` | This becomes your `FASTMCP_SERVER_AUTH_AUDIENCE`. Use your actual MCP server URL and path. This is a logical identifier — it doesn't need to be a reachable URL. |
      | **Signing Algorithm** | `RS256` | Default; leave as-is |
 
 5. Select **Create**.
 
-### What you get from this step
+### What You Get from This Step
 
 | Config Field | Where to find it |
 |---|---|
-| `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** you entered (for example, `http://127.0.0.1:8000/mcp`) |
+| `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** you entered (for example, `http://127.0.0.1:8000/mcp`). |
 
 !!! info "Auth0 requires an explicit audience"
-    Unlike Keycloak (where the audience defaults to the Client ID), Auth0 requires you to create a separate API and use its Identifier as the audience. If you omit `FASTMCP_SERVER_AUTH_AUDIENCE` from your config, the server falls back to `CLIENT_ID` — which won't match the API Identifier, causing `audience mismatch` errors.
+    Unlike Keycloak (where the audience defaults to the Client ID), Auth0 requires you to create a separate API and use its Identifier as the audience. If you omit `FASTMCP_SERVER_AUTH_AUDIENCE` from your config, the server falls back to `CLIENT_ID` — which will not match the API Identifier, causing `audience mismatch` errors.
 
 
-## Part 2 Create an Auth0 application
+## Part 2: Create an Auth0 Application
 
-The **Application** represents the MCP server's OAuth client — it holds the `client_id` and `client_secret` used during the OAuth handshake.
+The **Application** represents the MCP server's OAuth client. It holds the `client_id` and `client_secret` used during the OAuth handshake.
 
 !!! note "Why Machine to Machine?"
-    The MCP server's OAuth proxy (OIDCProxy) acts as a **confidential client** — it authenticates with Auth0 using a `CLIENT_ID` + `CLIENT_SECRET` pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients (VS Code, Claude Desktop, etc.) and the OIDCProxy itself — MCP clients never talk to Auth0 directly.
+    The MCP server's OAuth proxy (OIDCProxy) acts as a **confidential client** — it authenticates with Auth0 using a `CLIENT_ID` and `CLIENT_SECRET` pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients (VS Code, Claude Desktop, etc.) and the OIDCProxy itself — MCP clients never talk to Auth0 directly.
 
     **Do not use "Regular Web Application"** — Auth0 enforces PKCE validation differently for web apps, which conflicts with how the OIDCProxy forwards authorization requests. This causes `code_challenge: Field required` errors.
 
@@ -89,7 +89,7 @@ The **Application** represents the MCP server's OAuth client — it holds the `c
 5. When prompted, select your **Actian MCP Server** API and grant all scopes. (You can also do this later in [Part 3](#part-3-authorize-the-application-for-the-api).)
 6. The application's **Settings** tab opens.
 
-### Configure application settings
+### Configure Application Settings
 
 On the **Settings** tab, scroll down and configure:
 
@@ -104,7 +104,7 @@ On the **Settings** tab, scroll down and configure:
 
 Select **Save Changes**.
 
-### Configure grant types
+### Configure Grant Types
 
 Machine to Machine applications should have **Authorization Code** enabled by default, but always verify — some tenants or configurations may differ.
 
@@ -118,7 +118,7 @@ Machine to Machine applications should have **Authorization Code** enabled by de
 !!! danger "Authorization Code grant is required"
     Without **Authorization Code** enabled, Auth0 returns `Grant type 'authorization_code' not allowed for the client`. M2M apps should have this grant type enabled by default, but always verify — if it was disabled, re-enable it here.
 
-### What you get from this step
+### What You Get from This Step
 
 All values are on the **Settings** tab of your Application:
 
@@ -127,18 +127,18 @@ All values are on the **Settings** tab of your Application:
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | **Client ID** (at the top of the Settings tab) |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | **Client Secret** (click the eye icon to reveal) |
 | `FASTMCP_SERVER_AUTH_CONFIG_URL` | Constructed from your **Domain**: `https://<your-domain>/.well-known/openid-configuration` |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | Your MCP server's public URL (for example, `http://127.0.0.1:8000`) |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | Your MCP server's public URL (for example, `http://127.0.0.1:8000`). |
 
 !!! tip "Finding the Domain"
     The **Domain** is shown at the top of the Settings tab (for example, `dev-abc123.us.auth0.com`). The OIDC discovery URL is always `https://<domain>/.well-known/openid-configuration`.
 
 
-## Part 3 authorize the application for the API
+## Part 3: Authorize the Application for the API
 
 !!! danger "This step is critical"
     Without it, Auth0 rejects token requests with `invalid_request` because your Application isn't authorized for the API.
 
-### Why this is needed
+### Why This Is Needed
 
 During the OAuth handshake:
 
@@ -175,22 +175,22 @@ After saving, the Application should show two **AUTHORIZED** badges — one for 
     If you plan to use `user_impersonation: true`, the **User Access** column must show AUTHORIZED. Without it, Auth0 won't issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server won't be able to extract a database username.
 
 
-## Part 4 — configure scopes (optional)
+## Part 4: Configure Scopes (Optional)
 
 Scopes restrict what actions a token allows. The MCP server requires at minimum `openid email profile` (added automatically).
 
-### Define custom scopes on the API
+### Define Custom Scopes on the API
 
 1. Go to **Applications → APIs → your API → Permissions** tab.
 2. Add scopes as needed:
 
      | Permission (Scope) | Description |
      |---|---|
-     | `read:mcp_server` | Read access to MCP server tools and resources |
+     | `read:mcp_server` | Read access to MCP server tools and resources. |
 
 3. Select **Add**.
 
-### Config value
+### Config Value
 
 Scopes are **space-separated** (not comma-separated):
 
@@ -199,11 +199,11 @@ Scopes are **space-separated** (not comma-separated):
 ```
 
 
-## Part 5 Create Auth0 users (if using user impersonation)
+## Part 5: Create Auth0 Users (If Using User Impersonation)
 
-If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database via `SET SESSION AUTHORIZATION`. Each OAuth user must have a matching database account. See [User Impersonation](../index.md#user-impersonation) for full details.
+If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database via `SET SESSION AUTHORIZATION`. Each OAuth user must have a matching database account. For more information, see [User Impersonation](../index.md#user-impersonation).
 
-### Step 5.1 — create the user in Auth0
+### Step 5.1: Create the User in Auth0
 
 1. In the Auth0 Dashboard, go to **User Management → Users**.
 2. Select **+ Create User**.
@@ -211,9 +211,9 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
 
      | Field | Value | Notes |
      |-------|-------|-------|
-     | **Email** | `jdoe@example.com` | The part before `@` (`jdoe`) becomes the database username |
-     | **Password** | A secure password | Used for Auth0 login |
-     | **Connection** | `Username-Password-Authentication` | Default database connection |
+     | **Email** | `jdoe@example.com` | The part before `@` (`jdoe`) becomes the database username. |
+     | **Password** | A secure password | Used for Auth0 login. |
+     | **Connection** | `Username-Password-Authentication` | Default database connection. |
 
 4. Select **Create**.
 
@@ -225,7 +225,7 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
 !!! note "Case sensitivity"
     If the database is case-sensitive (for example, `jdoe` ≠ `Jdoe`), ensure the email prefix exactly matches the database account name.
 
-### Step 5.2 Create the matching database user
+### Step 5.2: Create the Matching Database User
 
 Auth0 handles authentication, but the Actian database still needs the user to exist for impersonation to work:
 
@@ -245,9 +245,9 @@ GRANT SELECT ON TABLE products TO jdoe;
     If users sign in via Google, Microsoft Entra, SAML, or corporate SSO through Auth0, the `sub` claim will look like `google-oauth2|12345` — the server strips the provider prefix, leaving `12345`, which is unlikely to match a database account. For SSO setups, set `user_impersonation` to `false` unless you can ensure the Auth0 user profile contains a matching username.
 
 
-## Part 6 Assemble the final configuration
+## Part 6: Assemble the Final Configuration
 
-### Mapping summary
+### Mapping Summary
 
 | `conf.json` Field | Auth0 Source | Example Value |
 |---|---|---|
@@ -269,7 +269,7 @@ GRANT SELECT ON TABLE products TO jdoe;
 !!! note
     The `AUDIENCE` is a logical identifier used for token validation — it doesn't need to be a reachable HTTPS URL.
 
-### Example `conf.json` (local development)
+### Example `conf.json` (Local Development)
 
 ```json
 {
@@ -291,7 +291,7 @@ GRANT SELECT ON TABLE products TO jdoe;
 }
 ```
 
-### Example `conf.json` (remote deployment with TLS)
+### Example `conf.json` (Remote Deployment with TLS)
 
 ```json
 {
@@ -320,7 +320,7 @@ For TLS setup details (certificate generation, Docker deployment, trusting self-
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](../index.md#security-best-practices).
 
 
-## Start the server
+## Start the Server
 
 ```bash
 export DATABASE_USER=<your_database_username>
@@ -332,7 +332,7 @@ uv run actian-mcp-server \
   --transport=sse
 ```
 
-### Verify end-to-end
+### Verify End-to-End
 
 1. Open a browser and navigate to `http://127.0.0.1:8000/sse` (or `/mcp` for HTTP transport).
 2. You should be **redirected to the Auth0 login page**.
@@ -342,7 +342,7 @@ uv run actian-mcp-server \
 
 ## Troubleshooting
 
-### Verify OIDC discovery endpoint
+### Verify OIDC Discovery Endpoint
 
 ```bash
 curl https://dev-abc123.us.auth0.com/.well-known/openid-configuration \
@@ -351,29 +351,29 @@ curl https://dev-abc123.us.auth0.com/.well-known/openid-configuration \
 
 You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`, etc.
 
-### Common errors
+### Common Errors
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| `code_challenge: Field required` | Auth0 Application type is "Regular Web Application" | Recreate as **Machine to Machine** application — Auth0 doesn't allow changing app type after creation. See [Part 2](#part-2-create-an-auth0-application). |
-| `Grant type 'authorization_code' not allowed` | M2M app missing Authorization Code grant | Enable **Authorization Code** in Advanced Settings → Grant Types. See [Configure Grant Types](#configure-grant-types). |
-| `invalid_request` when requesting a token | Application not authorized for the API | [Part 3](#part-3-authorize-the-application-for-the-api) — authorize the Application |
-| `audience mismatch` | `FASTMCP_SERVER_AUTH_AUDIENCE` doesn't match the API Identifier | Ensure they are identical strings |
-| `invalid_client` | Wrong `client_id` or `client_secret` | Re-copy from Application → Settings |
-| `KeyError` on startup (for example, `CLIENT_SECRET`) | Some OAuth fields present but others missing | Provide **all** required fields or remove `oauth` entirely |
-| `Could not extract username` | Token lacks `username`, `preferred_username`, or `email` | Add email/profile scopes, or set `user_impersonation: false` |
-| `unauthorized` / 401 on every request | OAuth misconfigured or token expired | Check server logs, verify OIDC discovery URL is reachable |
-| `redirect_uri_mismatch` | Callback URL doesn't match `<BASE_URL>/auth/callback` | Fix **Allowed Callback URLs** in Auth0 (scheme + host + port must match exactly) |
-| `ValueError: Issuer URL must be HTTPS` | OAuth on non-localhost host without TLS | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL` |
-| `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://` | Update `BASE_URL` to `https://` |
-| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start | Mount cert/key as volumes when starting the container (see [Docker deployment](../index.md#3-docker-deployment)) |
-| `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN | Regenerate with `-addext "subjectAltName=IP:<ip>"` |
-| `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by Node.js | Launch VS Code with `NODE_EXTRA_CA_CERTS=/path/to/server.crt code .` |
-| `Client Not Registered` (VS Code) | Server's Docker container was recreated, wiping client registrations, but VS Code caches the old client ID | Quit VS Code, then delete stale registrations from the state DB (see [Clearing VS Code OAuth cache](#clearing-vs-code-oauth-cache) below) and reopen VS Code. To prevent recurrence, mount a Docker volume for `/root/.local/share/fastmcp`. |
-| `Service not found: https://...` / `access_denied` | `AUDIENCE` mismatch between client request and server config (often `http` vs `https`) | Ensure `FASTMCP_SERVER_AUTH_AUDIENCE` in `conf.json` exactly matches the Auth0 API Identifier |
-| Token validation behaves unexpectedly | OIDC endpoint unreachable at startup | Restart server after endpoint is accessible |
+| `code_challenge: Field required` | Auth0 Application type is "Regular Web Application". | Recreate as **Machine to Machine** application — Auth0 doesn't allow changing app type after creation. See [Part 2](#part-2-create-an-auth0-application). |
+| `Grant type 'authorization_code' not allowed` | M2M app missing Authorization Code grant. | Enable **Authorization Code** in Advanced Settings → Grant Types. See [Configure Grant Types](#configure-grant-types). |
+| `invalid_request` when requesting a token | Application not authorized for the API. | [Part 3](#part-3-authorize-the-application-for-the-api) — authorize the Application. |
+| `audience mismatch` | `FASTMCP_SERVER_AUTH_AUDIENCE` doesn't match the API Identifier. | Ensure they are identical strings. |
+| `invalid_client` | Wrong `client_id` or `client_secret`. | Re-copy from Application → Settings. |
+| `KeyError` on startup (for example, `CLIENT_SECRET`). | Some OAuth fields present but others missing. | Provide **all** required fields or remove `oauth` entirely. |
+| `Could not extract username` | Token lacks `username`, `preferred_username`, or `email`. | Add email/profile scopes, or set `user_impersonation: false`. |
+| `unauthorized` / 401 on every request | OAuth misconfigured or token expired. | Check server logs, verify OIDC discovery URL is reachable. |
+| `redirect_uri_mismatch` | Callback URL doesn't match `<BASE_URL>/auth/callback`. | Fix **Allowed Callback URLs** in Auth0 (scheme + host + port must match exactly). |
+| `ValueError: Issuer URL must be HTTPS` | OAuth on non-localhost host without TLS. | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL`. |
+| `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://`. | Update `BASE_URL` to `https://`. |
+| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start. | Mount cert/key as volumes when starting the container (see [Docker deployment](../index.md#3-docker-deployment)). |
+| `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN. | Regenerate with `-addext "subjectAltName=IP:<ip>"`. |
+| `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by `Node.js`. | Launch VS Code with `NODE_EXTRA_CA_CERTS=/path/to/server.crt code .` |
+| `Client Not Registered` (VS Code) | Server's Docker container was recreated, wiping client registrations, but VS Code caches the old client ID. | Quit VS Code, then delete stale registrations from the state DB (see [Clearing VS Code OAuth cache](#clearing-vs-code-oauth-cache) below) and reopen VS Code. To prevent recurrence, mount a Docker volume for `/root/.local/share/fastmcp`. |
+| `Service not found: https://...` / `access_denied` | `AUDIENCE` mismatch between client request and server config (often `http` vs `https`). | Ensure `FASTMCP_SERVER_AUTH_AUDIENCE` in `conf.json` exactly matches the Auth0 API Identifier. |
+| Token validation behaves unexpectedly | OIDC endpoint unreachable at startup. | Restart server after endpoint is accessible. |
 
-### Clearing VS Code OAuth cache
+### Clearing VS Code OAuth Cache
 
 If the MCP server's Docker container is recreated, VS Code's cached OAuth client registration becomes stale. To clear it:
 
@@ -411,7 +411,7 @@ Replace `<your-server-host>` with your server's IP or hostname (for example, `35
     docker run ... -v mcp-auth-data:/root/.local/share/fastmcp ...
     ```
 
-### Token expiration
+### Token Expiration
 
 Auth0 tokens have a configurable lifetime:
 
@@ -423,7 +423,7 @@ Auth0 tokens have a configurable lifetime:
     Token refresh is handled automatically by the OAuth flow when using browser-based authentication.
 
 
-## Staging vs. production
+## Staging vs. Production
 
 | Environment | Recommendation |
 |---|---|

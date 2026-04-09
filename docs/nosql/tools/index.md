@@ -7,18 +7,18 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for document database interaction.
 
-## Available tools
+## Available Tools
 
 | Tool | Purpose |
 |------|---------|
-| `execute_query ` | run a JPQL query |
-| `query_next ` | fetch the next page from a query cursor |
-| `get_object_by_loid ` | fetch one object by LOID |
-| `get_objects_by_loids ` | fetch multiple objects by LOID |
-| `count_classes` | count database classes |
-| `list_classes ` | list class names and inheritance |
-| `describe_class ` | describe one class in detail |
-| `get_complete_schema ` | return full schema for all classes |
+| `execute_query ` | Run a JPQL query. |
+| `query_next ` | Fetch the next page from a query cursor. |
+| `get_object_by_loid ` | Fetch one object by LOID. |
+| `get_objects_by_loids ` | Fetch multiple objects by LOID. |
+| `count_classes` | Count database classes. |
+| `list_classes ` | List class names and inheritance. |
+| `describe_class ` | Describe one class in detail. |
+| `get_complete_schema ` | Return full schema for all classes. |
 
 <!-- 
 ### Write tools (full mode only)
@@ -37,29 +37,29 @@ The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for d
 
 ### Description
 
-Use execute_query to start any database query from the MCP server.
+Use `execute_query` to start any database query from the MCP server.
 
-It returns:
+It returns the following:
 
-	•  the first page of results
-	•  paging metadata
-	•  a cursor id if more results are available
+	•  The first page of results.
+	•  Paging metadata.
+	•  A cursor id if more results are available.
 
-If the response says there are more results, you continue with query_next using the returned cursor.
+If the response says there are more results, you continue with `query_next` using the returned cursor.
 
-### When to use it
+### When to Use It
 
-Use execute_query when:
+Use `execute_query` when:
 
-	•  you want to search objects by field values
-	•  you want a filtered set of entities
-	•  you don’t already know the target object LOIDs
-	•  you want to inspect a subset of data before fetching more pages
+	•  You want to search objects by field values.
+	•  You want a filtered set of entities.
+	•  You do not already know the target object LOIDs.
+	•  You want to inspect a subset of data before fetching more pages.
 
 Prefer the LOID fetch tools instead when:
 
-	•  you already know the object LOID(s)
-	•  you want the fastest direct retrieval path
+	•  You already know the object LOID(s).
+	•  You want the fastest direct retrieval path.
 
 
 ### Input Parameters
@@ -127,25 +127,25 @@ Show me all cars with the plate containing “123”
 
 ### Description
 
-The query_next tool is used to retrieve the next page of results from a paginated JPQL query. When you execute a query with execute_query and the response indicates that more results are available (pagination.hasMore is true), you use query_next with the provided cursorId to fetch subsequent pages.
+The `query_next` tool is used to retrieve the next page of results from a paginated JPQL query. When you execute a query with `execute_query` and the response indicates that more results are available (pagination.hasMore is true), you use `query_next` with the provided cursorId to fetch subsequent pages.
 
-### Usage	
+### Usage
 
-	1. Run execute_query with your JPQL query.
+	1. Run `execute_query` with your JPQL query.
 	2. If the response contains "pagination.hasMore": true, note the "cursorId".
-	3. Call query_next with that cursorId to get the next page of results.
+	3. Call `query_next` with that cursorId to get the next page of results.
 	4. Repeat until "pagination.hasMore" is false.
 
 ### Input Parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `cursorId` | `string` | Yes | The cursor ID returned from execute_query or a previous query_next call. |
+| `cursorId` | `string` | Yes | The cursor ID returned from `execute_query` or a previous `query_next` call. |
 | `limit` | `number` | No | Maximum number of items to return in the first page. |
 
 ### Response Schema
 
-The response from query_next is identical to execute_query:
+The response from `query_next` is identical to `execute_query`:
 
 ```json
 {
@@ -166,22 +166,22 @@ The response from query_next is identical to execute_query:
 
 ### Description
 
-The get_object_by_loid tool retrieves a single object from the database using its LOID (Logical Object ID). This is the fastest way to fetch a specific instance when you already know its LOID.
+The `get_object_by_loid` tool retrieves a single object from the database using its LOID (Logical Object ID). This is the fastest way to fetch a specific instance when you already know its LOID.
 
-### When to use
-Use this tool when you need to fetch details for a specific object and you already have its LOID. For multiple objects, use get_objects_by_loids.
+### When to Use
+Use this tool when you need to fetch details for a specific object and you already have its LOID. For multiple objects, use `get_objects_by_loids`.
 
 Usage Steps:
 
-	1. Obtain the LOID of the object you want (e.g., from a previous query).
-	2. Call get_object_by_loid with the LOID as a parameter.
+	1. Obtain the LOID of the object you want (for example, from a previous query).
+	2. Call `get_object_by_loid` with the LOID as a parameter.
 	3. The tool returns the full object data for that LOID.
 
 ### Input Parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `loid` | `string` | Yes | The LOID of the instance in dotted string format (e.g., "15.0.2085") |
+| `loid` | `string` | Yes | The LOID of the instance in dotted string format (for example, "15.0.2085") |
 
 ### Response Schema
 
@@ -238,22 +238,22 @@ Get the object with id 54.0.22538
 
 ### Description
 
-The get_objects_by_loid tool retrieves multiple objects from the database using their LOIDs (Logical Object ID). This is the fastest way to fetch a specific instances when you already know their LOIDs.
+The `get_objects_by_loid` tool retrieves multiple objects from the database using their LOIDs (Logical Object ID). This is the fastest way to fetch a specific instances when you already know their LOIDs.
 
-### When to use
+### When to Use
 Use this tool when you need to fetch details for specific objects and you already have their LOIDs.
 
 Usage Steps:
 
-	1. Obtain the LOIDs of the objects you want to fetch (e.g., from a previous query).
-	2. Call get_objects_by_loid with the LOIDs as a parameter.
+	1. Obtain the LOIDs of the objects you want to fetch (for example, from a previous query).
+	2. Call `get_objects_by_loid` with the LOIDs as a parameter.
 	3. The tool returns the full object data for these LOIDs.
 
 ### Input Parameters
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `loids` | `string[]` | Yes | An array of LOIDs for the instances to be fetched in dotted string format (e.g., "15.0.2085") |
+| `loids` | `string[]` | Yes | An array of LOIDs for the instances to be fetched in dotted string format (for example, "15.0.2085") |
 
 ### Response Schema
 
@@ -328,7 +328,7 @@ Get the objects with id 54.0.22537, 54.0.22538
 
 ### Description
 
-The count_classes tool returns the total number of classes (entity types) defined in the database schema. It provides a single integer value representing how many distinct classes are available for querying or object retrieval. This is useful for schema introspection and understanding the data model's complexity.
+The `count_classes` tool returns the total number of classes (entity types) defined in the database schema. It provides a single integer value representing how many distinct classes are available for querying or object retrieval. This is useful for schema introspection and understanding the data model's complexity.
 
 ### Input Parameters
 
@@ -370,7 +370,7 @@ This tool does not use any input parameters.
 
 ### Description
 
-The list_classes tool returns a list of all classes (entity types) defined in the database schema, along with their names and superclasses. This is useful for discovering the available data model structure and understanding class inheritance relationships.
+The `list_classes` tool returns a list of all classes (entity types) defined in the database schema, along with their names and superclasses. This is useful for discovering the available data model structure and understanding class inheritance relationships.
 
 ### Input Parameters
 
@@ -431,7 +431,7 @@ This tool does not use any input parameters.
 
 ### Description
 
-The describe_class tool provides a detailed description of a specific class in the **Actian NoSQL Database** schema. Its main purpose is to return the schema metadata for a given class, including:
+The `describe_class` tool provides a detailed description of a specific class in the **Actian NoSQL Database** schema. Its main purpose is to return the schema metadata for a given class, including:
 
 	•  The class name and its superclass (if any)
 	•  All declared fields (attributes) of the class
@@ -444,7 +444,7 @@ This tool is typically used to programmatically discover the structure of entiti
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `className` | `string` | Yes | The name of the class to describe (case-sensitive) |
+| `className` | `string` | Yes | The name of the class to describe (case-sensitive). |
 
 ### Output Schema
 
@@ -512,7 +512,7 @@ This tool is typically used to programmatically discover the structure of entiti
 
 ### Description
 
-The get_complete_schema returns the entire database schema for the  connected **Actian NoSQL Database**. It provides detailed metadata for every class in the schema, including class names, superclasses, and all declared and inherited fields with their types and properties.
+The `get_complete_schema` tool returns the entire database schema for the  connected **Actian NoSQL Database**. It provides detailed metadata for every class in the schema, including class names, superclasses, and all declared and inherited fields with their types and properties.
 
 This tool is useful for clients or tools that need to understand the full data model in a single call, enabling dynamic UI generation, schema introspection, or code generation.
 
@@ -631,7 +631,7 @@ Explanation:
 }
 ```
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

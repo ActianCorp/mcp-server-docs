@@ -10,32 +10,32 @@ Connect your MCP-compatible client to **Actian Analytics Engine** using the Acti
 
 ## Overview
 
-The Analytics Engine MCP Server acts as a bridge between any MCP client and your Actian database. It handles connection pooling, response formatting, and schema discovery automatically — so you can focus on your queries.
+The Analytics Engine MCP Server acts as a bridge between any MCP client and your Actian database. It automatically handles connection pooling, response formatting, and schema discovery, so you can focus on your queries.
 
 ### Capabilities
 
 | Action | Description |
 |--------|-------------|
-| **Run SQL queries** | Execute read-only SQL against your database |
-| **List tables and views** | Discover available objects in the schema |
-| **Inspect table structure** | Retrieve column definitions and types |
-| **Read schema metadata** | Explore database-level metadata |
-| **List functions and procedures** | View available user-defined routines |
+| **Run SQL queries** | Execute read-only SQL against your database. |
+| **List tables and views** | Discover available objects in the schema. |
+| **Inspect table structure** | Retrieve column definitions and types. |
+| **Read schema metadata** | Explore database-level metadata. |
+| **List functions and procedures** | View available user-defined routines. |
 
 
 ## Prerequisites
 
-- Docker installed and running
-- Access credentials for your Analytics Engine database
-- (Optional) TLS certificate and key files for secure deployments
-- (Optional) An OIDC provider if using OAuth authentication
+- Docker installed and running.
+- Access credentials for your Analytics Engine database.
+- (Optional) TLS certificate and key files for secure deployments.
+- (Optional) An OIDC provider if using OAuth authentication.
 
 
 ## Configuration
 
-The server is distributed as a Docker container. You supply a single JSON configuration file that is mounted into the container at `/app/conf.json`.
+The server is distributed as a Docker container. You provide a single `JSON` configuration file that is mounted into the container at `/app/conf.json`.
 
-### Create the configuration file
+### Create the Configuration File
 
 Create a file named `conf.json` in your working directory:
 
@@ -64,9 +64,9 @@ Create a file named `conf.json` in your working directory:
 }
 ```
 
-### Configuration reference
+### Configuration Reference
 
-**Required fields**
+**Required Fields**
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -90,9 +90,9 @@ Create a file named `conf.json` in your working directory:
 
 ---
 
-## Start the server
+## Start the Server
 
-With your `conf.json` ready, start the container and mount the configuration file:
+With your `conf.json` file ready, start the container and mount the configuration file:
 
 ```bash
 docker run -d \
@@ -110,13 +110,13 @@ Once the container is running, connect your MCP client to the server endpoint us
 
 After connecting, your MCP client automatically discovers the server's capabilities. Common tasks include:
 
-- **Inspect before querying** — List tables and review structure before writing SQL.
-- **Run a query** — Execute a read-only SQL statement and receive formatted results.
-- **Explore functions** — Look up available user-defined functions and stored procedures.
-- **Summarize results** — Ask the client to interpret or summarize query output.
+- **Inspect before querying**: List tables and review structure before writing SQL.
+- **Run a query**: Execute a read-only SQL statement and receive formatted results.
+- **Explore functions**: Look up available user-defined functions and stored procedures.
+- **Summarize results**: Ask the client to interpret or summarize query output.
 
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

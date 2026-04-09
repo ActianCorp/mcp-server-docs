@@ -25,20 +25,20 @@ Connect your MCP-compatible client to **Actian Zen** using the Actian MCP Server
 
 ## Prerequisites
 
-- Docker installed and running
-- A running Actian Zen instance reachable from the container
-- (Optional) Database credentials if your Zen database requires authentication
-- (Optional) An OIDC provider if using OAuth authentication
+- Docker installed and running.
+- A running Actian Zen instance reachable from the container.
+- (Optional) Database credentials if your Zen database requires authentication.
+- (Optional) An OIDC provider if using OAuth authentication.
 
 
 
 ## Configuration
 
-The Zen MCP Server is configured via a single JSON file mounted into the container at `/app/conf.json`. Two connection formats are supported depending on whether your database requires credentials.
+The Zen MCP Server is configured via a single `JSON` file mounted into the container at `/app/conf.json`. Two connection formats are supported depending on whether your database requires credentials.
 
-### Connection formats
+### Connection Formats
 
-**DSN connection (no credentials)**
+**DSN Connection (No Credentials)**
 
 Use this format when the built-in `odbc.ini` DSN is sufficient.
 
@@ -50,7 +50,7 @@ Use this format when the built-in `odbc.ini` DSN is sufficient.
 }
 ```
 
-**Full driver connection (with credentials)**
+**Full Driver Connection (With Credentials)**
 
 Use this format when the database requires authentication. This bypasses the container's built-in `odbc.ini` and connects directly to the Zen engine.
 
@@ -62,15 +62,15 @@ Use this format when the database requires authentication. This bypasses the con
 }
 ```
 
-### Configuration reference
+### Configuration Reference
 
-**Required fields**
+**Required Fields**
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `conn_string` | `string` | ODBC connection string. Use `DSN=<name>` for the built-in DSN, or a full driver string with `UID` and `PWD` for authenticated connections. |
 
-**Optional fields**
+**Optional Fields**
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -83,7 +83,7 @@ Use this format when the database requires authentication. This bypasses the con
 
 ---
 
-## Start the server
+## Start the Server
 
 With your `conf.json` ready, start the container and mount the configuration file:
 
@@ -111,7 +111,7 @@ After connecting, your MCP client automatically discovers the server's capabilit
 
 ---
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

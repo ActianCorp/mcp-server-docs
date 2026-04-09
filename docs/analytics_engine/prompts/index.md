@@ -8,7 +8,7 @@ description: Built-in prompts available when using the Actian MCP Server with Ac
 The Actian MCP Server for **Actian Analytics Engine** provides a built-in prompt that transforms natural-language questions into structured, database-expert queries.
 
 
-## Available prompts
+## Available Prompts
 
 | Prompt | Description |
 |--------|-------------|
@@ -18,7 +18,7 @@ The Actian MCP Server for **Actian Analytics Engine** provides a built-in prompt
 
 ## ask_question
 
-Renders a database expert prompt from a plain-language question and returns the formatted prompt text ready for use.
+Renders a database expert prompt from a plain-language question and returns the formatted prompt text, ready for use.
 
 ### Parameters
 
@@ -26,7 +26,7 @@ Renders a database expert prompt from a plain-language question and returns the 
 |-------|------|:--------:|-------------|
 | `question` | `string` | ✓ | The question to insert into the prompt template. |
 
-### Output template
+### Output Template
 
 ```text
 You are a database expert. Answer the following question: <question>
@@ -49,7 +49,7 @@ You are a database expert. Answer the following question: What are the top 5 cus
 ```
 
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

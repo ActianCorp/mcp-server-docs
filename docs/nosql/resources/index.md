@@ -7,7 +7,7 @@ description: Overview of the resources available when using the Actian MCP Serve
 
 The Actian MCP Server for **Actian NoSQL Database** exposes built-in resources for data discovery.
 
-## Available resources
+## Available Resources
 
 | Resource URI | Purpose |
 |-----|-------------|
@@ -25,7 +25,7 @@ List all available database classes and their inheritance hierarchy.
 Returns a summary of each class including its parent class (if any).
 Use this to discover the schema before describing specific classes.
 
-### Output schema
+### Output Schema
 
 ```json
 {
@@ -40,7 +40,7 @@ Use this to discover the schema before describing specific classes.
 }
 ```
 
-### Example usage
+### Example Usage
 
 ```json
 {
@@ -66,7 +66,7 @@ Use this to discover the schema before describing specific classes.
 
 Returns the total number of classes in the database schema.
 
-### Output schema
+### Output Schema
 
 ```json
 {
@@ -75,7 +75,7 @@ Returns the total number of classes in the database schema.
 
 ```
 
-### Example usage
+### Example Usage
 
 ```json
 {
@@ -104,7 +104,7 @@ Combines listing all classes and describing each one in a single call.
 Each entry includes the class name, superclass, declared fields, and all inherited fields.
 Prefer this resource when you need a complete picture of the data model upfront.
 
-### Output schema
+### Output Schema
 
 ```json
 {
@@ -144,7 +144,7 @@ Prefer this resource when you need a complete picture of the data model upfront.
 }
 ```
 
-### Example usage
+### Example Usage
 
 ```json
 {
@@ -162,7 +162,7 @@ Prefer this resource when you need a complete picture of the data model upfront.
 }
 ```
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

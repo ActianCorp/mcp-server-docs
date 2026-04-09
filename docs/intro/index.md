@@ -11,9 +11,9 @@ The **Model Context Protocol (MCP)** is an open standard for connecting AI model
 
 | Primitive | Description |
 |-----------|-------------|
-| **Tools** | Callable functions the AI can invoke (for example, running a SQL query) |
-| **Resources** | Read-only data sources the AI can access (for example, schema information) |
-| **Prompts** | Prebuilt prompt templates for common workflows |
+| **Tools** | Callable functions the AI can invoke (for example, running a SQL query). |
+| **Resources** | Read-only data sources the AI can access (for example, schema information). |
+| **Prompts** | Prebuilt prompt templates for common workflows. |
 
 ## What Does the Actian MCP Server Do?
 
@@ -28,7 +28,7 @@ Depending on how it is configured, the server helps AI clients do the following:
 
 The server handles the surrounding concerns, such as transport, configuration, authentication, and secure access to the target database.
 
-## Architecture overview
+## Architecture Overview
 ```mermaid
 %%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
 flowchart TB
@@ -101,7 +101,7 @@ JWT Validation"]
     Security -.-> MCP
 ```
 
-## End-to-end request flow
+## End-to-End Request Flow
 
 ```mermaid
 %%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '20px', 'fontFamily': 'arial'}}}%%
@@ -135,7 +135,7 @@ sequenceDiagram
     Client-->>User: Natural language answer
 ```
 
-## Key features
+## Key Features
 
 <div class="grid cards" markdown>
 
@@ -159,7 +159,7 @@ sequenceDiagram
 
 </div>
 
-## How it works
+## How It Works
 
 Each Actian DBMS is served by its own Actian MCP Server instance.
 
@@ -188,11 +188,11 @@ Each Actian DBMS is served by its own Actian MCP Server instance.
 !!! info 
     Each server instance represents one Actian database environment. This keeps setup simple — one server, one database, one MCP endpoint.
 
-## Why it matters
+## Why It Matters
 
 The Actian MCP Server removes the need to build separate integrations for each AI use case. It provides teams a standard way to expose trusted database capabilities to MCP clients while keeping deployment and access control within the server layer.
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 

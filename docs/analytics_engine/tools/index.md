@@ -5,10 +5,10 @@ description: Built-in tools available when using the Actian MCP Server with Acti
 
 # Tools
 
-The Actian MCP Server for **Actian Analytics Engine** provides built-in tools for database discovery and read-only query execution.
+The Actian MCP Server for **Actian Analytics Engine** provides built-in tools for database discovery and executing read-only queries.
 
 
-## Available tools
+## Available Tools
 
 | Tool | Description |
 |------|-------------|
@@ -28,9 +28,9 @@ Executes a read-only SQL query against Actian Analytics Engine and returns the r
 |-------|------|:--------:|-------------|
 | `query` | `string` | ✓ | Read-only SQL query to execute. |
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -44,9 +44,9 @@ Executes a read-only SQL query against Actian Analytics Engine and returns the r
 ```
 
 !!! note
-    The `truncated` and `warning` fields appear only when the result row count exceeds the `max_rows` value set in your server configuration.
+    The `truncated` and `warning` fields appear only when the number of result rows exceeds the `max_rows` value set in your server configuration.
 
-**On error**
+**On Error**
 
 ```json
 {
@@ -92,9 +92,9 @@ Returns all user tables and views available in the connected database as structu
 
 This tool takes no input parameters.
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -105,7 +105,7 @@ This tool takes no input parameters.
 }
 ```
 
-**On error**
+**On Error**
 
 ```json
 {
@@ -147,9 +147,9 @@ Returns schema details for a specific table, including column names, data types,
 |-------|------|:--------:|-------------|
 | `table_name` | `string` | ✓ | Name of the table to describe. |
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -168,7 +168,7 @@ Returns schema details for a specific table, including column names, data types,
 }
 ```
 
-**On error**
+**On Error**
 
 ```json
 {
@@ -224,9 +224,9 @@ Returns user-defined functions and procedures, including their stored DDL defini
 
 This tool takes no input parameters.
 
-### Output schema
+### Output Schema
 
-**On success**
+**On Success**
 
 ```json
 {
@@ -237,7 +237,7 @@ This tool takes no input parameters.
 }
 ```
 
-**On error**
+**On Error**
 
 ```json
 {
@@ -269,7 +269,7 @@ Show me all the functions in my database
 ```
 
 
-## Next steps
+## Next Steps
 
 <div class="grid cards" markdown>
 
