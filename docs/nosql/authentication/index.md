@@ -80,8 +80,8 @@ To enable HTTPS, provide a certificate and private key. The `0` in the variable 
 
 | Environment Variable | Required | Description |
 |---|---|---|
-| `QUARKUS_TLS_KEY_STORE_PEM_0_CERT` | Yes (for TLS) | Path to the PEM certificate file inside the container. |
-| `QUARKUS_TLS_KEY_STORE_PEM_0_KEY` | Yes (for TLS) | Path to the PEM private key file inside the container. |
+| `QUARKUS_TLS_KEY_STORE_PEM__0__CERT` | Yes (for TLS) | Path to the PEM certificate file inside the container. |
+| `QUARKUS_TLS_KEY_STORE_PEM__0__KEY` | Yes (for TLS) | Path to the PEM private key file inside the container. |
 | `QUARKUS_HTTP_INSECURE_REQUESTS` | No | Set to `redirect` to redirect all HTTP traffic to HTTPS. |
 
 ### Example
