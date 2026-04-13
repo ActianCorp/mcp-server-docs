@@ -7,6 +7,9 @@ description: Enable OAuth 2.0 / OIDC authentication for the Actian MCP Server �
 
 The Actian MCP Server supports **OAuth 2.0 / OpenID Connect (OIDC)** authentication. When enabled, every client request must carry a valid JWT (JSON Web Token) issued by a trusted identity provider (IdP).
 
+!!! warning "Actian NoSQL uses a different authentication model"
+    This page describes the **OIDC proxy flow** used by the SQL-family connectors. If you are configuring **Actian NoSQL**, see [NoSQL Authentication](../nosql/authentication/index.md). NoSQL uses a **direct OAuth 2.0 flow** with different configuration properties.
+
 !!! note "Transport requirement"
     OAuth is only available with network transports: `sse`, `http`, and `streamable-http`. The `stdio` transport — used for IDE integrations like Claude Desktop and Cursor — does not support OAuth.
 
@@ -84,8 +87,9 @@ When `user_impersonation` is `true` (the default), the server extracts a usernam
 | `true` (default) | JWT verified + `SET SESSION AUTHORIZATION "<user>"` per query. Every OAuth user needs a matching database account. |
 | `false` | JWT still verified — unauthenticated requests are rejected — but all queries run under the service-account pool credentials. |
 
-!!! warning "Zen does not support user impersonation"
-    Actian Zen does not support `SET SESSION AUTHORIZATION`. If you are using the Zen plugin, set `user_impersonation` to `false` in the `oauth` block. The server still enforces JWT authentication — only per-user database switching is skipped.
+!!! warning "Not all connectors support user impersonation"
+    - **Zen** — Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication is still enforced — only per-user database switching is skipped.
+    - **NoSQL** — Uses a different authentication model entirely (direct OAuth 2.0 flow). The `user_impersonation` field does not apply. See [NoSQL Authentication](../nosql/authentication/index.md).
 
 ### Username Extraction Priority
 
@@ -137,6 +141,9 @@ chmod 600 server.key
     For production, use a certificate issued by a trusted CA — Let's Encrypt or your corporate CA.
 
 ### Step 2: Configure TLS in `conf.json`
+
+!!! warning "NoSQL uses a different TLS configuration"
+    The Actian NoSQL MCP Server does not use `conf.json` or `ssl_certfile`/`ssl_keyfile` fields. TLS is configured via Quarkus environment variables. See [NoSQL TLS](../nosql/authentication/index.md#tls).
 
 Add `ssl_certfile` and `ssl_keyfile` at the **top level** (not inside the `oauth` block) and update `BASE_URL` to `https://`:
 ```json

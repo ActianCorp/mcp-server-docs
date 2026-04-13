@@ -21,37 +21,47 @@ The Actian NoSQL MCP Server acts as a bridge between any MCP client and your Act
 
 ## Configuration
 
-There are two settings you need to define to configure the NSQL MCP Server.
+All configuration is provided as **environment variables** to the container. There is no configuration file.
 
-1. The port which you want to use to connect to the MCP Server.
-2. The database url you want to explore with the MCP Server.<br>
-	The database url looks like `database@server:port#user:password`.<br>
-	`port`, `user` and `password` are optional.
+### NoSQL Connection
 
+| Environment Variable | Required | Description |
+|----------------------|----------|-------------|
+| `NSQL_CONNECTIONURL` | Yes | Connection URL in the format `database@server:port#user:password`. `port`, `user`, and `password` are optional. |
 
-<!-- TODO: Describe the configuration file format and required fields for NoSQL. Example:
+### Quarkus Properties
 
-```json
-{
-  "plugins": [
-    "actian_mcp_server.nosql.plugin.NoSQLPlugin"
-  ],
-  "nosql": {
-    "host": "localhost",
-    "port": 27017,
-    "database": "mydb",
-    "username": "admin",
-    "password": "secret"
-  }
-}
-```
--->
+The server is a **Quarkus** application. Any standard Quarkus configuration property can be passed as an environment variable using `SCREAMING_SNAKE_CASE` notation. Some commonly used properties:
+
+| Property | Environment Variable | Default | Description |
+|----------|---------------------|---------|-------------|
+| `quarkus.http.port` | `QUARKUS_HTTP_PORT` | `8080` | HTTP listening port. |
+| `quarkus.http.ssl-port` | `QUARKUS_HTTP_SSL_PORT` | `8443` | HTTPS listening port. |
+
+!!! note "Securing the server"
+    To enable OAuth 2.0 or HTTPS, additional environment variables are required. See [Authentication](authentication/index.md) for the full configuration reference.
 
 ## Start the Server
 
-To start the MCP Server, run the docker image by providing the parameters specified above.
+Pass configuration as environment variables using `-e` flags. Any property from the [Configuration](#configuration) section can be included this way:
 
-`docker run --name NSQL-MCP -e NSQL_CONNECTIONURL=cars@localhost -p 8080:8080 actian/nsql-mcp-server`
+```bash
+docker run --name NSQL-MCP \
+  -e NSQL_CONNECTIONURL=<connection-url> \
+  -e <ENV_VAR>=<value> \
+  -p <host-port>:<container-port> \
+  actian/nsql-mcp-server:1.0.0
+```
+
+A minimal example connecting to a local `cars` database on the default port:
+
+```bash
+docker run --name NSQL-MCP \
+  -e NSQL_CONNECTIONURL=cars@localhost \
+  -p 8080:8080 \
+  actian/nsql-mcp-server:1.0.0
+```
+
 
 ---
 
@@ -67,5 +77,8 @@ To start the MCP Server, run the docker image by providing the parameters specif
 
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
   Discover pre-built prompt templates for common workflows.
+
+- :material-lock: **[Authentication](authentication/index.md)**  
+  Configure OAuth 2.0 and TLS for the NoSQL MCP Server.
 
 </div>
