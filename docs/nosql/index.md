@@ -69,6 +69,9 @@ docker run --name NSQL-MCP \
 
 <div class="grid cards" markdown>
 
+- :material-lock: **[Authentication](authentication/index.md)**  
+  Configure OAuth 2.0 and TLS for the NoSQL MCP Server.
+
 - :material-tools: **[Tools](tools/index.md)**  
   Explore the available MCP tools for NoSQL database operations.
 
@@ -77,8 +80,5 @@ docker run --name NSQL-MCP \
 
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
   Discover pre-built prompt templates for common workflows.
-
-- :material-lock: **[Authentication](authentication/index.md)**  
-  Configure OAuth 2.0 and TLS for the NoSQL MCP Server.
 
 </div>

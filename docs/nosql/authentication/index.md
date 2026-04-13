@@ -73,6 +73,9 @@ docker run --name NSQL-MCP \
 
 ## TLS
 
+!!! note "Generating and trusting a self-signed certificate"
+    For instructions on generating a self-signed certificate and trusting it in your MCP client, see [HTTPS / TLS for Remote Deployments](../../authentication/index.md#https-tls-for-remote-deployments) in the main Authentication guide.
+
 To enable HTTPS, provide a certificate and private key. The `0` in the variable name is the index of the PEM key-store entry — increment it to add multiple certificates.
 
 | Environment Variable | Required | Description |
