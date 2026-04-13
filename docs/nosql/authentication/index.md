@@ -91,8 +91,8 @@ Mount your certificate and key into the container and pass the paths as environm
 ```bash
 docker run --name NSQL-MCP \
   -e NSQL_CONNECTIONURL=<connection-url> \
-  -e QUARKUS_TLS_KEY_STORE_PEM_0_CERT=/certs/cert.pem \
-  -e QUARKUS_TLS_KEY_STORE_PEM_0_KEY=/certs/key.pem \
+  -e QUARKUS_TLS_KEY_STORE_PEM__0__CERT=/certs/server.crt \
+  -e QUARKUS_TLS_KEY_STORE_PEM__0__KEY=/certs/server.key \
   -v /path/to/certs:/certs:ro \
   -p 8080:8080 \
   -p 8443:8443 \
