@@ -11,14 +11,14 @@ The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for d
 
 | Tool | Purpose |
 |------|---------|
-| `execute_query ` | Run a JPQL query. |
-| `query_next ` | Fetch the next page from a query cursor. |
-| `get_object_by_loid ` | Fetch one object by LOID. |
-| `get_objects_by_loids ` | Fetch multiple objects by LOID. |
-| `count_classes` | Count database classes. |
-| `list_classes ` | List class names and inheritance. |
-| `describe_class ` | Describe one class in detail. |
-| `get_complete_schema ` | Return full schema for all classes. |
+| [`execute_query `](#execute_query) | Run a JPQL query. |
+| [`query_next `](#query_next) | Fetch the next page from a query cursor. |
+| [`get_object_by_loid `](#get_object_by_loid) | Fetch one object by LOID. |
+| [`get_objects_by_loids `](#get_objects_by_loids) | Fetch multiple objects by LOID. |
+| [`count_classes`](#count_classes) | Count database classes. |
+| [`list_classes `](#list_classes) | List class names and inheritance. |
+| [`describe_class `](#describe_class) | Describe one class in detail. |
+| [`get_complete_schema `](#get_complete_schema) | Return full schema for all classes. |
 
 <!-- 
 ### Write tools (full mode only)
@@ -234,11 +234,11 @@ Get the object with id 54.0.22538
 
 ---
 
-## get_objects_by_loid
+## get_objects_by_loids
 
 ### Description
 
-The `get_objects_by_loid` tool retrieves multiple objects from the database using their LOIDs (Logical Object ID). This is the fastest way to fetch a specific instances when you already know their LOIDs.
+The `get_objects_by_loids` tool retrieves multiple objects from the database using their LOIDs (Logical Object ID). This is the fastest way to fetch a specific instances when you already know their LOIDs.
 
 ### When to Use
 Use this tool when you need to fetch details for specific objects and you already have their LOIDs.
