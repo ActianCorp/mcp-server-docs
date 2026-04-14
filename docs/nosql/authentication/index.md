@@ -63,6 +63,22 @@ Two OIDC tenants are pre-configured:
 
 Both tenants share the same auth server URL by default. Override the SSE tenant only if your SSE endpoint needs a different identity provider.
 
+### Provider Setup
+
+The identity provider configuration — creating a realm, registering an OAuth2 client, and managing users — is the same for the NoSQL MCP Server as for any other connector. Follow the existing provider guides for those steps:
+
+<div class="grid cards" markdown>
+
+- :material-cloud: **[Auth0](../../authentication/auth0/index.md)**  
+  Set up an Auth0 application and configure the OAuth2 client.
+
+- :material-key: **[Keycloak](../../authentication/keycloak/index.md)**  
+  Set up a Keycloak realm and configure the OAuth2 client.
+
+</div>
+
+Once your identity provider is configured, use the issuer URL it provides as the value for `QUARKUS_OIDC_AUTH_SERVER_URL` when starting the NoSQL MCP Server container.
+
 ### Example
 
 ```bash
@@ -105,18 +121,3 @@ docker run --name NSQL-MCP \
   actian/nsql-mcp-server:1.0.0
 ```
 
-## Provider Setup
-
-The identity provider configuration — creating a realm, registering an OAuth2 client, and managing users — is the same for the NoSQL MCP Server as for any other connector. Follow the existing provider guides for those steps:
-
-<div class="grid cards" markdown>
-
-- :material-cloud: **[Auth0](../../authentication/auth0/index.md)**  
-  Set up an Auth0 application and configure the OAuth2 client.
-
-- :material-key: **[Keycloak](../../authentication/keycloak/index.md)**  
-  Set up a Keycloak realm and configure the OAuth2 client.
-
-</div>
-
-Once your identity provider is configured, use the issuer URL it provides as the value for `QUARKUS_OIDC_AUTH_SERVER_URL` when starting the NoSQL MCP Server container.
