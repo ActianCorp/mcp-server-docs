@@ -63,17 +63,6 @@ Two OIDC tenants are pre-configured:
 
 Both tenants share the same auth server URL by default. Override the SSE tenant only if your SSE endpoint needs a different identity provider.
 
-### Example
-
-```bash
-docker run --name NSQL-MCP \
-  -e NSQL_CONNECTIONURL=<connection-url> \
-  -e MCP_AUTH_ENABLED=true \
-  -e QUARKUS_OIDC_AUTH_SERVER_URL=https://your-idp.example.com/realms/your-realm \
-  -p 8080:8080 \
-  actian/nsql-mcp-server:1.0.0
-```
-
 ### Provider Setup
 
 The identity provider configuration — creating a realm, registering an OAuth2 client, and managing users — is the same for the NoSQL MCP Server as for any other connector. Follow the existing provider guides for those steps:
@@ -89,6 +78,17 @@ The identity provider configuration — creating a realm, registering an OAuth2 
 </div>
 
 Once your identity provider is configured, use the issuer URL it provides as the value for `QUARKUS_OIDC_AUTH_SERVER_URL` when starting the NoSQL MCP Server container.
+
+### Example
+
+```bash
+docker run --name NSQL-MCP \
+  -e NSQL_CONNECTIONURL=<connection-url> \
+  -e MCP_AUTH_ENABLED=true \
+  -e QUARKUS_OIDC_AUTH_SERVER_URL=https://your-idp.example.com/realms/your-realm \
+  -p 8080:8080 \
+  actian/nsql-mcp-server:1.0.0
+```
 
 ## TLS
 
