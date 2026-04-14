@@ -15,7 +15,6 @@ The Actian MCP Server for **Actian NoSQL Database** exposes built-in resources f
 | [`db://schema/classes/count`](#dbschemaclassescount) | Database Class Count |
 | [`db://schema/complete`](#dbschemacomplete) | Complete Database Schema |
 
-
 ---
 
 ## db://schema/classes

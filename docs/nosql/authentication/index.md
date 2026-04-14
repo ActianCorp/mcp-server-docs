@@ -20,14 +20,14 @@ The server acts as an OAuth2 resource server and exposes a resource metadata end
 %%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     participant Client as MCP Client
-    participant Server as MCP Server (Quarkus)
-    participant IdP as Identity Provider
+    participant Server as MCP Server
+    participant IdP as Identity Provider (Auth0 / Keycloak)
 
     Client->>Server: Connect (no token)
     Server->>Client: 401 WWW-Authenticate Bearer resource_metadata=<br/><mcp_server_url>/.well-known/oauth-protected-resource
 
     Client->>Server: GET /.well-known/oauth-protected-resource
-    Server->>Client: {"authorization_servers": ["<idp_url>/realms/<realm>"]}
+    Server->>Client: {"authorization_servers": ["<idp_url>"]}
 
     Client->>IdP: Discover metadata
     Client->>IdP: Login, get authorization code
@@ -44,6 +44,9 @@ sequenceDiagram
 ```
 
 ### Configuration
+
+!!! note "Quarkus OIDC configuration"
+    The table below lists the most common properties. The full set of options is provided by the [Quarkus OIDC configuration reference](https://quarkus.io/guides/security-openid-connect-client-reference) — any property can be passed as an environment variable using `SCREAMING_SNAKE_CASE` notation.
 
 | Environment Variable | Required | Description |
 |---|---|---|
@@ -75,6 +78,9 @@ docker run --name NSQL-MCP \
 
 !!! note "Generating and trusting a self-signed certificate"
     For instructions on generating a self-signed certificate and trusting it in your MCP client, see [HTTPS / TLS for Remote Deployments](../../authentication/index.md#https-tls-for-remote-deployments) in the main Authentication guide.
+
+!!! note "Quarkus TLS configuration"
+    The table below lists the most common properties. The full set of options is provided by the [Quarkus TLS Registry](https://quarkus.io/guides/tls-registry-reference) extension — any property can be passed as an environment variable using `SCREAMING_SNAKE_CASE` notation.
 
 To enable HTTPS, provide a certificate and private key. The `0` in the variable name is the index of the PEM key-store entry — increment it to add multiple certificates.
 
