@@ -53,8 +53,8 @@
         { name: 'Prompts', path: 'prompts/index.html' }
       ],
       'nosql': [
-        { name: 'Tools', path: 'tools/index.html' },
         { name: 'Authentication', path: 'authentication/index.html' },
+        { name: 'Tools', path: 'tools/index.html' },
         { name: 'Resources', path: 'resources/index.html' },
         { name: 'Prompts', path: 'prompts/index.html' }
       ],
