@@ -21,47 +21,40 @@ The Actian NoSQL MCP Server acts as a bridge between any MCP client and your Act
 
 ## Configuration
 
-All configuration is provided as **environment variables** to the container. There is no configuration file.
+All configuration is provided through an **`application.properties`** file mounted into the container at `/home/jboss/config/application.properties`. Environment variables are supported as an alternative — any property can be passed with a `-e` flag using `SCREAMING_SNAKE_CASE` notation, and they take precedence over the file.
 
 ### NoSQL Connection
 
-| Environment Variable | Required | Description |
-|----------------------|----------|-------------|
-| `NSQL_CONNECTIONURL` | Yes | Connection URL in the format `database@server:port#user:password`. `port`, `user`, and `password` are optional. |
+| Property | Required | Description |
+|----------|----------|-------------|
+| `nsql_connectionURL` | Yes | Connection URL in the format `database@server:port#user:password`. `port`, `user`, and `password` are optional. |
 
 ### Quarkus Properties
 
-The server is a **Quarkus** application. Any standard Quarkus configuration property can be passed as an environment variable using `SCREAMING_SNAKE_CASE` notation. Some commonly used properties:
+The server is a **Quarkus** application. Any standard Quarkus configuration property can be set in `application.properties`. Some commonly used properties:
 
-| Property | Environment Variable | Default | Description |
-|----------|---------------------|---------|-------------|
-| `quarkus.http.port` | `QUARKUS_HTTP_PORT` | `8080` | HTTP listening port. |
-| `quarkus.http.ssl-port` | `QUARKUS_HTTP_SSL_PORT` | `8443` | HTTPS listening port. |
+| Property | Default | Description |
+|----------|---------|-------------|
+| `quarkus.http.port` | `8080` | HTTP listening port. |
+| `quarkus.http.ssl-port` | `8443` | HTTPS listening port. |
 
 !!! note "Securing the server"
-    To enable OAuth 2.0 or HTTPS, additional environment variables are required. See [Authentication](authentication/index.md) for the full configuration reference.
+    To enable OAuth 2.0 or HTTPS, additional properties are required. See [Authentication](authentication/index.md) for the full configuration reference.
 
 ## Start the Server
 
-Pass configuration as environment variables using `-e` flags. Any property from the [Configuration](#configuration) section can be included this way:
+Add your settings to `application.properties` and mount it into the container:
+
+```properties
+nsql_connectionURL=<connection-url>
+```
 
 ```bash
 docker run --name NSQL-MCP \
-  -e NSQL_CONNECTIONURL=<connection-url> \
-  -e <ENV_VAR>=<value> \
+  -v /path/to/application.properties:/home/jboss/config/application.properties:ro \
   -p <host-port>:<container-port> \
   actian/nsql-mcp-server:1.0.0
 ```
-
-A minimal example connecting to a local `cars` database on the default port:
-
-```bash
-docker run --name NSQL-MCP \
-  -e NSQL_CONNECTIONURL=cars@localhost \
-  -p 8080:8080 \
-  actian/nsql-mcp-server:1.0.0
-```
-
 
 ---
 
