@@ -58,7 +58,6 @@ Create a file named `conf.json` in your working directory:
 	"FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<client_secret>",
 	"FASTMCP_SERVER_AUTH_BASE_URL": "<server_base_url>",
 	"FASTMCP_SERVER_AUTH_AUDIENCE": "<audience>",
-	"FASTMCP_SERVER_AUTH_SCOPE": "<scopes>",
 	"user_impersonation": true
   }
 }

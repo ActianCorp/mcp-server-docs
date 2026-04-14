@@ -49,10 +49,8 @@ Add an `oauth` object to your `conf.json` to enable authentication. The server r
 | `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL — for example, `https://domain/.well-known/openid-configuration`. Use HTTPS in production; `http://` is acceptable for local Keycloak development. |
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | Yes | OAuth client ID from your identity provider. |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | OAuth client secret. |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | Public URL of the MCP server — for example, `http://127.0.0.1:8000`. Must be `https://` for non-localhost hosts. |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | External URL of the MCP server — for example, `https://<mcp-server-host>:8000`. Must use `https://`. |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | No | Token audience. Falls back to `CLIENT_ID` if omitted (standard for Keycloak). Auth0 requires an explicit audience. |
-| `FASTMCP_SERVER_AUTH_SCOPE` | No | Space-separated scopes — for example, `read:mcp_server`. The scopes `openid`, `email`, and `profile` are always auto-appended. |
-| `FASTMCP_SERVER_AUTH_REDIRECT_PATH` | No | Custom OAuth callback path. Defaults to `/auth/callback`. |
 | `user_impersonation` | No | Boolean. When `true` (default), the server runs each query as the authenticated user via `SET SESSION AUTHORIZATION`. |
 
 ### Example
@@ -62,9 +60,8 @@ Add an `oauth` object to your `conf.json` to enable authentication. The server r
     "FASTMCP_SERVER_AUTH_CONFIG_URL": "https://dev-abc123.us.auth0.com/.well-known/openid-configuration",
     "FASTMCP_SERVER_AUTH_CLIENT_ID": "wNXUdrp9aBcDeFgHiJkLmN",
     "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "a1B2c3D4e5F6g7H8i9J0kLmNoPqRsTuVwXyZ",
-    "FASTMCP_SERVER_AUTH_BASE_URL": "http://127.0.0.1:8000",
-    "FASTMCP_SERVER_AUTH_AUDIENCE": "http://127.0.0.1:8000/mcp",
-    "FASTMCP_SERVER_AUTH_SCOPE": "openid email profile read:mcp_server",
+    "FASTMCP_SERVER_AUTH_BASE_URL": "https://<mcp-server-host>:8000",
+    "FASTMCP_SERVER_AUTH_AUDIENCE": "<your-audience>",
     "user_impersonation": true
   }
 }
@@ -73,8 +70,8 @@ Add an `oauth` object to your `conf.json` to enable authentication. The server r
 !!! warning "All-or-nothing configuration"
     Provide **all** required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or **none**. If `CONFIG_URL` and `CLIENT_ID` are present but `CLIENT_SECRET` or `BASE_URL` is missing, the server fails to start with a `KeyError`. To disable OAuth, remove the entire `oauth` block.
 
-!!! info "Scope auto-append"
-    The scopes `openid`, `email`, and `profile` are always included automatically, even if you don't specify `FASTMCP_SERVER_AUTH_SCOPE`. Only add custom scopes such as `read:mcp_server` when needed.
+!!! info "Scopes"
+    The server automatically requests `openid`, `email`, and `profile` scopes. No additional scope configuration is needed.
 
 ## User Impersonation
 
@@ -121,7 +118,7 @@ flowchart TD
 
 ## HTTPS / TLS for Remote Deployments
 
-OAuth 2.0 requires HTTPS for non-localhost hosts. When OAuth is configured and the server runs on a non-localhost address — for example, a VM or container — HTTPS is **mandatory**. The server refuses to start without `ssl_certfile` and `ssl_keyfile`.
+OAuth 2.0 requires HTTPS. When OAuth is configured, HTTPS is **mandatory**. The server refuses to start without `ssl_certfile` and `ssl_keyfile`.
 
 ### Step 1: Generate a Certificate
 
@@ -247,7 +244,7 @@ Then trust it for your operating system:
 
     - **Restrict file permissions**: `chmod 600 conf.json`
     - **Never commit to version control**: Add `conf.json` to `.gitignore`
-    - **Use HTTPS for `BASE_URL` in production**: Tokens sent over plain HTTP can be intercepted. The `http://127.0.0.1` examples are for local development only
+    - **Use HTTPS for `BASE_URL`**: Tokens sent over plain HTTP can be intercepted
     - **Production secrets management**: Inject secrets through environment variables or a secrets manager
 
 ## Provider Setup Guides
