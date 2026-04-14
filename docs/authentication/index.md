@@ -145,8 +145,8 @@ chmod 600 server.key
 Add `ssl_certfile` and `ssl_keyfile` at the **top level** (not inside the `oauth` block) and update `BASE_URL` to `https://`:
 ```json
 {
-  "ssl_certfile": "/path/to/server.crt",
-  "ssl_keyfile": "/path/to/server.key",
+  "ssl_certfile": "/app/server.crt",
+  "ssl_keyfile": "/app/server.key",
   "oauth": {
     "FASTMCP_SERVER_AUTH_BASE_URL": "https://<your-ip-or-hostname>:8000"
   }
