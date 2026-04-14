@@ -20,14 +20,14 @@ The server acts as an OAuth2 resource server and exposes a resource metadata end
 %%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     participant Client as MCP Client
-    participant Server as MCP Server (Quarkus)
-    participant IdP as Identity Provider
+    participant Server as MCP Server
+    participant IdP as Identity Provider (Auth0 / Keycloak)
 
     Client->>Server: Connect (no token)
     Server->>Client: 401 WWW-Authenticate Bearer resource_metadata=<br/><mcp_server_url>/.well-known/oauth-protected-resource
 
     Client->>Server: GET /.well-known/oauth-protected-resource
-    Server->>Client: {"authorization_servers": ["<idp_url>/realms/<realm>"]}
+    Server->>Client: {"authorization_servers": ["<idp_url>"]}
 
     Client->>IdP: Discover metadata
     Client->>IdP: Login, get authorization code
