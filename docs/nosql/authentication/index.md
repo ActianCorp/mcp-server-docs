@@ -120,4 +120,3 @@ The identity provider configuration — creating a realm, registering an OAuth2 
 </div>
 
 Once your identity provider is configured, use the issuer URL it provides as the value for `QUARKUS_OIDC_AUTH_SERVER_URL` when starting the NoSQL MCP Server container.
-

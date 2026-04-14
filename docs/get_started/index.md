@@ -32,7 +32,7 @@ Create a `conf.json` file with the connection details for your database. Each da
 - [Analytics Engine configuration](../analytics_engine/index.md#configuration)
 - [Zen configuration](../zen/index.md#configuration)
 - [Ingres configuration](../ingres/index.md#configuration)
-- [HCL Informix® configuration](../informix/index.md#configuration)
+- [HCL Informix® configuration](../hcl_informix/index.md#configuration)
 - [NoSQL configuration](../nosql/index.md#configuration)
 
 !!! warning "NoSQL does not use a configuration file"
@@ -109,7 +109,7 @@ For the complete list of available tools per database, see database-specific doc
 - [Analytics Engine tools](../analytics_engine/tools/index.md)
 - [Ingres tools](../ingres/tools/index.md)
 - [Zen tools](../zen/tools/index.md)
-- [HCL Informix® tools](../informix/tools/index.md)
+- [HCL Informix® tools](../hcl_informix/tools/index.md)
 - [NoSQL tools](../nosql/tools/index.md)
 
 ## Optional: Add Authentication

@@ -104,7 +104,7 @@ JWT Validation"]
 ## End-to-End Request Flow
 
 ```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '20px', 'fontFamily': 'arial'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '44px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     actor User
     participant Client as MCP Client (Claude/Cursor/Codex)

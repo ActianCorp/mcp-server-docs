@@ -1,13 +1,11 @@
 ---
-title: Connecting to MCP Clients
+title: Connecting MCP Clients
 description: Connect MCP-compatible clients to a running Actian MCP Server instance.
 ---
 
-# Connecting to MCP Clients
+# Connecting MCP Clients
 
-Once the Actian MCP Server is running in a container, MCP-compatible clients can connect to it over the configured network transport.
-
-The server inside the container runs in **HTTP** transport mode, and clients connect to the server endpoint exposed by the container.
+Once the Actian MCP Server is running in a container, MCP-compatible clients can connect to it via the configured network transport. Inside the container, the server operates in HTTP transport mode, and clients connect to the server endpoint exposed by the container
 
 ## Connection URL Format
 

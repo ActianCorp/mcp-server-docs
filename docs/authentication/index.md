@@ -95,7 +95,7 @@ When `user_impersonation` is `true` (the default), the server extracts a usernam
 
 The server extracts the database username from the token using the following priority order. It first queries the IdP's **userinfo endpoint**; if that fails, it falls back to **token claims** directly.
 ```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 flowchart TD
     A[Incoming Request with JWT] --> B{user_impersonation?}
     B -- false --> C[Run query as service account]

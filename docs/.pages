@@ -5,8 +5,8 @@ nav:
   - get_started
   - mcp_clients
   - authentication
-  - analytics_engine
   - ingres
-  - informix
-  - nosql
+  - hcl_informix
   - zen
+  - nosql
+  - analytics_engine
