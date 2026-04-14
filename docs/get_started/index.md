@@ -32,8 +32,11 @@ Create a `conf.json` file with the connection details for your database. Each da
 - [Analytics Engine configuration](../analytics_engine/index.md#configuration)
 - [Zen configuration](../zen/index.md#configuration)
 - [Ingres configuration](../ingres/index.md#configuration)
-- [HCL Informix® configuration](../informix/index.md#configuration)
+- [HCL Informix® configuration](../hcl_informix/index.md#configuration)
 - [NoSQL configuration](../nosql/index.md#configuration)
+
+!!! warning "NoSQL does not use a configuration file"
+    The Actian NoSQL MCP Server is configured entirely through **environment variables** — there is no `conf.json` to create or mount. See [NoSQL configuration](../nosql/index.md#configuration) for available settings.
 
 All database configurations share these common fields for the MCP server:
 
@@ -51,6 +54,9 @@ All database configurations share these common fields for the MCP server:
     The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control. The `:ro` flag in the mount command ensures the file cannot be modified from inside the container.
 
 ## Step 3: Start the Container
+
+!!! warning "NoSQL users"
+    The NoSQL MCP Server does not use a `conf.json` and requires no volume mount. Pass configuration as `-e` flags instead — see [Starting the NoSQL server](../nosql/index.md#start-the-server).
 
 Mount your configuration file into the container as `/app/conf.json`:
 
@@ -103,7 +109,7 @@ For the complete list of available tools per database, see database-specific doc
 - [Analytics Engine tools](../analytics_engine/tools/index.md)
 - [Ingres tools](../ingres/tools/index.md)
 - [Zen tools](../zen/tools/index.md)
-- [HCL Informix® tools](../informix/tools/index.md)
+- [HCL Informix® tools](../hcl_informix/tools/index.md)
 - [NoSQL tools](../nosql/tools/index.md)
 
 ## Optional: Add Authentication

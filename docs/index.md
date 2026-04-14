@@ -68,29 +68,29 @@ hide:
     </thead>
     <tbody>
       <tr>
-        <td><a href="./analytics_engine/index.html">Actian Analytics Engine</a></td>
-        <td><code>actian/mcp-server-ae</code></td>
-        <td>Large-scale retrieval-augmented generation (RAG) and high-performance vector analysis.</td>
-      </tr>
-      <tr>
         <td><a href="./ingres/index.html">Actian Ingres</a></td>
-        <td><code>actian/mcp-server-ingres</code></td>
+        <td><code>actian/ingres-mcp-server</code></td>
         <td>Mission-critical relational data and enterprise logic.</td>
       </tr>
       <tr>
-        <td><a href="./nosql/index.html">Actian NoSQL</a></td>
-        <td><code>actian/mcp-server-nosql</code></td>
-        <td>High-fidelity context from complex object structures.</td>
+        <td><a href="./hcl_informix/index.html">HCL Informix®</a></td>
+        <td><code>actian/informix-mcp-server</code></td>
+        <td>Time-series, Internet of Things (IoT), and high-availability spatial data.</td>
       </tr>
-      <tr>
+       <tr>
         <td><a href="./zen/index.html">Actian Zen</a></td>
-        <td><code>actian/mcp-server-zen</code></td>
+        <td><code>actian/zen-mcp-server</code></td>
         <td>Edge-based AI and zero-admin mobile applications.</td>
       </tr>
       <tr>
-        <td><a href="./informix/index.html">HCL Informix®</a></td>
-        <td><code>actian/mcp-server-informix</code></td>
-        <td>Time-series, Internet of Things (IoT), and high-availability spatial data.</td>
+        <td><a href="./nosql/index.html">Actian NoSQL</a></td>
+        <td><code>actian/nsql-mcp-server</code></td>
+        <td>High-fidelity context from complex object structures.</td>
+      </tr>
+      <tr>
+        <td><a href="./analytics_engine/index.html">Actian Analytics Engine</a></td>
+        <td><code>actian/analytics-engine-mcp-server</code></td>
+        <td>Large-scale retrieval-augmented generation (RAG) and high-performance vector analysis.</td>
       </tr>
     </tbody>
   </table>
