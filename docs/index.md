@@ -14,7 +14,7 @@ hide:
     </p>
     <div class="hero-cta">
       <a href="https://hub.docker.com/u/actian" class="primary-link">Browse the Actian MCP Hub →</a>
-      <a href="./get_started/index.html" class="primary-link" style="margin-left:1.5rem;">View Documentation →</a>
+      <a href="./get-started/index.html" class="primary-link" style="margin-left:1.5rem;">View Documentation →</a>
     </div>
   </div>
 </div>
@@ -73,7 +73,7 @@ hide:
         <td>Mission-critical relational data and enterprise logic.</td>
       </tr>
       <tr>
-        <td><a href="./hcl_informix/index.html">HCL Informix®</a></td>
+        <td><a href="./hcl-informix/index.html">HCL Informix®</a></td>
         <td><code>actian/informix-mcp-server</code></td>
         <td>Time-series, Internet of Things (IoT), and high-availability spatial data.</td>
       </tr>
@@ -88,7 +88,7 @@ hide:
         <td>High-fidelity context from complex object structures.</td>
       </tr>
       <tr>
-        <td><a href="./analytics_engine/index.html">Actian Analytics Engine</a></td>
+        <td><a href="./analytics-engine/index.html">Actian Analytics Engine</a></td>
         <td><code>actian/analytics-engine-mcp-server</code></td>
         <td>Large-scale retrieval-augmented generation (RAG) and high-performance vector analysis.</td>
       </tr>
@@ -135,7 +135,7 @@ hide:
         All MCP server images are available at <strong>hub.docker.com/u/actian</strong>. You can spin up a specific server using standard container orchestration.
       </p>
       <div class="section-cta">
-        <a href="./get_started/index.html" class="primary-link">Read the quick-start guide →</a>
+        <a href="./get-started/index.html" class="primary-link">Read the quick-start guide →</a>
       </div>
     </div>
     <div class="code-side">

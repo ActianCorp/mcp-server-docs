@@ -19,21 +19,21 @@ Each Actian database has its own container image with the required drivers pre-i
 
 | Database | Container image |
 |----------|----------------|
-| Analytics Engine | [`actian/analytics-engine-mcp-server`](https://hub.docker.com/r/actian/analytics-engine-mcp-server) |
 | Ingres | [`actian/ingres-mcp-server`](https://hub.docker.com/r/actian/ingres-mcp-server) |
 | HCL Informix® | [`actian/informix-mcp-server`](https://hub.docker.com/r/actian/informix-mcp-server) |
 | Zen | [`actian/zen-mcp-server`](https://hub.docker.com/r/actian/zen-mcp-server) |
 | NoSQL | [`actian/nsql-mcp-server`](https://hub.docker.com/r/actian/nsql-mcp-server) |
+| Analytics Engine | [`actian/analytics-engine-mcp-server`](https://hub.docker.com/r/actian/analytics-engine-mcp-server) |
 
 ## Step 2: Create a Configuration File
 
 Create a `conf.json` file with the connection details for your database. Each database has its own configuration format. For the full field reference, see the database-specific documentation:
 
-- [Analytics Engine configuration](../analytics_engine/index.md#configuration)
-- [Zen configuration](../zen/index.md#configuration)
 - [Ingres configuration](../ingres/index.md#configuration)
-- [HCL Informix® configuration](../hcl_informix/index.md#configuration)
+- [HCL Informix® configuration](../hcl-informix/index.md#configuration)
+- [Zen configuration](../zen/index.md#configuration)
 - [NoSQL configuration](../nosql/index.md#configuration)
+- [Analytics Engine configuration](../analytics-engine/index.md#configuration)
 
 !!! warning "NoSQL does not use a configuration file"
     The Actian NoSQL MCP Server is configured entirely through **environment variables** — there is no `conf.json` to create or mount. See [NoSQL configuration](../nosql/index.md#configuration) for available settings.
@@ -106,11 +106,11 @@ The client will invoke the server's `list_tables` tool. If the client returns ta
 
 For the complete list of available tools per database, see database-specific documentation:
 
-- [Analytics Engine tools](../analytics_engine/tools/index.md)
 - [Ingres tools](../ingres/tools/index.md)
+- [HCL Informix® tools](../hcl-informix/tools/index.md)
 - [Zen tools](../zen/tools/index.md)
-- [HCL Informix® tools](../hcl_informix/tools/index.md)
 - [NoSQL tools](../nosql/tools/index.md)
+- [Analytics Engine tools](../analytics-engine/tools/index.md)
 
 ## Optional: Add Authentication
 

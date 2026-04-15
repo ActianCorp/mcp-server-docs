@@ -30,7 +30,7 @@ The server handles the surrounding concerns, such as transport, configuration, a
 
 ## Architecture Overview
 ```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
+%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '12px', 'fontFamily': 'arial'}}}%%
 flowchart TB
     subgraph Clients["MCP Clients"]
         claude["Claude Desktop"]
@@ -196,6 +196,6 @@ The Actian MCP Server removes the need to build separate integrations for each A
 
 <div class="grid cards" markdown>
 
-- :material-rocket-launch: **[Get Started](../get_started/index.md)**  
+- :material-rocket-launch: **[Get Started](../get-started/index.md)**  
   Follow our get started guide to deploy your first Actian MCP Server instance and connect it to an AI client.
 </div>
