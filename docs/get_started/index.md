@@ -46,8 +46,8 @@ All database configurations share these common fields for the MCP server:
 | `database_password` | `str` | Yes | Database password. |
 | `host` | `str` | Yes | Host address the MCP server listens on inside the container. |
 | `port` | `str` | Yes | Port the MCP server listens on inside the container. |
-| `ssl_certfile` | `str` | No | Path to the TLS certificate file. |
-| `ssl_keyfile` | `str` | No | Path to the TLS private key file. |
+| `ssl_certfile` | `str` | No | Path to the TLS certificate file. Always `/app/server.crt` inside the container. |
+| `ssl_keyfile` | `str` | No | Path to the TLS private key file. Always `/app/server.key` inside the container. |
 | `oauth` | `object` | No | OAuth 2.0 configuration. See [Authentication](../authentication/index.md). |
 
 !!! warning "Protect your configuration file"
