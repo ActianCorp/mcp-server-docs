@@ -33,10 +33,11 @@ All configuration is provided through an **`application.properties`** file mount
 
 The server is a **Quarkus** application. Any standard Quarkus configuration property can be set in `application.properties`. Some commonly used properties:
 
-| Property | Default | Description |
-|----------|---------|-------------|
-| `quarkus.http.port` | `8080` | HTTP listening port. |
-| `quarkus.http.ssl-port` | `8443` | HTTPS listening port. |
+| Property | Default | Description                                                                                                                                                                                               |
+|----------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `quarkus.http.port` | `8080` | HTTP listening port.                                                                                                                                                                                      |
+| `quarkus.http.ssl-port` | `8443` | HTTPS listening port.                                                                                                                                                                                     |
+| `quarkus.log.level` | `INFO` | Root log level. Individual categories can be tuned independently  — for example, `quarkus.log.category."io.quarkus.oidc".level=DEBUG`. See the [Quarkus logging guide](https://quarkus.io/guides/logging#configure-the-log-level-category-and-format) for the full reference. |
 
 !!! note "Securing the server"
     To enable OAuth 2.0 or HTTPS, additional properties are required. See [Authentication](authentication/index.md) for the full configuration reference.
