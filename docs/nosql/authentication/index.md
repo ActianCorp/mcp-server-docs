@@ -114,7 +114,6 @@ Add the following to your `application.properties`:
 nsql_connectionURL=<connection-url>
 quarkus.tls.key-store.pem.0.cert=/certs/server.crt
 quarkus.tls.key-store.pem.0.key=/certs/server.key
-quarkus.http.insecure-requests=redirect
 ```
 
 Then mount both the properties file and the certificate directory, and expose the HTTPS port:
