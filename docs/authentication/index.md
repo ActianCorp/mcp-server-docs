@@ -3,19 +3,21 @@ title: Authentication
 description: Enable OAuth 2.0 / OIDC authentication for the Actian MCP Server — configuration reference, user impersonation, TLS setup, and security best practices.
 ---
 
-# Authentication (OAuth 2.0 / OIDC)
+# Configuring OAuth 2.0 and OIDC Authentication
 
-The Actian MCP Server supports **OAuth 2.0 / OpenID Connect (OIDC)** authentication. When enabled, every client request must carry a valid JWT (JSON Web Token) issued by a trusted identity provider (IdP).
+The Actian MCP Server supports OAuth 2.0 and OpenID Connect (OIDC) authentication. When you enable this feature, every client request must include a valid JSON Web Token (JWT) issued by a trusted identity provider (IdP).
 
-!!! warning "Actian NoSQL uses a different authentication model"
-    This page describes the **OIDC proxy flow** used by the SQL-family connectors. If you are configuring **Actian NoSQL**, see [NoSQL Authentication](../nosql/authentication/index.md). NoSQL uses a **direct OAuth 2.0 flow** with different configuration properties.
 
-!!! note "Transport requirement"
-    OAuth is only available with network transports: `sse`, `http`, and `streamable-http`. The `stdio` transport — used for IDE integrations like Claude Desktop and Cursor — does not support OAuth.
+!!! warning "Important notes for deployment:"
+    - **Actian NoSQL users:**  This section describes the OIDC proxy flow used by the SQL-family connectors. NoSQL uses a direct OAuth 2.0 flow with different configuration properties, see [NoSQL Authentication guide](../nosql/authentication/index.md) for more information.
+    - **Transport requirements:** OAuth only works with network transports, such as `sse`, `http`, and `streamable-http`. You cannot use OAuth with the stdio transport, which is used for local IDE integrations like Claude Desktop or Cursor.
 
-## How OAuth Works
 
-The MCP server acts as an **OIDC Relying Party**. When a client connects for the first time, the server redirects the user's browser to the identity provider's login page. After successful authentication, the IdP issues a token that the client includes in every subsequent request.
+
+## Working with OAuth
+
+The Actian MCP Server acts as an `OIDC Relying Party` by redirecting unauthenticated AI clients to the identity provider for secure login and token issuance. Once authenticated, the client includes this bearer token in all subsequent requests, allowing the server to validate the session and securely fulfill database queries.
+
 ```mermaid
 %%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
@@ -40,20 +42,21 @@ sequenceDiagram
     end
 ```
 
-## The `oauth` Configuration Block
+## Configuring `oauth` block
 
-Add an `oauth` object to your `conf.json` to enable authentication. The server reads these fields at startup.
+To enable authentication, add an `oauth` object to the `conf.json` file. The server reads these fields during startup.
 
 | Field | Required | Description |
 | :---- | :------- | :---------- |
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL — for example, `https://domain/.well-known/openid-configuration`. Use HTTPS in production; `http://` is acceptable for local Keycloak development. |
-| `FASTMCP_SERVER_AUTH_CLIENT_ID` | Yes | OAuth client ID from your identity provider. |
-| `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | OAuth client secret. |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | External URL of the MCP server — for example, `https://<mcp-server-host>:8000`. Must use `https://`. |
-| `FASTMCP_SERVER_AUTH_AUDIENCE` | No | Token audience. Falls back to `CLIENT_ID` if omitted (standard for Keycloak). Auth0 requires an explicit audience. |
-| `user_impersonation` | No | Boolean. When `true` (default), the server runs each query as the authenticated user via `SET SESSION AUTHORIZATION`. |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The OIDC discovery URL, for example: `https://domain/.well-known/openid-configuration`. Use `https://` in production. `http://` is acceptable only for local Keycloak development. |
+| `FASTMCP_SERVER_AUTH_CLIENT_ID` | Yes | The OAuth client ID provided by the identity provider. |
+| `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | The OAuth client secret. |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | The external URL of the MCP server, for example: `https://<mcp-server-host>:8000`. This must use `https://`. |
+| `FASTMCP_SERVER_AUTH_AUDIENCE` | No | The token audience. If omitted, it defaults to the `CLIENT_ID` (standard for Keycloak). **Note:** Auth0 requires an explicit audience. |
+| `user_impersonation` | No | Boolean. When `true` (the default setting), the server runs each query as the authenticated user using `SET SESSION AUTHORIZATION`. |
 
-### Example
+### Example Configuration
+
 ```json
 {
   "oauth": {
@@ -68,29 +71,29 @@ Add an `oauth` object to your `conf.json` to enable authentication. The server r
 ```
 
 !!! warning "All-or-nothing configuration"
-    Provide **all** required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or **none**. If `CONFIG_URL` and `CLIENT_ID` are present but `CLIENT_SECRET` or `BASE_URL` is missing, the server fails to start with a `KeyError`. To disable OAuth, remove the entire `oauth` block.
+    You must provide all four required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or none. If you include the `CONFIG_URL` and `CLIENT_ID`, and omit the `CLIENT_SECRET` or `BASE_URL`, the server fails to start and throw a `KeyError`. To disable OAuth, remove the entire `oauth` block.
 
 !!! info "Scopes"
-    The server automatically requests `openid`, `email`, and `profile` scopes. No additional scope configuration is needed.
+    You do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
+
 
 ## User Impersonation
 
-When `user_impersonation` is `true` (the default), the server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before each database query. This ensures every user operates under their own database permissions.
+By default, the `user_impersonation` field is set to `true` and the server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
 
-### Behavior
-
-| `user_impersonation` | Behavior |
+|  `user_impersonation` | Server |
 | :------------------- | :------- |
-| `true` (default) | JWT verified + `SET SESSION AUTHORIZATION "<user>"` per query. Every OAuth user needs a matching database account. |
-| `false` | JWT still verified — unauthenticated requests are rejected — but all queries run under the service-account pool credentials. |
+| `true` (default) | Verify the `JWT` and run `SET SESSION AUTHORIZATION "<user>"` for each query. Every OAuth user needs a matching database account. |
+| `false` | Verify the `JWT` and reject unauthenticated requests. However, all approved queries will run under the shared service-account connection pool credentials.|
 
-!!! warning "Not all connectors support user impersonation"
-    - **Zen** — Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication is still enforced — only per-user database switching is skipped.
-    - **NoSQL** — Uses a different authentication model entirely (direct OAuth 2.0 flow). The `user_impersonation` field does not apply. See [NoSQL Authentication](../nosql/authentication/index.md).
+!!! warning "Plugin limitations: Not all connectors support user impersonation"
+    - **Zen** — Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication works and only per-user database switching is skipped.
+    - **NoSQL** — Uses a direct OAuth 2.0 flow, different authentication model. The `user_impersonation` field does not apply, see [NoSQL Authentication guide](../nosql/authentication/index.md) for more information.
 
-### Username Extraction Priority
+### Extracting Username
 
-The server extracts the database username from the token using the following priority order. It first queries the IdP's **userinfo endpoint**; if that fails, it falls back to **token claims** directly.
+When user impersonation is active, the server extracts the database username from the token using the following priority order:
+
 ```mermaid
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
 flowchart TD
@@ -111,14 +114,14 @@ flowchart TD
     L --> M[Execute query]
 ```
 
-!!! tip "Provider-specific behavior"
-    - **Auth0** — Does not return `username` or `preferred_username` by default. The email prefix is used in practice. Create database users matching the email prefix — for example, `jdoe@example.com` → database user `jdoe`.
-    - **Keycloak** — Returns `preferred_username` by default when the `profile` scope is present. Create database users matching the Keycloak login name.
-    - **Federated identity** (Google, SAML, corporate SSO) — The `sub` claim may be a provider-specific ID (for example, `google-oauth2|12345`) that does not match a database account. For SSO setups, set `user_impersonation` to `false` or ensure the IdP profile contains a `username` that matches the database account.
+!!! tip "Provider-specific behavior:"
+    - **Auth0** — Does not return `username` or `preferred_username` by default. The server usually falls back to the email prefix. Ensure that the database usernames match the email prefixes, for example: create database user `jdoe` for `jdoe@example.com`.
+    - **Keycloak** — Returns `preferred_username` by default when the `profile` scope is present. Create database users that match the Keycloak login names.
+    - **Federated SSO (Google, SAML)** — The `sub` claim often generates a provider-specific ID (like `google-oauth2|12345`) that won't match a database account. For SSO setups, ensure the IdP profile passes a valid database `username`, or set `user_impersonation` to `false`.  
 
-## HTTPS / TLS for Remote Deployments
+## Secure Remote Deployments with HTTPS and TLS
 
-OAuth 2.0 requires HTTPS. When OAuth is configured, HTTPS is **mandatory**. The server refuses to start without `ssl_certfile` and `ssl_keyfile`.
+OAuth 2.0 requires HTTPS. If you configure OAuth, the server mandates HTTPS and will refuse to start unless you provide the `ssl_certfile` and `ssl_keyfil`e paths.
 
 ### Step 1: Generate a Certificate
 

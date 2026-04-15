@@ -3,20 +3,26 @@ title: Connecting MCP Clients
 description: Connect MCP-compatible clients to a running Actian MCP Server instance.
 ---
 
-# Connecting MCP Clients
+# Connect AI Clients to Actian MCP Server
 
-Once the Actian MCP Server is running in a container, MCP-compatible clients can connect to it via the configured network transport. Inside the container, the server operates in HTTP transport mode, and clients connect to the server endpoint exposed by the container
+After you deploy the Actian MCP Server container, you can connect to the MCP-compatible artificial intelligence (AI) clients. The server uses HTTP transport mode, and clients can connect directly to the endpoint exposed by the container.
 
-## Connection URL Format
+## Connection URL Formats
+
+Identify the deployment type to determine the correct connection URL. The standard endpoint path is `/mcp`.
 
 - Local deployment: `http://localhost:<port>/mcp`
 - Remote deployment: `http://<hostname>:<port>/mcp`
 
 The standard endpoint used for the server deployment is `/mcp`.
 
+#### Client Configuration Examples
+
+You can connect popular AI clients like Claude Desktop, Cursor, fast-agent, and Codex using the connection URL.
+
 === ":material-brain: Claude Desktop"
 
-    Add the following server entry to `claude_desktop_config.json`:
+    To connect Claude Desktop, add the following server entry to the `claude_desktop_config.json` file:
 
     ```json
     {
@@ -28,11 +34,11 @@ The standard endpoint used for the server deployment is `/mcp`.
     }
     ```
 
-    For a remote deployment, replace `localhost` and `<port>` with the public host and port of the Actian MCP Server.
+    For a remote deployment, replace localhost and <port> with the public hostname and port of the Actian MCP Server.
 
 === ":material-cursor-default-click: Cursor"
 
-    Add the following server entry to `~/.cursor/mcp.json`:
+    To connect Cursor, add the following server entry to the `~/.cursor/mcp.json` file:
 
     ```json
     {
@@ -44,11 +50,11 @@ The standard endpoint used for the server deployment is `/mcp`.
     }
     ```
 
-    For a remote deployment, replace `localhost` and `<port>` with the public host and port of the Actian MCP Server.
+    For a remote deployment, replace localhost and <port> with the public hostname and port of the Actian MCP Server.
 
 === ":material-lightning-bolt: fast-agent"
 
-    Add the following server entry to `fastagent.config.yaml`:
+    To connect fast-agent, add the following server entry to the `fastagent.config.yaml` file:
 
     ```yaml
     mcp:
@@ -59,36 +65,36 @@ The standard endpoint used for the server deployment is `/mcp`.
 
 === ":material-code-braces: Codex"
 
-    Add the following server entry to `~/.codex/config.toml`:
+    To connect Codex, add the following server entry to the `~/.codex/config.toml` file:
 
     ```toml
     [mcp_servers.actian-mcp-server]
     url = "http://localhost:<port>/mcp"
     ```
 
-    For a remote deployment, replace `localhost` and `<port>` with the public host and port of the Actian MCP Server.
+    For a remote deployment, replace localhost and <port> with the public hostname and port of the Actian MCP Server.
 
-## Python Client
+## Connect Using Python Client
 
-The following example demonstrates how to connect to a running Actian MCP Server instance using the [FastMCP](https://pypi.org/project/fastmcp/) Python client. It works with any supported database plugin (Ingres, Analytics Engine, HCL Informix®, or Zen).
+The following example demonstrates how to connect to a running Actian MCP Server instance using the [FastMCP](https://pypi.org/project/fastmcp/) Python client. This approach supports all database plugins (Ingres, HCL Informix®, Zen, and Analytics Engine).
 
 ### Prerequisites
 
-Install the required package:
+Install the required FastMCP package:
 
 ```bash
 pip install fastmcp
 ```
 
-For the OAuth example, also install `httpx`:
+To use OAuth authentication, install the `HTTPX` library:
 
 ```bash
 pip install httpx
 ```
 
-### Parameter Differences by Plugin
+### Parameter Naming Differences
 
-Most tools share the same interface, but parameter names differ slightly between plugins:
+Most tools share the same interface across databases, the parameter names may vary depending on the specific plugin.
 
 | Tool | Ingres / Analytics Engine / HCL Informix® | Zen |
 |------|--------------------------------------|-----|
@@ -97,7 +103,9 @@ Most tools share the same interface, but parameter names differ slightly between
 
 The following examples use the Ingres / Analytics Engine / HCL Informix® parameter names. For Zen, substitute the parameter names from the table above.
 
-### Basic Usage
+### Basic Connection Example
+
+The following Python script demonstrates a standard connection. This example uses the parameter names for Analytics Engine, HCL Informix®, and Ingres. If you use Zen, substitute the parameters using the table above.
 
 ```python
 """Actian MCP Server — Python client example."""
@@ -157,9 +165,9 @@ if __name__ == "__main__":
         print(f"Error: {e}")
 ```
 
-### Connecting with OAuth Authentication
+### Connect Using OAuth Authentication
 
-When the server is deployed with OAuth enabled over HTTPS, provide authentication and SSL parameters:
+When you deploy the server with OAuth enabled over HTTPS, provide authentication and TLS/SSL parameters in the client code
 
 ```python
 """Actian MCP Server — Python client with OAuth and TLS."""
@@ -205,12 +213,12 @@ if __name__ == "__main__":
 ```
 
 !!! tip
-    When using OAuth, the FastMCP client automatically handles the browser-based login flow. Ensure a browser is available on the machine running the client.
+    When you use OAuth, the FastMCP client automatically handles the browser-based login flow. Ensure you run the client on a machine with a web browser available.
 
-## Connection Notes
+## Deployment Considerations
 
-- Use the port configured for the MCP Server container.
-- For production deployments, prefer **HTTPS** and configure authentication when you expose the server outside a trusted local environment.
-- When OAuth is enabled on a non-localhost deployment, the server requires **TLS** and a public `https://` base URL.
-  For certificate generation, Docker setup, and trusting self-signed certificates in MCP clients, see [HTTPS / TLS for remote deployments](../authentication/index.md#https-tls-for-remote-deployments).
+Review the following guidelines to ensure a stable and secure connection:
 
+- **Port mapping:** Always connect using the specific port configured for the MCP Server container.
+- **Production security:** Enforce HTTPS and configure authentication whenever you expose the server outside a trusted local environment.
+- **Remote deployments:** If you enable OAuth on a non-localhost deployment, the server requires TLS and a public `https://` base URL. For detailed instructions on generating certificates, configuring Docker, and trusting self-signed certificates, see [HTTPS / TLS for remote deployments](../authentication/index.md#https-tls-for-remote-deployments) documentation.
