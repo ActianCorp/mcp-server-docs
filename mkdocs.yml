@@ -119,7 +119,7 @@ extra_css:
   - stylesheets/dx_style.css
   - assets/stylesheets/actian-landing.css?v=4
   - stylesheets/extra.css
-  # - stylesheets/comprehensive-nav.css
+  - stylesheets/comprehensive-nav.css
 
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -127,7 +127,7 @@ extra_javascript:
   - javascripts/mermaid-init.js
   - javascripts/search_enhancement.js
   - javascripts/extra.js
-  # - javascripts/comprehensive-nav.js
+  - javascripts/comprehensive-nav.js
   - path: javascripts/current.js
     defer: true
   # - path: javascripts/MiniChatJavaScript.js  # disabled: Zeenea chatbot
