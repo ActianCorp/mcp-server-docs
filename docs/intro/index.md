@@ -170,10 +170,24 @@ sequenceDiagram
 
 You can deploy an MCP Server as follows:
 
-1. Configure the server: Start a server instance using a configuration that targets the specific Actian DBMS.
-2. Connect to the database: The server connects to the target DBMS using an ODBC connection pool.
-3. Expose capabilities: The server makes database tools, resources, and prompts available through the MCP protocol.
-4. Connect the AI client: An MCP-compatible client uses the exposed capabilities to query data, inspect metadata, and run workflows.
+<div class="steps-container" markdown>
+<div class="step-item">
+<h4 class="step-title">Configure the server</h4>
+<p class="step-description">Start a server instance using a configuration that targets the specific Actian DBMS.</p>
+</div>
+<div class="step-item">
+<h4 class="step-title">Connect to the database</h4>
+<p class="step-description">The server connects to the target DBMS using an ODBC connection pool.</p>
+</div>
+<div class="step-item">
+<h4 class="step-title">Expose capabilities</h4>
+<p class="step-description">The server makes database tools, resources, and prompts available through the MCP protocol.</p>
+</div>
+<div class="step-item">
+<h4 class="step-title">Connect the AI client</h4>
+<p class="step-description">An MCP-compatible client uses the exposed capabilities to query data, inspect metadata, and run workflows.</p>
+</div>
+</div>
 
 !!! info 
     Each Actian DBMS requires its own dedicated Actian MCP Server instance, which means there is a single server, database, and MCP endpoint.
