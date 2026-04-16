@@ -10,7 +10,7 @@ hide:
 <div class="databases-section">
   <div class="features-header">
     <p class="databases-subtitle">
-      The Model Context Protocol (MCP) is an open standard that enables large language models (LLMs) to securely access and interact with external data sources and tools. Think of MCP as a universal plug like a <strong>“USB-C port”</strong> for artificial intelligence (AI). Instead of building fragile, custom integrations for every database, MCP provides a standardized way for AI models to connect directly to your infrastructure. This allows the model to understand schemas, execute queries, and retrieve real-time context, all without the data ever leaving the secure environment.
+      The Model Context Protocol (MCP) is an open standard that enables large language models (LLMs) to securely access and interact with external data sources and tools. MCP is like a universal plug, a USB-C port for artificial intelligence (AI). Instead of building fragile, custom integrations for every database, MCP provides a standardized way for AI models to connect directly to your infrastructure. This allows the model to understand schemas, execute queries, and retrieve real-time context, without the need for data to leave the secure environment.
     </p>
     <div class="hero-cta">
       <a href="https://hub.docker.com/u/actian" class="primary-link">Actian MCP Hub →</a>
@@ -34,7 +34,7 @@ hide:
     </div>
     <div class="feature-item">
       <h4 class="feature-title">Grounded Truth</h4>
-      <p class="feature-description">By querying Actian Ingres or HCL Informix® in real time, agents base their answers on the latest business facts. This directly reduces AI hallucinations”</p>
+      <p class="feature-description">By querying Actian Ingres or HCL Informix® in real time, agents base their answers on the latest business facts. This directly reduces AI hallucinations.</p>
     </div>
     <div class="feature-item">
       <h4 class="feature-title">Tool-Use Capabilities</h4>
@@ -67,27 +67,27 @@ hide:
       <tr>
         <td><a href="./ingres/index.html">Actian Ingres</a></td>
         <td><code>actian/ingres-mcp-server</code></td>
-        <td>Mission-critical relational data and enterprise logic.</td>
+        <td>Mission-critical relational data and enterprise logic</td>
       </tr>
       <tr>
         <td><a href="./hcl-informix/index.html">HCL Informix®</a></td>
         <td><code>actian/informix-mcp-server</code></td>
-        <td>Time-series, Internet of Things (IoT), and high-availability spatial data.</td>
+        <td>Time-series, Internet of Things (IoT), and high-availability spatial data</td>
       </tr>
        <tr>
         <td><a href="./zen/index.html">Actian Zen</a></td>
         <td><code>actian/zen-mcp-server</code></td>
-        <td>Edge-based AI and zero-admin mobile applications.</td>
+        <td>Edge-based AI and zero-admin mobile applications</td>
       </tr>
       <tr>
         <td><a href="./nosql/index.html">Actian NoSQL</a></td>
         <td><code>actian/nsql-mcp-server</code></td>
-        <td>High-fidelity context from complex object structures.</td>
+        <td>High-fidelity context from complex object structures</td>
       </tr>
       <tr>
         <td><a href="./analytics-engine/index.html">Actian Analytics Engine</a></td>
         <td><code>actian/analytics-engine-mcp-server</code></td>
-        <td>Large-scale retrieval-augmented generation (RAG) and high-performance vector analysis.</td>
+        <td>Large-scale retrieval-augmented generation (RAG) and high-performance vector analysis</td>
       </tr>
     </tbody>
   </table>
@@ -129,7 +129,7 @@ hide:
         All MCP server images are available at <strong>hub.docker.com/u/actian</strong>. You can deploy a specific server quickly using standard container orchestration.
       </p>
       <div class="section-cta">
-        <a href="./get-started/index.html" class="primary-link">Read the quick-start guide →</a>
+        <a href="./get-started/index.html" class="primary-link">Read the Get Started Guide →</a>
       </div>
     </div>
     <div class="code-side">
@@ -155,18 +155,18 @@ docker run -e INFORMIXSERVER=myserver \
     <div class="feature-item">
       <h4 class="feature-title">Identity-Aware Access</h4>
       <p class="feature-description">The server supports modern authentication protocols, ensuring agents only see the data they are explicitly authorized to access.</p>
-      <a href="./authentication/index.html" class="primary-link">Set up authentication →</a>
+      <a href="./authentication/index.html" class="primary-link">Set Up Authentication →</a>
     </div>
     <div class="feature-item">
-      <h4 class="feature-title">Enforced Read-Only mode</h4>
+      <h4 class="feature-title">Enforced Read-only Mode</h4>
       <p class="feature-description">Configuration toggles guarantee that AI agents can read data but can never modify or delete it.</p>
-      <a href="./intro/index.html" class="primary-link">Learn about read-only mode →</a>
+      <a href="./intro/index.html" class="primary-link">Learn about Read-only Mode →</a>
     </div>
 
     <div class="feature-item">
       <h4 class="feature-title"> Comprehensive Audit Trails</h4>
       <p class="feature-description">The system logs every tool call and query generated by the AI for full compliance and monitoring.</p>
-      <a href="./intro/index.html" class="primary-link">Explore the architecture →</a>
+      <a href="./intro/index.html" class="primary-link">Explore the Architecture →</a>
     </div>
   </div>
 </div>
