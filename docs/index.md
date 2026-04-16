@@ -21,7 +21,7 @@ hide:
 
 <div class="features-section">
   <div class="features-header">
-    <h3 class="jumbo-heading">Why use MCP for Agentic AI?</h3>
+    <h3 class="jumbo-heading">Why Use MCP for Agentic AI?</h3>
     <p class="features-subtitle">
       We are moving beyond simple chatbots to <strong>agentic AI</strong> systems that can autonomously reason, plan, and execute tasks. To be effective, these agents require more than just a training dataset; they need secure, direct access to your data estate.
     </p>
