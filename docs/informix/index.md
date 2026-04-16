@@ -75,30 +75,22 @@ Use these fields as follows:
 
 ## Starting the server
 
-Once your configuration file is ready, start the Actian MCP Server container and mount the file into the container as `/app/conf.json`.
+Once your configuration file is ready, start the Actian MCP Server container and mount the configuration file as `/app/conf.json`.
 
 Example:
 
 ```bash
-podman run --network host --rm -it \
+docker load -i ifx_mcp_image.tar
+
+docker run --network host -d --name ifx-mcp \
   -v $(pwd)/conf_temp.json:/app/conf.json:ro,Z \
-  actian/informix-mcp-server-linux:1.0.0 bash
+  actian/informix-mcp-server-linux:1.0.0
 ```
 
-This example assumes:
+!!! note The container always reads its configuration from /app/conf.json. Do not change the mount target path.
 
-- Your local configuration file is named `conf.json`.
-- The container image reads its configuration from `/app/conf.json`.
+Once the container is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration like "https://127.0.0.1:8000/mcp"
 
-The container image starts the server with `/app/conf.json`, so the mounted file path inside the container should remain `/app/conf.json`.
-
-After the container starts, connect your MCP client to the exposed server endpoint using the transport configured for your deployment.
-
-Inside the container cd /app and then start the server with the following command
-
-```bash
-actian-mcp-server --dbms=informix --transport=sse --conf-file=/app/conf.json --username=USERNAME --password=PASSWORD
-```
 
 ## What users should expect
 
@@ -110,8 +102,6 @@ In practice, this means a user can ask the client to:
 - Run a read-only query and summarize the results.
 - Look up details for a specific table.
 - Review available database functions.
-
-This keeps Informix MCP server access available through a consistent MCP workflow while the server manages the database connection and response formatting.
 
 ## Next steps
 
