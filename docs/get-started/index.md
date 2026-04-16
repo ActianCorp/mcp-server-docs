@@ -3,7 +3,7 @@ title: Get Started
 description: Get the Actian MCP Server running in your environment with Docker.
 ---
 
-# Getting started with Actian MCP Server
+# Getting Started with Actian MCP Server
 
 The Actian MCP Server is distributed as Docker container images, with one dedicated image for each supported Actian database. This guide explains how to start the server instance and connect it to an MCP-compatible artificial intelligence (AI) client.
 
@@ -34,7 +34,7 @@ For most databases, you need to create a `conf.json` file that contains the spec
 !!! warning "NoSQL users:"
      The Actian NoSQL MCP Server is configured entirely through environment variables. You do not need to create or mount a `conf.json` file. For more information, see [NoSQL configuration](../nosql/index.md#configuration).
 
-Each database includes unique settings, see the corresponding database configuration document for more information:
+Each database includes unique settings. See the corresponding database configuration document for more information:
 
 - [Ingres configuration](../ingres/index.md#configuration)
 - [HCL Informix® configuration](../hcl-informix/index.md#configuration)
@@ -116,7 +116,7 @@ Prompt the AI with a standard database request, such as:
 
 > "List all tables in the database"
 
-The client will invoke the server's `list_tables` tool. If the AI returns a list of your database tables, the end-to-end connection is working correctly.
+The client will invoke the server's `list_tables` tool. If the AI clients returns a list of the database tables, the end-to-end connection is working correctly.
 
 For the complete list of available tools for each database, see database-specific documentation:
 

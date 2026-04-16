@@ -32,7 +32,7 @@ The server also manages backend requirements, including transport, configuration
 
 ### Workflow
 
-The Actian MCP Server sits directly between the AI clients and the databases.
+The Actian MCP Server sits between AI clients and the databases that they need to access.
 
 ```mermaid
 %%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '12px', 'fontFamily': 'arial'}}}%%
