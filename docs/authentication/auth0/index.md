@@ -196,6 +196,7 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
 ### Step 4.2: Create the Matching Database User
 
 === Example
+
 Auth0 handles authentication, but the Actian database still needs the user to exist for impersonation to work:
 
 ```sql
