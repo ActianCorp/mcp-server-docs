@@ -46,7 +46,8 @@ Use this format when the built-in `odbc.ini` DSN is sufficient.
 {
   "database": "demodata",
   "conn_string": "DSN=demodata",
-  "max_rows": 1000
+  "host": "0.0.0.0",
+  "port": 8000
 }
 ```
 
@@ -54,11 +55,12 @@ Use this format when the built-in `odbc.ini` DSN is sufficient.
 
 Use this format when the database requires authentication. This bypasses the container's built-in `odbc.ini` and connects directly to the Zen engine.
 
-```json 
+```json
 {
   "database": "demodata",
   "conn_string": "Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA;UID=myuser;PWD=mypassword",
-  "max_rows": 1000
+  "host": "0.0.0.0",
+  "port": 8000
 }
 ```
 
@@ -69,6 +71,8 @@ Use this format when the database requires authentication. This bypasses the con
 | Field | Type | Description |
 |-------|------|-------------|
 | `conn_string` | `string` | ODBC connection string. Use `DSN=<name>` for the built-in DSN, or a full driver string with `UID` and `PWD` for authenticated connections. |
+| `host` | `string` | Bind address for the MCP server inside the container. Must be `0.0.0.0` for the server to be reachable from outside the container. |
+| `port` | `integer` | Port the MCP server listens on. Must match the port exposed by Docker (typically `8000`). |
 
 **Optional Fields**
 
@@ -89,12 +93,14 @@ With your `conf.json` ready, start the container and mount the configuration fil
 
 ```bash
 docker run -d \
+  -p 8000:8000 \
+  --add-host=host.docker.internal:host-gateway \
   -v $(pwd)/conf.json:/app/conf.json:ro \
-  actian/zen-mcp-server:1.0.0
+  actian/zen-mcp-server:latest
 ```
 
 !!! note "Container networking"
-    When connecting to a Zen engine running on the host machine, use the host's reachable IP address — not `localhost`. Docker Desktop resolves `host.docker.internal` automatically. On Windows, use the `start-zen-mcp.ps1` helper script to automate container startup.
+    `-p 8000:8000` exposes the server port on the host. `--add-host=host.docker.internal:host-gateway` allows the container to reach services on the host machine (such as the Zen engine on port 1583). Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically; Linux requires the `--add-host` flag. On Windows, the `start-zen-mcp.ps1` helper script automates container startup.
 
 Once the container is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration.
 
@@ -115,13 +121,13 @@ After connecting, your MCP client automatically discovers the server's capabilit
 
 <div class="grid cards" markdown>
 
-- :material-tools: **[Tools](tools/index.md)**  
+- :material-tools: **[Tools](tools/index.md)**
   Learn about the SQL, ORM, and blob tools exposed by the Zen server.
 
-- :material-folder-open: **[Resources](resources/index.md)**  
+- :material-folder-open: **[Resources](resources/index.md)**
   Explore the resource types available through the server.
 
-- :material-message-text: **[Prompts](prompts/index.md)**  
+- :material-message-text: **[Prompts](prompts/index.md)**
   Review the built-in prompt templates for common workflows.
 
 </div>
