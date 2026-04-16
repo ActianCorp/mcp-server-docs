@@ -175,3 +175,7 @@ pyrightconfig.json
 # local config
 .mcp.json
 zen_config.json
+
+# MacOS internal file
+.DS_Store
+

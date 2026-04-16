@@ -67,7 +67,7 @@
 /* Set the main area background colour */
 
 .md-main {
-    background-color: #EFEFEF;
+    background-color: var(--color-bg, #ffffff);
 }
 
 /* Card style */
@@ -99,17 +99,28 @@
 
 .dx-hero-container {
     padding-top: 0rem;
-    /* background: url(../images/dx-doc-hero-banner.png) no-repeat; */
     background: url(../images/dx-doc-home-banner.png?v=2) no-repeat;
     background-position: center;
     background-size: cover;
-    /*height: 15rem;*/
     min-height: auto;
+    display: block;
 }
 
 .dx-hero__content {
     width: 100%;
     height: auto;
+}
+
+.hero-banner-tagline {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.88);
+    margin: 0.4rem 0 0 0;
+    padding: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @media screen and (max-width:30em) {
@@ -233,7 +244,7 @@ only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
 
 .feature-grid li {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--color-border, #e0e0e0);
 }
 
 .feature-grid li:hover {
@@ -288,23 +299,20 @@ only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
 /* Call-to-Action Section */
 .cta-section {
     text-align: center;
-    padding: 3rem 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 12px;
-    margin-top: 3rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    padding: 2rem 2rem;
+    background: transparent;
+    margin-top: 1.5rem;
 }
 
 .cta-section h2 {
-    color: white;
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    color: var(--md-default-fg-color);
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
 }
 
 .cta-section p {
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
     opacity: 0.95;
 }
 
@@ -316,9 +324,9 @@ only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
 }
 
 .cta-buttons .md-button {
-    font-size: 1.1rem;
-    padding: 0.8rem 2rem;
-    border-radius: 8px;
+    font-size: 0.85rem;
+    padding: 0.45em 1.1em;
+    border-radius: 6px;
     transition: all 0.3s ease;
 }
 

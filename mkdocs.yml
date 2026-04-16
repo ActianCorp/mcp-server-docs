@@ -1,6 +1,6 @@
 #Project Information
 site_name: Actian MCP Server
-site_url: https://help.actian-software.com/actian-mcp-server/latest/
+site_url: https://docs.actian.com/mcp-server/
 site_description: >-
   Documentation for the Actian MCP Server — connect AI agents to Actian data sources via the Model Context Protocol.
 use_directory_urls: false
@@ -9,7 +9,7 @@ site_dir: site
 # Theme Configuration
 theme:
   name: material
-  logo: assets/images/actian-logo-white.svg
+  logo: assets/images/actian-logo.svg
   language: en
   features:
     - navigation.tabs
@@ -18,8 +18,10 @@ theme:
     - navigation.top
     - navigation.instant
     - navigation.prune
+    - navigation.expand
     - navigation.path
     - navigation.footer
+    - navigation.sections
     - search.highlight
     - search.share
     - search.suggest
@@ -44,9 +46,7 @@ theme:
   icon:
     repo: fontawesome/brands/github
     edit: fontawesome/regular/pen-to-square
-  font:
-    text: Inter
-    code: Roboto Mono
+  font: false
   favicon: assets/favicon.png
   
   # Static files
@@ -118,6 +118,8 @@ extra_css:
   # - stylesheets/minichat.css  # disabled: Zeenea chatbot
   - stylesheets/dx_style.css
   - assets/stylesheets/actian-landing.css?v=4
+  - stylesheets/extra.css
+  - stylesheets/comprehensive-nav.css
 
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -125,6 +127,7 @@ extra_javascript:
   - javascripts/mermaid-init.js
   - javascripts/search_enhancement.js
   - javascripts/extra.js
+  - javascripts/comprehensive-nav.js
   - path: javascripts/current.js
     defer: true
   # - path: javascripts/MiniChatJavaScript.js  # disabled: Zeenea chatbot

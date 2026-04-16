@@ -1,11 +1,12 @@
 ---
 title: Prompts
-description: Overview of the prompts available when using the Actian MCP Server with Actian NoSQL.
+description: Built-in prompts available when using the Actian MCP Server with Actian Analytics Engine.
 ---
 
 # Prompts
 
-The Actian MCP Server for **Actian NoSQL** provides a built-in prompt that transforms natural-language questions into structured, database-expert queries.
+The Actian MCP Server for **Actian Analytics Engine** provides a built-in prompt that transforms natural-language questions into structured, database-expert queries.
+
 
 ## Available Prompts
 
@@ -13,9 +14,11 @@ The Actian MCP Server for **Actian NoSQL** provides a built-in prompt that trans
 |--------|-------------|
 | [`ask_question`](#ask_question) | Wraps a user question in a database expert prompt template. |
 
+
+
 ## ask_question
 
-Renders a database expert prompt from a plain-language question and returns the formatted prompt text ready for use.
+Renders a database expert prompt from a plain-language question and returns the formatted prompt text, ready for use.
 
 ### Parameters
 
@@ -26,7 +29,7 @@ Renders a database expert prompt from a plain-language question and returns the 
 ### Output Template
 
 ```text
-You are an Actian NoSQL database expert. Answer the following question: <question>
+You are a database expert. Answer the following question: <question>
 ```
 
 ### Example
@@ -42,17 +45,18 @@ You are an Actian NoSQL database expert. Answer the following question: <questio
 **Output**
 
 ```text
-You are an Actian NoSQL database expert. Answer the following question: What are the top 5 customers by revenue this quarter?
+You are a database expert. Answer the following question: What are the top 5 customers by revenue this quarter?
 ```
+
 
 ## Next Steps
 
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](../tools/index.md)**  
-  Learn about the query and schema tools exposed by the NoSQL server.
+  Learn about the SQL and schema tools exposed by the Analytics Engine server.
 
 - :material-folder-open: **[Resources](../resources/index.md)**  
-  Explore the resource types available through the NoSQL server.
+  Explore the resource types available through the server.
 
 </div>
