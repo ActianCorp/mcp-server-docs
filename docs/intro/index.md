@@ -9,7 +9,7 @@ The Actian [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) Serv
 
 MCP is an open standard designed to connect AI models with external systems, tools, and data sources. When you use an Actian MCP Server, it provides the AI clients with three core building blocks:
 
-| Component | Description | Example | 
+| Component | Description | Example 1 | 
 |-----------|-------------|---------|
 | **Tools** | Callable functions that the AI can invoke.| Running a specific SQL query. |
 | **Resources** | Read-only data sources that the AI can access.| Viewing database schema information. |
