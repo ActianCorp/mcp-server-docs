@@ -1,16 +1,16 @@
 ---
-title: Actian Ingres
-description: Use the Actian MCP Server to connect MCP clients to Actian Ingres.
+title: HCL Informix®
+description: Use the Actian MCP Server to connect MCP clients to HCL Informix® Database.
 ---
 
-# Actian Ingres
+# HCL Informix®
 
-Connect your MCP-compatible client to **Actian Ingres** using the Actian MCP Server. Once configured, clients can explore schema metadata and execute read-only SQL queries through a standard interface.
+Connect your MCP-compatible client to **HCL Informix® Database** using the Actian MCP Server. Once configured, clients can explore schema metadata and execute read-only SQL queries through a standard interface.
 
 
 ## Overview
 
-The Ingres MCP Server acts as a bridge between any MCP client and your Actian Ingres database. It automatically handles connection pooling, response formatting, and schema discovery, so you can focus on your queries.
+The HCL Informix® MCP Server acts as a bridge between any MCP client and your HCL Informix® database. It automatically handles connection pooling, response formatting, and schema discovery, so you can focus on your queries.
 
 ### Capabilities
 
@@ -18,15 +18,15 @@ The Ingres MCP Server acts as a bridge between any MCP client and your Actian In
 |--------|-------------|
 | **Run SQL queries** | Execute read-only SQL against your database. |
 | **List tables and views** | Discover available objects in the schema. |
-| **Inspect table structure** | Retrieve column definitions, types, and comments. |
-| **Read schema metadata** | Explore database-level metadata with constraint information. |
+| **Inspect table structure** | Retrieve column definitions, types, and key information. |
+| **Read schema metadata** | Explore database-level metadata. |
 | **List functions and procedures** | View available user-defined routines. |
 
 
 ## Prerequisites
 
-- Docker installed and running.
-- Access credentials for your Actian Ingres database.
+- Docker or Podman installed and running.
+- Access credentials for your HCL Informix® database.
 - (Optional) TLS certificate and key files for secure deployments.
 - (Optional) An OIDC provider if using OAuth authentication.
 
@@ -41,15 +41,17 @@ Create a file named `conf.json` in your working directory:
 
 ```json
 {
-  "driver": "<odbc_driver>",
+  "servername": "<server_name>",
+  "service": "<service_port>",
+  "dsn": "<dsn_name>",
   "server": "<database_host>",
   "database": "<database_name>",
+  "database_user": "<database_user>",
+  "database_password": "<database_password>",
   "max_connections": "<max_concurrent_connections>",
   "max_rows": "<max_rows_per_query_response>",
   "host": "<mcp_server_host>",
   "port": "<mcp_server_port>",
-  "database_user": "<database_user>",
-  "database_password": "<database_password>",
   "ssl_certfile": "/app/server.crt",
   "ssl_keyfile": "/app/server.key",
   "oauth": {
@@ -59,7 +61,7 @@ Create a file named `conf.json` in your working directory:
     "FASTMCP_SERVER_AUTH_BASE_URL": "<server_base_url>",
     "FASTMCP_SERVER_AUTH_AUDIENCE": "<audience>",
     "user_impersonation": true
-  }
+  }  
 }
 ```
 
@@ -69,16 +71,18 @@ Create a file named `conf.json` in your working directory:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `driver` | `string` | ODBC driver name used to connect to Ingres. |
-| `server` | `string` | Host or connection target for the Ingres database. |
+| `servername` | `string` | HCL Informix® database server name. |
+| `service` | `integer` | HCL Informix® server port number. |
+| `dsn` | `string` | Data source name. |
+| `server` | `string` | Host address for the HCL Informix® database. |
 | `database` | `string` | Name of the database to connect to. |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool. |
 | `host` | `string` | Host address that the MCP Server listens on inside the container. |
 | `port` | `string` | Port that the MCP Server listens on inside the container. |
-| `database_user` | `string` | Database username. |
-| `database_password` | `string` | Database password. |
+| `database_user` | `string` | Database username (can also be provided on the command line). |
+| `database_password` | `string` | Database password (can also be provided on the command line). |
 
-**Optional Fields**
+**Optional fields**
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -94,12 +98,19 @@ Create a file named `conf.json` in your working directory:
 With your `conf.json` file ready, start the container and mount the configuration file:
 
 ```bash
-docker run -d \
-  -v $(pwd)/conf.json:/app/conf.json:ro \
-  actian/ingres-mcp-server:1.0.0
+podman run --network host --rm -it \
+  -v $(pwd)/conf.json:/app/conf.json:ro,Z \
+  actian/informix-mcp-server-linux:1.0.0 bash
 ```
 
-Once the container is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration.
+Inside the container, navigate to the application directory and start the server:
+
+```bash
+cd /app
+actian-mcp-server --dbms=informix --transport=sse --conf-file=/app/conf.json --username=USERNAME --password=PASSWORD
+```
+
+Once the server is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration.
 
 ---
 
@@ -108,7 +119,7 @@ Once the container is running, connect your MCP client to the exposed server end
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](tools/index.md)**  
-  Explore the available MCP tools for Ingres database operations.
+  Explore the available MCP tools for HCL Informix® database operations.
 
 - :material-folder-open: **[Resources](resources/index.md)**  
   Learn about schema metadata resources.

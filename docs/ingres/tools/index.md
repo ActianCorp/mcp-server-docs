@@ -7,30 +7,31 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 The Actian MCP Server for **Actian Ingres** exposes a set of built-in tools for database discovery and read-only query execution.
 
-## Available tools
+## Available Tools
 
-The Ingres integration provides the following tools:
-
-| Tool | Purpose |
-|------|---------|
-| `execute_query` | Runs a read-only SQL query against the connected database. |
-| `list_tables` | Lists available user tables and views. |
-| `describe_table` | Shows column definitions and comments for a table. |
-| `list_functions` | Lists available user-defined functions and procedures. |
+| Tool | Description |
+|------|-------------|
+| [`execute_query`](#execute_query) | Runs a read-only SQL query against the connected database. |
+| [`list_tables`](#list_tables) | Lists available user tables and views. |
+| [`describe_table`](#describe_table) | Shows column definitions and comments for a table. |
+| [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
 
 ## execute_query
 
-### Description
-
 Executes a read-only SQL query against Actian Ingres and returns the result set as structured JSON.
 
-### Input Parameters
+!!! note "Result truncation"
+    The `truncated` and `warning` fields appear only when the number of result rows exceeds the `max_rows` configuration.
+
+### Parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `query` | `string` | Yes | Read-only SQL query to execute. |
+|-------|------|:--------:|-------------|
+| `query` | `string` | ✓ | Read-only SQL query to execute. |
 
 ### Output Schema
+
+**On Success**
 
 ```json
 {
@@ -43,10 +44,7 @@ Executes a read-only SQL query against Actian Ingres and returns the result set 
 }
 ```
 
-!!! note
-    The `truncated` and `warning` fields appear only when the number of result rows exceeds the `max_rows` configuration.
-
-On error:
+**On Error**
 
 ```json
 {
@@ -57,9 +55,13 @@ On error:
 
 ### Example
 
+**User Request**
+
 ```
 Show me all the rows in the customers table
 ```
+
+**Input**
 
 ```json
 {
@@ -67,7 +69,7 @@ Show me all the rows in the customers table
 }
 ```
 
-### Success Response Example
+**Response**
 
 ```json
 {
@@ -83,15 +85,15 @@ Show me all the rows in the customers table
 
 ## list_tables
 
-### Description
-
 Returns all user tables and views available in the connected database as structured JSON.
 
-### Input Parameters
+### Parameters
 
-This tool doesn't require any input parameters.
+This tool takes no input parameters.
 
 ### Output Schema
+
+**On Success**
 
 ```json
 {
@@ -102,7 +104,7 @@ This tool doesn't require any input parameters.
 }
 ```
 
-On error:
+**On Error**
 
 ```json
 {
@@ -113,13 +115,13 @@ On error:
 
 ### Example
 
+**User Request**
+
 ```
 Show me all the tables in my database
 ```
 
-This tool takes no input.
-
-### Success Response Example
+**Response**
 
 ```json
 {
@@ -135,17 +137,17 @@ This tool takes no input.
 
 ## describe_table
 
-### Description
-
 Returns schema details for a table, including column names, data types, lengths, scales, and column comments.
 
-### Input Parameters
+### Parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `table_name` | `string` | Yes | Name of the table to describe. |
+|-------|------|:--------:|-------------|
+| `table_name` | `string` | ✓ | Name of the table to describe. |
 
 ### Output Schema
+
+**On Success**
 
 ```json
 {
@@ -162,7 +164,7 @@ Returns schema details for a table, including column names, data types, lengths,
 }
 ```
 
-On error:
+**On Error**
 
 ```json
 {
@@ -173,9 +175,13 @@ On error:
 
 ### Example
 
+**User Request**
+
 ```
 Show me schema information about the customers table
 ```
+
+**Input**
 
 ```json
 {
@@ -183,7 +189,7 @@ Show me schema information about the customers table
 }
 ```
 
-### Success Response Example
+**Success Response**
 
 ```json
 {
@@ -203,7 +209,7 @@ Show me schema information about the customers table
 }
 ```
 
-### Error Response Example
+**Error Response**
 
 ```json
 {
@@ -214,15 +220,15 @@ Show me schema information about the customers table
 
 ## list_functions
 
-### Description
-
 Returns user-defined functions and procedures, including their stored definitions, as structured JSON.
 
-### Input Parameters
+### Parameters
 
-This tool doesn't require any input parameters.
+This tool takes no input parameters.
 
 ### Output Schema
+
+**On Success**
 
 ```json
 {
@@ -233,7 +239,7 @@ This tool doesn't require any input parameters.
 }
 ```
 
-On error:
+**On Error**
 
 ```json
 {
@@ -244,13 +250,13 @@ On error:
 
 ### Example
 
+**User Request**
+
 ```
 Show me all the functions in my database
 ```
 
-This tool takes no input.
-
-### Success Response Example
+**Response**
 
 ```json
 {
@@ -264,7 +270,14 @@ This tool takes no input.
 }
 ```
 
-## Next steps
+## Next Steps
 
-- [Resources](../resources/index.md) — Learn about Ingres resources
-- [Prompts](../prompts/index.md) — Learn about Ingres prompts
+<div class="grid cards" markdown>
+
+- :material-folder-open: **[Resources](../resources/index.md)**  
+  Explore the resource types available through the Ingres server.
+
+- :material-chat-processing: **[Prompts](../prompts/index.md)**  
+  Discover pre-built prompt templates for common Ingres workflows.
+
+</div>

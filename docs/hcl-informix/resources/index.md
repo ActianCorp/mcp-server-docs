@@ -1,31 +1,29 @@
 ---
 title: Resources
-description: Overview of the resources available when using the Actian MCP Server with Informix database.
+description: Overview of the resources available when using the Actian MCP Server with HCL Informix® database.
 ---
 
 # Resources
 
-The Actian MCP Server for **Informix database** exposes a built-in resource for database schema discovery.
+The Actian MCP Server for **HCL Informix® database** exposes a built-in resource for database schema discovery.
 
-## Available resources
+## Available Resources
 
-The Informix database integration provides the following resource:
-
-| Resource URI | Purpose |
-|-----|-------------|
-| `resource://database/schema` | Returns database schema metadata for the connected database. |
+| Resource URI | Description |
+|--------------|-------------|
+| [`resource://database/schema`](#resourcedatabaseschema) | Returns database schema metadata for the connected database. |
 
 ## resource://database/schema
 
-### Description
-
 Returns the database schema as JSON, including tables, columns, comments, and constraint information.
 
-### Input parameters
+### Parameters
 
-This resource doesn't require any input parameters.
+This resource takes no input parameters.
 
-### Output schema
+### Output Schema
+
+**On Success**
 
 ```json
 {
@@ -42,7 +40,7 @@ This resource doesn't require any input parameters.
 }
 ```
 
-On error:
+**On Error**
 
 ```text
 The database schema could not be retrieved. Error: <error_message>
@@ -50,11 +48,13 @@ The database schema could not be retrieved. Error: <error_message>
 
 ### Example
 
+**Request**
+
 ```text
 resource://database/schema
 ```
 
-### Success response example
+**Response**
 
 ```json
 {
@@ -73,7 +73,14 @@ resource://database/schema
 }
 ```
 
-## Next steps
+## Next Steps
 
-- [Tools](../tools/index.md) — Learn about Informix MCP server tools
-- [Prompts](../prompts/index.md) — Learn about Informix MCP server prompts
+<div class="grid cards" markdown>
+
+- :material-tools: **[Tools](../tools/index.md)**  
+  Learn about the SQL and schema tools exposed by the HCL Informix® server.
+
+- :material-chat-processing: **[Prompts](../prompts/index.md)**  
+  Discover pre-built prompt templates for common HCL Informix® workflows.
+
+</div>

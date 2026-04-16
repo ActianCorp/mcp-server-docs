@@ -1,16 +1,16 @@
 ---
-title: Actian Ingres
-description: Use the Actian MCP Server to connect MCP clients to Actian Ingres.
+title: Actian Analytics Engine
+description: Connect MCP clients to Actian Analytics Engine for schema exploration and read-only SQL queries.
 ---
 
-# Actian Ingres
+# Actian Analytics Engine
 
-Connect your MCP-compatible client to **Actian Ingres** using the Actian MCP Server. Once configured, clients can explore schema metadata and execute read-only SQL queries through a standard interface.
+Connect your MCP-compatible client to **Actian Analytics Engine** using the Actian MCP Server. Once configured, clients can explore schema metadata and execute read-only SQL queries through a standard interface.
 
 
 ## Overview
 
-The Ingres MCP Server acts as a bridge between any MCP client and your Actian Ingres database. It automatically handles connection pooling, response formatting, and schema discovery, so you can focus on your queries.
+The Analytics Engine MCP Server acts as a bridge between any MCP client and your Actian database. It automatically handles connection pooling, response formatting, and schema discovery, so you can focus on your queries.
 
 ### Capabilities
 
@@ -18,22 +18,22 @@ The Ingres MCP Server acts as a bridge between any MCP client and your Actian In
 |--------|-------------|
 | **Run SQL queries** | Execute read-only SQL against your database. |
 | **List tables and views** | Discover available objects in the schema. |
-| **Inspect table structure** | Retrieve column definitions, types, and comments. |
-| **Read schema metadata** | Explore database-level metadata with constraint information. |
+| **Inspect table structure** | Retrieve column definitions and types. |
+| **Read schema metadata** | Explore database-level metadata. |
 | **List functions and procedures** | View available user-defined routines. |
 
 
 ## Prerequisites
 
 - Docker installed and running.
-- Access credentials for your Actian Ingres database.
+- Access credentials for your Analytics Engine database.
 - (Optional) TLS certificate and key files for secure deployments.
 - (Optional) An OIDC provider if using OAuth authentication.
 
 
 ## Configuration
 
-The server is distributed as a Docker container. You supply a single JSON configuration file that is mounted into the container at `/app/conf.json`.
+The server is distributed as a Docker container. You provide a single `JSON` configuration file that is mounted into the container at `/app/conf.json`.
 
 ### Create the Configuration File
 
@@ -53,12 +53,12 @@ Create a file named `conf.json` in your working directory:
   "ssl_certfile": "/app/server.crt",
   "ssl_keyfile": "/app/server.key",
   "oauth": {
-    "FASTMCP_SERVER_AUTH_CONFIG_URL": "<oidc_discovery_url>",
-    "FASTMCP_SERVER_AUTH_CLIENT_ID": "<client_id>",
-    "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<client_secret>",
-    "FASTMCP_SERVER_AUTH_BASE_URL": "<server_base_url>",
-    "FASTMCP_SERVER_AUTH_AUDIENCE": "<audience>",
-    "user_impersonation": true
+	"FASTMCP_SERVER_AUTH_CONFIG_URL": "<oidc_discovery_url>",
+	"FASTMCP_SERVER_AUTH_CLIENT_ID": "<client_id>",
+	"FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<client_secret>",
+	"FASTMCP_SERVER_AUTH_BASE_URL": "<server_base_url>",
+	"FASTMCP_SERVER_AUTH_AUDIENCE": "<audience>",
+	"user_impersonation": true
   }
 }
 ```
@@ -69,8 +69,8 @@ Create a file named `conf.json` in your working directory:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `driver` | `string` | ODBC driver name used to connect to Ingres. |
-| `server` | `string` | Host or connection target for the Ingres database. |
+| `driver` | `string` | ODBC driver name used to connect to Analytics Engine. |
+| `server` | `string` | Host or connection target for the Analytics Engine database. |
 | `database` | `string` | Name of the database to connect to. |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool. |
 | `host` | `string` | Host address that the MCP Server listens on inside the container. |
@@ -78,7 +78,7 @@ Create a file named `conf.json` in your working directory:
 | `database_user` | `string` | Database username. |
 | `database_password` | `string` | Database password. |
 
-**Optional Fields**
+**Optional fields**
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -96,24 +96,36 @@ With your `conf.json` file ready, start the container and mount the configuratio
 ```bash
 docker run -d \
   -v $(pwd)/conf.json:/app/conf.json:ro \
-  actian/ingres-mcp-server:1.0.0
+  actian/analytics-engine-mcp-server:1.0.0
 ```
 
-Once the container is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration.
+!!! note
+	The container always reads its configuration from `/app/conf.json`. Do not change the mount target path.
 
----
+Once the container is running, connect your MCP client to the server endpoint using the host and port you specified in `conf.json`.
+
+
+## Usage
+
+After connecting, your MCP client automatically discovers the server's capabilities. Common tasks include:
+
+- **Inspect before querying**: List tables and review structure before writing SQL.
+- **Run a query**: Execute a read-only SQL statement and receive formatted results.
+- **Explore functions**: Look up available user-defined functions and stored procedures.
+- **Summarize results**: Ask the client to interpret or summarize query output.
+
 
 ## Next Steps
 
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](tools/index.md)**  
-  Explore the available MCP tools for Ingres database operations.
+  Learn about the Analytics Engine tools exposed by the MCP Server.
 
 - :material-folder-open: **[Resources](resources/index.md)**  
-  Learn about schema metadata resources.
+  Explore the resource types available through the server.
 
-- :material-chat-processing: **[Prompts](prompts/index.md)**  
-  Discover pre-built prompt templates for common workflows.
+- :material-message-text: **[Prompts](prompts/index.md)**  
+  Review the built-in prompt templates for common workflows.
 
 </div>
