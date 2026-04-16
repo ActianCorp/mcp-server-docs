@@ -180,12 +180,12 @@ You can deploy an MCP Server as follows:
 <p class="step-description">The server connects to the target DBMS using an ODBC connection pool.</p>
 </div>
 <div class="step-item">
-<h4 class="step-title">Expose capabilities</h4>
+<h4 class="step-title">Use database capabilities</h4>
 <p class="step-description">The server makes database tools, resources, and prompts available through the MCP protocol.</p>
 </div>
 <div class="step-item">
-<h4 class="step-title">Connect the AI client</h4>
-<p class="step-description">An MCP-compatible client uses the exposed capabilities to query data, inspect metadata, and run workflows.</p>
+<h4 class="step-title">Connect to the AI client</h4>
+<p class="step-description">An MCP-compatible client uses the database capabilities to query data, inspect metadata, and run workflows.</p>
 </div>
 </div>
 
