@@ -9,15 +9,15 @@ The Actian [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) Serv
 
 MCP is an open standard designed to connect AI models with external systems, tools, and data sources. When you use an Actian MCP Server, it provides the AI clients with three core building blocks:
 
-| Component | Description | Example 1 | 
+| Component | Description | Example | 
 |-----------|-------------|---------|
-| **Tools** | Callable functions that the AI can invoke.| Running a specific SQL query. |
-| **Resources** | Read-only data sources that the AI can access.| Viewing database schema information. |
-| **Prompts** |Prebuilt templates designed for recurring tasks.| Reusing common database workflows. |
+| **Tools** | Callable functions that the AI can invoke| Running a specific SQL query |
+| **Resources** | Read-only data sources that the AI can access| Viewing database schema information |
+| **Prompts** |Prebuilt templates designed for recurring tasks| Reusing common database workflows |
 
 ## MCP Server Capabilities 
 
-You can use the Actian MCP Server to provide a single and unified interface for the Actian database management systems (DBMS) instead of building and maintaining separate connections for every AI client or workflow.
+You can use the Actian MCP Server to provide a single and unified interface for the Actian database management systems instead of building and maintaining separate connections for every AI client or workflow.
 
 Depending on the configuration, the server enables AI clients to:
 
@@ -41,7 +41,7 @@ flowchart TB
         claude["Claude Desktop"]
         cursor["Cursor"]
         copilot["GitHub Copilot"]
-        fastagent["fast-agent"]
+        fastagent["Fast-agent"]
         codex["Codex"]
         custom["Custom AI Agents"]
     end
@@ -85,7 +85,7 @@ JWT Validation"]
     end
 
     subgraph Security["Security Controls"]
-        readonly["Read-Only Mode"]
+        readonly["Read-only Mode"]
         impersonation["User Impersonation
 (SET SESSION AUTHORIZATION)"]
         tls["TLS / HTTPS"]
@@ -108,7 +108,7 @@ JWT Validation"]
 
 ### End-to-End Request Flow
 
-When an AI agent interacts with the database, the system follows this standard sequence:
+When an AI agent interacts with the database, the system follows the standard sequence:
 
 ```mermaid
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '44px', 'fontFamily': 'arial'}}}%%
@@ -146,29 +146,29 @@ sequenceDiagram
 
 <div class="grid cards" markdown>
 
-- :material-connection: **MCP-native capabilities**  
+- :material-connection: **MCP-Native Capabilities**  
   Exposes tools, resources, and prompts in a standard MCP format usable by any compatible client.
 
-- :material-docker: **Container-friendly deployment**  
+- :material-docker: **Container-Friendly Deployment**  
   Runs each DBMS server instance in its own container to ensure clean environment isolation.
 
-- :material-shield-lock: **OAuth 2.0 support**  
+- :material-shield-lock: **OAuth 2.0 Support**  
   Uses `OAuth 2.0` to provide secure, standards-based access for all MCP clients.
 
-- :material-transit-connection-horizontal: **HTTP transport**  
+- :material-transit-connection-horizontal: **HTTP Transport**  
   Operates in `HTTP` transport mode to simplify network connectivity.
 
-- :material-eye-lock: **Read-only mode**  
+- :material-eye-lock: **Read-only Mode**  
   Restricts AI agents to read-only operations, preventing unintended modifications to the data.
 
-- :material-database-search: **Schema discovery**  
+- :material-database-search: **Schema Discovery**  
   Enables AI agents to review database structures and metadata before executing queries.
 
 </div>
 
-## Working with MCP Server
+## MCP Server Deployment
 
-The deployment follows a simple four-step process:
+You can deploy an MCP Server as follows:
 
 <div class="steps-container" markdown>
 <div class="step-item">
@@ -193,16 +193,16 @@ The deployment follows a simple four-step process:
 </div>
 
 !!! info 
-    Each Actian DBMS requires its own dedicated Actian MCP Server instance. This ensures a straightforward architecture: one server, one database, one MCP endpoint.
+    Each Actian DBMS requires its own dedicated Actian MCP Server instance. Therefore, there is a single server, database, and MCP endpoint.
 
-## MCP Server Advanatges 
+## MCP Server Advantages 
 
-By removing the need to build individual integrations for every AI use case, the Actian MCP Server provides a standardized way to expose trusted database capabilities. It ensures that deployment and access control remain securely managed at the server layer.
+By removing the need to build individual integrations for every AI use case, the Actian MCP Server provides a standardized way to use the trusted database capabilities. It ensures that deployment and access control remain securely managed at the server layer.
 
 ## Next Steps
 
 <div class="grid cards" markdown>
 
 - :material-rocket-launch: **[Get Started](../get-started/index.md)**  
-  To deploy the first Actian MCP Server instance and connect it to an AI client, see [Getting Started with MCP Server](../get-started/index.md).
+  To deploy Actian MCP Server instance and connect it to an AI client, see [Getting Started with MCP Server](../get-started/index.md).
 </div>
