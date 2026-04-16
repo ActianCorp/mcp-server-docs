@@ -121,11 +121,12 @@ flowchart TD
 
 ## Secure Remote Deployments with HTTPS and TLS
 
-OAuth 2.0 requires HTTPS. If you configure OAuth, the server mandates HTTPS and will refuse to start unless you provide the `ssl_certfile` and `ssl_keyfil`e paths.
+OAuth 2.0 requires HTTPS. If you configure OAuth, the server mandates HTTPS and refuses to start unless you provide the `ssl_certfile` and `ssl_keyfil`e paths.
 
-### Step 1: Generate a Certificate
+### Step 1: Generate a certificate
 
-For testing on a remote host, generate a self-signed certificate with a Subject Alternative Name (SAN):
+For remote testing, generate a self-signed certificate with a Subject Alternative Name (SAN). 
+
 ```bash
 openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt \
   -days 365 -nodes \
@@ -135,17 +136,18 @@ chmod 600 server.key
 ```
 
 !!! warning "SAN is required"
-    The `-addext "subjectAltName=IP:..."` flag is required. Node.js-based MCP clients (VS Code, Cursor) strictly enforce SAN validation and reject certificates that only set the CN field.
+    The `-addext "subjectAltName=IP:..."` flag is required. Node.js-based MCP clients (like VS Code and Cursor) strictly enforce SAN validation and rejects certificates that only use the Common Name (CN) field.
 
 !!! tip "Production certificates"
-    For production, use a certificate issued by a trusted CA — Let's Encrypt or your corporate CA.
+    For production environments, use a certificate issued by a trusted Certificate Authority (CA), such as `Let's Encrypt or your corporate CA`.
 
 ### Step 2: Configure TLS in `conf.json`
 
 !!! warning "NoSQL uses a different TLS configuration"
-    The Actian NoSQL MCP Server does not use `conf.json` or `ssl_certfile`/`ssl_keyfile` fields. TLS is configured via Quarkus environment variables. See [NoSQL TLS](../nosql/authentication/index.md#tls).
+    The Actian NoSQL MCP Server do not use `conf.json` or `ssl_certfile`/`ssl_keyfile` fields. TLS is configured via Quarkus environment variables. See [NoSQL TLS guide](../nosql/authentication/index.md#tls) for more information.
 
-Add `ssl_certfile` and `ssl_keyfile` at the **top level** (not inside the `oauth` block) and update `BASE_URL` to `https://`:
+Add the certificate `ssl_certfile` and key paths `ssl_keyfile` to the top level of the `conf.json` file (outside the `oauth` block), ensure the `BASE_URL` uses `https://`:
+
 ```json
 {
   "ssl_certfile": "/app/server.crt",
