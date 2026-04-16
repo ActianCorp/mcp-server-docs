@@ -144,7 +144,7 @@ chmod 600 server.key
 ### Step 2: Configure TLS in `conf.json`
 
 !!! warning "NoSQL uses a different TLS configuration"
-    The Actian NoSQL MCP Server do not use `conf.json` or `ssl_certfile`/`ssl_keyfile` fields. TLS is configured via Quarkus environment variables. See [NoSQL TLS guide](../nosql/authentication/index.md#tls) for more information.
+    NoSQL uses different configuration properties. See [NoSQL TLS guide](../nosql/authentication/index.md#tls) for more information.
 
 Add the certificate `ssl_certfile` and key paths `ssl_keyfile` to the top level of the `conf.json` file (outside the `oauth` block), ensure the `BASE_URL` uses `https://`:
 
