@@ -9,7 +9,7 @@ This section describes how to use the **Actian MCP Server** with **Actian NoSQL 
 
 ## Overview
 
-The Actian NoSQL MCP Server acts as a bridge between any MCP client and your Actian NoSQL Database. Once configured, clients can explore schema metadata, run read-only JPQL queries and access all details of the persistent objects retrieved.
+The Actian MCP Server acts as a bridge between any MCP client and your Actian NoSQL Database. Once configured, clients can explore schema metadata, run read-only JPQL queries and access all details of the persistent objects retrieved.
 
 ### Capabilities
 
@@ -64,7 +64,7 @@ docker run --name NSQL-MCP \
 <div class="grid cards" markdown>
 
 - :material-lock: **[Authentication](authentication/index.md)**  
-  Configure OAuth 2.0 and TLS for the NoSQL MCP Server.
+  Configure OAuth 2.0 and TLS for the Actian MCP Server with Actian NoSQL Database.
 
 - :material-tools: **[Tools](tools/index.md)**  
   Explore the available MCP tools for NoSQL database operations.

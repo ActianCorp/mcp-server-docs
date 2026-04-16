@@ -5,7 +5,7 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 # Tools
 
-The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for document database interaction.
+The Actian MCP Server for Actian NoSQL Database exposes a set of tools for document database interaction.
 
 ## Available Tools
 
@@ -143,9 +143,9 @@ The `query_next` tool is used to retrieve the next page of results from a pagina
 | `cursorId` | `string` | Yes | The cursor ID returned from `execute_query` or a previous `query_next` call. |
 | `limit` | `number` | No | Maximum number of items to return in the first page. |
 
-### Response Schema
+### Output Schema
 
-The response from `query_next` is identical to `execute_query`:
+The output from `query_next` is identical to `execute_query`:
 
 ```json
 {
@@ -183,7 +183,7 @@ Usage Steps:
 |-------|------|----------|-------------|
 | `loid` | `string` | Yes | The LOID of the instance in dotted string format (for example, "15.0.2085") |
 
-### Response Schema
+### Output Schema
 
 ```json
 {
@@ -255,7 +255,7 @@ Usage Steps:
 |-------|------|----------|-------------|
 | `loids` | `string[]` | Yes | An array of LOIDs for the instances to be fetched in dotted string format (for example, "15.0.2085") |
 
-### Response Schema
+### Output Schema
 
 ```json
 {

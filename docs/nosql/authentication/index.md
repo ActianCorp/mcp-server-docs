@@ -1,11 +1,11 @@
 ---
 title: Authentication
-description: OAuth 2.0 and TLS configuration for the Actian NoSQL MCP Server.
+description: OAuth 2.0 and TLS configuration for the Actian MCP Server with Actian NoSQL Database.
 ---
 
 # Authentication
 
-The Actian NoSQL MCP Server supports **OAuth 2.0** authentication and HTTPS. All settings are provided through `application.properties`.
+The Actian MCP Server for Actian NoSQL Database supports **OAuth 2.0** authentication and HTTPS. All settings are provided through `application.properties`.
 
 !!! note "Database credentials vs. OAuth"
     The `user:password` portion of the NoSQL connection URL (for example, `cars@localhost#admin:secret`) authenticates against the **database** itself. This is separate from OAuth, which controls access to the **MCP Server** endpoint.
@@ -65,7 +65,7 @@ Both tenants share the same auth server URL by default. Override the SSE tenant 
 
 ### Provider Setup
 
-The identity provider configuration — creating a realm, registering an OAuth2 client, and managing users — is the same for the NoSQL MCP Server as for any other connector. Follow the existing provider guides for those steps:
+The identity provider configuration — creating a realm, registering an OAuth2 client, and managing users — is the same regardless of the database connector. Follow the existing provider guides for those steps:
 
 <div class="grid cards" markdown>
 
