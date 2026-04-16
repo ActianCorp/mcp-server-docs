@@ -32,7 +32,8 @@ Create a file such as `conf.json` and mount it into the container. Two connectio
 {
     "database": "demodata",
     "conn_string": "DSN=demodata",
-    "max_rows": 1000
+    "host": "0.0.0.0",
+    "port": 8000
 }
 ```
 
@@ -42,7 +43,8 @@ Create a file such as `conf.json` and mount it into the container. Two connectio
 {
     "database": "demodata",
     "conn_string": "Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA;UID=myuser;PWD=mypassword",
-    "max_rows": 1000
+    "host": "0.0.0.0",
+    "port": 8000
 }
 ```
 
@@ -52,8 +54,10 @@ Use these fields as follows:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `database` | `str` | No | Logical database name, used for display purposes. |
 | `conn_string` | `str` | Yes | ODBC connection string. Use `DSN=<name>` for the built-in DSN, or a full driver string with `UID` and `PWD` for authenticated connections. |
+| `host` | `str` | Yes | Bind address for the MCP server inside the container. Must be `0.0.0.0` for the server to be reachable from outside the container. |
+| `port` | `int` | Yes | Port the MCP server listens on. Must match the port exposed by Docker (typically `8000`). |
+| `database` | `str` | No | Logical database name, used for display purposes. |
 | `max_rows` | `int` | No | Maximum number of rows returned for a single query response. Defaults to `1000`. |
 | `oauth` | `object` | No | OAuth configuration block for protected deployments. See [Authentication](../authentication/index.md) for details. |
 
@@ -66,12 +70,14 @@ The Zen MCP Server is deployed as a container image.
 
 ```bash
 docker run -d \
+    -p 8000:8000 \
+    --add-host=host.docker.internal:host-gateway \
     -v $(pwd)/conf.json:/app/conf.json:ro \
-    actian/zen-mcp-server:1.0.0
+    actian/zen-mcp-server:latest
 ```
 
 !!! note "Container networking"
-    When the container connects to a Zen engine on the host machine, you must provide the host's reachable IP address (not `localhost`). Docker Desktop handles `host.docker.internal` automatically. On Windows, the `start-zen-mcp.ps1` helper script automates container startup.
+    `-p 8000:8000` exposes the server port on the host. `--add-host=host.docker.internal:host-gateway` allows the container to reach services on the host machine (such as the Zen engine on port 1583). Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically; Linux requires the `--add-host` flag. On Windows, the `start-zen-mcp.ps1` helper script automates container startup.
 
 After the container starts, connect your MCP client to the exposed server endpoint using the transport configured for your deployment.
 
