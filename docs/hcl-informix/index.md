@@ -52,15 +52,14 @@ Create a file named `conf.json` in your working directory:
   "max_rows": "<max_rows_per_query_response>",
   "host": "<mcp_server_host>",
   "port": "<mcp_server_port>",
-  "ssl_certfile": "<path_to_ssl_certificate_file>",
-  "ssl_keyfile": "<path_to_ssl_private_key_file>",
+  "ssl_certfile": "/app/server.crt",
+  "ssl_keyfile": "/app/server.key",
   "oauth": {
     "FASTMCP_SERVER_AUTH_CONFIG_URL": "<oidc_discovery_url>",
     "FASTMCP_SERVER_AUTH_CLIENT_ID": "<client_id>",
     "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<client_secret>",
     "FASTMCP_SERVER_AUTH_BASE_URL": "<server_base_url>",
     "FASTMCP_SERVER_AUTH_AUDIENCE": "<audience>",
-    "FASTMCP_SERVER_AUTH_SCOPE": "<scopes>",
     "user_impersonation": true
   }  
 }
@@ -88,8 +87,8 @@ Create a file named `conf.json` in your working directory:
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. |
-| `ssl_certfile` | `string` | — | Path to the TLS certificate file. |
-| `ssl_keyfile` | `string` | — | Path to the TLS private key file. |
+| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Always `/app/server.crt` inside the container. |
+| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Always `/app/server.key` inside the container. |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments. See [OAuth configuration](../authentication/index.md#the-oauth-configuration-block). |
 
 ---

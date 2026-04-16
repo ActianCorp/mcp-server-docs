@@ -2,11 +2,11 @@ title: Actian MCP Server
 nav:
   - index.md
   - intro
-  - get_started
-  - mcp_clients
+  - get-started
+  - mcp-clients
   - authentication
   - ingres
-  - hcl_informix
+  - hcl-informix
   - zen
   - nosql
-  - analytics_engine
+  - analytics-engine

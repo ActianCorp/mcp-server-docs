@@ -71,31 +71,31 @@ Add an `oauth` object to your `conf.json` to enable authentication. The server r
 ```
 
 !!! warning "All-or-nothing configuration"
-    Provide **all** required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or **none**. If `CONFIG_URL` and `CLIENT_ID` are present but `CLIENT_SECRET` or `BASE_URL` is missing, the server fails to start with a `KeyError`. To disable OAuth, remove the entire `oauth` block.
+    You must provide all four required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or none. If you include the `CONFIG_URL` and `CLIENT_ID`, and omit the `CLIENT_SECRET` or `BASE_URL`, the server fails to start and throw a `KeyError`. To disable OAuth, remove the entire `oauth` block.
 
-!!! info "Scope auto-append"
-    The scopes `openid`, `email`, and `profile` are always included automatically, even if you don't specify `FASTMCP_SERVER_AUTH_SCOPE`. Only add custom scopes such as `read:mcp_server` when needed.
+!!! info "Scopes"
+    You do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
+
 
 ## User Impersonation
 
-When `user_impersonation` is `true` (the default), the server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before each database query. This ensures every user operates under their own database permissions.
+By default, the `user_impersonation` field is set to `true` and the server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
 
-### Behavior
-
-| `user_impersonation` | Behavior |
+|  `user_impersonation` | Server |
 | :------------------- | :------- |
-| `true` (default) | JWT verified + `SET SESSION AUTHORIZATION "<user>"` per query. Every OAuth user needs a matching database account. |
-| `false` | JWT still verified — unauthenticated requests are rejected — but all queries run under the service-account pool credentials. |
+| `true` (default) | Verify the `JWT` and run `SET SESSION AUTHORIZATION "<user>"` for each query. Every OAuth user needs a matching database account. |
+| `false` | Verify the `JWT` and reject unauthenticated requests. However, all approved queries will run under the shared service-account connection pool credentials.|
 
-!!! warning "Not all connectors support user impersonation"
-    - **Zen** — Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication is still enforced — only per-user database switching is skipped.
+!!! warning "Plugin limitations: Not all connectors support user impersonation"
+    - **Zen** — Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication works and only per-user database switching is skipped.
     - **NoSQL** — Uses a different authentication model entirely (direct OAuth 2.0 flow). The `user_impersonation` field does not apply. See [NoSQL Authentication](../nosql/authentication/index.md).
 
-### Username Extraction Priority
+### Extracting Username
 
-The server extracts the database username from the token using the following priority order. It first queries the IdP's **userinfo endpoint**; if that fails, it falls back to **token claims** directly.
+When user impersonation is active, the server extracts the database username from the token using the following priority order:
+
 ```mermaid
-%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
 flowchart TD
     A[Incoming Request with JWT] --> B{user_impersonation?}
     B -- false --> C[Run query as service account]
@@ -114,18 +114,19 @@ flowchart TD
     L --> M[Execute query]
 ```
 
-!!! tip "Provider-specific behavior"
-    - **Auth0** — Does not return `username` or `preferred_username` by default. The email prefix is used in practice. Create database users matching the email prefix — for example, `jdoe@example.com` → database user `jdoe`.
-    - **Keycloak** — Returns `preferred_username` by default when the `profile` scope is present. Create database users matching the Keycloak login name.
-    - **Federated identity** (Google, SAML, corporate SSO) — The `sub` claim may be a provider-specific ID (for example, `google-oauth2|12345`) that does not match a database account. For SSO setups, set `user_impersonation` to `false` or ensure the IdP profile contains a `username` that matches the database account.
+!!! tip "Provider-specific behavior:"
+    - **Auth0** — Does not return `username` or `preferred_username` by default. The server usually falls back to the email prefix. Ensure that the database usernames match the email prefixes, for example: create database user `jdoe` for `jdoe@example.com`.
+    - **Keycloak** — Returns `preferred_username` by default when the `profile` scope is present. Create database users that match the Keycloak login names.
+    - **Federated SSO (Google, SAML)** — The `sub` claim often generates a provider-specific ID (like `google-oauth2|12345`) that won't match a database account. For SSO setups, ensure the IdP profile passes a valid database `username`, or set `user_impersonation` to `false`.  
 
-## HTTPS / TLS for Remote Deployments
+## Secure Remote Deployments with HTTPS and TLS
 
-OAuth 2.0 requires HTTPS for non-localhost hosts. When OAuth is configured and the server runs on a non-localhost address — for example, a VM or container — HTTPS is **mandatory**. The server refuses to start without `ssl_certfile` and `ssl_keyfile`.
+OAuth 2.0 requires HTTPS. If you configure OAuth, the server mandates HTTPS and refuses to start unless you provide the `ssl_certfile` and `ssl_keyfil`e paths.
 
-### Step 1: Generate a Certificate
+### Step 1: Generate a certificate
 
-For testing on a remote host, generate a self-signed certificate with a Subject Alternative Name (SAN):
+For remote testing, generate a self-signed certificate with a Subject Alternative Name (SAN). 
+
 ```bash
 openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt \
   -days 365 -nodes \
@@ -135,21 +136,22 @@ chmod 600 server.key
 ```
 
 !!! warning "SAN is required"
-    The `-addext "subjectAltName=IP:..."` flag is required. Node.js-based MCP clients (VS Code, Cursor) strictly enforce SAN validation and reject certificates that only set the CN field.
+    The `-addext "subjectAltName=IP:..."` flag is required. Node.js-based MCP clients (like VS Code and Cursor) strictly enforce SAN validation and rejects certificates that only use the Common Name (CN) field.
 
 !!! tip "Production certificates"
-    For production, use a certificate issued by a trusted CA — Let's Encrypt or your corporate CA.
+    For production environments, use a certificate issued by a trusted Certificate Authority (CA), such as `Let's Encrypt or your corporate CA`.
 
 ### Step 2: Configure TLS in `conf.json`
 
 !!! warning "NoSQL uses a different TLS configuration"
     The Actian NoSQL MCP Server uses different configuration properties. See [NoSQL TLS](../nosql/authentication/index.md#tls).
 
-Add `ssl_certfile` and `ssl_keyfile` at the **top level** (not inside the `oauth` block) and update `BASE_URL` to `https://`:
+Add the certificate `ssl_certfile` and key paths `ssl_keyfile` to the top level of the `conf.json` file (outside the `oauth` block), ensure the `BASE_URL` uses `https://`:
+
 ```json
 {
-  "ssl_certfile": "/path/to/server.crt",
-  "ssl_keyfile": "/path/to/server.key",
+  "ssl_certfile": "/app/server.crt",
+  "ssl_keyfile": "/app/server.key",
   "oauth": {
     "FASTMCP_SERVER_AUTH_BASE_URL": "https://<your-ip-or-hostname>:8000"
   }
@@ -247,7 +249,7 @@ Then trust it for your operating system:
 
     - **Restrict file permissions**: `chmod 600 conf.json`
     - **Never commit to version control**: Add `conf.json` to `.gitignore`
-    - **Use HTTPS for `BASE_URL` in production**: Tokens sent over plain HTTP can be intercepted. The `http://127.0.0.1` examples are for local development only
+    - **Use HTTPS for `BASE_URL`**: Tokens sent over plain HTTP can be intercepted
     - **Production secrets management**: Inject secrets through environment variables or a secrets manager
 
 ## Provider Setup Guides

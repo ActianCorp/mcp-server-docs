@@ -1,0 +1,147 @@
+---
+title: Get Started
+description: Get the Actian MCP Server running in your environment with Docker.
+---
+
+# Getting Started with Actian MCP Server
+
+The Actian MCP Server is distributed as Docker container images, with one dedicated image for each supported Actian database. This guide explains how to start the server instance and connect it to an MCP-compatible artificial intelligence (AI) client.
+
+## Prerequisites
+
+Before you begin, ensure that the following requirements are met::
+
+- **Container runtime:** Docker or Podman installed on the host machine.
+- **Database access:** Network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, or Analytics Engine).
+- **AI client:** An MCP-compatible client, such as Claude Desktop, Cursor, GitHub Copilot, or Codex.
+
+## Step 1: Choose a database image
+
+Each Actian database uses a specific container image that comes pre-configured with the required drivers. Identify the correct image for the environment:
+
+| Database | Container image |
+|----------|----------------|
+| Ingres | [`actian/ingres-mcp-server`](https://hub.docker.com/r/actian/ingres-mcp-server) |
+| HCL Informix® | [`actian/informix-mcp-server`](https://hub.docker.com/r/actian/informix-mcp-server) |
+| Zen | [`actian/zen-mcp-server`](https://hub.docker.com/r/actian/zen-mcp-server) |
+| NoSQL | [`actian/nsql-mcp-server`](https://hub.docker.com/r/actian/nsql-mcp-server) |
+| Analytics Engine | [`actian/analytics-engine-mcp-server`](https://hub.docker.com/r/actian/analytics-engine-mcp-server) |
+
+## Step 2: Create a configuration file
+
+For most databases, you need to create a `conf.json` file that contains the specific connection details.
+
+!!! warning "NoSQL users:"
+     The Actian NoSQL MCP Server is configured entirely through environment variables. You do not need to create or mount a `conf.json` file. For more information, see [NoSQL configuration](../nosql/index.md#configuration).
+
+Each database includes unique settings. See the corresponding database configuration document for more information:
+
+- [Ingres configuration](../ingres/index.md#configuration)
+- [HCL Informix® configuration](../hcl-informix/index.md#configuration)
+- [Zen configuration](../zen/index.md#configuration)
+- [NoSQL configuration](../nosql/index.md#configuration)
+- [Analytics Engine configuration](../analytics-engine/index.md#configuration)
+
+All database configurations share the following standard MCP server fields:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `database_user` | String | Yes | The database username. |
+| `database_password` | String | Yes | The database password. |
+| `host` | String | Yes | The host address the MCP server listens on inside the container. |
+| `port` | String | Yes | The port the MCP server listens on inside the container. |
+| `ssl_certfile` | String| No | Path to the TLS certificate file. Inside the container, this is always mapped to `/app/server.crt`. |
+| `ssl_keyfile` | String | No | Path to the TLS private key file. Inside the container, this is always mapped to `/app/server.key`. |
+| `oauth` | Object | No | OAuth 2.0 configuration settings for authentication, see [Authentication Guide](../authentication/index.md) for more information.|
+
+!!! warning "Protect the configuration file:"
+    The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control.
+
+## Step 3: Start the container
+
+To start the server, run the container and mount the configuration file to `/app/conf.json`. Use the `:ro` (read-only) flag in the mount command to ensure the configuration file cannot be modified from inside the container.
+
+Run the following command, replace the image name at the end with the correct image from Step 1: 
+
+```bash
+docker run -d \
+    -v $(pwd)/conf.json:/app/conf.json:ro \
+    -p 8000:8000 \
+    actian/analytics-engine-mcp-server
+```
+!!! warning "NoSQL users:"
+    The NoSQL MCP Server does not use a `conf.json` and requires no `-v` volume mount. Pass the configuration using `-e` environment variable flags instead, see [Starting the NoSQL server guide](../nosql/index.md#start-the-server) for more information.
+
+
+## Step 4: Connect an MCP client
+
+The server operates in HTTP transport mode. Configure the AI client to connect to the following endpoint:
+
+```
+http://localhost:<port>/mcp
+```
+For example, If you mapped port 8000 in the previous step, the endpoint is `http://localhost:8000/mcp`.
+
+For configuration examples for Claude Desktop, Cursor, GitHub Copilot, fast-agent, and Codex, see [Connecting MCP Clients](../mcp-clients/index.md) documentation.
+
+
+## Step 5: Verify the connection
+
+Follow these steps to confirm that server is running and successfully communicating with the database and AI client.
+
+**1. Verify the container status:**
+
+Run the following command to ensure the container is actively running:
+
+```bash
+docker ps --filter "name=actian-mcp"
+```
+
+Confirm that the container status is `Up`.
+
+**2. Verify the endpoint:**
+
+Ping the server to confirm it is listening for requests:
+
+```bash
+curl -i http://localhost:8000/mcp
+```
+
+If the server is ready, it returns a `200` or `307` status code instead of a "connection refused" error.
+
+**3. Test the client integration:**
+
+Open the configured MCP client. It automatically detects the Actian MCP Server and display its available tools.
+Prompt the AI with a standard database request, such as:
+
+> "List all tables in the database"
+
+The client will invoke the server's `list_tables` tool. If the AI clients returns a list of the database tables, the end-to-end connection is working correctly.
+
+For the complete list of available tools for each database, see database-specific documentation:
+
+- [Ingres tools](../ingres/tools/index.md)
+- [HCL Informix® tools](../hcl-informix/tools/index.md)
+- [Zen tools](../zen/tools/index.md)
+- [NoSQL tools](../nosql/tools/index.md)
+- [Analytics Engine tools](../analytics-engine/tools/index.md)
+
+## Optional: Add Authentication
+
+If you are deploying the server outside of a secure, trusted local environment, it is recommended to use OAuth 2.0 authentication. You can secure the server using an external identity provider like Keycloak or Auth0. See following authentication documentation for detailed setup instructions:
+
+- [Authentication overview](../authentication/index.md)
+- [Keycloak setup](../authentication/keycloak/index.md)
+- [Auth0 setup](../authentication/auth0/index.md)
+
+## Next Steps
+
+<div class="grid cards" markdown>
+
+- :material-connection: **[MCP clients](../mcp-clients/index.md)**  
+  Configuration examples for Claude Desktop, Cursor, GitHub Copilot, and fast-agent.
+
+- :material-shield-check: **[Authentication](../authentication/index.md)**  
+  Secure the server with OAuth 2.0 and an external identity provider.
+
+</div>
