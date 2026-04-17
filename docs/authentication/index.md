@@ -163,6 +163,7 @@ The server validates at startup that both paths exist and that `BASE_URL` uses `
 ### Step 3: Docker Deployment
 
 Mount the certificate and key into the container using volume flags:
+
 ```bash
 docker run -p 8000:8000 \
   -v /path/to/server.crt:/app/server.crt:ro \
@@ -184,16 +185,19 @@ Reference the container paths in `conf.json`:
 
     - **Dev only**: `chmod 644 server.key` (world-readable; acceptable for local testing only)
     - **Production**: `sudo chown <container-uid>:<container-gid> server.key` to match the container user's UID/GID, keeping `chmod 600`
-    - **Best practice**: Terminate TLS at a reverse proxy (nginx, Traefik) so the private key stays outside the container entirely
+    - **Best practice**: Terminate TLS at a reverse proxy (nginx, Traefik) to keep the private key outside the container entirely
 
-### Step 4: Trust the Certificate in Your MCP Client
+### Step 4: Trust the certificate in the MCP Client
 
-Self-signed certificates are rejected by Node.js-based MCP clients (VS Code and Cursor) by default. Copy the certificate to your development machine first:
+By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed certificates. You must explicitly trust the certificate on your development machine.
+
+First, securely copy the certificate to your machine:
+
 ```bash
 scp user@<your-vm>:/path/to/server.crt ~/server.crt
 ```
 
-Then trust it for your operating system:
+Next, configure the operating system to trust it:
 
 === "macOS"
 
@@ -245,12 +249,12 @@ Then trust it for your operating system:
 ## Security Best Practices
 
 !!! danger "Protect your secrets"
-    The `conf.json` file contains `CLIENT_SECRET` in plaintext. Follow these practices:
-
-    - **Restrict file permissions**: `chmod 600 conf.json`
-    - **Never commit to version control**: Add `conf.json` to `.gitignore`
-    - **Use HTTPS for `BASE_URL`**: Tokens sent over plain HTTP can be intercepted
-    - **Production secrets management**: Inject secrets through environment variables or a secrets manager
+    The `conf.json` file contains `CLIENT_SECRET` in plaintext. Follow the following security guidelines:
+    
+    - Lock down file permissions: Run chmod 600 conf.json` to restrict access on the host machine.
+    - Keep secrets out of version control: Add c`onf.json` to your `.gitignore` file immediately.
+    - Mandate HTTPS: Always use `https://` for the `BASE_URL`. Tokens sent over plain HTTP are vulnerable to interception.
+    - Use production secrets management: For production environments, avoid plaintext files entirely. Inject your secrets   dynamically using environment variables or a dedicated secrets manager.
 
 ## Provider Setup Guides
 
