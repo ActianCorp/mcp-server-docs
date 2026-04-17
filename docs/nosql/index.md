@@ -5,11 +5,11 @@ description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Da
 
 # Actian NoSQL Database
 
-This section describes how to use the **Actian MCP Server** with **Actian NoSQL Database**.
+Connect your MCP-compatible client to **Actian NoSQL Database** using the Actian MCP Server. Once configured, clients can explore schema metadata, run read-only JPQL queries, and access all details of the persistent objects retrieved.
 
 ## Overview
 
-The Actian MCP Server acts as a bridge between any MCP client and your Actian NoSQL Database. Once configured, clients can explore schema metadata, run read-only JPQL queries and access all details of the persistent objects retrieved.
+The Actian MCP Server acts as a bridge between any MCP client and your Actian NoSQL Database. It handles connection management, schema discovery, and query execution, so you can focus on exploring your data.
 
 ### Capabilities
 

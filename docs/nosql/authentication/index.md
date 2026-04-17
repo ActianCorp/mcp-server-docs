@@ -5,7 +5,7 @@ description: OAuth 2.0 and TLS configuration for the Actian MCP Server with Acti
 
 # Authentication
 
-The Actian MCP Server for Actian NoSQL Database supports **OAuth 2.0** authentication and HTTPS. All settings are provided through `application.properties`.
+The Actian MCP Server for **Actian NoSQL Database** supports **OAuth 2.0** authentication and HTTPS. All settings are provided through `application.properties`.
 
 !!! note "Database credentials vs. OAuth"
     The `user:password` portion of the NoSQL connection URL (for example, `cars@localhost#admin:secret`) authenticates against the **database** itself. This is separate from OAuth, which controls access to the **MCP Server** endpoint.
@@ -92,13 +92,11 @@ quarkus.oidc.auth-server-url=https://your-idp.example.com/realms/your-realm
 
 ## TLS
 
-!!! note "Generating and trusting a self-signed certificate"
-    For instructions on generating a self-signed certificate and trusting it in your MCP client, see [HTTPS / TLS for Remote Deployments](../../authentication/index.md#https-tls-for-remote-deployments) in the main Authentication guide.
+To enable HTTPS, provide a certificate and private key. The `.0.` in the property name is the index of the PEM key-store entry — increment it to add multiple certificates.
 
 !!! note "Quarkus TLS configuration"
     The table below lists the most common properties. The full set of options is provided by the [Quarkus TLS Registry](https://quarkus.io/guides/tls-registry-reference) extension.
 
-To enable HTTPS, provide a certificate and private key. The `.0.` in the property name is the index of the PEM key-store entry — increment it to add multiple certificates.
 
 | Property | Required | Description |
 |---|---|---|
@@ -107,6 +105,9 @@ To enable HTTPS, provide a certificate and private key. The `.0.` in the propert
 | `quarkus.http.insecure-requests` | No | Set to `redirect` to redirect all HTTP traffic to HTTPS. |
 
 ### Example
+
+!!! note "Generating and trusting a self-signed certificate"
+    For instructions on generating a self-signed certificate and trusting it in your MCP client, see [Secure Remote Deployments with HTTPS and TLS](../../authentication/index.md#secure-remote-deployments-with-https-and-tls) in the main Authentication guide.
 
 Add the following to your `application.properties`:
 
