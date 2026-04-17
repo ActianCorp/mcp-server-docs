@@ -95,22 +95,19 @@ Create a file named `conf.json` in your working directory:
 
 ## Start the Server
 
-With your `conf.json` file ready, start the container and mount the configuration file:
+In the conf.json set host address to 0.0.0.0. With your `conf.json` file ready, start the container and mount the configuration file as `/app/conf.json`:
 
 ```bash
-podman run --network host --rm -it \
-  -v $(pwd)/conf.json:/app/conf.json:ro,Z \
-  actian/informix-mcp-server-linux:1.0.0 bash
+docker load -i ifx_mcp_image.tar
+
+docker run -p 8000:8000 -d --name ifx-mcp \
+  -v $(pwd)/conf_temp.json:/app/conf.json:ro,Z \
+  actian/informix-mcp-server-linux:1.0.0
 ```
 
-Inside the container, navigate to the application directory and start the server:
+!!! note The container always reads its configuration from /app/conf.json. Do not change the mount target path.
 
-```bash
-cd /app
-actian-mcp-server --dbms=informix --transport=sse --conf-file=/app/conf.json --username=USERNAME --password=PASSWORD
-```
-
-Once the server is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration.
+Once the container is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration like "https://<host machine ip address>:8000/mcp"
 
 ---
 

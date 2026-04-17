@@ -194,6 +194,8 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
 
 ### Step 4.2: Create the Matching Database User
 
+=== Example
+
 Auth0 handles authentication, but the Actian database still needs the user to exist for impersonation to work:
 
 ```sql
@@ -206,6 +208,22 @@ GRANT ACCESS ON DATABASE mydb TO jdoe;
 -- Grant the necessary table permissions (adjust per your schema)
 GRANT SELECT ON TABLE orders TO jdoe;
 GRANT SELECT ON TABLE products TO jdoe;
+```
+=== Informix
+```sql
+-- Create the user account (DB password not used — Auth0 handles authentication)
+CREATE USER mcpuser with password 'mcpuser' properties user 'daemon';;
+
+-- Grant access to the database
+GRANT CONNECT TO mcpuser;
+
+-- Grant the necessary table permissions (adjust per your schema)
+GRANT SELECT ON TABLE orders TO mcpuser;
+GRANT SELECT ON TABLE products TO mcpuser;
+
+-- Set session authorization to the privleged database_user passed to mcp server in conf.json
+GRANT SETSESSIONAUTH ON 'mcpuser' TO 'database_user';
+
 ```
 
 !!! note "Federated identity caveat"
