@@ -15,13 +15,20 @@ The Actian MCP Server acts as a bridge between any MCP client and your Actian No
 
 | Action | Description |
 |--------|-------------|
-| **Discover the Schema of a NoSQL Database** | List classes, Explore details of persistent classes. |
-| **Run queries on database objects** | Use Filter, Projections, Navigation. |
-| **Retrieve Objects by ID** | Including optimizations for collections of Object IDs. |
+| **Discover the schema** | List all classes and explore their fields and inheritance hierarchy. |
+| **Run JPQL queries** | Execute read-only queries against your database. |
+| **Retrieve objects by ID** | Fetch one or many objects directly by LOID for the fastest retrieval path. |
+
+## Prerequisites
+
+- Docker installed and running.
+- Access credentials for your Actian NoSQL database
+- (Optional) TLS certificate and key files for secure deployments.
+- (Optional) An OIDC provider if using OAuth authentication.
 
 ## Configuration
 
-All configuration is provided through an **`application.properties`** file mounted into the container at `/home/jboss/config/application.properties`. Environment variables are supported as an alternative — any property can be passed with a `-e` flag using `SCREAMING_SNAKE_CASE` notation, and they take precedence over the file.
+The server is distributed as a Docker container. All configuration is provided through an `application.properties` file mounted into the container at `/home/jboss/config/application.properties`. Environment variables are supported as an alternative — any property can be passed with a `-e` flag using `SCREAMING_SNAKE_CASE` notation, and they take precedence over the file.
 
 ### NoSQL Connection
 
@@ -33,11 +40,11 @@ All configuration is provided through an **`application.properties`** file mount
 
 The server is a **Quarkus** application. Any standard Quarkus configuration property can be set in `application.properties`. Some commonly used properties:
 
-| Property | Default | Description                                                                                                                                                                                               |
-|----------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `quarkus.http.port` | `8080` | HTTP listening port.                                                                                                                                                                                      |
-| `quarkus.http.ssl-port` | `8443` | HTTPS listening port.                                                                                                                                                                                     |
-| `quarkus.log.level` | `INFO` | Root log level. Individual categories can be tuned independently  — for example, `quarkus.log.category."io.quarkus.oidc".level=DEBUG`. See the [Quarkus logging guide](https://quarkus.io/guides/logging#configure-the-log-level-category-and-format) for the full reference. |
+| Property | Default | Description |
+|----------|---------|-------------|
+| `quarkus.http.port` | `8080` | HTTP listening port. |
+| `quarkus.http.ssl-port` | `8443` | HTTPS listening port. |
+| `quarkus.log.level` | `INFO` | Root log level. Individual categories can be tuned independently — for example, `quarkus.log.category."io.quarkus.oidc".level=DEBUG`. See the [Quarkus logging guide](https://quarkus.io/guides/logging#configure-the-log-level-category-and-format) for the full reference. |
 
 !!! note "Securing the server"
     To enable OAuth 2.0 or HTTPS, additional properties are required. See [Authentication](authentication/index.md) for the full configuration reference.
@@ -56,6 +63,8 @@ docker run --name NSQL-MCP \
   -p <host-port>:<container-port> \
   actian/nsql-mcp-server:1.0.0
 ```
+
+Once the container is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration.
 
 ---
 

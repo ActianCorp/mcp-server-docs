@@ -11,50 +11,45 @@ The Actian MCP Server for **Actian NoSQL Database** exposes built-in resources f
 
 | Resource URI | Purpose |
 |-----|-------------|
-| [`db://schema/classes`](#dbschemaclasses) | Database Classes |
-| [`db://schema/classes/count`](#dbschemaclassescount) | Database Class Count |
-| [`db://schema/complete`](#dbschemacomplete) | Complete Database Schema |
+| [`db://schema/classes`](#dbschemaclasses) | List all classes and their inheritance hierarchy |
+| [`db://schema/classes/count`](#dbschemaclassescount) | Total number of classes in the schema |
+| [`db://schema/class/{className}`](#dbschemaclassclassname) | Schema details for a specific class |
+| [`db://schema/complete`](#dbschemacomplete) | Complete schema for all classes |
 
 ---
 
 ## db://schema/classes
 
-### Description
-
-List all available database classes and their inheritance hierarchy.
-Returns a summary of each class including its parent class (if any).
-Use this to discover the schema before describing specific classes.
+Lists all classes in the database schema and their inheritance hierarchy. Returns each class name and its parent class (if any).
 
 ### Output Schema
 
 ```json
 {
-	"classes": [
-	{
-		"className": "string", // Name of the class (entity)
-		"superClassName": "string|null" // Name of the superclass, or null if none 
-	}
-	// ...more classes
-	], 
-	"count": integer // Total number of classes
+  "classes": [
+    {
+      "name": "string",       // class name
+      "superclass": "string"  // parent class name; omitted if none
+    }
+  ],
+  "count": 0                  // total number of classes
 }
 ```
 
-### Example Usage
+### Example
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "id": 11,
-  "result": {
-    "contents": [
-      {
-        "uri": "db://schema/classes",
-        "text": "{\"classes\":[{\"name\":\"Vehicle\",\"superclass\":\"Thing\"},{\"name\":\"Car\",\"superclass\":\"Vehicle\"},{\"name\":\"Thing\"}],\"count\":3}",
-        "mimeType": "application/json"
-      }
-    ]
-  }
+  "classes": [
+    { "name": "Project" },
+    { "name": "Skill" },
+    { "name": "Employee", "superclass": "Worker" },
+    { "name": "Contractor", "superclass": "Worker" },
+    { "name": "Address" },
+    { "name": "Worker" },
+    { "name": "Certificate" }
+  ],
+  "count": 7
 }
 ```
 
@@ -62,34 +57,74 @@ Use this to discover the schema before describing specific classes.
 
 ## db://schema/classes/count
 
-### Description
-
 Returns the total number of classes in the database schema.
 
 ### Output Schema
 
 ```json
 {
-	"count": integer // The total number of classes in the database schema
+  "count": 0 // total number of classes
 }
-
 ```
 
-### Example Usage
+### Example
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "id": 12,
-  "result": {
-    "contents": [
-      {
-        "uri": "db://schema/classes/count",
-        "text": "{\"count\":3}",
-        "mimeType": "application/json"
-      }
-    ]
-  }
+  "count": 7
+}
+```
+
+---
+
+## db://schema/class/{className}
+
+Describes the schema of a specific class, including its superclass, declared fields, and all inherited fields. `{className}` is a **URI template parameter** — replace it with the name of the class you want to inspect (for example, `db://schema/class/Employee`).
+
+### Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `className` | The name of the class to describe (case-sensitive). |
+
+### Output Schema
+
+```json
+{
+  "name": "string",           // class name
+  "superclass": {
+    "name": "string",         // parent class name
+    "superclass": "string"    // grandparent class name; omitted if none
+  },
+  "declaredFields": [
+    { "name": "string", "type": "string" }
+  ],
+  "allFields": [
+    { "name": "string", "type": "string" }
+  ]
+}
+```
+
+### Example
+
+```json
+{
+  "name": "Employee",
+  "superclass": {
+    "name": "Worker"
+  },
+  "declaredFields": [
+    { "name": "annualSalary", "type": "int" },
+    { "name": "department", "type": "java.lang.String" },
+    { "name": "performanceBonus", "type": "double" }
+  ],
+  "allFields": [
+    { "name": "active", "type": "boolean" },
+    { "name": "name", "type": "java.lang.String" },
+    { "name": "annualSalary", "type": "int" },
+    { "name": "department", "type": "java.lang.String" },
+    { "name": "performanceBonus", "type": "double" }
+  ]
 }
 ```
 
@@ -97,68 +132,64 @@ Returns the total number of classes in the database schema.
 
 ## db://schema/complete
 
-### Description
-
-Returns the complete database schema with detailed field information for every class.
-Combines listing all classes and describing each one in a single call.
-Each entry includes the class name, superclass, declared fields, and all inherited fields.
-Prefer this resource when you need a complete picture of the data model upfront.
+Returns the complete database schema with detailed field information for every class. Each entry includes the class name, superclass, declared fields, and all inherited fields. Use this when you need the full data model upfront, instead of calling `db://schema/classes` followed by multiple `db://schema/class/{className}` reads.
 
 ### Output Schema
 
 ```json
 {
-	"classes": [
-	{
-		"className": "string", // Name of the class (entity)
-		"superClassName": "string|null", // Name of the superclass, or null if none
-		"declaredFields": [
-		{
-			"name": "string", // Field name declared in this class
-			"type": "string", // Field type (e.g., "String", "Integer", "Date", "Reference", etc.)
-			"reference": "boolean", // True if the field is a reference to another class
-			"collection": "boolean", // True if the field is a collection (list/set)
-			"nullable": "boolean", // True if the field can be null
-			"description": "string|null" // Optional field description or comment
-			// ...other metadata as needed
-		}
-		// ...more declared fields
-		],
-		"allFields": [
-		{
-			"name": "string", // Field name (declared or inherited)
-			"type": "string", // Field type
-			"reference": "boolean", // True if the field is a reference
-			"collection": "boolean", // True if the field is a collection
-			"declaredIn": "string", // Name of the class where the field is declared
-			"nullable": "boolean", // True if the field can be null
-			"description": "string|null" // Optional field description or comment
-			// ...other metadata as needed
-		}
-		// ...more fields (declared + inherited) 
-		]
-	}
-	// ...more classes
-	],
-	"count": integer // Total number of classes
+  "classes": [
+    {
+      "name": "string",           // class name
+      "superclass": {
+        "name": "string",         // parent class name
+        "superclass": "string"    // grandparent class name; omitted if none
+      },
+      "declaredFields": [
+        { "name": "string", "type": "string" }
+      ],
+      "allFields": [
+        { "name": "string", "type": "string" }
+      ]
+    }
+  ],
+  "count": 0                      // total number of classes
 }
 ```
 
-### Example Usage
+### Example
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "id": 13,
-  "result": {
-    "contents": [
-      {
-        "uri": "db://schema/complete",
-        "text": "{\"classes\":[{\"name\":\"Vehicle\",\"superclass\":{\"name\":\"Thing\"},\"declaredFields\":[{\"name\":\"plate\",\"type\":\"java.lang.String\"}],\"allFields\":[{\"name\":\"plate\",\"type\":\"java.lang.String\"}]},{\"name\":\"Car\",\"superclass\":{\"name\":\"Vehicle\",\"superclass\":\"Thing\"},\"declaredFields\":[{\"name\":\"somethingElse\",\"type\":\"Thing {}\"},{\"name\":\"trailer\",\"type\":\"Vehicle extends Thing {plate: java.lang.String; }\"}],\"allFields\":[{\"name\":\"plate\",\"type\":\"java.lang.String\"},{\"name\":\"somethingElse\",\"type\":\"Thing {}\"},{\"name\":\"trailer\",\"type\":\"Vehicle extends Thing {plate: java.lang.String; }\"}]},{\"name\":\"Thing\",\"declaredFields\":[],\"allFields\":[]}],\"count\":3}",
-        "mimeType": "application/json"
-      }
-    ]
-  }
+  "classes": [
+    {
+      "name": "Project",
+      "declaredFields": [
+        { "name": "budget", "type": "int" },
+        { "name": "projectName", "type": "java.lang.String" }
+      ],
+      "allFields": [
+        { "name": "budget", "type": "int" },
+        { "name": "projectName", "type": "java.lang.String" }
+      ]
+    },
+    {
+      "name": "Employee",
+      "superclass": { "name": "Worker" },
+      "declaredFields": [
+        { "name": "annualSalary", "type": "int" },
+        { "name": "department", "type": "java.lang.String" }
+      ],
+      "allFields": [
+        { "name": "active", "type": "boolean" },
+        { "name": "name", "type": "java.lang.String" },
+        { "name": "annualSalary", "type": "int" },
+        { "name": "department", "type": "java.lang.String" }
+      ]
+    },
+    "..."
+  ],
+  "count": 7
 }
 ```
 
