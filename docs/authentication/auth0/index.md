@@ -3,30 +3,32 @@ title: Auth0 Setup Guide
 description: Step-by-step guide to configure Auth0 as the OAuth identity provider for the Actian MCP Server.
 ---
 
-# Auth0 Setup Guide
+# Configuring Auth0
 
-This section describes how to create and configure an Auth0 **Application** and **API** for OAuth 2.0 / OIDC authentication with the Actian MCP Server.
+Set up an Auth0 application and API to enable OAuth 2.0 and OpenID Connect (OIDC) authentication for your Actian MCP Server. After you complete these steps, you can see the credentials required for the `oauth` block in the `conf.json` configuration file.
 
-By the end, you will have all the values needed to populate the `oauth` block in your `conf.json`. For the full configuration reference and shared concepts, such as TLS, user impersonation, and security practices, see the [Authentication overview](../index.md).
+For details on shared security concepts like TLS and user impersonation, see [Authentication overview](../index.md).
+
 
 !!! info "Reference"
     [FastMCP Auth0 Integration](https://gofastmcp.com/integrations/auth0)
 
 
-## Quick-Start Checklist
+## Quick Start
 
-For experienced Auth0 users, the full walkthrough follows below.
+If you are an experienced Auth0 user, use the following checklist to set up the environment:
 
-1. **Create an API** (Applications → APIs → + Create API). The **Identifier** becomes `FASTMCP_SERVER_AUTH_AUDIENCE`.
-2. **Create an Application** (Applications → Applications → + Create Application → **Machine to Machine**). Authorize it for the API when prompted. Copy the **Client ID** and **Client Secret**.
-3. **Authorize the Application for the API** — ensure both **User Access** and **Client Access** show AUTHORIZED (APIs → your API → Application Access → Edit).
+1. **Create an API:** Navigate to **Applications > APIs** and select **Create API**. The **Identifier** serves as the `FASTMCP_SERVER_AUTH_AUDIENCE`.
+2. **Create an Application:** Navigate to **Applications > Applications** and select **Create Application**. Choose **Machine to Machine**. Authorize it for the API when prompted. Copy the **Client ID** and **Client Secret**.
+3. **Authorize the Application:** In your API settings, verify that **User Access** and **Client Access** are set to **Authorized**.
 
     !!! warning
-        Skipping this step causes Auth0 to reject token requests with `invalid_request`.
-4. **Enable Authorization Code grant** (Application → Settings → Advanced Settings → Grant Types → check **Authorization Code**).
-5. **Configure Callback URLs** (Application → Settings → Allowed Callback URLs → `<BASE_URL>/auth/callback`).
-6. **Fill `conf.json`** with the values from steps 1–2 plus your Auth0 domain.
-7. **Start the server** with `--transport sse` (or `http` / `streamable-http`).
+        If you skip this, Auth0 returns an `invalid_request` error.
+
+4. **Enable Authorization Code Grant:** In **Advanced Settings > Grant Types**, select **Authorization Code**.
+5. **Set Callback URLs:** Add `<BASE_URL>/auth/callback` to the **Allowed Callback URLs** field.
+6. **Update Configuration:** Add your Auth0 domain and credentials to `conf.json`.
+7. **Start the server:** Launch the server using the `--transport sse` (or `http` / `streamable-http`) flag.
 
 
 ## Prerequisites
@@ -36,11 +38,9 @@ For experienced Auth0 users, the full walkthrough follows below.
 - The Actian MCP Server installed and ready to run.
 
 
-## Part 1: Create an Auth0 API
+## Step 1: Create an Auth0 API
 
 The **API** represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 include the API's identifier as the `audience` claim.
-
-### Steps
 
 1. Log in to the [Auth0 Dashboard](https://manage.auth0.com/).
 2. In the left sidebar, navigate to **Applications → APIs**.
@@ -62,7 +62,7 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** you entered (for example, `https://<mcp-server-host>:8000/mcp`). |
 
 
-## Part 2: Create an Auth0 Application
+## Step 2: Create an Auth0 Application
 
 The **Application** represents the MCP server's OAuth client. It holds the `client_id` and `client_secret` used during the OAuth handshake.
 
@@ -71,7 +71,6 @@ The **Application** represents the MCP server's OAuth client. It holds the `clie
 
     **Do not use "Regular Web Application"** — Auth0 enforces PKCE validation differently for web apps, which conflicts with how the OIDCProxy forwards authorization requests. This causes `code_challenge: Field required` errors.
 
-### Steps
 
 1. In the Auth0 Dashboard, go to **Applications → Applications**.
 2. Select **+ Create Application**.
@@ -130,7 +129,7 @@ All values are on the **Settings** tab of your Application:
     The **Domain** is shown at the top of the Settings tab (for example, `dev-abc123.us.auth0.com`). The OIDC discovery URL is always `https://<domain>/.well-known/openid-configuration`.
 
 
-## Part 3: Authorize the Application for the API
+## Step 3: Authorize the Application for the API
 
 !!! danger "This step is critical"
     Without it, Auth0 rejects token requests with `invalid_request` because your Application isn't authorized for the API.
@@ -167,7 +166,7 @@ After saving, the Application should show two **AUTHORIZED** badges — one for 
     If you plan to use `user_impersonation: true`, the **User Access** column must show AUTHORIZED. Without it, Auth0 won't issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server won't be able to extract a database username.
 
 
-## Part 4: Create Auth0 Users (If Using User Impersonation)
+## Step 4: Create Auth0 Users (If Using User Impersonation)
 
 If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database via `SET SESSION AUTHORIZATION`. Each OAuth user must have a matching database account. For more information, see [User Impersonation](../index.md#user-impersonation).
 
@@ -213,7 +212,7 @@ GRANT SELECT ON TABLE products TO jdoe;
     If users sign in via Google, Microsoft Entra, SAML, or corporate SSO through Auth0, the `sub` claim will look like `google-oauth2|12345` — the server strips the provider prefix, leaving `12345`, which is unlikely to match a database account. For SSO setups, set `user_impersonation` to `false` unless you can ensure the Auth0 user profile contains a matching username.
 
 
-## Part 5: Assemble the Final Configuration
+## Step 5: Assemble the Final Configuration
 
 ### Mapping Summary
 
@@ -364,3 +363,4 @@ Auth0 tokens have a configurable lifetime:
 |---|---|
 | **Development** | Use a free Auth0 tenant. |
 | **Staging / Production** | Use a dedicated Auth0 tenant (or separate Application + API). Always use HTTPS for `BASE_URL` and callback URLs. |
+
