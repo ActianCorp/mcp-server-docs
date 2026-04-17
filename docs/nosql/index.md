@@ -44,10 +44,43 @@ The server is a **Quarkus** application. Any standard Quarkus configuration prop
 |----------|---------|-------------|
 | `quarkus.http.port` | `8080` | HTTP listening port. |
 | `quarkus.http.ssl-port` | `8443` | HTTPS listening port. |
-| `quarkus.log.level` | `INFO` | Root log level. Individual categories can be tuned independently — for example, `quarkus.log.category."io.quarkus.oidc".level=DEBUG`. See the [Quarkus logging guide](https://quarkus.io/guides/logging#configure-the-log-level-category-and-format) for the full reference. |
 
 !!! note "Securing the server"
     To enable OAuth 2.0 or HTTPS, additional properties are required. See [Authentication](authentication/index.md) for the full configuration reference.
+
+#### Logging
+
+The root log level is controlled by `quarkus.log.level` (default: `INFO`).
+
+Available log levels:
+
+| Level | Description |
+|-------|-------------|
+| `OFF` | A special level used in configuration to turn off logging. |
+| `FATAL` | A critical service failure or total inability to handle any requests. |
+| `ERROR` | A major issue in processing or an inability to complete a request. |
+| `WARN` | A non-critical service error or problem that might not require immediate correction. |
+| `INFO` | Service lifecycle events or other important infrequent information. |
+| `DEBUG` | Additional information about lifecycle events or events not tied to specific requests, useful for debugging. |
+| `TRACE` | Detailed per-request debugging information, potentially at a very high frequency. |
+| `ALL` | A special level to turn on logging for all messages, including custom levels. |
+
+Individual categories can be tuned independently using `quarkus.log.category."<package>".level`.
+The following Actian-specific categories are available:
+
+| Category | Description                                                                       |
+|----------|-----------------------------------------------------------------------------------|
+| `com.actian` | All Actian components.                                                            |
+| `com.actian.mcp` | MCP protocol layer — primitives, tool dispatch, guardrails, and related handling. |
+| `com.actian.nsql` | Actian NoSQL data layer — schema discovery, query execution, and object mapping.  |
+
+For example, to enable debug logging for the Actian NoSQL data layer:
+
+```properties
+quarkus.log.category."com.actian.nsql".level=DEBUG
+```
+
+See the [Quarkus logging guide](https://quarkus.io/guides/logging) for the full reference.
 
 ## Start the Server
 
