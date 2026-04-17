@@ -100,7 +100,7 @@ docker run -d \
 ```
 
 !!! note "Container networking"
-    `-p 8000:8000` exposes the server port on the host. `--add-host=host.docker.internal:host-gateway` allows the container to reach services on the host machine (such as the Zen engine on port 1583). Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically; Linux requires the `--add-host` flag. On Windows, the `start-zen-mcp.ps1` helper script automates container startup.
+    `-p 8000:8000` exposes the server port on the host. `--add-host=host.docker.internal:host-gateway` allows the container to reach services on the host machine (such as the Zen engine on port 1583). Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically; Linux requires the `--add-host` flag.
 
 Once the container is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration.
 
