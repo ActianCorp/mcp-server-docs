@@ -52,6 +52,7 @@ All database configurations share the following standard MCP server fields:
 | `port` | String | Yes | Port the MCP server listens to in the container. |
 | `ssl_certfile` | String| No | Path to the TLS certificate file. In the container, this is always mapped to `/app/server.crt`. |
 | `ssl_keyfile` | String | No | Path to the TLS private key file. In the container, this is always mapped to `/app/server.key`. |
+| `log_level` | String | No | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. Defaults to `INFO`. |
 | `oauth` | Object | No | OAuth 2.0 configuration settings for authentication. For more information, see [Authentication Guide](../authentication/index.md).|
 
 !!! note "Configuration File Protection"
