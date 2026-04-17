@@ -78,6 +78,9 @@ You can connect popular AI clients like Claude Desktop, Cursor, fast-agent, and 
 
 The following example demonstrates how to connect to a running Actian MCP Server instance using the [FastMCP](https://pypi.org/project/fastmcp/) Python client. This approach supports all database plugins (Ingres, HCL Informix®, Zen, and Analytics Engine).
 
+!!! warning "Actian NoSQL"
+    Actian NoSQL uses different tools (JPQL-based queries, LOID fetches, schema resources) and a different authentication model. For a NoSQL-specific Python client example, see [Connect Using a Python Client](../nosql/index.md#connect-using-a-python-client).
+
 ### Prerequisites
 
 Install the required FastMCP package:

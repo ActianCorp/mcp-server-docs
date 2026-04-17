@@ -101,6 +101,140 @@ Once the container is running, connect your MCP client to the exposed server end
 
 ---
 
+## Connect Using a Python Client
+
+The following example demonstrates how to connect to a running Actian MCP Server for Actian NoSQL using the [FastMCP](https://pypi.org/project/fastmcp/) Python client.
+
+### Prerequisites
+
+Install the required packages:
+
+```bash
+pip install fastmcp
+pip install httpx  # required for OAuth authentication
+```
+
+### Basic Connection Example
+
+```python
+"""Actian MCP Server for Actian NoSQL — Python client example."""
+
+import asyncio
+import json
+from fastmcp import Client
+from fastmcp.client.transports import StreamableHttpTransport
+
+
+async def main():
+    # Replace with your Actian MCP Server URL
+    server_url = "http://localhost:8080/mcp"
+
+    transport = StreamableHttpTransport(url=server_url)
+
+    async with Client(transport, timeout=60) as client:
+
+        # 1. Discover available tools and their parameters
+        tools = await client.list_tools()
+        print("Available tools:")
+        for tool in tools:
+            print(f"  - {tool.name}")
+
+        # 2. List all classes in the database
+        result = await client.call_tool("list_classes", {})
+        print(f"\nClasses:\n{json.dumps(result.structured_content, indent=2)}")
+
+        # 3. Describe a specific class
+        # Replace "Employee" with a class name from your database
+        result = await client.call_tool(
+            "describe_class", {"className": "Employee"}
+        )
+        print(f"\nEmployee class schema:\n{json.dumps(result.structured_content, indent=2)}")
+
+        # 4. Execute a read-only JPQL query
+        # Replace class and field names to match your schema
+        result = await client.call_tool(
+            "execute_query",
+            {"jpql": "select e from Employee e"},
+        )
+        print(f"\nQuery results:\n{json.dumps(result.structured_content, indent=2)}")
+
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        print(f"Error: {e}")
+```
+
+### Connect Using OAuth Authentication
+
+When you deploy the server with OAuth enabled over HTTPS, provide authentication and TLS/SSL parameters in the client code
+
+```python
+"""Actian MCP Server for Actian NoSQL — Python client with OAuth and TLS."""
+
+import asyncio
+import json
+import ssl
+import httpx
+import certifi
+from fastmcp import Client
+from fastmcp.client.auth import OAuth
+from fastmcp.client.transports import StreamableHttpTransport
+
+
+# Replace with your values
+MCP_URL = "https://mcp.example.com:8443/mcp"
+CLIENT_ID = "<your-client-id>"    # OAuth 2.0 client ID registered in your identity provider
+CALLBACK_PORT = <callback-port>   # must match the redirect URI registered in your identity provider
+CA_CERT = "/path/to/server.crt"  # self-signed certificate of the MCP server
+
+
+def make_httpx_client(**kwargs) -> httpx.AsyncClient:
+    """Create an HTTP client that trusts both the identity provider and the MCP server certificate."""
+    # Load standard public certificates (for the identity provider)
+    ssl_ctx = ssl.create_default_context(cafile=certifi.where())
+    # Append the self-signed certificate (for the MCP server)
+    ssl_ctx.load_verify_locations(cafile=CA_CERT)
+    return httpx.AsyncClient(verify=ssl_ctx, **kwargs)
+
+
+async def main():
+    oauth = OAuth(
+        client_id=CLIENT_ID,
+        callback_port=CALLBACK_PORT,
+        httpx_client_factory=make_httpx_client,  # used for identity provider requests
+    )
+
+    transport = StreamableHttpTransport(
+        url=MCP_URL,
+        auth=oauth,
+        httpx_client_factory=make_httpx_client,  # used for MCP server requests
+    )
+
+    async with Client(transport, timeout=120) as client:
+        tools = await client.list_tools()
+        print(f"Connected — {len(tools)} tools available")
+
+        result = await client.call_tool(
+            "execute_query",
+            {"jpql": "select e from Employee e"},
+        )
+        print(f"Results:\n{json.dumps(result.structured_content, indent=2)}")
+
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        print(f"Error: {e}")
+```
+
+!!! tip
+    The FastMCP `OAuth` helper automatically handles the browser-based login flow. Ensure you run the client on a machine with a web browser available.
+
+---
+
 ## Next Steps
 
 <div class="grid cards" markdown>

@@ -9,7 +9,7 @@ The Actian MCP Server is distributed as Docker container images, with one dedica
 
 ## Prerequisites
 
-Before you begin, ensure that the following requirements are met::
+Before you begin, ensure that the following requirements are met:
 
 - **Container runtime:** Docker or Podman installed on the host machine.
 - **Database access:** Network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, or Analytics Engine).
@@ -31,9 +31,6 @@ Each Actian database uses a specific container image that comes pre-configured w
 
 For most databases, you need to create a `conf.json` file that contains the specific connection details.
 
-!!! warning "NoSQL users:"
-     The Actian NoSQL MCP Server is configured entirely through environment variables. You do not need to create or mount a `conf.json` file. For more information, see [NoSQL configuration](../nosql/index.md#configuration).
-
 Each database includes unique settings. See the corresponding database configuration document for more information:
 
 - [Ingres configuration](../ingres/index.md#configuration)
@@ -42,7 +39,7 @@ Each database includes unique settings. See the corresponding database configura
 - [NoSQL configuration](../nosql/index.md#configuration)
 - [Analytics Engine configuration](../analytics-engine/index.md#configuration)
 
-All database configurations share the following standard MCP server fields:
+All database configurations except NoSQL share the following standard MCP server fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -59,6 +56,9 @@ All database configurations share the following standard MCP server fields:
 
 ## Step 3: Start the container
 
+!!! warning "NoSQL users"
+    The Actian MCP Server for Actian NoSQL Database uses a different startup command. See [Start the Server](../nosql/index.md#start-the-server) for the NoSQL-specific steps.
+
 To start the server, run the container and mount the configuration file to `/app/conf.json`. Use the `:ro` (read-only) flag in the mount command to ensure the configuration file cannot be modified from inside the container.
 
 Run the following command, replace the image name at the end with the correct image from Step 1: 
@@ -69,9 +69,6 @@ docker run -d \
     -p 8000:8000 \
     actian/analytics-engine-mcp-server
 ```
-!!! warning "NoSQL users:"
-    The NoSQL MCP Server does not use a `conf.json` and requires no `-v` volume mount. Pass the configuration using `-e` environment variable flags instead, see [Starting the NoSQL server guide](../nosql/index.md#start-the-server) for more information.
-
 
 ## Step 4: Connect an MCP client
 
