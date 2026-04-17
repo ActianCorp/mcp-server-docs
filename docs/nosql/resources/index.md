@@ -7,6 +7,9 @@ description: Overview of the resources available when using the Actian MCP Serve
 
 The Actian MCP Server for **Actian NoSQL Database** exposes built-in resources for data discovery.
 
+!!! note "Response format"
+    Resources return results as **text content** — the data is serialised as a JSON string in the `text` field. Unlike tools, resources do not use structured content.
+
 ## Available Resources
 
 | Resource URI | Purpose |

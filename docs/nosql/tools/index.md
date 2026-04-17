@@ -7,6 +7,9 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for document database interaction.
 
+!!! note "Response format"
+    All tools return results as **structured content** (`structuredContent`). For compatibility with older MCP clients, each response also includes the same data serialised as a JSON string in the `text` field.
+
 ## Available Tools
 
 | Tool | Purpose |
