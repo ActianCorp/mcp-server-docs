@@ -126,7 +126,7 @@ For the complete list of available tools for each database, see database-specifi
 - [NoSQL tools](../nosql/tools/index.md)
 - [Analytics Engine tools](../analytics-engine/tools/index.md)
 
-## (Optional) Step 6: Add Authentication
+## Step 6 (Optional): Add Authentication
 
 If you are deploying the server outside a secure, trusted local environment, it is recommended to use OAuth 2.0 authentication. You can secure the server using an external identity provider like Keycloak or Auth0. See the following authentication documentation for detailed setup instructions:
 
