@@ -80,6 +80,7 @@ Use this format when the database requires authentication. This bypasses the con
 |-------|------|---------|-------------|
 | `database` | `string` | — | Logical database name used for display purposes. |
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. |
+| `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments. See [Authentication](../authentication/index.md). |
 
 !!! note "OAuth and user impersonation"

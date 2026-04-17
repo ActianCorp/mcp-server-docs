@@ -52,6 +52,7 @@ Create a file named `conf.json` in your working directory:
   "max_rows": "<max_rows_per_query_response>",
   "host": "<mcp_server_host>",
   "port": "<mcp_server_port>",
+  "log_level": "INFO",
   "ssl_certfile": "/app/server.crt",
   "ssl_keyfile": "/app/server.key",
   "oauth": {
@@ -87,6 +88,7 @@ Create a file named `conf.json` in your working directory:
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. |
+| `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Always `/app/server.crt` inside the container. |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Always `/app/server.key` inside the container. |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments. See [OAuth configuration](../authentication/index.md#the-oauth-configuration-block). |
