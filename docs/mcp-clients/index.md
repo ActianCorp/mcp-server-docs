@@ -80,15 +80,15 @@ This section demonstrates how to connect to a running Actian MCP Server instance
 
 1. Install the required FastMCP package:
 
-```bash
-pip install fastmcp
-```
+   ```bash
+   pip install fastmcp
+   ```
 
 2. To use OAuth authentication, install the `HTTPX` library:
 
-```bash
-pip install httpx
-```
+   ```bash
+   pip install httpx
+   ```
 
 ### Parameter Naming Differences
 
