@@ -5,7 +5,7 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 # Tools
 
-The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for document database interaction.
+The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for database discovery and read-only query execution.
 
 !!! note "Response format"
     All tools return results as **structured content** (`structuredContent`). For compatibility with older MCP clients, each response also includes the same data serialised as a JSON string in the `text` field.
@@ -53,7 +53,7 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
 | `jpql` | `string` | ✓ | JPQL SELECT query to execute. |
-| `limit` | `number` | | Maximum number of results to return per page. The server enforces a maximum page size. Use the same value in subsequent `query_next` calls for consistent pagination. |
+| `limit` | `number` | | Maximum number of results to return per page. The server enforces a maximum of **1000** per page. Use the same value in subsequent `query_next` calls for consistent pagination. |
 
 ### Output Schema
 
@@ -117,10 +117,10 @@ Fetches the next page of results from a paginated query. Call this tool after `e
 
 ### Parameters
 
-| Field | Type | Required | Description |
-|-------|------|:--------:|-------------|
-| `cursorId` | `string` | ✓ | The cursor ID returned from `execute_query` or a previous `query_next` call. |
-| `limit` | `number` | | Maximum number of results to return per page. Use the same value as in the original `execute_query` call for consistent page sizes. |
+| Field | Type | Required | Description                                                                                                                                                                             |
+|-------|------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `cursorId` | `string` | ✓ | The cursor ID returned from `execute_query` or a previous `query_next` call.                                                                                                            |
+| `limit` | `number` | | Maximum number of results to return per page. The server enforces a maximum of **1000** per page. Use the same value as in the original `execute_query` call for consistent page sizes. |
 
 ### Output Schema
 
@@ -425,32 +425,18 @@ Describes the schema of a specific class, including its direct superclasses, dec
     { "name": "Worker", "superclasses": [] }
   ],
   "declaredFields": [
-    { "name": "accessLevels", "type": "int[]" },
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
-    { "name": "metadata", "type": "java.util.Map" },
-    { "name": "performanceBonus", "type": "double" },
-    { "name": "skillMap", "type": "java.util.Map" },
     { "name": "subordinates", "type": "java.util.List" },
-    { "name": "technicalTags", "type": "java.util.List" }
+    "..."
   ],
   "allFields": [
     { "name": "active", "type": "boolean" },
     { "name": "address", "type": "Address {city: java.lang.String; street: java.lang.String; }" },
-    { "name": "certifications", "type": "java.util.List" },
-    { "name": "lastLogin", "type": "java.sql.Timestamp" },
     { "name": "name", "type": "java.lang.String" },
-    { "name": "projects", "type": "java.util.List" },
-    { "name": "skills", "type": "java.util.List" },
-    { "name": "startDate", "type": "java.sql.Timestamp" },
-    { "name": "accessLevels", "type": "int[]" },
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
-    { "name": "metadata", "type": "java.util.Map" },
-    { "name": "performanceBonus", "type": "double" },
-    { "name": "skillMap", "type": "java.util.Map" },
-    { "name": "subordinates", "type": "java.util.List" },
-    { "name": "technicalTags", "type": "java.util.List" }
+    "..."
   ]
 }
 ```

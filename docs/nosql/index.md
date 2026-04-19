@@ -32,9 +32,9 @@ The server is distributed as a Docker container. All configuration is provided t
 
 ### NoSQL Connection
 
-| Property | Required | Description |
-|----------|----------|-------------|
-| `nsql_connectionURL` | Yes | Connection URL in the format `database@server:port#user:password`. `port`, `user`, and `password` are optional. |
+| Property | Required | Description                                                                                                              |
+|----------|----------|--------------------------------------------------------------------------------------------------------------------------|
+| `nsql_connectionURL` | Yes | Database connection URL in the format `database@server:port#user:password`. `port`, `user`, and `password` are optional. |
 
 ### Quarkus Properties
 
@@ -46,7 +46,7 @@ The server is a **Quarkus** application. Any standard Quarkus configuration prop
 | `quarkus.http.ssl-port` | `8443` | HTTPS listening port. |
 
 !!! note "Securing the server"
-    To enable OAuth 2.0 or HTTPS, additional properties are required. See [Authentication](authentication/index.md) for the full configuration reference.
+    To enable OAuth 2.0 or TLS, additional properties are required. See [Authentication](authentication/index.md) for the full configuration reference.
 
 #### Logging
 
@@ -68,11 +68,11 @@ Available log levels:
 Individual categories can be tuned independently using `quarkus.log.category."<package>".level`.
 The following Actian-specific categories are available:
 
-| Category | Description                                                                       |
-|----------|-----------------------------------------------------------------------------------|
-| `com.actian` | All Actian components.                                                            |
-| `com.actian.mcp` | MCP protocol layer — primitives, tool dispatch, guardrails, and related handling. |
-| `com.actian.nsql` | Actian NoSQL data layer — schema discovery, query execution, and object mapping.  |
+| Category | Description                                                                     |
+|----------|---------------------------------------------------------------------------------|
+| `com.actian` | All Actian components.                                                          |
+| `com.actian.mcp` | MCP protocol layer — primitives, guardrails, and related handling. |
+| `com.actian.nsql` | Actian NoSQL data layer — schema discovery, query execution, and object mapping. |
 
 For example, to enable debug logging for the Actian NoSQL data layer:
 
@@ -91,9 +91,9 @@ nsql_connectionURL=<connection-url>
 ```
 
 ```bash
-docker run --name NSQL-MCP \
-  -v /path/to/application.properties:/home/jboss/config/application.properties:ro \
-  -p <host-port>:<container-port> \
+docker run \
+  -v $(pwd)/application.properties:/home/jboss/config/application.properties:ro \
+  -p 8080:8080 \
   actian/nsql-mcp-server:1.0.0
 ```
 
@@ -102,6 +102,9 @@ Once the container is running, connect your MCP client to the exposed server end
 ---
 
 ## Connect Using a Python Client
+
+!!! note "Other MCP clients"
+    For connecting AI clients such as Claude Desktop, Cursor, fast-agent, and Codex, see the [Connecting MCP Clients](../mcp-clients/index.md) guide.
 
 The following example demonstrates how to connect to a running Actian MCP Server for Actian NoSQL using the [FastMCP](https://pypi.org/project/fastmcp/) Python client.
 

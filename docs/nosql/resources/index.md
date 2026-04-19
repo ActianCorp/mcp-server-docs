@@ -5,7 +5,7 @@ description: Overview of the resources available when using the Actian MCP Serve
 
 # Resources
 
-The Actian MCP Server for **Actian NoSQL Database** exposes built-in resources for data discovery.
+The Actian MCP Server for **Actian NoSQL Database** exposes built-in resources for database schema discovery.
 
 !!! note "Response format"
     Resources return results as **text content** — the data is serialised as a JSON string in the `text` field. Unlike tools, resources do not use structured content.
@@ -119,32 +119,18 @@ Describes the schema of a specific class, including its direct superclasses, dec
     { "name": "Worker", "superclasses": [] }
   ],
   "declaredFields": [
-    { "name": "accessLevels", "type": "int[]" },
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
-    { "name": "metadata", "type": "java.util.Map" },
-    { "name": "performanceBonus", "type": "double" },
-    { "name": "skillMap", "type": "java.util.Map" },
     { "name": "subordinates", "type": "java.util.List" },
-    { "name": "technicalTags", "type": "java.util.List" }
+    "..."
   ],
   "allFields": [
     { "name": "active", "type": "boolean" },
     { "name": "address", "type": "Address {city: java.lang.String; street: java.lang.String; }" },
-    { "name": "certifications", "type": "java.util.List" },
-    { "name": "lastLogin", "type": "java.sql.Timestamp" },
     { "name": "name", "type": "java.lang.String" },
-    { "name": "projects", "type": "java.util.List" },
-    { "name": "skills", "type": "java.util.List" },
-    { "name": "startDate", "type": "java.sql.Timestamp" },
-    { "name": "accessLevels", "type": "int[]" },
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
-    { "name": "metadata", "type": "java.util.Map" },
-    { "name": "performanceBonus", "type": "double" },
-    { "name": "skillMap", "type": "java.util.Map" },
-    { "name": "subordinates", "type": "java.util.List" },
-    { "name": "technicalTags", "type": "java.util.List" }
+    "..."
   ]
 }
 ```
