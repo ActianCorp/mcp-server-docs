@@ -87,8 +87,10 @@ By default, the `user_impersonation` field is set to `true`. The server extracts
 | `false` | Verify the `JWT` and reject unauthenticated requests. However, all approved queries will run under the shared service-account connection pool credentials.|
 
 !!! note "Plugin Limitations"
-    Not all connectors support user impersonation:
+    Not all connectors support user impersonation:  
+
     - **Zen**: Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication works and only per-user database switching is skipped.
+    
     - **NoSQL**: Uses a direct OAuth 2.0 flow, different authentication model. The `user_impersonation` field does not apply. For more information, see [NoSQL Authentication Guide](../nosql/authentication/index.md).
 
 ### Extracting Username

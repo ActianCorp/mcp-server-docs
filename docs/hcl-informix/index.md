@@ -5,9 +5,7 @@ description: Use the Actian MCP Server to connect MCP clients to HCL Informix® 
 
 # HCL Informix® MCP Server
 
-Connect the MCP-compatible client to an HCL Informix® database using the Actian MCP Server. Once configured, you can use the server to explore schema metadata and execute read-only SQL queries through a standardized interface.
-
-The HCL Informix® MCP Server enables communication between any MCP client and the HCL Informix® database. The server automatically manages connection pooling, response formatting, and schema discovery, allowing you to focus on writing queries.
+Connect the MCP-compatible client to an HCL Informix® database using the Actian MCP Server. Once configured, you can use the server to explore schema metadata and execute read-only SQL queries through a standardized interface. The HCL Informix® MCP Server enables communication between any MCP client and the HCL Informix® database. The server automatically manages connection pooling, response formatting, and schema discovery, allowing you to focus on writing queries.
 
 
 ### Capabilities

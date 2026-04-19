@@ -5,16 +5,19 @@ description: OAuth 2.0 and TLS configuration for the Actian NoSQL MCP Server.
 
 # Authentication
 
-The Actian NoSQL MCP Server supports **OAuth 2.0** authentication and HTTPS. All settings are supplied as environment variables to the container.
+The Actian NoSQL MCP Server supports OAuth 2.0 and HTTPS. You can configure all settings using environment variables within the container.
 
-!!! note "Database credentials vs. OAuth"
-    The `user:password` portion of the NoSQL connection URL (for example, `cars@localhost#admin:secret`) authenticates against the **database** itself. This is separate from OAuth, which controls access to the **MCP Server** endpoint.
+!!! info "Database credentials vs. OAuth:"
+     This setup uses two types of authentication:
+
+     - **Database credentials:** The `user:password` portion of the NoSQL connection URL (for example, `cars@localhost#admin:secret`) authenticates you to the database itself.  
+
+     - **OAuth 2.0:** This controls access to the MCP Server endpoint.
 
 ## OAuth 2.0
 
-Authentication is **disabled by default**. When enabled, all `/mcp/*` endpoints require a valid Bearer token issued by an OIDC provider.
-
-The server acts as an OAuth2 resource server and exposes a resource metadata endpoint at `/.well-known/oauth-protected-resource`. MCP clients use this to automatically discover the identity provider and complete the authorization code flow without any manual configuration.
+Authentication is disabled by default. When you enable it, all `/mcp/*` endpoints require a valid Bearer token issued by an OIDC provider.   
+The server acts as an OAuth 2.0 resource server. It exposes a resource metadata endpoint at `/.well-known/oauth-protected-resource`. MCP clients use this endpoint to discover the identity provider and complete the authorization code flow automatically.
 
 ```mermaid
 %%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
@@ -45,13 +48,15 @@ sequenceDiagram
 
 ### Configuration
 
+The server uses Quarkus OIDC configuration. You can pass any property from the Quarkus OIDC configuration as an environment variable using `SCREAMING_SNAKE_CASE`.
+
 !!! note "Quarkus OIDC configuration"
-    The table below lists the most common properties. The full set of options is provided by the [Quarkus OIDC configuration reference](https://quarkus.io/guides/security-openid-connect-client-reference) — any property can be passed as an environment variable using `SCREAMING_SNAKE_CASE` notation.
+    The table below lists the most common properties. The full set of options is provided by the [Quarkus OIDC configuration reference](https://quarkus.io/guides/security-openid-connect-client-reference). You can pass any property as an environment variable using `SCREAMING_SNAKE_CASE` notation.
 
 | Environment Variable | Required | Description |
 |---|---|---|
 | `MCP_AUTH_ENABLED` | Yes (to enable) | Set to `true` to enable OAuth2 authentication. Disabled by default. |
-| `QUARKUS_OIDC_AUTH_SERVER_URL` | Yes (when enabled) | Issuer URL of your OIDC provider — for example, `https://your-idp.example.com/realms/your-realm`. |
+| `QUARKUS_OIDC_AUTH_SERVER_URL` | Yes (when enabled) | Issuer URL of the OIDC provider, for example: `https://your-idp.example.com/realms/your-realm`. |
 | `QUARKUS_OIDC_SSE_TENANT_AUTH_SERVER_URL` | No | Override the OIDC provider for the SSE endpoint (`/mcp/sse`) only. Defaults to `QUARKUS_OIDC_AUTH_SERVER_URL`. |
 
 Two OIDC tenants are pre-configured:
@@ -61,11 +66,11 @@ Two OIDC tenants are pre-configured:
 | Default | `/mcp/*` | `QUARKUS_OIDC_*` |
 | SSE | `/mcp/sse` | `QUARKUS_OIDC_SSE_TENANT_*` |
 
-Both tenants share the same auth server URL by default. Override the SSE tenant only if your SSE endpoint needs a different identity provider.
+Both tenants share the same auth server URL by default. Override the SSE tenant only if the SSE endpoint needs a different identity provider.
 
 ### Provider Setup
 
-The identity provider configuration — creating a realm, registering an OAuth2 client, and managing users — is the same for the NoSQL MCP Server as for any other connector. Follow the existing provider guides for those steps:
+The process for creating a realm, registering an OAuth 2.0 client, and managing users is the same for the NoSQL MCP Server as it is for other connectors.
 
 <div class="grid cards" markdown>
 
@@ -77,7 +82,7 @@ The identity provider configuration — creating a realm, registering an OAuth2 
 
 </div>
 
-Once your identity provider is configured, use the issuer URL it provides as the value for `QUARKUS_OIDC_AUTH_SERVER_URL` when starting the NoSQL MCP Server container.
+Once the identity provider is configured, use the provided issuer URL as the value for `QUARKUS_OIDC_AUTH_SERVER_URL` when starting the NoSQL MCP Server container.
 
 ### Example
 
@@ -92,13 +97,17 @@ docker run --name NSQL-MCP \
 
 ## TLS
 
+To secure the connection, provide a certificate and a private key.
+
 !!! note "Generating and trusting a self-signed certificate"
-    For instructions on generating a self-signed certificate and trusting it in your MCP client, see [HTTPS / TLS for Remote Deployments](../../authentication/index.md#https-tls-for-remote-deployments) in the main Authentication guide.
+    For instructions on generating a self-signed certificate and trusting it in the MCP client, see [HTTPS / TLS for Remote Deployments](../../authentication/index.md#https-tls-for-remote-deployments) in the main Authentication guide.
 
 !!! note "Quarkus TLS configuration"
-    The table below lists the most common properties. The full set of options is provided by the [Quarkus TLS Registry](https://quarkus.io/guides/tls-registry-reference) extension — any property can be passed as an environment variable using `SCREAMING_SNAKE_CASE` notation.
+    The table below lists the most common properties. The full set of options is provided by the [Quarkus TLS Registry](https://quarkus.io/guides/tls-registry-reference) extension. You can pass any property as an environment variable using `SCREAMING_SNAKE_CASE` notation.
 
-To enable HTTPS, provide a certificate and private key. The `0` in the variable name is the index of the PEM key-store entry — increment it to add multiple certificates.
+To enable HTTPS, provide a certificate and private key. The `0` in the variable name represents the index of the PEM keystore entry; increment this number to add multiple certificates.
+
+The following variables are part of the [Quarkus TLS Registry](https://quarkus.io/guides/tls-registry-reference):
 
 | Environment Variable | Required | Description |
 |---|---|---|
@@ -108,7 +117,7 @@ To enable HTTPS, provide a certificate and private key. The `0` in the variable 
 
 ### Example
 
-Mount your certificate and key into the container and pass the paths as environment variables:
+Mount the certificate and key into the container, and pass the paths as environment variables:
 
 ```bash
 docker run --name NSQL-MCP \
@@ -121,3 +130,5 @@ docker run --name NSQL-MCP \
   actian/nsql-mcp-server:1.0.0
 ```
 
+!!! note 
+    For details on generating and trusting self-signed certificates, see [HTTPS / TLS for Remote Deployments](../../authentication/index.md#https-tls-for-remote-deployments) section in the main Authentication guide.

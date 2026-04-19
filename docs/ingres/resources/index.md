@@ -107,6 +107,6 @@ The server returns a nested JSON object where each top-level key is a table name
   Learn about the SQL and schema tools provided by the Ingres server.
 
 - :material-chat-processing: **[Prompts](../prompts/index.md)**  
-  Use pre-built prompt templates for common Ingres workflows
+  Use pre-built prompt templates for common Ingres workflows.
 
 </div>

@@ -3,20 +3,18 @@ title: Actian Analytics Engine
 description: Connect MCP clients to Actian Analytics Engine for schema exploration and read-only SQL queries.
 ---
 
-# Actian Analytics Engine
+# Actian Analytics Engine MCP Server
 
-Connect your MCP-compatible client to **Actian Analytics Engine** using the Actian MCP Server. Once configured, clients can explore schema metadata and execute read-only SQL queries through a standard interface.
+Connect the MCP-compatible client to the Actian Analytics Engine using the Actian MCP Server. This setup allows you to explore schema metadata and execute read-only SQL queries through a standard interface. The Analytics Engine MCP Server bridges the gap between the MCP client and the Actian database. The server manages connection pooling, response formatting, and schema discovery automatically, allowing you to focus on the data.
 
-
-## Overview
-
-The Analytics Engine MCP Server acts as a bridge between any MCP client and your Actian database. It automatically handles connection pooling, response formatting, and schema discovery, so you can focus on your queries.
 
 ### Capabilities
 
+The following tools are available through the server:
+
 | Action | Description |
 |--------|-------------|
-| **Run SQL queries** | Execute read-only SQL against your database. |
+| **Run SQL queries** | Execute read-only SQL against the database. |
 | **List tables and views** | Discover available objects in the schema. |
 | **Inspect table structure** | Retrieve column definitions and types. |
 | **Read schema metadata** | Explore database-level metadata. |
@@ -25,19 +23,21 @@ The Analytics Engine MCP Server acts as a bridge between any MCP client and your
 
 ## Prerequisites
 
-- Docker installed and running.
-- Access credentials for your Analytics Engine database.
-- (Optional) TLS certificate and key files for secure deployments.
-- (Optional) An OIDC provider if using OAuth authentication.
+Before you start, ensure to meet the following requirements:
+
+- **Docker:** Installed and running on the system.
+- **Database credentials:** Valid access for the Analytics Engine database.
+- **Security files (optional):** TLS certificate and key files for secure deployments.
+- **OIDC provider (optional):** Required if you are using OAuth authentication.
 
 
 ## Configuration
 
-The server is distributed as a Docker container. You provide a single `JSON` configuration file that is mounted into the container at `/app/conf.json`.
+The server is distributed as a Docker container. You can provide a single `JSON` configuration file that is mounted into the container at `/app/conf.json`.
 
 ### Create the Configuration File
 
-Create a file named `conf.json` in your working directory:
+Create a file named `conf.json` in your working directory using the following structure:
 
 ```json
 {
@@ -72,7 +72,7 @@ Create a file named `conf.json` in your working directory:
 |-------|------|-------------|
 | `driver` | `string` | ODBC driver name used to connect to Analytics Engine. |
 | `server` | `string` | Host or connection target for the Analytics Engine database. |
-| `database` | `string` | Name of the database to connect to. |
+| `database` | `string` | Name of the database. |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool. |
 | `host` | `string` | Host address that the MCP Server listens on inside the container. |
 | `port` | `string` | Port that the MCP Server listens on inside the container. |
@@ -83,17 +83,16 @@ Create a file named `conf.json` in your working directory:
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. |
+| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Default is `1000`.|
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
-| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Always `/app/server.crt` inside the container. |
-| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Always `/app/server.key` inside the container. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments. See [OAuth configuration](../authentication/index.md#the-oauth-configuration-block). |
+| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` inside the container. |
+| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` inside the container. |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) for more information. |
 
----
 
 ## Start the Server
 
-With your `conf.json` file ready, start the container and mount the configuration file:
+Once you have created the `conf.json` file, start the container and mount the configuration file:
 
 ```bash
 docker run -d \
@@ -101,15 +100,15 @@ docker run -d \
   actian/analytics-engine-mcp-server:1.0.0
 ```
 
-!!! note
-	The container always reads its configuration from `/app/conf.json`. Do not change the mount target path.
+!!! important
+	The container reads its configuration from `/app/conf.json`. Do not change the mount target path.
 
-Once the container is running, connect your MCP client to the server endpoint using the host and port you specified in `conf.json`.
+After the container starts, connect the MCP client to the server endpoint using the host and port you specified in `conf.json`.
 
 
 ## Usage
 
-After connecting, your MCP client automatically discovers the server's capabilities. Common tasks include:
+Once connected, the MCP client automatically discovers the server capabilities. You can perform the following tasks:
 
 - **Inspect before querying**: List tables and review structure before writing SQL.
 - **Run a query**: Execute a read-only SQL statement and receive formatted results.
@@ -122,12 +121,12 @@ After connecting, your MCP client automatically discovers the server's capabilit
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](tools/index.md)**  
-  Learn about the Analytics Engine tools exposed by the MCP Server.
+  Learn more about the Analytics Engine tools used by the MCP Server.
 
 - :material-folder-open: **[Resources](resources/index.md)**  
   Explore the resource types available through the server.
 
 - :material-message-text: **[Prompts](prompts/index.md)**  
-  Review the built-in prompt templates for common workflows.
+  Use the built-in prompt templates for common workflows.
 
 </div>
