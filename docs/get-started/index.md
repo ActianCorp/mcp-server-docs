@@ -56,7 +56,7 @@ All database configurations except NoSQL share the following standard MCP server
 
 ## Step 3: Start the container
 
-!!! warning "NoSQL users"
+!!! warning "Actian NoSQL users"
     The Actian MCP Server for Actian NoSQL Database uses a different startup command. See [Start the Server](../nosql/index.md#start-the-server) for the NoSQL-specific steps.
 
 To start the server, run the container and mount the configuration file to `/app/conf.json`. Use the `:ro` (read-only) flag in the mount command to ensure the configuration file cannot be modified from inside the container.
