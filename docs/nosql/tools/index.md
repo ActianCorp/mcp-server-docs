@@ -329,7 +329,7 @@ This tool takes no input parameters.
 
 ## list_classes
 
-Lists all classes in the database schema and their inheritance hierarchy. Returns each class name and its parent class (if any). Use this to discover available classes before querying or describing specific ones.
+Lists all classes in the database schema and their inheritance hierarchy. Returns each class name and its direct parent classes (if any). Use this to discover available classes before querying or describing specific ones.
 
 ### Parameters
 
@@ -341,11 +341,11 @@ This tool takes no input parameters.
 {
   "classes": [
     {
-      "name": "string",       // class name
-      "superclass": "string"  // parent class name; omitted if none
+      "name": "string",           // class name
+      "superclasses": ["string"]  // list of direct parent class names; empty if none
     }
   ],
-  "count": 0                  // total number of classes
+  "count": 0                      // total number of classes
 }
 ```
 
@@ -356,13 +356,13 @@ This tool takes no input parameters.
 ```json
 {
   "classes": [
-    { "name": "Project" },
-    { "name": "Skill" },
-    { "name": "Employee", "superclass": "Worker" },
-    { "name": "Contractor", "superclass": "Worker" },
-    { "name": "Address" },
-    { "name": "Worker" },
-    { "name": "Certificate" }
+    { "name": "Project", "superclasses": [] },
+    { "name": "Skill", "superclasses": [] },
+    { "name": "Employee", "superclasses": ["Worker"] },
+    { "name": "Contractor", "superclasses": ["Worker"] },
+    { "name": "Address", "superclasses": [] },
+    { "name": "Worker", "superclasses": [] },
+    { "name": "Certificate", "superclasses": [] }
   ],
   "count": 7
 }
@@ -372,7 +372,7 @@ This tool takes no input parameters.
 
 ## describe_class
 
-Describes the schema of a specific class, including its superclass, declared fields, and all inherited fields. Use this after `list_classes` to understand the structure of a specific entity before querying it.
+Describes the schema of a specific class, including its direct superclasses, declared fields, and all inherited fields. Use this after `list_classes` to understand the structure of a specific entity before querying it.
 
 ### Parameters
 
@@ -384,21 +384,23 @@ Describes the schema of a specific class, including its superclass, declared fie
 
 ```json
 {
-  "name": "string",           // class name
-  "superclass": {
-    "name": "string",         // parent class name
-    "superclass": "string"    // grandparent class name; omitted if none
-  },
+  "name": "string",               // class name
+  "superclasses": [
+    {
+      "name": "string",           // direct parent class name
+      "superclasses": ["string"]  // parent's own direct parents; empty if none
+    }
+  ],
   "declaredFields": [
     {
-      "name": "string",       // field name
-      "type": "string"        // field type
+      "name": "string",           // field name
+      "type": "string"            // field type
     }
   ],
   "allFields": [
     {
-      "name": "string",       // field name (declared or inherited)
-      "type": "string"        // field type
+      "name": "string",           // field name (declared or inherited)
+      "type": "string"            // field type
     }
   ]
 }
@@ -419,24 +421,36 @@ Describes the schema of a specific class, including its superclass, declared fie
 ```json
 {
   "name": "Employee",
-  "superclass": {
-    "name": "Worker"
-  },
+  "superclasses": [
+    { "name": "Worker", "superclasses": [] }
+  ],
   "declaredFields": [
+    { "name": "accessLevels", "type": "int[]" },
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
+    { "name": "metadata", "type": "java.util.Map" },
     { "name": "performanceBonus", "type": "double" },
+    { "name": "skillMap", "type": "java.util.Map" },
     { "name": "subordinates", "type": "java.util.List" },
     { "name": "technicalTags", "type": "java.util.List" }
   ],
   "allFields": [
     { "name": "active", "type": "boolean" },
     { "name": "address", "type": "Address {city: java.lang.String; street: java.lang.String; }" },
+    { "name": "certifications", "type": "java.util.List" },
+    { "name": "lastLogin", "type": "java.sql.Timestamp" },
     { "name": "name", "type": "java.lang.String" },
+    { "name": "projects", "type": "java.util.List" },
+    { "name": "skills", "type": "java.util.List" },
     { "name": "startDate", "type": "java.sql.Timestamp" },
+    { "name": "accessLevels", "type": "int[]" },
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
-    { "name": "performanceBonus", "type": "double" }
+    { "name": "metadata", "type": "java.util.Map" },
+    { "name": "performanceBonus", "type": "double" },
+    { "name": "skillMap", "type": "java.util.Map" },
+    { "name": "subordinates", "type": "java.util.List" },
+    { "name": "technicalTags", "type": "java.util.List" }
   ]
 }
 ```
@@ -445,7 +459,7 @@ Describes the schema of a specific class, including its superclass, declared fie
 
 ## get_complete_schema
 
-Returns the complete database schema with detailed field information for every class. Each entry includes the class name, superclass, declared fields, and all inherited fields. Use this when you need the full data model upfront, instead of calling `list_classes` followed by multiple `describe_class` calls.
+Returns the complete database schema with detailed field information for every class. Each entry includes the class name, direct superclasses, declared fields, and all inherited fields. Prefer this tool when you need a complete picture of the data model upfront, instead of calling `list_classes` followed by multiple `describe_class` calls.
 
 ### Parameters
 
@@ -457,11 +471,13 @@ This tool takes no input parameters.
 {
   "classes": [
     {
-      "name": "string",           // class name
-      "superclass": {
-        "name": "string",         // parent class name
-        "superclass": "string"    // grandparent class name; omitted if none
-      },
+      "name": "string",               // class name
+      "superclasses": [
+        {
+          "name": "string",           // direct parent class name
+          "superclasses": ["string"]  // parent's own direct parents; empty if none
+        }
+      ],
       "declaredFields": [
         { "name": "string", "type": "string" }
       ],
@@ -470,7 +486,7 @@ This tool takes no input parameters.
       ]
     }
   ],
-  "count": 0                      // total number of classes
+  "count": 0                          // total number of classes
 }
 ```
 
@@ -483,6 +499,7 @@ This tool takes no input parameters.
   "classes": [
     {
       "name": "Project",
+      "superclasses": [],
       "declaredFields": [
         { "name": "budget", "type": "int" },
         { "name": "projectName", "type": "java.lang.String" }
@@ -494,7 +511,7 @@ This tool takes no input parameters.
     },
     {
       "name": "Employee",
-      "superclass": { "name": "Worker" },
+      "superclasses": [{ "name": "Worker", "superclasses": [] }],
       "declaredFields": [
         { "name": "annualSalary", "type": "int" },
         { "name": "department", "type": "java.lang.String" }
@@ -504,6 +521,18 @@ This tool takes no input parameters.
         { "name": "name", "type": "java.lang.String" },
         { "name": "annualSalary", "type": "int" },
         { "name": "department", "type": "java.lang.String" }
+      ]
+    },
+    {
+      "name": "Worker",
+      "superclasses": [],
+      "declaredFields": [
+        { "name": "active", "type": "boolean" },
+        { "name": "name", "type": "java.lang.String" }
+      ],
+      "allFields": [
+        { "name": "active", "type": "boolean" },
+        { "name": "name", "type": "java.lang.String" }
       ]
     },
     "..."
