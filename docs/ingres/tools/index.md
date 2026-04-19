@@ -5,29 +5,31 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 # Tools
 
-The Actian MCP Server for **Actian Ingres** exposes a set of built-in tools for database discovery and read-only query execution.
+The Actian MCP Server for Actian Ingres provides built-in tools that allow you to discover databases and execute read-only queries.
 
 ## Available Tools
+
+Use the following tools to interact with the database:
 
 | Tool | Description |
 |------|-------------|
 | [`execute_query`](#execute_query) | Runs a read-only SQL query against the connected database. |
-| [`list_tables`](#list_tables) | Lists available user tables and views. |
-| [`describe_table`](#describe_table) | Shows column definitions and comments for a table. |
+| [`list_tables`](#list_tables) | Lists all available user tables and views. |
+| [`describe_table`](#describe_table) | Displays column definitions and comments for a specific table. |
 | [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
 
 ## execute_query
 
-Executes a read-only SQL query against Actian Ingres and returns the result set as structured JSON.
+Use this tool to run a read-only SQL query against Actian Ingres. The server returns the result set as structured `JSON`.
 
-!!! note "Result truncation"
-    The `truncated` and `warning` fields appear only when the number of result rows exceeds the `max_rows` configuration.
+!!! note "Result truncation:"
+    If the number of rows exceeds the `max_rows` configuration, the response includes the `truncated` and `warning` fields.
 
 ### Parameters
 
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
-| `query` | `string` | ✓ | Read-only SQL query to execute. |
+| `query` | `string` | ✓ | The read-only SQL query you want to execute. |
 
 ### Output Schema
 
@@ -54,6 +56,7 @@ Executes a read-only SQL query against Actian Ingres and returns the result set 
 ```
 
 ### Example
+
 
 **User Request**
 
@@ -89,7 +92,7 @@ Returns all user tables and views available in the connected database as structu
 
 ### Parameters
 
-This tool takes no input parameters.
+This tool does not require input parameters.
 
 ### Output Schema
 
@@ -224,7 +227,7 @@ Returns user-defined functions and procedures, including their stored definition
 
 ### Parameters
 
-This tool takes no input parameters.
+This tool does not require input parameters.
 
 ### Output Schema
 
@@ -278,6 +281,6 @@ Show me all the functions in my database
   Explore the resource types available through the Ingres server.
 
 - :material-chat-processing: **[Prompts](../prompts/index.md)**  
-  Discover pre-built prompt templates for common Ingres workflows.
+  Use pre-built prompt templates for common Ingres workflows.
 
 </div>

@@ -3,41 +3,41 @@ title: Actian Ingres
 description: Use the Actian MCP Server to connect MCP clients to Actian Ingres.
 ---
 
-# Actian Ingres
+# Actian Ingres MCP Server
 
-Connect your MCP-compatible client to **Actian Ingres** using the Actian MCP Server. Once configured, clients can explore schema metadata and execute read-only SQL queries through a standard interface.
+Connect the MCP-compatible client to Actian Ingres using the Actian MCP Server. This bridge allows the clients to explore schema metadata and execute read-only SQL queries through a standard interface. The server manages connection pooling, response formatting, and schema discovery automatically, allowing you to focus on data analysis.
 
+## Capabilities
 
-## Overview
-
-The Ingres MCP Server acts as a bridge between any MCP client and your Actian Ingres database. It automatically handles connection pooling, response formatting, and schema discovery, so you can focus on your queries.
-
-### Capabilities
+The Ingres MCP Server supports the following operations:
 
 | Action | Description |
-|--------|-------------|
-| **Run SQL queries** | Execute read-only SQL against your database. |
+| :--- | :--- |
+| **Run SQL queries** | Execute read-only SQL against the database. |
 | **List tables and views** | Discover available objects in the schema. |
 | **Inspect table structure** | Retrieve column definitions, types, and comments. |
-| **Read schema metadata** | Explore database-level metadata with constraint information. |
-| **List functions and procedures** | View available user-defined routines. |
+| **Read schema metadata** | Explore database-level metadata and constraints. |
+| **List functions** | View available user-defined routines and procedures. |
 
+---
 
 ## Prerequisites
+Before starting the server, ensure to meet the following requirements:
 
-- Docker installed and running.
-- Access credentials for your Actian Ingres database.
-- (Optional) TLS certificate and key files for secure deployments.
-- (Optional) An OIDC provider if using OAuth authentication.
+* **Docker:** Installed and running on the host machine.
+* **Database Access:** Valid credentials for the Actian Ingres instance.
+* **Security (Optional):** TLS certificate and key files for secure deployments.
+* **Authentication (Optional):** An OIDC provider if you require OAuth.
+
+---
 
 
 ## Configuration
 
-The server is distributed as a Docker container. You supply a single JSON configuration file that is mounted into the container at `/app/conf.json`.
+The server runs as a Docker container. You must provide a `conf.json` configuration file and mount it to the `/app/conf.json` path inside the container.
 
-### Create the Configuration File
-
-Create a file named `conf.json` in your working directory:
+### Create Configuration File
+Create a file named `conf.json` in the working directory and define the environment variables:
 
 ```json
 {
@@ -70,30 +70,30 @@ Create a file named `conf.json` in your working directory:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `driver` | `string` | ODBC driver name used to connect to Ingres. |
-| `server` | `string` | Host or connection target for the Ingres database. |
-| `database` | `string` | Name of the database to connect to. |
+| `driver` | `string` | The ODBC driver name for the Ingres connection. |
+| `server` | `string` | The host or connection target for the Ingres database. |
+| `database` | `string` |The name of the target database. |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool. |
-| `host` | `string` | Host address that the MCP Server listens on inside the container. |
-| `port` | `string` | Port that the MCP Server listens on inside the container. |
-| `database_user` | `string` | Database username. |
-| `database_password` | `string` | Database password. |
+| `host` | `string` | The host address the server listens on inside the container. |
+| `port` | `string` | The port the server listens on inside the container (typically `8000`). |
+| `database_user` | `string` | The username for database authentication. |
+| `database_password` | `string` | The password for database authentication. |
 
 **Optional Fields**
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. |
+| `max_rows` | `integer` | `1000` | The maximum number of rows returned in a single query response.  |
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
-| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Always `/app/server.crt` inside the container. |
-| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Always `/app/server.key` inside the container. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments. See [OAuth configuration](../authentication/index.md#the-oauth-configuration-block). |
+| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` inside the container. |
+| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` inside the container. |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) for more information. |
 
 ---
 
 ## Start the Server
 
-With your `conf.json` file ready, start the container and mount the configuration file:
+With the `conf.json` file ready, run the following Docker command to start the container. This command mounts the configuration file as a read-only volume.
 
 ```bash
 docker run -d \
@@ -101,7 +101,7 @@ docker run -d \
   actian/ingres-mcp-server:1.0.0
 ```
 
-Once the container is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration.
+Once the container is running, you can connect the MCP client to the server using the host and port you specified in the configuration.
 
 ---
 
@@ -116,6 +116,6 @@ Once the container is running, connect your MCP client to the exposed server end
   Learn about schema metadata resources.
 
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
-  Discover pre-built prompt templates for common workflows.
+  Access pre-built templates for common database workflows.
 
 </div>

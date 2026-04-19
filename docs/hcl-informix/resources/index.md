@@ -5,23 +5,26 @@ description: Overview of the resources available when using the Actian MCP Serve
 
 # Resources
 
-The Actian MCP Server for **HCL Informix® database** exposes a built-in resource for database schema discovery.
+The Actian MCP Server for HCL Informix® provides a built-in resource that enables comprehensive database schema discovery.
+
 
 ## Available Resources
 
+Use the following resource to retrieve metadata for the database:
+
 | Resource URI | Description |
 |--------------|-------------|
-| [`resource://database/schema`](#resourcedatabaseschema) | Returns database schema metadata for the connected database. |
+| [`resource://database/schema`](#resourcedatabaseschema) | Returns JSON metadata for the connected database, including table names, column definitions, and constraints. |
 
 ## resource://database/schema
 
-Returns the database schema as JSON, including tables, columns, comments, and constraint information.
+This resource returns the database schema as a structured JSON object. The response includes details for every user table, such as data types, column lengths, nullability, and key constraints.
 
 ### Parameters
 
-This resource takes no input parameters.
+This resource does not require any input parameters.
 
-### Output Schema
+### Output Schema   
 
 **On Success**
 
@@ -40,7 +43,9 @@ This resource takes no input parameters.
 }
 ```
 
-**On Error**
+**Error handling**
+
+If the schema cannot be retrieved, the server returns the following error:
 
 ```text
 The database schema could not be retrieved. Error: <error_message>
@@ -78,9 +83,9 @@ resource://database/schema
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](../tools/index.md)**  
-  Learn about the SQL and schema tools exposed by the HCL Informix® server.
+  Learn about the SQL and schema tools provided by the HCL Informix®  server.
 
 - :material-chat-processing: **[Prompts](../prompts/index.md)**  
-  Discover pre-built prompt templates for common HCL Informix® workflows.
+  Use pre-built prompt templates for common HCL Informix® workflows.
 
 </div>
