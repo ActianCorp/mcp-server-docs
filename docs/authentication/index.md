@@ -183,7 +183,6 @@ Reference the container paths in `conf.json`:
 
 !!! note "Docker Key Permissions"
     If mounting the key as a volume, the container user must be able to read it:
-
     - **Dev only**: `chmod 644 server.key` (world-readable; acceptable for local testing only)
     - **Production**: `sudo chown <container-uid>:<container-gid> server.key` to match the container user's UID/GID, keeping `chmod 600`
     - **Best practice**: Terminate TLS at a reverse proxy (nginx, Traefik) to keep the private key outside the container entirely.

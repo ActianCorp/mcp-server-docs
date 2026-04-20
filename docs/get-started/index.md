@@ -33,13 +33,13 @@ For most databases, you need to create a `conf.json` file that contains the spec
 
 Each database has unique settings. For more information, see the database configuration document:
 
-- [Ingres configuration](../ingres/index.md#configuration)
-- [HCL Informix® configuration](../hcl-informix/index.md#configuration)
-- [Zen configuration](../zen/index.md#configuration)
-- [NoSQL configuration](../nosql/index.md#configuration)
-- [Analytics Engine configuration](../analytics-engine/index.md#configuration)
+- [Ingres Configuration](../ingres/index.md#configuration)
+- [HCL Informix® Configuration](../hcl-informix/index.md#configuration)
+- [Zen Configuration](../zen/index.md#configuration)
+- [NoSQL Configuration](../nosql/index.md#configuration)
+- [Analytics Engine Configuration](../analytics-engine/index.md#configuration)
 
-All database configurations share the following standard MCP server fields:
+All database except NoSQL configurations share the following standard MCP server fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -71,7 +71,7 @@ docker run -d \
     actian/analytics-engine-mcp-server
 ```
 
-## Step 4: Connect an MCP client
+## Step 4: Connect to an MCP Client
 
 The server operates in HTTP transport mode. Configure the AI client to connect to the following endpoint:
 
