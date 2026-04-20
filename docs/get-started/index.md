@@ -57,8 +57,8 @@ All database configurations except NoSQL share the following standard MCP server
 
 ## Step 3: Start the Container
 
-!!! note "NoSQL Users"
-    The NoSQL MCP Server does not use a `conf.json` and does not require `-v` volume mount. Instead, pass the configuration using `-e` environment variable flags. For more information, see [Starting the NoSQL Server Guide](../nosql/index.md#start-the-server).
+!!! warning "Actian NoSQL users"
+    The Actian MCP Server for Actian NoSQL Database uses a different startup command. See [Start the Server](../nosql/index.md#start-the-server) for the NoSQL-specific steps.
 
 To start the server, run the container and mount the configuration file to `/app/conf.json`. Use the `:ro` (read-only) flag in the `mount` command to ensure that the configuration file cannot be modified from inside the container.
 
