@@ -250,6 +250,7 @@ scp user@<your-vm>:/path/to/server.crt ~/server.crt
 
 !!! danger "Protect your secrets"
     The `conf.json` file contains `CLIENT_SECRET` in plaintext. The following are the security guidelines:
+    
     - **Lock down file permissions**: Run chmod 600 conf.json` to restrict access on the host machine.
     - **Keep secrets out of version control**: Add `conf.json` to `.gitignore` file immediately.
     - **Mandate HTTPS**: Always use `https://` for the `BASE_URL`. Tokens sent over plain HTTP are vulnerable to interception.
