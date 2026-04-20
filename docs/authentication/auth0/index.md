@@ -16,7 +16,7 @@ For details on shared security concepts like TLS and user impersonation, see [Au
 
 ## Quick Start
 
-If you are an experienced Auth0 user, use the following checklist to set up the environment:
+If you are familiar with Auth0, use this checklist to set up the environment:
 
 1. **Create an API:** Navigate to **Applications > APIs** and select **Create API**. The **Identifier** serves as the `FASTMCP_SERVER_AUTH_AUDIENCE`.
 2. **Create an Application:** Navigate to **Applications > Applications** and select **Create Application**. Choose **Machine to Machine**. Authorize it for the API when prompted. Copy the **Client ID** and **Client Secret**.
@@ -33,43 +33,45 @@ If you are an experienced Auth0 user, use the following checklist to set up the 
 
 ## Prerequisites
 
+Before you start, ensure to meet the following requirements: 
+
 - An Auth0 account ([sign up free](https://auth0.com/signup)).
-- An Auth0 **Tenant** (created automatically on signup, for example, `dev-abc123`).
-- The Actian MCP Server installed and ready to run.
+- An Auth0 Tenant (created automatically on signup, for example, `dev-abc123`).
+- The Actian MCP Server installed and ready for deployment.
 
 
 ## Step 1: Create an Auth0 API
 
-The **API** represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 include the API's identifier as the `audience` claim.
+The API represents the Actian MCP Server as a protected resource in Auth0. Auth0 tokens includes the API's identifier in the `audience` claim.
 
 1. Log in to the [Auth0 Dashboard](https://manage.auth0.com/).
 2. In the left sidebar, navigate to **Applications → APIs**.
 1. Select **+ Create API**.
-4. Fill in the form:
+4. Complete the form using the following values:
 
      | Field | Value | Notes |
      |-------|-------|-------|
      | **Name** | `Actian MCP Server` | Display name (any descriptive string). |
-     | **Identifier (Audience)** | `https://<mcp-server-host>:8000/mcp` | This becomes your `FASTMCP_SERVER_AUTH_AUDIENCE`. This is a logical identifier — it doesn't need to be a reachable URL. |
-     | **Signing Algorithm** | `RS256` | Default; leave as-is |
+     | **Identifier (Audience)** | `https://<mcp-server-host>:8000/mcp` | This becomes `FASTMCP_SERVER_AUTH_AUDIENCE`. This is a logical identifier and does not require to be a reachable URL. |
+     | **Signing Algorithm** | `RS256` | Keep default |
 
 5. Select **Create**.
 
-### What You Get from This Step
+### Output from Step 1
 
-| Config Field | Where to find it |
+| Config Field |Source Value|
 |---|---|
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** you entered (for example, `https://<mcp-server-host>:8000/mcp`). |
 
 
 ## Step 2: Create an Auth0 Application
 
-The **Application** represents the MCP server's OAuth client. It holds the `client_id` and `client_secret` used during the OAuth handshake.
+The Application represents the MCP server's OAuth client. It holds the `client_id` and `client_secret` used during the OAuth handshake.
 
 !!! note "Why Machine to Machine?"
-    The MCP server's OAuth proxy (OIDCProxy) acts as a **confidential client** — it authenticates with Auth0 using a `CLIENT_ID` and `CLIENT_SECRET` pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients (VS Code, Claude Desktop, etc.) and the OIDCProxy itself — MCP clients never talk to Auth0 directly.
+    The MCP server's OAuth proxy (OIDCProxy) acts as a confidential client. It authenticates with Auth0 using a `CLIENT_ID` and `CLIENT_SECRET` pair, which follows the machine-to-machine pattern. The browser-based user login flow is handled between MCP clients (VS Code, Claude Desktop, etc.) and the OIDCProxy itself. MCP clients never communicate with Auth0 directly.
 
-    **Do not use "Regular Web Application"** — Auth0 enforces PKCE validation differently for web apps, which conflicts with how the OIDCProxy forwards authorization requests. This causes `code_challenge: Field required` errors.
+    **Do not use "Regular Web Application"**. Auth0 enforces PKCE validation differently for web apps, which conflicts with how the OIDCProxy forwards authorization requests. This results in `code_challenge: Field required` errors.
 
 
 1. In the Auth0 Dashboard, go to **Applications → Applications**.
