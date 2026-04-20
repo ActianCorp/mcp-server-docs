@@ -124,7 +124,7 @@ flowchart TD
 
 OAuth 2.0 requires HTTPS. If you configure OAuth, the server mandates HTTPS and refuses to start unless you provide the `ssl_certfile` and `ssl_keyfile` paths.
 
-### Step 1: Generate a certificate
+### Step 1: Generate a Certificate
 
 For remote testing, generate a self-signed certificate with a Subject Alternative Name (SAN). 
 
@@ -161,7 +161,7 @@ Add the `ssl_certfile` certificate and `ssl_keyfile` key paths to the top level 
 
 The server validates the existance of both paths at startup, and the usage of `https://` for `BASE_URL` when SSL is active.
 
-### Step 3: Docker deployment
+### Step 3: Deploy the Docker
 
 Mount the certificate and key into the container using volume flags:
 
@@ -187,7 +187,7 @@ Reference the container paths in `conf.json`:
     - **Production**: `sudo chown <container-uid>:<container-gid> server.key` to match the container user's UID/GID, keeping `chmod 600`
     - **Best practice**: Terminate TLS at a reverse proxy (nginx, Traefik) to keep the private key outside the container entirely.
 
-### Step 4: Trust the certificate in the MCP Client
+### Step 4: Trust the Certificate in the MCP Client
 
 By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed certificates. You must explicitly trust the certificate on your development machine.
 
