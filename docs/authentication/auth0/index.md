@@ -51,7 +51,7 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
      |-------|-------|-------|
      | **Name** | `Actian MCP Server` | Display name (any descriptive string). |
      | **Identifier (Audience)** | `https://<mcp-server-host>:8000/mcp` | Logical identifier (may not be a reachable URL). This becomes your `FASTMCP_SERVER_AUTH_AUDIENCE`.  |
-     | **Signing Algorithm** | `RS256` | Default (leave the value as is) |
+     | **Signing Algorithm** | `RS256` | Default, leave the value as is. |
 
 5. Select **Create**.
 
@@ -59,17 +59,17 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
 
 | Config Field | Where to find it |
 |---|---|
-| `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** that you entered. For example, `https://<mcp-server-host>:8000/mcp`. |
+| `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** that you entered, for example, `https://<mcp-server-host>:8000/mcp`. |
 
 
 ## Step 2: Create an Auth0 Application
 
-The **Application** represents the MCP server's OAuth client. It holds the `client_id` and `client_secret` used during the OAuth handshake.
+The **Application** represents the MCP server's OAuth client. It holds `client_id` and `client_secret` used during the OAuth handshake.
 
 !!! note "Why Machine to Machine?"
     The MCP server's OAuth proxy (OIDCProxy) acts as a **confidential client** — it authenticates with Auth0 using a `CLIENT_ID` and `CLIENT_SECRET` pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.
 
-!!! warning "Do not use "Regular Web Application"
+!!! warning "Do not use "Regular Web Application""
     Auth0 enforces PKCE validation differently for Web applications, which conflicts with the forwarding of OIDCProxy authorization requests. This causes `code_challenge: Field required` errors.
 
 1. In the Auth0 Dashboard, navigate to **Applications** > **Applications**.
@@ -123,7 +123,7 @@ All values appear on the **Settings** tab of your application:
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | **Client ID** (at the top of the Settings tab) |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | **Client Secret** (click the eye icon to reveal) |
 | `FASTMCP_SERVER_AUTH_CONFIG_URL` | Constructed from **Domain**: `https://<your-domain>/.well-known/openid-configuration` |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL. For example, `https://<mcp-server-host>:8000`. |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL, for example, `https://<mcp-server-host>:8000`. |
 
 !!! tip "Finding the Domain"
     The **Domain** is shown at the top of the Settings tab, for example, `dev-abc123.us.auth0.com`. The OIDC discovery URL is always `https://<domain>/.well-known/openid-configuration`.
@@ -303,9 +303,9 @@ You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`,
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| `code_challenge: Field required` | Auth0 Application type is "Regular Web Application". | Recreate as **Machine to Machine** application — Auth0 does not allow changing app type after creation. See [Step 2](#step-2-create-an-auth0-application). |
+| `code_challenge: Field required` | Auth0 Application type is "Regular Web Application". | Recreate as **Machine to Machine** application. Auth0 does not allow changing app type after creation. See [Step 2](#step-2-create-an-auth0-application). |
 | `Grant type 'authorization_code' not allowed` | Machine to Machine application is missing Authorization Code grant. | Enable **Authorization Code** in Advanced Settings > Grant Types. See [Configure Grant Types](#configure-grant-types). |
-| `invalid_request` when requesting a token | Application not authorized for the API. | [Step 3](#step-3-authorize-the-application-for-the-api) — authorize the Application. |
+| `invalid_request` when requesting a token | Application not authorized for the API. | [Step 3](#step-3-authorize-the-application-for-the-api) - authorize the application. |
 | `audience mismatch` | `FASTMCP_SERVER_AUTH_AUDIENCE` does not match the API Identifier. | Ensure they are identical strings. |
 | `invalid_client` | Wrong `client_id` or `client_secret`. | Re-copy from Application > Settings. |
 | `KeyError` on startup (for example, `CLIENT_SECRET`). | Some OAuth fields are present but others missing. | Provide **all** required fields or remove `oauth` entirely. |
@@ -371,7 +371,7 @@ Auth0 tokens have a configurable lifetime:
     Token refresh is handled automatically by the OAuth flow when using browser-based authentication.
 
 
-## Staging Versus Production
+## Staging versus Production
 
 | Environment | Recommendation |
 |---|---|
