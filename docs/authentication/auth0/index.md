@@ -143,10 +143,8 @@ You can authorize from either the application's APIs tab or the API's Applicatio
 3. Search your API. For example, `mcp_server` with the identifier `https://<mcp-server-host>:8000/mcp`.
 4. Select **Edit** next to your API.
 5. Authorize both access types:
-
-   - **User Access**: Set to **Authorized**. This is required for the browser-based login flow and user impersonation.
-   - **Client Access**: Set to **Authorized**. This may already be authorized if you selected the API during Machine to Machine application creation.
-
+     - **User Access**: Set to **Authorized**. This is required for the browser-based login flow and user impersonation.
+     - **Client Access**: Set to **Authorized**. This may already be authorized if you selected the API during Machine to Machine application creation.
 6. Select **Update** to save.
 
 **Option B - Authorize From API:**
@@ -314,10 +312,10 @@ You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`,
 | `redirect_uri_mismatch` | Callback URL does not match `<BASE_URL>/auth/callback`. | Fix **Allowed Callback URLs** in Auth0 - scheme, host, and port must match exactly. |
 | `ValueError: Issuer URL must be HTTPS` | OAuth without TLS configured. | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL`. |
 | `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://`. | Update `BASE_URL` to `https://`. |
-| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start. | Mount cert/key as volumes when starting the container (see [Docker Deployment](../index.md#3-docker-deployment)). |
+| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start. | Mount cert/key as volumes when starting the container (see [Docker Deployment](../index.md#step-3-deploy-the-docker)). |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN. | Regenerate with `-addext "subjectAltName=IP:<ip>"`. |
 | `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by `Node.js`. | Launch Visual Studio Code with `NODE_EXTRA_CA_CERTS=/path/to/server.crt code .` |
-| `Client Not Registered` (VS Code) | Server's Docker container was recreated, wiping client registrations, but Visual Studio Code caches the old client ID. | Quit Visual Studio Code, then delete stale registrations from the state DB (see [Clearing Visual Studio Code OAuth cache](#clearing-vs-code-oauth-cache) below) and reopen Visual Studio Code. To prevent recurrence, mount a Docker volume for `/root/.local/share/fastmcp`. |
+| `Client Not Registered` (VS Code) | Server's Docker container was recreated, wiping client registrations, but Visual Studio Code caches the old client ID. | Quit Visual Studio Code, then delete stale registrations from the state DB (see [Clearing Visual Studio Code OAuth cache](#clearing-visual-studio-code-oauth-cache) below) and reopen Visual Studio Code. To prevent recurrence, mount a Docker volume for `/root/.local/share/fastmcp`. |
 | `Service not found: https://...` / `access_denied` | `AUDIENCE` mismatch between client request and server config (often `http` versus `https`). | Ensure `FASTMCP_SERVER_AUTH_AUDIENCE` in `conf.json` exactly matches the Auth0 API Identifier. |
 | Token validation behaves unexpectedly | OIDC endpoint is unreachable at startup. | Restart server after endpoint is accessible. |
 
