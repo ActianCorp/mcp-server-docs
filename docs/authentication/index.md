@@ -88,7 +88,9 @@ By default, the `user_impersonation` field is set to `true`. The server extracts
 
 !!! note "Plugin Limitations"
     Not all connectors support user impersonation:
+
     - **Zen**: Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication works and only per-user database switching is skipped.
+    
     - **NoSQL**: Uses a direct OAuth 2.0 flow, a different authentication model. The `user_impersonation` field does not apply. For more information, see [NoSQL Authentication Guide](../nosql/authentication/index.md).
 
 ### Extracting Username
@@ -183,8 +185,11 @@ Reference the container paths in `conf.json`:
 
 !!! note "Docker Key Permissions"
     If mounting the key as a volume, the container user must be able to read it:
+
     - **Dev only**: `chmod 644 server.key` (world-readable; acceptable for local testing only)
+
     - **Production**: `sudo chown <container-uid>:<container-gid> server.key` to match the container user's UID/GID, keeping `chmod 600`
+
     - **Best practice**: Terminate TLS at a reverse proxy (nginx, Traefik) to keep the private key outside the container entirely.
 
 ### Step 4: Trust the Certificate in the MCP Client
@@ -193,9 +198,9 @@ By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed ce
 
 1. Securely copy the certificate to your machine:
 
-```bash
-scp user@<your-vm>:/path/to/server.crt ~/server.crt
-```
+     ```bash
+       scp user@<your-vm>:/path/to/server.crt ~/server.crt
+     ```
 
 2. Configure the operating system:
 
@@ -252,8 +257,11 @@ scp user@<your-vm>:/path/to/server.crt ~/server.crt
     The `conf.json` file contains `CLIENT_SECRET` in plaintext. The following are the security guidelines:
     
     - **Lock down file permissions**: Run chmod 600 conf.json` to restrict access on the host machine.
+
     - **Keep secrets out of version control**: Add `conf.json` to `.gitignore` file immediately.
+
     - **Mandate HTTPS**: Always use `https://` for the `BASE_URL`. Tokens sent over plain HTTP are vulnerable to interception.
+
     - **Use production secrets management**: For production environments, avoid plaintext files entirely. Inject your secrets dynamically using environment variables or a dedicated secrets manager.
 
 ## Provider Setup Guides
