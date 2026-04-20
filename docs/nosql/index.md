@@ -32,9 +32,9 @@ The server is distributed as a Docker container. All configuration is provided t
 
 ### NoSQL Connection
 
-| Property | Required | Description                                                                                                              |
-|----------|----------|--------------------------------------------------------------------------------------------------------------------------|
-| `nsql_connectionURL` | Yes | Database connection URL in the format `database@server:port#user:password`. `port`, `user`, and `password` are optional. |
+| Property             | Required | Description                                                                                                              |
+|----------------------|----------|--------------------------------------------------------------------------------------------------------------------------|
+| `nsql.connectionURL` | Yes | Database connection URL in the format `database@server:port#user:password`. `port`, `user`, and `password` are optional. |
 
 ### Quarkus Properties
 
@@ -87,7 +87,7 @@ See the [Quarkus logging guide](https://quarkus.io/guides/logging) for the full 
 Add your settings to `application.properties` and mount it into the container:
 
 ```properties
-nsql_connectionURL=<connection-url>
+nsql.connectionURL=<connection-url>
 ```
 
 ```bash
