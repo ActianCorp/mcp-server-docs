@@ -39,7 +39,7 @@ Each database has unique settings. For more information, see the database config
 - [NoSQL Configuration](../nosql/index.md#configuration)
 - [Analytics Engine Configuration](../analytics-engine/index.md#configuration)
 
-All database except NoSQL configurations share the following standard MCP server fields:
+All database configurations except NoSQL share the following standard MCP server fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
