@@ -5,20 +5,25 @@ description: Built-in prompts available when using the Actian MCP Server with Ac
 
 # Prompts
 
-The Actian MCP Server for **Actian Analytics Engine** provides a built-in prompt that transforms natural-language questions into structured, database-expert queries.
+The Actian MCP Server for the Actian Analytics Engine includes a built-in prompt template. This tool bridges the gap between natural-language inquiries and the structured context an LLM needs to function as a database expert.
 
 
 ## Available Prompts
 
+Use the following prompt to help you format the database inquiries:
+
+
+
 | Prompt | Description |
 |--------|-------------|
-| [`ask_question`](#ask_question) | Wraps a user question in a database expert prompt template. |
+| [`ask_question`](#ask_question) | Formats a plain-language question into a structured prompt template designed for database experts. |
 
 
 
 ## ask_question
 
-Renders a database expert prompt from a plain-language question and returns the formatted prompt text, ready for use.
+Use the ask_question prompt to transform a standard question into a formatted string ready for LLM processing. By framing the request within an expert context, you improve the accuracy and relevance of the generated SQL or data analysis.
+
 
 ### Parameters
 
@@ -54,7 +59,7 @@ You are a database expert. Answer the following question: What are the top 5 cus
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](../tools/index.md)**  
-  Learn about the SQL and schema tools exposed by the Analytics Engine server.
+  Learn more about the SQL and schema tools provided by the Analytics Engine server.
 
 - :material-folder-open: **[Resources](../resources/index.md)**  
   Explore the resource types available through the server.

@@ -8,9 +8,9 @@ description: Enable OAuth 2.0 / OIDC authentication for the Actian MCP Server �
 The Actian MCP Server supports OAuth 2.0 and OpenID Connect (OIDC) authentication. When you enable this feature, every client request must include a valid JSON Web Token (JWT) issued by a trusted identity provider (IdP).
 
 
-!!! warning "Important notes for deployment:"
-    - **Actian NoSQL users:**  This section describes the OIDC proxy flow used by the SQL-family connectors. NoSQL uses a direct OAuth 2.0 flow with different configuration properties, see [NoSQL Authentication guide](../nosql/authentication/index.md) for more information.
-    - **Transport requirements:** OAuth only works with network transports, such as `sse`, `http`, and `streamable-http`. You cannot use OAuth with the stdio transport, which is used for local IDE integrations like Claude Desktop or Cursor.
+!!! note "Deployment Considerations"
+    - **Actian NoSQL users**:  NoSQL uses a direct OAuth 2.0 flow with different configuration properties. See [NoSQL Authentication Guide](../nosql/authentication/index.md) for more information.
+    - **Transport requirements**: OAuth only works with network transport such as `sse`, `http`, and `streamable-http`. You cannot use OAuth with the stdio transport, which is used for local IDE integrations like Claude Desktop or Cursor.
 
 
 
@@ -42,20 +42,20 @@ sequenceDiagram
     end
 ```
 
-## Configuring `oauth` block
+## Configuring `oauth` Block
 
-To enable authentication, add an `oauth` object to the `conf.json` file. The server reads these fields during startup.
+To enable authentication, add an `oauth` object to the `conf.json` file. The server reads the following data during startup:
 
 | Field | Required | Description |
 | :---- | :------- | :---------- |
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The OIDC discovery URL, for example: `https://domain/.well-known/openid-configuration`. Use `https://` in production. `http://` is acceptable only for local Keycloak development. |
-| `FASTMCP_SERVER_AUTH_CLIENT_ID` | Yes | The OAuth client ID provided by the identity provider. |
-| `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | The OAuth client secret. |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | The external URL of the MCP server, for example: `https://<mcp-server-host>:8000`. This must use `https://`. |
-| `FASTMCP_SERVER_AUTH_AUDIENCE` | No | The token audience. If omitted, it defaults to the `CLIENT_ID` (standard for Keycloak). **Note:** Auth0 requires an explicit audience. |
-| `user_impersonation` | No | Boolean. When `true` (the default setting), the server runs each query as the authenticated user using `SET SESSION AUTHORIZATION`. |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL, for example `https://domain/.well-known/openid-configuration`. Use `https://` in production since `http://` is acceptable only for local Keycloak development. |
+| `FASTMCP_SERVER_AUTH_CLIENT_ID` | Yes | OAuth client ID provided by the identity provider |
+| `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | OAuth client secret |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | External URL of the MCP server, for example `https://<mcp-server-host>:8000`. It must use `https://`. |
+| `FASTMCP_SERVER_AUTH_AUDIENCE` | No | Token audience. If omitted, it defaults to the `CLIENT_ID` (standard for Keycloak). **Note:** Auth0 requires an explicit audience. |
+| `user_impersonation` | No | Boolean. If `true` (the default setting), the server runs each query as the authenticated user using `SET SESSION AUTHORIZATION`. |
 
-### Example Configuration
+### Example
 
 ```json
 {
@@ -70,8 +70,8 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 }
 ```
 
-!!! warning "All-or-nothing configuration"
-    You must provide all four required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or none. If you include the `CONFIG_URL` and `CLIENT_ID`, and omit the `CLIENT_SECRET` or `BASE_URL`, the server fails to start and throw a `KeyError`. To disable OAuth, remove the entire `oauth` block.
+!!! note "Configuration Considerations"
+    You must either provide all four required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or none. If you include `CONFIG_URL` and `CLIENT_ID`, and omit `CLIENT_SECRET` or `BASE_URL`, the server fails to start and throws a `KeyError`. To disable OAuth, remove the entire `oauth` block.
 
 !!! info "Scopes"
     You do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
@@ -79,16 +79,17 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 
 ## User Impersonation
 
-By default, the `user_impersonation` field is set to `true` and the server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
+By default, the `user_impersonation` field is set to `true`. The server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
 
-|  `user_impersonation` | Server |
+|  user_impersonation | Server |
 | :------------------- | :------- |
 | `true` (default) | Verify the `JWT` and run `SET SESSION AUTHORIZATION "<user>"` for each query. Every OAuth user needs a matching database account. |
 | `false` | Verify the `JWT` and reject unauthenticated requests. However, all approved queries will run under the shared service-account connection pool credentials.|
 
-!!! warning "Plugin limitations: Not all connectors support user impersonation"
-    - **Zen** — Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication works and only per-user database switching is skipped.
-    - **NoSQL** — Uses a direct OAuth 2.0 flow, different authentication model. The `user_impersonation` field does not apply, see [NoSQL Authentication guide](../nosql/authentication/index.md) for more information.
+!!! note "Plugin Limitations"
+    Not all connectors support user impersonation:
+    - **Zen**: Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication works and only per-user database switching is skipped.
+    - **NoSQL**: Uses a direct OAuth 2.0 flow, a different authentication model. The `user_impersonation` field does not apply. For more information, see [NoSQL Authentication Guide](../nosql/authentication/index.md).
 
 ### Extracting Username
 
@@ -114,16 +115,16 @@ flowchart TD
     L --> M[Execute query]
 ```
 
-!!! tip "Provider-specific behavior:"
-    - **Auth0** — Does not return `username` or `preferred_username` by default. The server usually falls back to the email prefix. Ensure that the database usernames match the email prefixes, for example: create database user `jdoe` for `jdoe@example.com`.
-    - **Keycloak** — Returns `preferred_username` by default when the `profile` scope is present. Create database users that match the Keycloak login names.
-    - **Federated SSO (Google, SAML)** — The `sub` claim often generates a provider-specific ID (like `google-oauth2|12345`) that won't match a database account. For SSO setups, ensure the IdP profile passes a valid database `username`, or set `user_impersonation` to `false`.  
+!!! tip "Provider-Specific Behavior"
+    - **Auth0**: Does not return `username` or `preferred_username` by default. The server usually falls back to the email prefix. Ensure that the database usernames match the email prefixes, for example, create database user `jdoe` for `jdoe@example.com`.
+    - **Keycloak**: Returns `preferred_username` by default when the `profile` scope is present. Create database users that match the Keycloak login names.
+    - **Federated SSO (Google, SAML)**: The `sub` claim often generates a provider-specific ID (like `google-oauth2|12345`) that does not match a database account. For SSO setups, ensure the IdP profile passes a valid database `username` or set `user_impersonation` to `false`.  
 
 ## Secure Remote Deployments with HTTPS and TLS
 
-OAuth 2.0 requires HTTPS. If you configure OAuth, the server mandates HTTPS and refuses to start unless you provide the `ssl_certfile` and `ssl_keyfil`e paths.
+OAuth 2.0 requires HTTPS. If you configure OAuth, the server mandates HTTPS and refuses to start unless you provide the `ssl_certfile` and `ssl_keyfile` paths.
 
-### Step 1: Generate a certificate
+### Step 1: Generate a Certificate
 
 For remote testing, generate a self-signed certificate with a Subject Alternative Name (SAN). 
 
@@ -135,18 +136,18 @@ openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt \
 chmod 600 server.key
 ```
 
-!!! warning "SAN is required"
-    The `-addext "subjectAltName=IP:..."` flag is required. Node.js-based MCP clients (like VS Code and Cursor) strictly enforce SAN validation and rejects certificates that only use the Common Name (CN) field.
+!!! note "SAN is required"
+    The `-addext "subjectAltName=IP:..."` flag is required. Node.js-based MCP clients (like VS Code and Cursor) strictly enforce SAN validation and reject certificates that only use the Common Name (CN) field.
 
 !!! tip "Production certificates"
     For production environments, use a certificate issued by a trusted Certificate Authority (CA), such as `Let's Encrypt or your corporate CA`.
 
 ### Step 2: Configure TLS in `conf.json`
 
-!!! warning "NoSQL uses a different TLS configuration"
-    NoSQL uses different configuration properties. See [NoSQL TLS guide](../nosql/authentication/index.md#tls) for more information.
+!!! note "TLS configuration for NoSQL"
+    The Actian NoSQL MCP Server uses different configuration properties. See [NoSQL TLS guide](../nosql/authentication/index.md#tls) for more information.
 
-Add the certificate `ssl_certfile` and key paths `ssl_keyfile` to the top level of the `conf.json` file (outside the `oauth` block), ensure the `BASE_URL` uses `https://`:
+Add the `ssl_certfile` certificate and `ssl_keyfile` key paths to the top level of the `conf.json` file (outside the `oauth` block). Ensure the usage of `https://` in `BASE_URL`:
 
 ```json
 {
@@ -158,11 +159,12 @@ Add the certificate `ssl_certfile` and key paths `ssl_keyfile` to the top level 
 }
 ```
 
-The server validates at startup that both paths exist and that `BASE_URL` uses `https://` when SSL is active.
+The server validates the existance of both paths at startup, and the usage of `https://` for `BASE_URL` when SSL is active.
 
-### Step 3: Docker Deployment
+### Step 3: Deploy the Docker
 
 Mount the certificate and key into the container using volume flags:
+
 ```bash
 docker run -p 8000:8000 \
   -v /path/to/server.crt:/app/server.crt:ro \
@@ -179,21 +181,24 @@ Reference the container paths in `conf.json`:
 }
 ```
 
-!!! note "Docker key permissions"
+!!! note "Docker Key Permissions"
     If mounting the key as a volume, the container user must be able to read it:
 
     - **Dev only**: `chmod 644 server.key` (world-readable; acceptable for local testing only)
     - **Production**: `sudo chown <container-uid>:<container-gid> server.key` to match the container user's UID/GID, keeping `chmod 600`
-    - **Best practice**: Terminate TLS at a reverse proxy (nginx, Traefik) so the private key stays outside the container entirely
+    - **Best practice**: Terminate TLS at a reverse proxy (nginx, Traefik) to keep the private key outside the container entirely.
 
-### Step 4: Trust the Certificate in Your MCP Client
+### Step 4: Trust the Certificate in the MCP Client
 
-Self-signed certificates are rejected by Node.js-based MCP clients (VS Code and Cursor) by default. Copy the certificate to your development machine first:
+By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed certificates. You must explicitly trust the certificate on your development machine.
+
+1. Securely copy the certificate to your machine:
+
 ```bash
 scp user@<your-vm>:/path/to/server.crt ~/server.crt
 ```
 
-Then trust it for your operating system:
+2. Configure the operating system:
 
 === "macOS"
 
@@ -245,12 +250,12 @@ Then trust it for your operating system:
 ## Security Best Practices
 
 !!! danger "Protect your secrets"
-    The `conf.json` file contains `CLIENT_SECRET` in plaintext. Follow these practices:
-
-    - **Restrict file permissions**: `chmod 600 conf.json`
-    - **Never commit to version control**: Add `conf.json` to `.gitignore`
-    - **Use HTTPS for `BASE_URL`**: Tokens sent over plain HTTP can be intercepted
-    - **Production secrets management**: Inject secrets through environment variables or a secrets manager
+    The `conf.json` file contains `CLIENT_SECRET` in plaintext. The following are the security guidelines:
+    
+    - **Lock down file permissions**: Run chmod 600 conf.json` to restrict access on the host machine.
+    - **Keep secrets out of version control**: Add `conf.json` to `.gitignore` file immediately.
+    - **Mandate HTTPS**: Always use `https://` for the `BASE_URL`. Tokens sent over plain HTTP are vulnerable to interception.
+    - **Use production secrets management**: For production environments, avoid plaintext files entirely. Inject your secrets dynamically using environment variables or a dedicated secrets manager.
 
 ## Provider Setup Guides
 

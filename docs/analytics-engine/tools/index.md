@@ -5,10 +5,13 @@ description: Built-in tools available when using the Actian MCP Server with Acti
 
 # Tools
 
-The Actian MCP Server for **Actian Analytics Engine** provides built-in tools for database discovery and executing read-only queries.
+The Actian MCP Server for the Actian Analytics Engine provides four built-in tools for database discovery and read-only query execution.
 
 
 ## Available Tools
+
+Use the following tools to interact with the database:
+
 
 | Tool | Description |
 |------|-------------|
@@ -20,7 +23,7 @@ The Actian MCP Server for **Actian Analytics Engine** provides built-in tools fo
 
 ## execute_query
 
-Executes a read-only SQL query against Actian Analytics Engine and returns the result set as structured JSON.
+Use this tool to run read-only SQL queries. The server returns the result set as a structured JSON object.
 
 ### Parameters
 
@@ -44,7 +47,7 @@ Executes a read-only SQL query against Actian Analytics Engine and returns the r
 ```
 
 !!! note
-    The `truncated` and `warning` fields appear only when the number of result rows exceeds the `max_rows` value set in your server configuration.
+    The `truncated` and `warning` fields appear only when the number of result rows exceeds the `max_rows` value set in the server configuration.
 
 **On Error**
 
@@ -212,7 +215,7 @@ Show me schema information about the customers table
 ```
 
 !!! warning
-    If the authenticated database user lacks access to a table, the error response will include a permission message. For example: `"error": "No permission to access table 'ii_tables'"`.
+    If the authenticated database user lacks access to a table, the error response includes a permission message. For example: `"error": "No permission to access table 'ii_tables'"`.
 
 
 
@@ -277,6 +280,6 @@ Show me all the functions in my database
   Explore the resource types available through the server.
 
 - :material-message-text: **[Prompts](../prompts/index.md)**  
-  Review the built-in prompt templates for common workflows.
+  Use the built-in prompt templates for common workflows.
 
 </div>

@@ -3,19 +3,17 @@ title: Actian NoSQL Database
 description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Databases.
 ---
 
-# Actian NoSQL Database
+# Actian NoSQL MCP Server
 
 Connect your MCP-compatible client to **Actian NoSQL Database** using the Actian MCP Server. Once configured, clients can explore schema metadata, run read-only JPQL queries, and access all details of the persistent objects retrieved.
 
-## Overview
+## Capabilities
 
-The Actian MCP Server acts as a bridge between any MCP client and your Actian NoSQL Database. It handles connection management, schema discovery, and query execution, so you can focus on exploring your data.
-
-### Capabilities
+Use the MCP Server to perform the following tasks:
 
 | Action | Description |
 |--------|-------------|
-| **Discover the schema** | List all classes and explore their fields and inheritance hierarchy. |
+| **Discover the Schema** | List all classes and explore their fields and inheritance hierarchy. |
 | **Run JPQL queries** | Execute read-only queries against your database. |
 | **Retrieve objects by ID** | Fetch one or many objects directly by LOID for the fastest retrieval path. |
 
@@ -28,7 +26,7 @@ The Actian MCP Server acts as a bridge between any MCP client and your Actian No
 
 ## Configuration
 
-The server is distributed as a Docker container. All configuration is provided through an `application.properties` file mounted into the container at `/home/jboss/config/application.properties`. Environment variables are supported as an alternative — any property can be passed with a `-e` flag using `SCREAMING_SNAKE_CASE` notation, and they take precedence over the file.
+All configuration is provided through an `application.properties` file mounted into the container at `/home/jboss/config/application.properties`. Environment variables are supported as an alternative — any property can be passed with a `-e` flag using `SCREAMING_SNAKE_CASE` notation, and they take precedence over the file.
 
 ### NoSQL Connection
 
@@ -249,9 +247,9 @@ if __name__ == "__main__":
   Explore the available MCP tools for NoSQL database operations.
 
 - :material-folder-open: **[Resources](resources/index.md)**  
-  Learn about schema metadata resources.
+  Learn more about schema metadata resources.
 
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
-  Discover pre-built prompt templates for common workflows.
+  Use pre-built prompt templates for common workflows.
 
 </div>

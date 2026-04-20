@@ -1,20 +1,22 @@
 ---
 title: Authentication
-description: OAuth 2.0 and TLS configuration for the Actian MCP Server with Actian NoSQL Database.
+description: OAuth 2.0 and TLS configuration for the Actian NoSQL MCP Server.
 ---
 
-# Configuring OAuth 2.0 and OIDC Authentication
+# Authentication
 
 The Actian MCP Server for **Actian NoSQL Database** supports **OAuth 2.0** and OpenID Connect (OIDC) authentication. When you enable this feature, every client request must include a valid JSON Web Token (JWT) issued by a trusted identity provider (IdP).
 
-!!! note "Database credentials vs. OAuth"
-    The `user:password` portion of the NoSQL connection URL (for example, `cars@localhost#admin:secret`) authenticates against the **database** itself. This is separate from OAuth, which controls access to the **MCP Server** endpoint.
+!!! info "Database credentials vs. OAuth:"
+    This setup uses two types of authentication:
+
+     - **Database credentials:** The `user:password` portion of the NoSQL connection URL (for example, `cars@localhost#admin:secret`) authenticates you to the database itself.
+     - **OAuth 2.0:** This controls access to the MCP Server endpoint.
 
 ## Working with OAuth
 
-Authentication is **disabled by default**. When enabled, all `/mcp/*` endpoints require a valid Bearer token issued by an OIDC provider.
-
-The MCP server acts as an OAuth 2.0 resource server and exposes a resource metadata endpoint at `/.well-known/oauth-protected-resource`. MCP clients use this to automatically discover the identity provider and initiate the appropriate OAuth flow.
+Authentication is **disabled by default**. When you enable it, all `/mcp/*` endpoints require a valid Bearer token issued by an OIDC provider.
+The server acts as an OAuth 2.0 resource server. It exposes a resource metadata endpoint at `/.well-known/oauth-protected-resource`. MCP clients use this endpoint to discover the identity provider and initiate the appropriate OAuth flow.
 
 Two flows are supported:
 
@@ -52,7 +54,6 @@ sequenceDiagram
 
 ### Configuration
 
-
 | Property | Required | Description |
 |---|---|---|
 | `mcp.auth.enabled` | Yes (to enable) | Set to `true` to enable OAuth2 authentication. Disabled by default. |
@@ -70,7 +71,7 @@ Two OIDC tenants are pre-configured:
 | Default | `/mcp/*` | `quarkus.oidc.*` |
 | SSE | `/mcp/sse` | `quarkus.oidc.sse-tenant.*` |
 
-Both tenants share the same auth server URL by default. Override the SSE tenant only if your SSE endpoint needs a different identity provider.
+Both tenants share the same auth server URL by default. Override the SSE tenant only if the SSE endpoint needs a different identity provider.
 
 ### Example
 
@@ -85,7 +86,7 @@ quarkus.oidc.auth-server-url=https://your-idp.example.com/
 
 ## Secure Remote Deployments with HTTPS and TLS
 
-To enable HTTPS, provide a certificate and private key. The `.0.` in the property name is the index of the PEM key-store entry — increment it to add multiple certificates.
+To secure the connection, provide a certificate and private key. The `.0.` in the property name is the index of the PEM key-store entry — increment it to add multiple certificates.
 
 | Property | Required | Description |
 |---|---|---|
@@ -99,7 +100,7 @@ To enable HTTPS, provide a certificate and private key. The `.0.` in the propert
 ### Example
 
 !!! note "Generating and trusting a self-signed certificate"
-    For instructions on generating a self-signed certificate and trusting it in your MCP client, see [Secure Remote Deployments with HTTPS and TLS](../../authentication/index.md#secure-remote-deployments-with-https-and-tls) in the main Authentication guide.
+    For instructions on generating a self-signed certificate and trusting it in the MCP client, see [Secure Remote Deployments with HTTPS and TLS](../../authentication/index.md#secure-remote-deployments-with-https-and-tls) in the main Authentication guide.
 
 Add the following to your `application.properties`:
 

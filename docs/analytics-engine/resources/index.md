@@ -5,23 +5,24 @@ description: Built-in resources available when using the Actian MCP Server with 
 
 # Resources
 
-The Actian MCP Server for **Actian Analytics Engine** provides a built-in resource that returns live schema metadata for the connected database.
+The Actian MCP Server for the Actian Analytics Engine includes a built-in resource for exploring live schema metadata. This resource is particularly useful for providing context to an LLM, ensuring it understands the table relationships and data types of the specific environment.
 
 
 ## Available Resources
 
 | Resource URI | Description |
 |--------------|-------------|
-| [`resource://database/schema`](#resourcedatabaseschema) | Returns schema metadata including tables, columns, constraints, and comments. |
+| [`resource://database/schema`](#resourcedatabaseschema) | Retrieves metadata for the connected database, including tables, columns, and constraints. |
 
 
 ## resource://database/schema
 
-Retrieves the full database schema as a structured `JSON` object. Use this resource to inspect table and column definitions before writing queries.
+Use the `resource://database/schema` URI to fetch the full database schema as a structured JSON object. You can use resource to inspect table and column definitions before you write or execute SQL queries.
+
 
 ### Parameters
 
-This resource takes no input parameters.
+This resource does not require input parameters.
 
 ### Output Schema
 
@@ -42,7 +43,9 @@ This resource takes no input parameters.
 }
 ```
 
-**On Error**
+**Error handling**
+
+If the schema cannot be retrieved, the server returns an error message:
 
 ```text
 The database schema could not be retrieved. Error: <error_message>
@@ -98,9 +101,9 @@ resource://database/schema
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](../tools/index.md)**  
-  Learn about the SQL and schema tools exposed by the Analytics Engine server.
+  Learn more about the SQL and schema tools provided by the Analytics Engine server.
 
 - :material-message-text: **[Prompts](../prompts/index.md)**  
-  Review the built-in prompt templates for common workflows.
+  Use the built-in prompt templates for common workflows.
 
 </div>
