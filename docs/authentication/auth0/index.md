@@ -82,7 +82,7 @@ The **Application** represents the MCP server's OAuth client. It holds the `clie
      | **Application Type** | Machine to Machine Applications |
 
 4. Select **Create**.
-5. When prompted, select your **Actian MCP Server** API and grant all scopes (You can also do this later in [Step 3](#part-3-authorize-the-application-for-the-api)).
+5. When prompted, select your **Actian MCP Server** API and grant all scopes (You can also do this later in [Step 3](#step-3-authorize-the-application-for-the-api).
 6. The application's **Settings** tab opens.
 
 ### Configure Application Settings
@@ -303,9 +303,9 @@ You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`,
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| `code_challenge: Field required` | Auth0 Application type is "Regular Web Application". | Recreate as **Machine to Machine** application — Auth0 does not allow changing app type after creation. See [Step 2](#part-2-create-an-auth0-application). |
+| `code_challenge: Field required` | Auth0 Application type is "Regular Web Application". | Recreate as **Machine to Machine** application — Auth0 does not allow changing app type after creation. See [Step 2](#step-2-create-an-auth0-application). |
 | `Grant type 'authorization_code' not allowed` | Machine to Machine application is missing Authorization Code grant. | Enable **Authorization Code** in Advanced Settings > Grant Types. See [Configure Grant Types](#configure-grant-types). |
-| `invalid_request` when requesting a token | Application not authorized for the API. | [Step 3](#part-3-authorize-the-application-for-the-api) — authorize the Application. |
+| `invalid_request` when requesting a token | Application not authorized for the API. | [Step 3](#step-3-authorize-the-application-for-the-api) — authorize the Application. |
 | `audience mismatch` | `FASTMCP_SERVER_AUTH_AUDIENCE` does not match the API Identifier. | Ensure they are identical strings. |
 | `invalid_client` | Wrong `client_id` or `client_secret`. | Re-copy from Application > Settings. |
 | `KeyError` on startup (for example, `CLIENT_SECRET`). | Some OAuth fields are present but others missing. | Provide **all** required fields or remove `oauth` entirely. |
