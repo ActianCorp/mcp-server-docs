@@ -5,7 +5,7 @@ description: Overview of the resources available when using the Actian MCP Serve
 
 # Resources
 
-The Actian MCP Server for Actian Ingres provides a built-in resource that helps you discover and understand your database schema.
+The Actian MCP Server for Actian Ingres provides a built-in resource that helps to discover and understand your database schema.
 
 ## Available Resources
 
@@ -13,7 +13,7 @@ The following resource is available for schema discovery:
 
 | Resource URI | Description |
 |--------------|-------------|
-| [`resource://database/schema`](#resourcedatabaseschema) | Returns metadata for the connected database, including tables, columns, and constraints |
+| [`resource://database/schema`](#resourcedatabaseschema) | Returns metadata for the connected database, including tables, columns, and constraints. |
 
 ## resource://database/schema
 
