@@ -48,7 +48,15 @@
         { name: 'Prompts', path: 'prompts/index.html' }
       ],
       'nosql': [
-        { name: 'Authentication', path: 'authentication/index.html' },
+        {
+          name: 'Authentication',
+          path: 'authentication/index.html',
+          collapsible: true,
+          subs: [
+            { name: 'Auth0', path: 'authentication/auth0/index.html' },
+            { name: 'Keycloak', path: 'authentication/keycloak/index.html' }
+          ]
+        },
         { name: 'Tools', path: 'tools/index.html' },
         { name: 'Resources', path: 'resources/index.html' },
         { name: 'Prompts', path: 'prompts/index.html' }
@@ -176,32 +184,177 @@
         
         const subsections = sectionsWithSubs[sectionKey];
         
-        subsections.forEach(subsection => {
+        subsections.forEach((subsection, subIndex) => {
           const subItem = document.createElement('li');
           subItem.className = 'md-nav__item';
-          const subLink = document.createElement('a');
-          subLink.className = 'md-nav__link';
           const basePath = tabHref.replace('index.html', '');
-          subLink.href = basePath + subsection.path;
-          subLink.textContent = subsection.name;
-          
-          try {
-            const subUrl = new URL(basePath + subsection.path, window.location.origin);
-            const subBasePath = subUrl.pathname.replace(/index\.html$/, '');
-            if (currentPath.startsWith(subBasePath)) {
-              subLink.classList.add('md-nav__link--active');
+
+          if (subsection.subs && Array.isArray(subsection.subs) && subsection.collapsible) {
+            // Collapsible subsection (e.g. Authentication under NoSQL)
+            subItem.classList.add('md-nav__item--subsection');
+
+            // Check if any child is active
+            let subIsActive = false;
+            try {
+              const subUrl = new URL(basePath + subsection.path, window.location.origin);
+              const subBasePath = subUrl.pathname.replace(/index\.html$/, '');
+              if (currentPath.startsWith(subBasePath)) subIsActive = true;
+            } catch (e) {}
+
+            const subLabel = document.createElement('div');
+            subLabel.className = 'md-nav__link md-nav__link--subsection-header';
+            if (subIsActive) subLabel.classList.add('md-nav__link--active');
+
+            const subSectionLink = document.createElement('a');
+            subSectionLink.href = basePath + subsection.path;
+            subSectionLink.textContent = subsection.name;
+            subSectionLink.style.flexGrow = '1';
+            subSectionLink.style.textDecoration = 'none';
+            subSectionLink.style.color = 'inherit';
+            if (subIsActive) subSectionLink.classList.add('md-nav__link--active');
+
+            const subToggleBtn = document.createElement('span');
+            subToggleBtn.className = 'nav-toggle-btn nav-toggle-btn--sub';
+            subToggleBtn.innerHTML = '›';
+            subToggleBtn.style.cursor = 'pointer';
+            subToggleBtn.style.fontSize = '1rem';
+            subToggleBtn.style.transition = 'transform 0.25s';
+            subToggleBtn.style.display = 'inline-flex';
+            subToggleBtn.style.alignItems = 'center';
+            subToggleBtn.style.justifyContent = 'center';
+            subToggleBtn.style.userSelect = 'none';
+            subToggleBtn.style.lineHeight = '1';
+            subToggleBtn.style.width = '1rem';
+            subToggleBtn.style.height = '1rem';
+            subToggleBtn.style.flexShrink = '0';
+            subToggleBtn.style.marginLeft = '0.25rem';
+
+            subLabel.style.display = 'flex';
+            subLabel.style.alignItems = 'center';
+            subLabel.style.justifyContent = 'space-between';
+            subLabel.style.cursor = 'pointer';
+            subLabel.appendChild(subSectionLink);
+            subLabel.appendChild(subToggleBtn);
+
+            const nestedNav = document.createElement('nav');
+            nestedNav.className = 'md-nav';
+            nestedNav.setAttribute('data-md-level', '2');
+
+            const nestedList = document.createElement('ul');
+            nestedList.className = 'md-nav__list';
+
+            subsection.subs.forEach(subsub => {
+              const subsubItem = document.createElement('li');
+              subsubItem.className = 'md-nav__item';
+              const subsubLink = document.createElement('a');
+              subsubLink.className = 'md-nav__link';
+              subsubLink.href = basePath + subsub.path;
+              subsubLink.textContent = subsub.name;
+              try {
+                const subsubUrl = new URL(basePath + subsub.path, window.location.origin);
+                const subsubBasePath = subsubUrl.pathname.replace(/index\.html$/, '');
+                if (currentPath.startsWith(subsubBasePath)) {
+                  subsubLink.classList.add('md-nav__link--active');
+                }
+              } catch (e) {
+                const subsubSegment = subsub.path.replace('/index.html', '');
+                if (
+                  currentPath.includes('/' + subsubSegment + '/') ||
+                  currentPath.endsWith('/' + subsubSegment)
+                ) {
+                  subsubLink.classList.add('md-nav__link--active');
+                }
+              }
+              subsubItem.appendChild(subsubLink);
+              nestedList.appendChild(subsubItem);
+            });
+
+            nestedNav.appendChild(nestedList);
+
+            // Toggle expand/collapse
+            if (subIsActive) {
+              nestedNav.style.setProperty('display', 'block', 'important');
+              subItem.classList.add('expanded');
+              subToggleBtn.style.transform = 'rotate(90deg)';
+            } else {
+              nestedNav.style.setProperty('display', 'none', 'important');
+              subToggleBtn.style.transform = 'rotate(0deg)';
             }
-          } catch (e) {
-            const subSegment = subsection.path.replace('/index.html', '');
-            if (
-              currentPath.includes('/' + subSegment + '/') ||
-              currentPath.endsWith('/' + subSegment)
-            ) {
-              subLink.classList.add('md-nav__link--active');
+
+            subToggleBtn.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              const expanded = subItem.classList.toggle('expanded');
+              if (expanded) {
+                nestedNav.style.setProperty('display', 'block', 'important');
+                subToggleBtn.style.transform = 'rotate(90deg)';
+              } else {
+                nestedNav.style.setProperty('display', 'none', 'important');
+                subToggleBtn.style.transform = 'rotate(0deg)';
+              }
+            }, true);
+
+            subItem.appendChild(subLabel);
+            subItem.appendChild(nestedNav);
+
+          } else if (subsection.subs && Array.isArray(subsection.subs)) {
+            // Non-collapsible subs (legacy): render parent + nested list flat
+            const parentLink = document.createElement('a');
+            parentLink.className = 'md-nav__link';
+            parentLink.href = basePath + subsection.path;
+            parentLink.textContent = subsection.name;
+            subItem.appendChild(parentLink);
+
+            const nestedList = document.createElement('ul');
+            nestedList.className = 'md-nav__list';
+            subsection.subs.forEach(subsub => {
+              const subsubItem = document.createElement('li');
+              subsubItem.className = 'md-nav__item';
+              const subsubLink = document.createElement('a');
+              subsubLink.className = 'md-nav__link';
+              subsubLink.href = basePath + subsub.path;
+              subsubLink.textContent = subsub.name;
+              try {
+                const subsubUrl = new URL(basePath + subsub.path, window.location.origin);
+                const subsubBasePath = subsubUrl.pathname.replace(/index\.html$/, '');
+                if (currentPath.startsWith(subsubBasePath)) {
+                  subsubLink.classList.add('md-nav__link--active');
+                }
+              } catch (e) {
+                const subsubSegment = subsub.path.replace('/index.html', '');
+                if (
+                  currentPath.includes('/' + subsubSegment + '/') ||
+                  currentPath.endsWith('/' + subsubSegment)
+                ) {
+                  subsubLink.classList.add('md-nav__link--active');
+                }
+              }
+              subsubItem.appendChild(subsubLink);
+              nestedList.appendChild(subsubItem);
+            });
+            subItem.appendChild(nestedList);
+          } else {
+            const subLink = document.createElement('a');
+            subLink.className = 'md-nav__link';
+            subLink.href = basePath + subsection.path;
+            subLink.textContent = subsection.name;
+            try {
+              const subUrl = new URL(basePath + subsection.path, window.location.origin);
+              const subBasePath = subUrl.pathname.replace(/index\.html$/, '');
+              if (currentPath.startsWith(subBasePath)) {
+                subLink.classList.add('md-nav__link--active');
+              }
+            } catch (e) {
+              const subSegment = subsection.path.replace('/index.html', '');
+              if (
+                currentPath.includes('/' + subSegment + '/') ||
+                currentPath.endsWith('/' + subSegment)
+              ) {
+                subLink.classList.add('md-nav__link--active');
+              }
             }
+            subItem.appendChild(subLink);
           }
-          
-          subItem.appendChild(subLink);
           subList.appendChild(subItem);
         });
         

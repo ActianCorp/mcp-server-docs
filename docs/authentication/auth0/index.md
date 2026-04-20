@@ -280,7 +280,7 @@ For security best practices (file permissions, `.gitignore`, secrets management)
 
 After starting the MCP server container with OAuth configured:
 
-1. Open a browser and navigate to your server's `/mcp` endpoint, or example, `https://<your-server-host>:8000/mcp`.
+1. Open a browser and navigate to your server's `/mcp` endpoint, for example, `https://<your-server-host>:8000/mcp`.
 2. You should be **redirected to the Auth0 login page**.
 3. After logging in, Auth0 redirects you back to the MCP server with a valid token.
 4. Check the server logs for `Stored database username: <username>` to confirm user impersonation is active.
