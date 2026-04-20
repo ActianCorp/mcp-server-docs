@@ -9,7 +9,7 @@ Connect the MCP-compatible client to Actian Ingres using the Actian MCP Server. 
 
 ## Capabilities
 
-The Ingres MCP Server supports the following operations:
+The Actian Ingres MCP Server supports the following operations:
 
 | Action | Description |
 | :--- | :--- |
@@ -27,14 +27,14 @@ Before starting the server, ensure to meet the following requirements:
 * **Docker:** Installed and running on the host machine.
 * **Database Access:** Valid credentials for the Actian Ingres instance.
 * **Security (Optional):** TLS certificate and key files for secure deployments.
-* **Authentication (Optional):** An OIDC provider if you require OAuth.
+* **Authentication (Optional):** An OIDC provider, if you require OAuth.
 
 ---
 
 
 ## Configuration
 
-The server runs as a Docker container. You must provide a `conf.json` configuration file and mount it to the `/app/conf.json` path inside the container.
+The server runs as a Docker container. You must provide a `conf.json` configuration file and mount it to the `/app/conf.json` path in the container.
 
 ### Create Configuration File
 Create a file named `conf.json` in the working directory and define the environment variables:
@@ -74,8 +74,8 @@ Create a file named `conf.json` in the working directory and define the environm
 | `server` | `string` | The host or connection target for the Ingres database. |
 | `database` | `string` |The name of the target database. |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool. |
-| `host` | `string` | The host address the server listens on inside the container. |
-| `port` | `string` | The port the server listens on inside the container (typically `8000`). |
+| `host` | `string` | The host address the server listens to in the container. |
+| `port` | `string` | The port the server listens to in the container (typically `8000`). |
 | `database_user` | `string` | The username for database authentication. |
 | `database_password` | `string` | The password for database authentication. |
 
@@ -84,10 +84,10 @@ Create a file named `conf.json` in the working directory and define the environm
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `max_rows` | `integer` | `1000` | The maximum number of rows returned in a single query response.  |
-| `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
-| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` inside the container. |
-| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` inside the container. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) for more information. |
+| `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
+| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` in the container. |
+| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` in the container. |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block). |
 
 ---
 
@@ -101,7 +101,7 @@ docker run -d \
   actian/ingres-mcp-server:1.0.0
 ```
 
-Once the container is running, you can connect the MCP client to the server using the host and port you specified in the configuration.
+Once the container is running, you can connect the MCP client to the server using the host and port specified in the configuration.
 
 ---
 
