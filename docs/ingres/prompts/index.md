@@ -5,17 +5,17 @@ description: Overview of the prompts available when using the Actian MCP Server 
 
 # Prompts
 
-The Actian MCP Server for Actian Ingres includes a built-in prompt that converts natural-language questions into expert-level database queries.
+The Actian MCP Server for Actian Ingres includes a built-in prompt that converts plain language questions into expert-level database queries.
 
 ## Available Prompts
 
 | Prompt | Description |
 |--------|-------------|
-| [`ask_question`](#ask_question) | Formats a plain-language question into a structured prompt template designed for database experts. |
+| [`ask_question`](#ask_question) | Formats a plain language question into a structured prompt template designed for database experts. |
 
 ## ask_question
 
-Renders a database expert prompt from a plain-language question and returns the formatted prompt text ready for use.
+Renders a database expert prompt from a plain language question and returns the formatted prompt text ready for use.
 
 ### Parameters
 
