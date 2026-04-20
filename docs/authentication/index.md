@@ -159,7 +159,7 @@ Add the `ssl_certfile` certificate and `ssl_keyfile` key paths to the top level 
 }
 ```
 
-The server validates that both paths exist at startup and the usage of `https://` for `BASE_URL` when SSL is active.
+The server validates the existance of both paths at startup, and the usage of `https://` for `BASE_URL` when SSL is active.
 
 ### Step 3: Docker deployment
 
