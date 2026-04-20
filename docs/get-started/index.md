@@ -31,9 +31,6 @@ Each Actian database uses a specific container image that is preconfigured with 
 
 For most databases, you need to create a `conf.json` file that contains the specific connection details.
 
-!!! note "NoSQL Users"
-     The Actian NoSQL MCP Server is configured through environment variables. You do not need to create or mount a `conf.json` file. For more information, see [NoSQL Configuration](../nosql/index.md#configuration).
-
 Each database has unique settings. For more information, see the database configuration document:
 
 - [Ingres Configuration](../ingres/index.md#configuration)
@@ -42,7 +39,7 @@ Each database has unique settings. For more information, see the database config
 - [NoSQL Configuration](../nosql/index.md#configuration)
 - [Analytics Engine Configuration](../analytics-engine/index.md#configuration)
 
-All database configurations share the following standard MCP server fields:
+All database configurations except NoSQL share the following standard MCP server fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -60,6 +57,9 @@ All database configurations share the following standard MCP server fields:
 
 ## Step 3: Start the Container
 
+!!! note "NoSQL Users"
+    The NoSQL MCP Server does not use a `conf.json` and does not require `-v` volume mount. Instead, pass the configuration using `-e` environment variable flags. For more information, see [Starting the NoSQL Server Guide](../nosql/index.md#start-the-server).
+
 To start the server, run the container and mount the configuration file to `/app/conf.json`. Use the `:ro` (read-only) flag in the `mount` command to ensure that the configuration file cannot be modified from inside the container.
 
 Run the following command (replace the image name with the database image as per Step 1): 
@@ -70,9 +70,6 @@ docker run -d \
     -p 8000:8000 \
     actian/analytics-engine-mcp-server
 ```
-!!! note "NoSQL Users"
-    The NoSQL MCP Server does not use a `conf.json` and does not require `-v` volume mount. Instead, pass the configuration using `-e` environment variable flags. For more information, see [Starting the NoSQL Server Guide](../nosql/index.md#start-the-server).
-
 
 ## Step 4: Connect to an MCP Client
 
@@ -105,7 +102,7 @@ Confirm that the container status is `Up`.
 Ping the server to confirm that it is listening for requests:
 
 ```bash
-curl -i http://localhost:8000/mcp
+curl -i http://localhost:<port>/mcp
 ```
 
 If the server is ready, it returns a `200` or `307` status code instead of a `connection refused` error.
