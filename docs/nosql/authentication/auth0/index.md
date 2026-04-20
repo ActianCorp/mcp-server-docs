@@ -10,7 +10,7 @@ This guide describes how to create and configure an Auth0 **API** and **Applicat
 !!! note "Manual client registration"
     This guide uses **manually created applications**. Dynamic Client Registration (DCR) is not covered here.
 
-By the end, you will have the issuer URL needed for `quarkus.oidc.auth-server-url` in your `application.properties`. For the full configuration reference and TLS setup, see the [NoSQL Authentication overview](../index.md).
+By the end, you will have the **issuer URL** needed for `quarkus.oidc.auth-server-url`, as well as the **Client ID** (and **Client Secret** for Client Credentials flow) for your MCP client configuration.
 
 !!! info "Reference"
     [Auth0 OpenID Connect documentation](https://auth0.com/docs/authenticate/protocols/openid-connect-protocol)
@@ -90,7 +90,7 @@ The API represents the Actian MCP Server as a protected resource in Auth0. Token
 The **Application** represents the OAuth client — the **MCP client** (such as Claude Desktop or Cursor) that requests tokens on behalf of the user.
 
 !!! note "Machine to Machine application"
-    When you created the API in Part 3, Auth0 automatically created a **Machine to Machine** application with Client Access already granted to that API. You can use that application directly for Client Credentials flow — no additional setup is needed for M2M.
+    When you created the API in Part 3, Auth0 automatically created a **Machine to Machine** application with Client Access already granted to that API. You can use that application directly for Client Credentials flow.
 
 The steps below cover creating an application for the **Authorization Code flow** (interactive login).
 

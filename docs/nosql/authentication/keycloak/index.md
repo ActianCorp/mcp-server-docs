@@ -10,7 +10,7 @@ This guide describes how to create and configure a Keycloak **Realm** and **Clie
 !!! note "Manual client registration"
     This guide uses **manually created clients**. Dynamic Client Registration (DCR) is not covered here.
 
-By the end, you will have the issuer URL needed for `quarkus.oidc.auth-server-url` in your `application.properties`. For the full configuration reference and TLS setup, see the [NoSQL Authentication overview](../index.md).
+By the end, you will have the **issuer URL** needed for `quarkus.oidc.auth-server-url`, as well as the **Client ID** (and **Client Secret** for Client Credentials flow) for your MCP client configuration.
 
 !!! note "Keycloak version"
     This guide was written for **Keycloak 22+** (Quarkus-based). Older WildFly-based versions (< 17) have a different admin UI and URL structure.
@@ -18,7 +18,7 @@ By the end, you will have the issuer URL needed for `quarkus.oidc.auth-server-ur
 ## Quick-Start Checklist
 
 1. **Create a realm** (or use an existing one).
-2. **Create a client** with _Client authentication_ enabled. Enable **Standard flow** for Authorization Code, **Service accounts roles** for Client Credentials, or both.
+2. **Create a client per flow** — enable **Standard flow** for Authorization Code; enable **Client authentication** and **Service accounts roles** for Client Credentials.
 3. **Create users** for people who will log in via Authorization Code flow. Not needed for Client Credentials.
 4. **Note the realm issuer URL**: `http://<keycloak-host>:8080/realms/<realm-name>`.
 5. **Set `quarkus.oidc.auth-server-url`** and **`quarkus.oidc.resource-metadata.scopes`** in `application.properties`.
@@ -62,8 +62,8 @@ Create one client per flow:
 
 | Flow | Client to create |
 |------|-----------------|
-| Interactive login (Authorization Code) | A client with **Standard flow** enabled |
-| Automated / server-to-server (Client Credentials) | A client with **Service accounts roles** enabled |
+| Interactive login (Authorization Code) | A **public** client with **Standard flow** enabled |
+| Automated / server-to-server (Client Credentials) | A **confidential** client with **Service accounts roles** enabled |
 
 ### Client A: Authorization Code Flow
 
@@ -80,7 +80,7 @@ Create one client per flow:
 
     | Setting | Value | Notes |
     |---------|-------|-------|
-    | **Client authentication** | `On` | Generates a client secret. |
+    | **Client authentication** | `Off` | Public client — no secret needed for Authorization Code flow. |
     | **Standard flow** | Checked | Required for browser-based login. |
     | **Direct access grants** | Unchecked (production) | Enable only for local `curl`-based testing. |
 
@@ -96,7 +96,6 @@ Create one client per flow:
     | **Web origins** | Your MCP client's origin | For CORS. |
 
 7. Select **Save**.
-8. Go to the **Credentials** tab and copy the **Client secret** — this is used in your MCP client configuration.
 
 ### Client B: Client Credentials Flow (M2M)
 
@@ -121,10 +120,10 @@ Create one client per flow:
 
 ### What You Get from This Step
 
-| Value | Where to find it in Keycloak |
-|---|---|
-| **Client ID** | The **Client ID** you entered for each client. |
-| **Client Secret** | Clients → your client → **Credentials** tab. |
+| Value | Where to find it in Keycloak                                                               |
+|---|--------------------------------------------------------------------------------------------|
+| **Client ID** | The **Client ID** you entered for each client.                                             |
+| **Client Secret** | Clients → your client → **Credentials** tab. Only needed for the Client Credentials client |
 
 
 ## Part 3: Create Keycloak Users
@@ -151,7 +150,7 @@ Create users in Keycloak that your MCP client users will log in as.
 5. Go to the **Credentials** tab → **Set password** → enter a password, toggle **Temporary** to `Off` → **Save**.
 
 
-## Part 4: Assemble the Server Configuration
+## Part 4: Configure and Start the Server
 
 The Actian MCP Server only needs the Keycloak **realm issuer URL** to validate incoming tokens. It does not need the client ID or secret — those belong to the MCP client.
 
@@ -163,7 +162,7 @@ The Actian MCP Server only needs the Keycloak **realm issuer URL** to validate i
 | `quarkus.oidc.resource-metadata.scopes` | — | `openid,profile,email` |
 
 !!! note "Why set scopes on the server?"
-    The MCP server advertises which scopes to request via its resource metadata endpoint. If this is not set, some MCP clients (such as VS Code) may request scopes that are not enabled for the client in Keycloak (for example, `service_account`), causing the token request to fail. Set this to the scopes actually configured for your client.
+    The MCP server advertises which scopes to request via its resource metadata endpoint. If this is not set, some MCP clients (such as VS Code) may request scopes that are not enabled for the client in Keycloak, causing the token request to fail. Set this to the scopes actually configured for your client.
 
 ### Example `application.properties`
 
