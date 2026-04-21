@@ -48,11 +48,11 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 
 | Field | Required | Description |
 | :---- | :------- | :---------- |
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL, for example `https://domain/.well-known/openid-configuration`. Use `https://` in production since `http://` is acceptable only for local Keycloak development. |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL, for example `https://domain/.well-known/openid-configuration`. Use `https://` in production |
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | Yes | OAuth client ID provided by the identity provider |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | OAuth client secret |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | External URL of the MCP server, for example `https://<mcp-server-host>:8000`. It must use `https://`. |
-| `FASTMCP_SERVER_AUTH_AUDIENCE` | No | Token audience. If omitted, it defaults to the `CLIENT_ID` (standard for Keycloak). **Note:** Auth0 requires an explicit audience. |
+| `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | Token audience |
 | `user_impersonation` | No | Boolean. If `true` (the default setting), the server runs each query as the authenticated user using `SET SESSION AUTHORIZATION`. |
 
 ### Example
@@ -189,11 +189,8 @@ Reference the container paths in `conf.json`:
 !!! note "Docker Key Permissions"
     If mounting the key as a volume, the container user must be able to read it:
 
-    - **Dev only**: `chmod 644 server.key` (world-readable; acceptable for local testing only)
+    - **Best practice**: `Ensure that server.key and conf.json` has 600 permission.
 
-    - **Production**: `sudo chown <container-uid>:<container-gid> server.key` to match the container user's UID/GID, keeping `chmod 600`
-
-    - **Best practice**: Terminate TLS at a reverse proxy (nginx, Traefik) to keep the private key outside the container entirely.
 
 ### Step 4: Trust the Certificate in the MCP Client
 
@@ -261,11 +258,8 @@ By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed ce
     
     - **Lock down file permissions**: Run chmod 600 conf.json` to restrict access on the host machine.
 
-    - **Keep secrets out of version control**: Add `conf.json` to `.gitignore` file immediately.
-
     - **Mandate HTTPS**: Always use `https://` for the `BASE_URL`. Tokens sent over plain HTTP are vulnerable to interception.
 
-    - **Use production secrets management**: For production environments, avoid plaintext files entirely. Inject your secrets dynamically using environment variables or a dedicated secrets manager.
 
 ## Provider Setup Guides
 

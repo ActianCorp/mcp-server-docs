@@ -154,7 +154,7 @@ sequenceDiagram
 - :material-shield-lock: **OAuth 2.0 Support**  
   Uses `OAuth 2.0` to provide secure, standards-based access for all MCP clients.
 
-- :material-transit-connection-horizontal: **HTTP Transport**  
+- :material-transit-connection-horizontal: **HTTP/HTTPS Transport**  
   Operates in `HTTP` transport mode to simplify network connectivity.
 
 - :material-eye-lock: **Read-only Mode**  
