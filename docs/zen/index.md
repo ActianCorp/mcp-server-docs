@@ -93,6 +93,7 @@ With your `conf.json` ready, start the container and mount the configuration fil
 
 ```bash
 docker run -d \
+  --name zen-mcp \
   -p 8000:8000 \
   --add-host=host.docker.internal:host-gateway \
   -v $(pwd)/conf.json:/app/conf.json:ro \
