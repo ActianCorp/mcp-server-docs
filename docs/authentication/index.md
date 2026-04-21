@@ -167,12 +167,15 @@ The server validates the existance of both paths at startup, and the usage of `h
 
 Mount the certificate and key into the container using volume flags:
 
+!!! note "Analytics Engine example"
+    The following example demonstrates how to deploy the Analytics Engine docker.
+
 ```bash
 docker run -p 8000:8000 \
   -v /path/to/server.crt:/app/server.crt:ro \
   -v /path/to/server.key:/app/server.key:ro \
   -v /path/to/conf.json:/app/conf.json:ro \
-  actian/mcp-server:latest
+  actian/analytics-engine-mcp-server:latest
 ```
 
 Reference the container paths in `conf.json`:

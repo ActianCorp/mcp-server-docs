@@ -98,10 +98,12 @@ This section demonstrates how to connect to a running Actian MCP Server instance
 
 Most tools share the same interface across databases and the parameter names may vary depending on the specific plugin.
 
-| Tool | Ingres/Analytics Engine/HCL Informix® | Zen |
-|------|--------------------------------------|-----|
-| `execute_query` | `query` | `sql` |
-| `describe_table` | `table_name` | `table` |
+| Tool | Product | Parameter |
+|------|---------|-----------|
+| `execute_query` | Ingres / Analytics Engine / HCL Informix® | `query` |
+| `execute_query` | Zen | `sql` |
+| `describe_table` | Ingres / Analytics Engine / HCL Informix® | `table_name` |
+| `describe_table` | Zen | `table` |
 
 The following examples use the Ingres, Analytics Engine, and HCL Informix® parameter names. For Zen, substitute the parameter names from the table above.
 

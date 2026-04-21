@@ -11,7 +11,7 @@ The Actian MCP Server is distributed as Docker container images, with one dedica
 
 Before you begin, ensure that the following requirements are met:
 
-- **Container runtime**: Docker or Podman is installed on the host machine.
+- **Container runtime**: Docker or Podman is installed on the host machine
 - **Database access**: There is network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, or Analytics Engine).
 - **AI client**: An MCP-compatible client, such as Claude Desktop, Cursor, GitHub Copilot, or Codex already exists.
 
@@ -63,6 +63,9 @@ All database configurations except NoSQL share the following standard MCP server
 To start the server, run the container and mount the configuration file to `/app/conf.json`. Use the `:ro` (read-only) flag in the `mount` command to ensure that the configuration file cannot be modified from inside the container.
 
 Run the following command (replace the image name with the database image as per Step 1): 
+
+!!! note "Analytics Engine example"
+    The following example demonstrates how to start the Analytics Engine server.
 
 ```bash
 docker run -d \

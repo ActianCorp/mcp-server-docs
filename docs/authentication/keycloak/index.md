@@ -132,7 +132,7 @@ By default, Keycloak tokens only include internal audiences like `account`. The 
 
 1. Navigate to **Clients** and select your client, for example, `actian-mcp`.
 2. Select the **Client scopes** tab.
-3. Select the **`actian-mcp-dedicated`** link (listed as "Dedicated"). If you don't see the dedicated scope, check the **Mappers** tab directly.
+3. Select the **`actian-mcp-dedicated`** link (listed as "Dedicated"). If you do not see the dedicated scope, check the **Mappers** tab directly.
 4. Select **Configure a new mapper** or **Add Mapper**.
 5. Select **Audience** (not **Audience Resolve**) from the list.
 
