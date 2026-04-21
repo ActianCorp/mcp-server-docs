@@ -93,14 +93,15 @@ Once the `conf.json` is ready, start the container and mount the configuration f
 
 ```bash
 docker run -d \
+  --name zen-mcp \
   -p 8000:8000 \
   --add-host=host.docker.internal:host-gateway \
   -v $(pwd)/conf.json:/app/conf.json:ro \
   actian/zen-mcp-server:latest
 ```
 
-!!! tip "Container networking"
-    The `-p 8000:8000` flag exposes the server port to the host machine. `--add-host=host.docker.internal:host-gateway` allows the container to reach services on the host machine, such as the Zen engine on port 1583. Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically.  Linux requires the `--add-host` flag to allow the container to reach the Zen engine on port 1583. On Windows, the `start-zen-mcp.ps1` helper script automates container startup.
+!!! note "Container networking"
+    `-p 8000:8000` exposes the server port on the host. `--add-host=host.docker.internal:host-gateway` allows the container to reach services on the host machine (such as the Zen engine on port 1583). Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically; Linux requires the `--add-host` flag.
 
 Once the container is running, connect the MCP client to the exposed server endpoint using the host and port from the configuration.
 
