@@ -13,7 +13,7 @@ hide:
       The Model Context Protocol (MCP) is an open standard that enables large language models (LLMs) to securely access and interact with external data sources and tools. MCP is like a universal plug, a USB-C port for artificial intelligence (AI). Instead of building fragile, custom integrations for every database, MCP provides a standardized way for AI models to connect directly to your database. This allows the model to understand schemas, execute queries, and retrieve real-time context, without the need for data to leave the secure environment.
     </p>
     <div class="hero-cta">
-      <a href="https://hub.docker.com/u/actian" class="primary-link">Actian MCP Hub →</a>
+      <a href="https://hub.docker.com/u/actian" class="primary-link">Actian MCP Server on Docker Hub →</a>
       <a href="./intro/index.html" class="primary-link" style="margin-left:1.5rem;">View Documentation →</a>
     </div>
   </div>
@@ -174,7 +174,7 @@ docker run -e INFORMIXSERVER=myserver \
 <div class="cta-section">
   <h4>Empower your agents with the world's most reliable data</h4>
   <div class="cta-buttons">
-    <a href="https://hub.docker.com/u/actian" class="primary-link">Visit Actian Docker Hub →</a>
+    <a href="https://hub.docker.com/u/actian" class="primary-link">Visit Actian MCP Server on Docker Hub →</a>
     <a href="https://www.actian.com/contact/" class="primary-link" style="margin-left:1.5rem;">Contact AI Architect →</a>
   </div>
 </div>

@@ -13,21 +13,21 @@ The Actian Ingres MCP Server supports the following operations:
 
 | Action | Description |
 | :--- | :--- |
-| **Run SQL queries** | Execute read-only SQL against the database. |
-| **List tables and views** | Discover available objects in the schema. |
-| **Inspect table structure** | Retrieve column definitions, types, and comments. |
-| **Read schema metadata** | Explore database-level metadata and constraints. |
-| **List functions** | View available user-defined routines and procedures. |
+| **Execute SQL queries** | Execute read-only SQL against the database |
+| **List tables and views** | Discover available objects in the schema |
+| **Describe table structure** | Retrieve column definitions, types, and comments|
+| **Read schema metadata** | Explore database-level metadata and constraints |
+| **List functions** | View available user-defined functions and procedures|
 
 ---
 
 ## Prerequisites
 Before starting the server, ensure to meet the following requirements:
 
-* **Docker:** Installed and running on the host machine.
-* **Database Access:** Valid credentials for the Actian Ingres instance.
-* **Security (Optional):** TLS certificate and key files for secure deployments.
-* **Authentication (Optional):** An OIDC provider, if you require OAuth.
+* **Docker:** Installed and running on the host machine
+* **Database Access:** Valid credentials for the Actian Ingres instance
+* **Security (Optional):** TLS certificate and key files for secure deployments
+* **Authentication (Optional):** An OIDC provider, if you require OAuth
 
 ---
 
@@ -70,24 +70,24 @@ Create a file named `conf.json` in the working directory and define the environm
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `driver` | `string` | The ODBC driver name for the Ingres connection. |
-| `server` | `string` | The host or connection target for the Ingres database. |
-| `database` | `string` |The name of the target database. |
-| `max_connections` | `integer` | Maximum concurrent database connections in the pool. |
+| `driver` | `string` | The ODBC driver name for the Ingres connection |
+| `server` | `string` | The host or connection target for the Ingres database |
+| `database` | `string` |The name of the target database |
+| `max_connections` | `integer` | Maximum concurrent database connections in the pool |
 | `host` | `string` | The host address the server listens to in the container. |
-| `port` | `string` | The port the server listens to in the container (typically `8000`). |
-| `database_user` | `string` | The username for database authentication. |
-| `database_password` | `string` | The password for database authentication. |
+| `port` | `string` | The port the server listens to in the container (typically `8000`)|
+| `database_user` | `string` | The username for database authentication|
+| `database_password` | `string` | The password for database authentication |
 
 **Optional Fields**
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `max_rows` | `integer` | `1000` | The maximum number of rows returned in a single query response.  |
-| `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
-| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` in the container. |
-| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` in the container. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block). |
+| `max_rows` | `integer` | `1000` | The maximum number of rows returned in a single query response. Maximum value: `1000` |
+| `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
+| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` in the container |
+| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` in the container |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) |
 
 ---
 
@@ -110,12 +110,12 @@ Once the container is running, you can connect the MCP client to the server usin
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](tools/index.md)**  
-  Explore the available MCP tools for Ingres database operations.
+  Explore the available MCP tools for Ingres database operations
 
 - :material-folder-open: **[Resources](resources/index.md)**  
-  Learn about schema metadata resources.
+  Learn about schema metadata resources
 
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
-  Access pre-built templates for common database workflows.
+  Access pre-built templates for common database workflows
 
 </div>

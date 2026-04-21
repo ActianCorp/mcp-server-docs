@@ -50,9 +50,9 @@ You are a database expert. Answer the following question: What are the top 5 cus
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](../tools/index.md)**  
-  Learn about the SQL and schema tools provided by the Ingres server.
+  Learn about the SQL and schema tools provided by the Ingres MCP Server.
 
 - :material-folder-open: **[Resources](../resources/index.md)**  
-  Explore the various resource types available through the Ingres server.
+  Explore the various resource types available through the Ingres MCP Server.
 
 </div>

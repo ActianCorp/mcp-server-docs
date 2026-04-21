@@ -278,7 +278,7 @@ Show me all the functions in my database
 <div class="grid cards" markdown>
 
 - :material-folder-open: **[Resources](../resources/index.md)**  
-  Explore the resource types available through the Ingres server.
+  Explore the resource types available through the Ingres MCP Server.
 
 - :material-chat-processing: **[Prompts](../prompts/index.md)**  
   Use pre-built prompt templates for common Ingres workflows.
