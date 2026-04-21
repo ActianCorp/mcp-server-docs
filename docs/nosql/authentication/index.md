@@ -92,7 +92,7 @@ To secure the connection, provide a certificate and private key. The `.0.` in th
 |---|---|---|
 | `quarkus.tls.key-store.pem.0.cert` | Yes (for TLS) | Path to the PEM certificate file inside the container. |
 | `quarkus.tls.key-store.pem.0.key` | Yes (for TLS) | Path to the PEM private key file inside the container. |
-| `quarkus.http.insecure-requests` | No | Set to `redirect` to redirect all HTTP traffic to HTTPS. |
+| `quarkus.http.insecure-requests` | No | Controls how insecure HTTP requests are handled. Set it to `redirect` to send all HTTP traffic to HTTPS, or to `disabled` to reject insecure HTTP requests entirely. |
 
 !!! note "Quarkus TLS configuration"
     The table lists the most common properties. The full set of options is provided by the [Quarkus TLS Registry](https://quarkus.io/guides/tls-registry-reference) extension.
@@ -108,6 +108,7 @@ Add the following to your `application.properties`:
 nsql.connectionURL=<connection-url>
 quarkus.tls.key-store.pem.0.cert=/certs/server.crt
 quarkus.tls.key-store.pem.0.key=/certs/server.key
+quarkus.http.insecure-requests=redirect
 ```
 
 Then mount both the properties file and the certificate directory, and expose the HTTPS port:
