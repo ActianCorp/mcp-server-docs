@@ -12,8 +12,8 @@ The Actian MCP Server is distributed as Docker container images, with one dedica
 Before you begin, ensure that the following requirements are met:
 
 - **Container runtime**: Docker or Podman is installed on the host machine
-- **Database access**: There is network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, or Analytics Engine).
-- **AI client**: An MCP-compatible client, such as Claude Desktop, Cursor, GitHub Copilot, or Codex already exists.
+- **Database access**: There is network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, or Analytics Engine)
+- **AI client**: An MCP-compatible client, such as Claude Desktop, Cursor, GitHub Copilot, or Codex already exists
 
 ## Step 1: Select a Database Image
 
@@ -46,11 +46,11 @@ All database configurations except NoSQL share the following standard MCP server
 | `database_user` | String | Yes | Database username |
 | `database_password` | String | Yes | Database password |
 | `host` | String | Yes | Host address the MCP server listens to in the container |
-| `port` | String | Yes | Port the MCP server listens to in the container. |
-| `ssl_certfile` | String| No | Path to the TLS certificate file. In the container, this is always mapped to `/app/server.crt`. |
-| `ssl_keyfile` | String | No | Path to the TLS private key file. In the container, this is always mapped to `/app/server.key`. |
-| `log_level` | String | No | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. Defaults to `INFO`. |
-| `oauth` | Object | No | OAuth 2.0 configuration settings for authentication. For more information, see [Authentication Guide](../authentication/index.md).|
+| `port` | String | Yes | Port the MCP server listens to in the container |
+| `ssl_certfile` | String| No | Path to the TLS certificate file. In the container, this is always mapped to `/app/server.crt`|
+| `ssl_keyfile` | String | No | Path to the TLS private key file. In the container, this is always mapped to `/app/server.key` |
+| `log_level` | String | No | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. Defaults to `INFO` |
+| `oauth` | Object | No | OAuth 2.0 configuration settings for authentication. For more information, see [Authentication Guide](../authentication/index.md)|
 
 !!! note "Configuration File Protection"
     The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control.
@@ -62,7 +62,7 @@ All database configurations except NoSQL share the following standard MCP server
 
 To start the server, run the container and mount the configuration file to `/app/conf.json`. Use the `:ro` (read-only) flag in the `mount` command to ensure that the configuration file cannot be modified from inside the container.
 
-Run the following command (replace the image name with the database image as per Step 1): 
+Run the following command (replace the image name with the database image as per [Step 1](#step-1-select-a-database-image)): 
 
 !!! note "Analytics Engine example"
     The following example demonstrates how to start the Analytics Engine server.
