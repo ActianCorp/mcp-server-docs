@@ -5,7 +5,7 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 # Tools
 
-The Actian MCP Server for **HCL Informix® Database** exposes a set of built-in tools for database discovery and read-only query execution.
+The Actian MCP Server for HCL Informix® provides built-in tools for database discovery and read-only query execution.
 
 ## Available Tools
 
@@ -13,12 +13,12 @@ The Actian MCP Server for **HCL Informix® Database** exposes a set of built-in 
 |------|-------------|
 | [`execute_query`](#execute_query) | Runs a read-only SQL query against the connected database. |
 | [`list_tables`](#list_tables) | Lists available user tables and views. |
-| [`describe_table`](#describe_table) | Shows column definitions and comments for a table. |
+| [`describe_table`](#describe_table) | Displays column definitions, data types, and key information for a table.|
 | [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
 
 ## execute_query
 
-Executes a read-only SQL query against HCL Informix® database and returns the result set as structured JSON.
+Use this tool to run read-only SQL queries. The results are returned as structured JSON.
 
 !!! note "Result truncation"
     The `truncated` and `warning` fields appear only when the number of result rows exceeds the `max_rows` configuration.
@@ -27,7 +27,7 @@ Executes a read-only SQL query against HCL Informix® database and returns the r
 
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
-| `query` | `string` | ✓ | Read-only SQL query to execute. |
+| `query` | `string` | ✓ |The read-only SQL statement you want to execute. |
 
 ### Output Schema
 
@@ -89,7 +89,7 @@ Returns all user tables and views available in the connected database as structu
 
 ### Parameters
 
-This tool takes no input parameters.
+This resource does not require any input parameters.
 
 ### Output Schema
 
@@ -224,7 +224,7 @@ Returns user-defined functions and procedures, including their stored definition
 
 ### Parameters
 
-This tool takes no input parameters.
+This resource does not require any input parameters.
 
 ### Output Schema
 
@@ -278,6 +278,6 @@ Show me all the functions in my database
   Explore the resource types available through the HCL Informix® server.
 
 - :material-chat-processing: **[Prompts](../prompts/index.md)**  
-  Discover pre-built prompt templates for common HCL Informix® workflows.
+  Use pre-built prompt templates for common HCL Informix® workflows.
 
 </div>

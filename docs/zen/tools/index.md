@@ -5,11 +5,12 @@ description: Built-in tools available when using the Actian MCP Server with Acti
 
 # Tools
 
-The Actian MCP Server for **Actian Zen** provides 6 built-in tools for read-only database access, ORM operations, blob handling, and server management.
+The Actian MCP Server for Actian Zen includes six built-in tools for database access, ORM operations, blob handling, and server management.
 
----
 
 ## Available Tools
+
+Use the following tools to interact with the database:
 
 | Tool | Description |
 |------|-------------|
@@ -24,7 +25,7 @@ The Actian MCP Server for **Actian Zen** provides 6 built-in tools for read-only
 
 ## execute_query
 
-Executes a read-only SQL query against Actian Zen with automatic dialect translation. Suitable for complex queries including JOINs, subqueries, aggregations, and UNION.
+Executes a read-only SQL query against Actian Zen with automatic dialect translation. It supports complex queries like JOINs, subqueries, aggregations, and UNION.
 
 !!! note "Auto-translations"
     The following translations are applied automatically before execution:
@@ -385,6 +386,6 @@ Provides server management operations: list available databases, list DSNs with 
   Explore the resource types available through the Zen server.
 
 - :material-message-text: **[Prompts](../prompts/index.md)**  
-  Review the built-in prompt templates for common workflows.
+  Use the built-in prompt templates for common workflows.
 
 </div>

@@ -5,13 +5,16 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 # Tools
 
-The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for document database interaction.
+The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for database discovery and read-only query execution.
+
+!!! note "Response format"
+    All tools return results as **structured content** (`structuredContent`). For compatibility with older MCP clients, each response also includes the same data serialised as a JSON string in the `text` field.
 
 ## Available Tools
 
 | Tool | Purpose |
 |------|---------|
-| [`execute_query `](#execute_query) | Run a JPQL query. |
+| [`execute_query `](#execute_query) | Runs a read-only JPQL query. |
 | [`query_next `](#query_next) | Fetch the next page from a query cursor. |
 | [`get_object_by_loid `](#get_object_by_loid) | Fetch one object by LOID. |
 | [`get_objects_by_loids `](#get_objects_by_loids) | Fetch multiple objects by LOID. |
@@ -35,88 +38,73 @@ The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for d
 
 ## execute_query
 
-### Description
+Runs a read-only JPQL query against the connected Actian NoSQL Database and returns the first page of results with pagination metadata. If `pagination.hasMore` is `true`, use `query_next` with the returned `cursorId` to fetch subsequent pages.
 
-Use `execute_query` to start any database query from the MCP server.
+!!! note "JPQL limitations"
+    The following are **not** supported in this dialect:
 
-It returns the following:
+    - `JOIN` — use dot notation instead (for example, `p.department.name = 'Engineering'`)
+    - Aggregate functions (`COUNT`, `SUM`, `AVG`, etc.)
+    - Collection traversal — only single-reference paths are allowed
+    - The `in` operator on collections
 
-	•  The first page of results.
-	•  Paging metadata.
-	•  A cursor id if more results are available.
-
-If the response says there are more results, you continue with `query_next` using the returned cursor.
-
-### When to Use It
-
-Use `execute_query` when:
-
-	•  You want to search objects by field values.
-	•  You want a filtered set of entities.
-	•  You do not already know the target object LOIDs.
-	•  You want to inspect a subset of data before fetching more pages.
-
-Prefer the LOID fetch tools instead when:
-
-	•  You already know the object LOID(s).
-	•  You want the fastest direct retrieval path.
-
-
-### Input Parameters
+### Parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `jpql` | `string` | Yes | The JPQL SELECT query to execute. |
-| `limit` | `number` | No | Maximum number of items to return in the first page. |
-
+|-------|------|:--------:|-------------|
+| `jpql` | `string` | ✓ | JPQL SELECT query to execute. |
+| `limit` | `number` | | Maximum number of results to return per page. The server enforces a maximum of **1000** per page. Use the same value in subsequent `query_next` calls for consistent pagination. |
 
 ### Output Schema
 
 ```json
 {
-	"items": [ /*array of objects, each representing a result item*/ ],
-	"count": 0, // integer: number of items in this page
-	"query": "string", // the original JPQL query string
-	"pagination":
-	{
-		"hasMore": false, // boolean: whether more items exist beyond this page
-		"cursorId": "string or null" // string: opaque cursor handle for query_next, or null if hasMore is false
-	}
+  "items": [],       // array of result objects for this page
+  "count": 0,        // number of items in this page
+  "query": "string", // the original JPQL query string
+  "pagination": {
+    "hasMore": false,       // true if more pages are available
+    "cursorId": "string"    // cursor handle for query_next; null when hasMore is false
+  }
 }
 ```
 
 ### Example
 
-Show me all cars with the plate containing “123”
+**User Request**
+
+```
+Show me all employees
+```
+
+**Input**
 
 ```json
 {
-	“jpql”: "select c from Car c where c.plate like '%123%'"
+  "jpql": "select e from Employee e"
 }
 ```
 
-### Success Response Example
+**Response**
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "id": 5,
-  "result": {
-    "isError": false,
-    "structuredContent": {
-      "items": [
-        {
-          "plate": "1234",
-          "thing": "54.0.22538",
-          "vehicle": "54.0.22539"
-        }
-      ],
-      "count": 1,
-      "query": "select c from Car c where c.plate like '%123%'",
-      "pagination": {
-        "hasMore": false
-      }
-    }
+  "items": [
+    {
+      "name": "Diana",
+      "department": "Executive",
+      "annualSalary": 250000,
+      "active": true,
+      "address": "135.0.2142",
+      "accessLevels": [1, 5, 10, 99],
+      "subordinates": ["135.0.2145"]
+    },
+    "..."
+  ],
+  "count": 3,
+  "query": "select e from Employee e",
+  "pagination": {
+    "hasMore": false
   }
 }
 ```
@@ -125,38 +113,60 @@ Show me all cars with the plate containing “123”
 
 ## query_next
 
-### Description
+Fetches the next page of results from a paginated query. Call this tool after `execute_query` returns `pagination.hasMore=true`, passing the `cursorId` from that response. The cursor is automatically closed when exhausted or after a period of inactivity — if it has expired, restart with `execute_query`.
 
-The `query_next` tool is used to retrieve the next page of results from a paginated JPQL query. When you execute a query with `execute_query` and the response indicates that more results are available (pagination.hasMore is true), you use `query_next` with the provided cursorId to fetch subsequent pages.
+### Parameters
 
-### Usage
+| Field | Type | Required | Description                                                                                                                                                                             |
+|-------|------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `cursorId` | `string` | ✓ | The cursor ID returned from `execute_query` or a previous `query_next` call.                                                                                                            |
+| `limit` | `number` | | Maximum number of results to return per page. The server enforces a maximum of **1000** per page. Use the same value as in the original `execute_query` call for consistent page sizes. |
 
-	1. Run `execute_query` with your JPQL query.
-	2. If the response contains "pagination.hasMore": true, note the "cursorId".
-	3. Call `query_next` with that cursorId to get the next page of results.
-	4. Repeat until "pagination.hasMore" is false.
+### Output Schema
 
-### Input Parameters
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `cursorId` | `string` | Yes | The cursor ID returned from `execute_query` or a previous `query_next` call. |
-| `limit` | `number` | No | Maximum number of items to return in the first page. |
-
-### Response Schema
-
-The response from `query_next` is identical to `execute_query`:
+The output is identical to `execute_query`:
 
 ```json
 {
-	"items": [ /*array of objects, each representing a result item*/ ],
-	"count": 0, // integer: number of items in this page
-	"query": "string", // the original JPQL query string
-	"pagination":
-	{
-		"hasMore": false, // boolean: whether more items exist beyond this page
-		"cursorId": "string or null" // string: opaque cursor handle for query_next, or null if hasMore is false
-	}
+  "items": [],       // array of result objects for this page
+  "count": 0,        // number of items in this page
+  "query": "string", // the original JPQL query string
+  "pagination": {
+    "hasMore": false,       // true if more pages are available
+    "cursorId": "string"    // cursor handle for the next call; null when hasMore is false
+  }
+}
+```
+
+### Example
+
+**Input**
+
+```json
+{
+  "cursorId": "f10a7b2b-9532-4280-acdb-fbd41ca7eb35"
+}
+```
+
+**Response**
+
+```json
+{
+  "items": [
+    {
+      "name": "Alice",
+      "department": "Engineering",
+      "annualSalary": 120000,
+      "active": true,
+      "address": "135.0.2142"
+    },
+    "..."
+  ],
+  "count": 2,
+  "query": "select e from Employee e",
+  "pagination": {
+    "hasMore": false
+  }
 }
 ```
 
@@ -164,69 +174,53 @@ The response from `query_next` is identical to `execute_query`:
 
 ## get_object_by_loid
 
-### Description
+Retrieves a single object from the database by its LOID (Logical Object ID). Fetching by LOID is faster than a JPQL query. LOIDs are strings in the format `<classId>.<volumeId>.<objectId>` — for example, `135.0.2146`.
 
-The `get_object_by_loid` tool retrieves a single object from the database using its LOID (Logical Object ID). This is the fastest way to fetch a specific instance when you already know its LOID.
-
-### When to Use
-Use this tool when you need to fetch details for a specific object and you already have its LOID. For multiple objects, use `get_objects_by_loids`.
-
-Usage Steps:
-
-	1. Obtain the LOID of the object you want (for example, from a previous query).
-	2. Call `get_object_by_loid` with the LOID as a parameter.
-	3. The tool returns the full object data for that LOID.
-
-### Input Parameters
+### Parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `loid` | `string` | Yes | The LOID of the instance in dotted string format (for example, "15.0.2085") |
+|-------|------|:--------:|-------------|
+| `loid` | `string` | ✓ | The LOID of the object to retrieve. |
 
-### Response Schema
+### Output Schema
 
 ```json
 {
-  "found": true,                // boolean: true if the object was found, false otherwise
-  "data": {                     // object: the fetched object data, or null if not found
-    "loid": "string",           // string: Logical Object ID (e.g., "15.0.2085")
-    "className": "string",      // string: class name of the object
-    "fields": {                 // object: map of field names to their values
-      "field1": "value1",
-      "field2": "value2"
-      // ... more fields ...
-    }
+  "found": true,         // true if the object was found, false otherwise
+  "data": {
+    "loid": "string",    // the LOID of the object
+    "className": "string", // class name of the object
+    "fields": {}         // map of field names to their values
   }
 }
 ```
 
 ### Example
 
-Get the object with id 54.0.22538
+**Input**
 
 ```json
 {
-  "loid": "54.0.22538"
+  "loid": "135.0.2146"
 }
 ```
 
-### Success Response Example
+**Response**
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "id": 9,
-  "result": {
-    "isError": false,
-    "structuredContent": {
-      "found": true,
-      "data": {
-        "loid": "54.0.22538",
-        "className": "Vehicle",
-        "fields": {
-          "plate": "1234"
-        }
-      }
+  "found": true,
+  "data": {
+    "loid": "135.0.2146",
+    "className": "Employee",
+    "fields": {
+      "name": "Bob",
+      "department": "Engineering",
+      "annualSalary": 90000,
+      "active": true,
+      "address": "135.0.2143",
+      "skills": ["135.0.2138", "135.0.2136"],
+      "technicalTags": ["Backend", "API"]
     }
   }
 }
@@ -236,89 +230,70 @@ Get the object with id 54.0.22538
 
 ## get_objects_by_loids
 
-### Description
+Retrieves multiple objects from the database by their LOIDs (Logical Object IDs) in a single call. Fetching by LOID is faster than a JPQL query.
 
-The `get_objects_by_loids` tool retrieves multiple objects from the database using their LOIDs (Logical Object ID). This is the fastest way to fetch a specific instances when you already know their LOIDs.
-
-### When to Use
-Use this tool when you need to fetch details for specific objects and you already have their LOIDs.
-
-Usage Steps:
-
-	1. Obtain the LOIDs of the objects you want to fetch (for example, from a previous query).
-	2. Call `get_objects_by_loid` with the LOIDs as a parameter.
-	3. The tool returns the full object data for these LOIDs.
-
-### Input Parameters
+### Parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `loids` | `string[]` | Yes | An array of LOIDs for the instances to be fetched in dotted string format (for example, "15.0.2085") |
+|-------|------|:--------:|-------------|
+| `loids` | `string[]` | ✓ | Array of LOIDs to retrieve. Each LOID is a string in the format `<classId>.<volumeId>.<objectId>` — for example, `135.0.2145`. |
 
-### Response Schema
+### Output Schema
 
 ```json
 {
   "objects": [
     {
-      "loid": "string",         // Logical Object ID (e.g., "15.0.2085")
-      "className": "string",    // Class name of the object
-      "fields": {               // Map of field names to their values
-        "field1": "value1",
-        "field2": "value2"
-        // ... more fields ...
-      }
+      "loid": "string",      // the LOID of the object
+      "className": "string", // class name of the object
+      "fields": {}           // map of field names to their values
     }
-    // ... more objects ...
   ],
-  "count": 0                   // Number of objects returned (integer)
+  "count": 0                 // number of objects returned
 }
 ```
 
 ### Example
 
-Get the objects with id 54.0.22537, 54.0.22538
+**Input**
 
 ```json
 {
-  "loids": [
-    "54.0.22537",
-    "54.0.22539"
-  ]
+  "loids": ["135.0.2145", "135.0.2146"]
 }
 ```
 
-### Success Response Example
-
+**Response**
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "id": 33,
-  "result": {
-    "isError": false,
-    "structuredContent": {
-      "objects": [
-        {
-          "loid": "54.0.22537",
-          "className": "Car",
-          "fields": {
-            "plate": "1234",
-            "thing": "54.0.22538",
-            "vehicle": "54.0.22539"
-          }
-        },
-        {
-          "loid": "54.0.22539",
-          "className": "Vehicle",
-          "fields": {
-            "plate": "1234"
-          }
-        }
-      ],
-      "count": 2
+  "objects": [
+    {
+      "loid": "135.0.2145",
+      "className": "Employee",
+      "fields": {
+        "name": "Alice",
+        "department": "Engineering",
+        "annualSalary": 120000,
+        "active": true,
+        "address": "135.0.2142",
+        "subordinates": ["135.0.2146", "135.0.2147"]
+      }
+    },
+    {
+      "loid": "135.0.2146",
+      "className": "Employee",
+      "fields": {
+        "name": "Bob",
+        "department": "Engineering",
+        "annualSalary": 90000,
+        "active": true,
+        "address": "135.0.2143",
+        "technicalTags": ["Backend", "API"]
+      }
     }
-  }
+  ],
+  "count": 2
 }
 ```
 
@@ -326,41 +301,27 @@ Get the objects with id 54.0.22537, 54.0.22538
 
 ## count_classes
 
-### Description
+Returns the total number of classes in the database schema.
 
-The `count_classes` tool returns the total number of classes (entity types) defined in the database schema. It provides a single integer value representing how many distinct classes are available for querying or object retrieval. This is useful for schema introspection and understanding the data model's complexity.
+### Parameters
 
-### Input Parameters
-
-This tool does not use any input parameters.
+This tool takes no input parameters.
 
 ### Output Schema
 
 ```json
 {
-  "count": 0 // integer: the total number of classes in the database schema
+  "count": 0 // total number of classes
 }
-
 ```
 
 ### Example
 
-```json
-{}
-```
-
-### Success Response Example
+**Response**
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "id": 36,
-  "result": {
-    "isError": false,
-    "structuredContent": {
-      "count": 3
-    }
-  }
+  "count": 7
 }
 ```
 
@@ -368,13 +329,11 @@ This tool does not use any input parameters.
 
 ## list_classes
 
-### Description
+Lists all classes in the database schema and their inheritance hierarchy. Returns each class name and its direct parent classes (if any). Use this to discover available classes before querying or describing specific ones.
 
-The `list_classes` tool returns a list of all classes (entity types) defined in the database schema, along with their names and superclasses. This is useful for discovering the available data model structure and understanding class inheritance relationships.
+### Parameters
 
-### Input Parameters
-
-This tool does not use any input parameters.
+This tool takes no input parameters.
 
 ### Output Schema
 
@@ -382,46 +341,30 @@ This tool does not use any input parameters.
 {
   "classes": [
     {
-      "name": "string",         // Name of the class (entity type)
-      "superclass": "string"    // Name of the superclass (or null if none)
+      "name": "string",           // class name
+      "superclasses": ["string"]  // list of direct parent class names; empty if none
     }
-    // ... more classes ...
   ],
-  "count": 0                   // Total number of classes (integer)
+  "count": 0                      // total number of classes
 }
 ```
 
 ### Example
 
-```json
-{}
-```
-
-### Success Response Example
+**Response**
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "id": 37,
-  "result": {
-    "isError": false,
-    "structuredContent": {
-      "classes": [
-        {
-          "name": "Vehicle",
-          "superclass": "Thing"
-        },
-        {
-          "name": "Car",
-          "superclass": "Vehicle"
-        },
-        {
-          "name": "Thing"
-        }
-      ],
-      "count": 3
-    }
-  }
+  "classes": [
+    { "name": "Project", "superclasses": [] },
+    { "name": "Skill", "superclasses": [] },
+    { "name": "Employee", "superclasses": ["Worker"] },
+    { "name": "Contractor", "superclasses": ["Worker"] },
+    { "name": "Address", "superclasses": [] },
+    { "name": "Worker", "superclasses": [] },
+    { "name": "Certificate", "superclasses": [] }
+  ],
+  "count": 7
 }
 ```
 
@@ -429,80 +372,72 @@ This tool does not use any input parameters.
 
 ## describe_class
 
-### Description
+Describes the schema of a specific class, including its direct superclasses, declared fields, and all inherited fields. Use this after `list_classes` to understand the structure of a specific entity before querying it.
 
-The `describe_class` tool provides a detailed description of a specific class in the **Actian NoSQL Database** schema. Its main purpose is to return the schema metadata for a given class, including:
-
-	•  The class name and its superclass (if any)
-	•  All declared fields (attributes) of the class
-	•  All inherited fields from parent classes
-	•  Field types, names, and possibly additional metadata (such as whether a field is a reference, collection, etc.)
-
-This tool is typically used to programmatically discover the structure of entities in the database, which is essential for dynamic clients, schema introspection, or building generic UI/data tools.
-
-### Input Parameters
+### Parameters
 
 | Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `className` | `string` | Yes | The name of the class to describe (case-sensitive). |
+|-------|------|:--------:|-------------|
+| `className` | `string` | ✓ | The name of the class to describe (case-sensitive). |
 
 ### Output Schema
 
 ```json
 {
-	"className": "string", // Name of the class (entity)
-	"superClassName": "string|null", // Name of the superclass, or null if none
-	"fields": [ 
-		{
-			"name": "string", // Field name
-			"type": "string", // Field type (e.g., "String", "Integer", "Date", "Reference", etc.)
-			"reference": "boolean", // True if the field is a reference to another class
-			"collection": "boolean", // True if the field is a collection (list/set)
-			"declaredIn": "string", // Name of the class where the field is declared
-			"nullable": "boolean", // True if the field can be null
-			"description": "string|null" // Optional field description or comment
-			// ...other metadata as needed
-		 }
-		// ...more fields
-	]
- }
+  "name": "string",               // class name
+  "superclasses": [
+    {
+      "name": "string",           // direct parent class name
+      "superclasses": ["string"]  // parent's own direct parents; empty if none
+    }
+  ],
+  "declaredFields": [
+    {
+      "name": "string",           // field name
+      "type": "string"            // field type
+    }
+  ],
+  "allFields": [
+    {
+      "name": "string",           // field name (declared or inherited)
+      "type": "string"            // field type
+    }
+  ]
+}
 ```
 
 ### Example
 
+**Input**
+
 ```json
 {
-  "className": "Vehicle"
+  "className": "Employee"
 }
 ```
 
-### Success Response Example
+**Response**
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "id": 4,
-  "result": {
-    "isError": false,
-    "structuredContent": {
-      "name": "Vehicle",
-      "superclass": {
-        "name": "Thing"
-      },
-      "declaredFields": [
-        {
-          "name": "plate",
-          "type": "java.lang.String"
-        }
-      ],
-      "allFields": [
-        {
-          "name": "plate",
-          "type": "java.lang.String"
-        }
-      ]
-    }
-  }
+  "name": "Employee",
+  "superclasses": [
+    { "name": "Worker", "superclasses": [] }
+  ],
+  "declaredFields": [
+    { "name": "annualSalary", "type": "int" },
+    { "name": "department", "type": "java.lang.String" },
+    { "name": "subordinates", "type": "java.util.List" },
+    "..."
+  ],
+  "allFields": [
+    { "name": "active", "type": "boolean" },
+    { "name": "address", "type": "Address {city: java.lang.String; street: java.lang.String; }" },
+    { "name": "name", "type": "java.lang.String" },
+    { "name": "annualSalary", "type": "int" },
+    { "name": "department", "type": "java.lang.String" },
+    "..."
+  ]
 }
 ```
 
@@ -510,124 +445,85 @@ This tool is typically used to programmatically discover the structure of entiti
 
 ## get_complete_schema
 
-### Description
+Returns the complete database schema with detailed field information for every class. Each entry includes the class name, direct superclasses, declared fields, and all inherited fields. Prefer this tool when you need a complete picture of the data model upfront, instead of calling `list_classes` followed by multiple `describe_class` calls.
 
-The `get_complete_schema` tool returns the entire database schema for the  connected **Actian NoSQL Database**. It provides detailed metadata for every class in the schema, including class names, superclasses, and all declared and inherited fields with their types and properties.
+### Parameters
 
-This tool is useful for clients or tools that need to understand the full data model in a single call, enabling dynamic UI generation, schema introspection, or code generation.
-
-### Input Parameters
-
-This tool does not use any input parameters.
+This tool takes no input parameters.
 
 ### Output Schema
 
 ```json
 {
-	"classes": [
-	{
-		"className": "string", // Name of the class (entity)
-		"superClassName": "string|null", // Name of the superclass, or null if none
-		"fields": [
-		{
-			"name": "string", // Field name
-			"type": "string", // Field type (e.g., "String", "Integer", "Date", "Reference", etc.)
-			"reference": "boolean", // True if the field is a reference to another class
-			"collection": "boolean", // True if the field is a collection (list/set)
-			"declaredIn": "string", // Name of the class where the field is declared
-			"nullable": "boolean", // True if the field can be null
-			"description": "string|null" // Optional field description or comment
-			// ...other metadata as needed
-		}
-		// ...more fields
-		]
-	} 
-	// ...more classes
-	]
+  "classes": [
+    {
+      "name": "string",               // class name
+      "superclasses": [
+        {
+          "name": "string",           // direct parent class name
+          "superclasses": ["string"]  // parent's own direct parents; empty if none
+        }
+      ],
+      "declaredFields": [
+        { "name": "string", "type": "string" }
+      ],
+      "allFields": [
+        { "name": "string", "type": "string" }
+      ]
+    }
+  ],
+  "count": 0                          // total number of classes
 }
 ```
 
-Explanation:
-
-	•  The top-level object contains a "classes" array.
-	•  Each entry in "classes" describes a single class/entity in the schema.
-	•  Each class includes its name, optional superclass, and a list of all fields (including inherited ones).
-	•  	Each field object provides its name, type, reference/collection status, where it was declared, nullability, and an optional description.
-
 ### Example
 
-```json
-{}
-```
-
-### Success Response Example
+**Response**
 
 ```json
 {
-  "jsonrpc": "2.0",
-  "id": 10,
-  "result": {
-    "isError": false,
-    "structuredContent": {
-      "classes": [
-        {
-          "name": "Vehicle",
-          "superclass": {
-            "name": "Thing"
-          },
-          "declaredFields": [
-            {
-              "name": "plate",
-              "type": "java.lang.String"
-            }
-          ],
-          "allFields": [
-            {
-              "name": "plate",
-              "type": "java.lang.String"
-            }
-          ]
-        },
-        {
-          "name": "Car",
-          "superclass": {
-            "name": "Vehicle",
-            "superclass": "Thing"
-          },
-          "declaredFields": [
-            {
-              "name": "somethingElse",
-              "type": "Thing {}"
-            },
-            {
-              "name": "trailer",
-              "type": "Vehicle extends Thing {plate: java.lang.String; }"
-            }
-          ],
-          "allFields": [
-            {
-              "name": "plate",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "somethingElse",
-              "type": "Thing {}"
-            },
-            {
-              "name": "trailer",
-              "type": "Vehicle extends Thing {plate: java.lang.String; }"
-            }
-          ]
-        },
-        {
-          "name": "Thing",
-          "declaredFields": [],
-          "allFields": []
-        }
+  "classes": [
+    {
+      "name": "Project",
+      "superclasses": [],
+      "declaredFields": [
+        { "name": "budget", "type": "int" },
+        { "name": "projectName", "type": "java.lang.String" }
       ],
-      "count": 3
-    }
-  }
+      "allFields": [
+        { "name": "budget", "type": "int" },
+        { "name": "projectName", "type": "java.lang.String" }
+      ]
+    },
+    {
+      "name": "Employee",
+      "superclasses": [{ "name": "Worker", "superclasses": [] }],
+      "declaredFields": [
+        { "name": "annualSalary", "type": "int" },
+        { "name": "department", "type": "java.lang.String" }
+      ],
+      "allFields": [
+        { "name": "active", "type": "boolean" },
+        { "name": "name", "type": "java.lang.String" },
+        { "name": "annualSalary", "type": "int" },
+        { "name": "department", "type": "java.lang.String" }
+      ]
+    },
+    {
+      "name": "Worker",
+      "superclasses": [],
+      "declaredFields": [
+        { "name": "active", "type": "boolean" },
+        { "name": "name", "type": "java.lang.String" }
+      ],
+      "allFields": [
+        { "name": "active", "type": "boolean" },
+        { "name": "name", "type": "java.lang.String" }
+      ]
+    },
+    "..."
+  ],
+  "count": 7
 }
 ```
 

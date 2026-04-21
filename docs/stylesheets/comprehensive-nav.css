@@ -12,7 +12,7 @@
 /* Section headings with subsections */
 .comprehensive-nav .md-nav__item--section > .md-nav__link {
   font-weight: 500;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   cursor: pointer !important;
   display: flex;
   justify-content: space-between;
@@ -55,7 +55,7 @@
 
 /* Simple links without subsections */
 .comprehensive-nav .md-nav__item:not(.md-nav__item--section) > .md-nav__link {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 0.8rem;
   padding: 0.35rem 0.6rem;
   margin-bottom: 0.05rem;
@@ -118,4 +118,54 @@
 .comprehensive-nav .md-nav__link--active {
   color: var(--md-primary-fg-color);
   font-weight: 500;
+}
+
+/* Toggle arrow - lighter, thinner */
+.comprehensive-nav .nav-toggle-btn {
+  font-weight: 300;
+  opacity: 0.55;
+  font-size: 0.95rem !important;
+}
+
+.comprehensive-nav .nav-toggle-btn:hover {
+  opacity: 0.85;
+}
+
+/* Collapsible subsection header (e.g. Authentication inside NoSQL) */
+.comprehensive-nav .md-nav__link--subsection-header {
+  font-size: 0.64rem;
+  font-weight: 400;
+  padding: 0.35rem 0.6rem 0.35rem 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  color: var(--md-default-fg-color--light);
+  border-radius: 0.2rem;
+  transition: background-color 0.2s;
+}
+
+.comprehensive-nav .md-nav__link--subsection-header:hover {
+  background-color: var(--md-default-fg-color--lightest);
+}
+
+.comprehensive-nav .md-nav__link--subsection-header a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.comprehensive-nav .md-nav__link--subsection-header.md-nav__link--active,
+.comprehensive-nav .md-nav__link--subsection-header a.md-nav__link--active {
+  color: var(--md-primary-fg-color);
+}
+
+/* Nested level-2 links (Auth0, Keycloak) */
+.comprehensive-nav .md-nav[data-md-level="2"] .md-nav__link {
+  padding: 0.3rem 0.6rem 0.3rem 2.8rem;
+  font-size: 0.62rem;
+  font-weight: 400;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 0.05rem;
+  line-height: 1.5;
 }

@@ -1,11 +1,11 @@
 ---
 title: Prompts
-description: Overview of the prompts available when using the Actian MCP Server with Actian NoSQL.
+description: Overview of the prompts available when using the Actian MCP Server with Actian NoSQL Database.
 ---
 
 # Prompts
 
-The Actian MCP Server for **Actian NoSQL** provides a built-in prompt that transforms natural-language questions into structured, database-expert queries.
+The Actian MCP Server for **Actian NoSQL Database** provides a built-in prompt that transforms natural-language questions into structured, database-expert queries.
 
 ## Available Prompts
 

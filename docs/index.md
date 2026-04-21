@@ -10,7 +10,7 @@ hide:
 <div class="databases-section">
   <div class="features-header">
     <p class="databases-subtitle">
-      The Model Context Protocol (MCP) is an open standard that enables large language models (LLMs) to securely access and interact with external data sources and tools. MCP is like a universal plug, a USB-C port for artificial intelligence (AI). Instead of building fragile, custom integrations for every database, MCP provides a standardized way for AI models to connect directly to your infrastructure. This allows the model to understand schemas, execute queries, and retrieve real-time context, without the need for data to leave the secure environment.
+      The Model Context Protocol (MCP) is an open standard that enables large language models (LLMs) to securely access and interact with external data sources and tools. MCP is like a universal plug, a USB-C port for artificial intelligence (AI). Instead of building fragile, custom integrations for every database, MCP provides a standardized way for AI models to connect directly to your database. This allows the model to understand schemas, execute queries, and retrieve real-time context, without the need for data to leave the secure environment.
     </p>
     <div class="hero-cta">
       <a href="https://hub.docker.com/u/actian" class="primary-link">Actian MCP Hub →</a>
@@ -103,15 +103,15 @@ hide:
 
   <div class="features-grid">
     <div class="feature-item">
-      <h4 class="feature-title">1. Agent Request   --> </h4>
+      <h4 class="feature-title">1. Agent Request </h4>
       <p class="feature-description">The AI agent (for example, Claude or GPT-4o) requests a specific tool or data point.</p>
     </div>
     <div class="feature-item">
-      <h4 class="feature-title">2. Native Translation   --> </h4>
+      <h4 class="feature-title">2. Native Translation  </h4>
       <p class="feature-description">The MCP Server, running securely in your Docker environment, translates that request into native database syntax.</p>
     </div>
     <div class="feature-item">
-      <h4 class="feature-title">3. Secure Execution   --> </h4>
+      <h4 class="feature-title">3. Secure Execution  </h4>
       <p class="feature-description">The database executes the request and returns only the necessary context.</p>
     </div>
     <div class="feature-item">

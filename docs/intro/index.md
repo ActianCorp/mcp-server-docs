@@ -63,7 +63,7 @@ JWT Validation"]
         core["MCP Protocol Handler"]
         tools["Tools
 ─────────────
-• Run SQL Queries
+• Execute SQL Queries
 • List Tables & Views
 • Describe Table Schema
 • List Functions"]
@@ -72,8 +72,7 @@ JWT Validation"]
 • Schema Metadata
 • Table Definitions"]
         plugins["Database Plugins"]
-        pool["Connection Pool
-(ODBC)"]
+        pool["Connection Pool"]
     end
 
     subgraph Databases["Actian Databases"]
@@ -134,7 +133,7 @@ sequenceDiagram
         Server->>Plugin: SET SESSION AUTHORIZATION
     end
 
-    Plugin->>DB: Execute read-only SQL (ODBC)
+    Plugin->>DB: Execute read-only queries
     DB-->>Plugin: Query results
     Plugin-->>Server: Formatted response
     Server-->>Transport: MCP response
@@ -177,7 +176,7 @@ You can deploy an MCP Server as follows:
 </div>
 <div class="step-item">
 <h4 class="step-title">Connect to the database</h4>
-<p class="step-description">The server connects to the target DBMS using an ODBC connection pool.</p>
+<p class="step-description">The server connects to the target DBMS using a connection pool.</p>
 </div>
 <div class="step-item">
 <h4 class="step-title">Use database capabilities</h4>

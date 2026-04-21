@@ -5,8 +5,7 @@ description: Overview of the resources available when using the Actian MCP Serve
 
 # Resources
 
-The Actian MCP Server for **Actian Zen** exposes a built-in resource for database schema discovery.
-
+The Actian MCP Server for Actian Zen provides a dedicated resource for discovering the database schema. This resource allows the server to share the database structure directly with an LLM, enabling more accurate query generation.
 
 ## Available Resources
 
@@ -18,14 +17,14 @@ The Actian MCP Server for **Actian Zen** exposes a built-in resource for databas
 
 ## resource://database/schema
 
-Returns the complete database schema as JSON, including tables, columns, types, nullability, primary keys, foreign keys, indexes, and row counts. This resource is injected into the LLM system prompt so the model has full awareness of the database structure.
+The `resource://database/schema` URI returns the complete database schema as JSON, including tables, columns, types, nullability, primary keys, foreign keys, indexes, and row counts. This data is injected into the LLM system prompt, giving the model full awareness of the database structure, including nullability, primary and foreign keys, and indexes.
 
 !!! info "Schema introspection method"
     The schema is built using SQLAlchemy introspection over the Zen ODBC connection, with Zen-specific type mapping applied to each column.
 
 ### Parameters
 
-This resource takes no input parameters.
+This resource does not require any input parameters.
 
 ### Output Schema
 
@@ -134,6 +133,6 @@ resource://database/schema
   Explore the available MCP tools for Actian Zen database operations.
 
 - :material-chat-processing: **[Prompts](../prompts/index.md)**  
-  Discover pre-built prompt templates for common Zen workflows.
+  Use pre-built prompt templates for common Zen workflows.
 
 </div>
