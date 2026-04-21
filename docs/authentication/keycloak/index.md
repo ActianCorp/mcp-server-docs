@@ -5,10 +5,9 @@ description: Step-by-step guide to configure Keycloak as the OAuth identity prov
 
 # Configuring Keycloak 
 
-This guide describes how to create and configure a Keycloak Realm, Client, and Audience Mapper. These steps enable the Actian MCP Server to authenticate users via OAuth 2.0 and OpenID Connect (OIDC).
+This guide describes the creation and configuration of a Keycloak Realm, Client, and Audience Mapper. It enables the Actian MCP Server to authenticate users through OAuth 2.0 and OpenID Connect (OIDC). 
 
-
-By the end of this guide, you can have the values required to populate the `oauth` block in the `conf.json` file. For the full configuration reference and shared concepts, such as TLS, user impersonation, and security practices, see  [Authentication overview](../index.md).
+By the end of this guide, you will have the values that are required to populate the `oauth` block in the `conf.json` file. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see  [Authentication Overview](../index.md).
 
 !!! info "Generic OIDC provider"
     FastMCP uses a generic OIDC provider. While there is no dedicated Keycloak class, the server uses the `OIDCProxy` provider, which is compatible with any OIDC-compliant identity provider.
@@ -21,39 +20,39 @@ If you are an experienced Keycloak user, use the following checklist to set up t
 1. **Create a realm** (or use an existing one).
 2. **Create a client** with _Client authentication_ enabled and record the **Client ID** and **Client Secret**.
 3. **Add an audience mapper** using the **Included Custom Audience** field to show the audience string in the token's `aud` claim. 
-       !!! warning
-        If you skip this, the MCP Server rejects tokens with `audience mismatch`.
-4. **(optional)** Add a **sub override mapper** to the `sub` claim containing the username instead of a UUID.
-5. **Create users** in the realm (if using `user_impersonation: true`).
-6. **Fill `conf.json`** with the values from step 1 to step 3.
-7. **Start the server** with `--transport sse` (or `http` / `streamable-http`).
+   !!! warning
+       If you skip this step, the MCP Server rejects tokens with `audience mismatch`.
+4. **(Optional)** Add a **sub override mapper** to the `sub` claim containing the username instead of a UUID.
+5. **Create users** in the realm, if using `user_impersonation: true`.
+6. **Fill `conf.json`** file with the values from Step 1 to Step 3.
+7. **Start the server** with `--transport sse`or `http` / `streamable-http`.
 
 
 ## Prerequisites - New Keycloak User
 
-- A running Keycloak instance (version 22 or higher) accessible by the MCP server.
-- Admin access to the Keycloak Admin Console.
-- The Actian MCP Server installed and ready for deployment.
+- A running Keycloak instance (version 22 or higher) is accessible by the MCP server.
+- Admin access is granted to the Keycloak Admin Console.
+- The Actian MCP Server is installed and ready for deployment.
 
 !!! note "Keycloak version"
     This guide is optimized for Quarkus-based Keycloak (v22+). If you are using a WildFly-based version (v17 or older), the UI and URL structures will differ significantly.
 
 !!! warning "Default admin credentials"
-    If your Keycloak instance uses the default `admin` / `admin` credentials, change it via **Users → admin → Credentials** in the `master` realm.
+    If your Keycloak instance uses the default `admin` / `admin` credentials, change it through **Users** > **admin** > **Credentials** in the `master` realm.
 
 
 ## Step 1: Create a Keycloak Realm
 
 A Realm is an isolated container for managing users, credentials, and roles.
 
-1. Log in to the Keycloak Admin Console (`http://<keycloak-host>:8080/admin`).
-2. In the top-left dropdown (showing `master`), select **Create Realm**.
+1. Log in to the Keycloak Admin Console `http://<keycloak-host>:8080/admin`.
+2. In the top-left drop-down (displaying `master`), select **Create Realm**.
 3. Fill the form as follows:
 
     | Field | Value | Notes |
     |-------|-------|-------|
-    | **Realm name** | `actian-mcp` | Any descriptive name. Appears in all OIDC URLs. |
-    | **Enabled** | `On` | |
+    | **Realm name** | `actian-mcp` | Any descriptive name; it appears in all OIDC URLs. |
+    | **Enabled** | `On` | NA |
 
 4. Select **Create**.
 
@@ -66,10 +65,10 @@ A Realm is an isolated container for managing users, credentials, and roles.
 
 ## Step 2: Create a Keycloak Client
 
-The client represents the MCP server’s OAuth credentials and holds the `client_id` and `client_secret`.
+The client represents the MCP server’s OAuth credentials and holds `client_id` and `client_secret`.
 
 1. In the Admin Console, select your realm from the drop-down.
-2. Select **Clients** in the left sidebar.
+2. Select **Clients** in the left panel.
 3. Select **Create client**.
 4. Fill the form as follows:
 
@@ -79,26 +78,26 @@ The client represents the MCP server’s OAuth credentials and holds the `client
     | **Client ID** | `actian-mcp` | Becomes both `FASTMCP_SERVER_AUTH_CLIENT_ID` and `FASTMCP_SERVER_AUTH_AUDIENCE` (after audience mapper). |
 
 5. Select **Next**.
-6. On the **Capability config** screen:
+6. On the **Capability config** screen, configure the following values:
 
     | Setting | Value | Notes |
     |---------|-------|-------|
-    | **Client authentication** | `On` | Makes the client _confidential_ and generates a client secret. |
-    | **Authorization** | `Off` | Not needed for basic OAuth. |
-    | **Standard flow** | Checked | Required for browser login. |
-    | **Direct access grants** | Checked | For testing only. |
+    | **Client authentication** | `On` | Makes the client _confidential_ and generates a client secret |
+    | **Authorization** | `Off` | Not needed for basic OAuth |
+    | **Standard flow** | Checked | Required for browser login |
+    | **Direct access grants** | Checked | Required for testing only |
 
     !!! warning "Disable direct access grants in production"
        The `password` grant (direct access grants) is insecure for production use and only intended for local debugging with `curl`.
 
 7. Select **Next**.
-8. On the **Login settings** screen:
+8. On the **Login settings** screen, configure the following values:
 
     | Setting | Value | Notes |
     |---------|-------|-------|
-    | **Root URL** | `https://<mcp-server-host>:8000` | MCP server's external URL. |
-    | **Valid redirect URIs** | `https://<mcp-server-host>:8000/*` | Must match the server's external URL. |
-    | **Web origins** | `https://<mcp-server-host>:8000` | For CORS. |
+    | **Root URL** | `https://<mcp-server-host>:8000` | MCP server's external URL |
+    | **Valid redirect URIs** | `https://<mcp-server-host>:8000/*` | Must match the server's external URL |
+    | **Web origins** | `https://<mcp-server-host>:8000` | For CORS |
 
 9. Select **Save**.
 
@@ -111,45 +110,42 @@ The client represents the MCP server’s OAuth credentials and holds the `client
 
 | Config Field | Where to find it in Keycloak |
 |---|---|
-| `FASTMCP_SERVER_AUTH_CLIENT_ID` | The **Client ID** you entered (for example, `actian-mcp`). |
-| `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Clients → your client → **Credentials** tab. |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | The MCP server's external URL (for example, `https://<mcp-server-host>:8000`). |
+| `FASTMCP_SERVER_AUTH_CLIENT_ID` | **Client ID** you entered (for example, `actian-mcp`) |
+| `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Clients > your client > **Credentials** tab |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL, for example, `https://<mcp-server-host>:8000` |
 
 
 ## Step 3: Add the Audience Mapper (Required)
 
 !!! danger "This step is critical"
-    Without the Audience Mapper, Keycloak not includes the Client ID in the token's `aud` (audience) claim, and the MCP server rejects tokens with an `audience mismatch` error.
+    Without the Audience Mapper, Keycloak does not include the Client ID in the token's `aud` (audience) claim, and the MCP server rejects tokens with an `audience mismatch` error.
 
 By default, Keycloak tokens only include internal audiences like `account`. The MCP server validates that the token's `aud` claim matches the configured `FASTMCP_SERVER_AUTH_AUDIENCE` value. You must inform Keycloak to include the audience string in the token.
 
-!!! warning "Included Client Audience vs Included Custom Audience"
+!!! warning "Included Client Audience versus Included Custom Audience"
     The Audience mapper uses two audience fields:
 
-    - **Included Client Audience** — Resolves the selected client name to its **internal UUID** (for example, `16f502e4-483e-4b0d-adbd-4d20e6e33e73`). This does not matches the audience string that MCP server expects and causes `audience mismatch` errors.
-    - **Included Custom Audience** — Inserts the literal string you type (for example, `actian-mcp`). This is what the MCP server needs.
+    - **Included Client Audience** - Resolves the selected client name to its **internal UUID**, for example, `16f502e4-483e-4b0d-adbd-4d20e6e33e73`. It does not match the audience string that MCP server expects and causes `audience mismatch` errors.
+    - **Included Custom Audience** - Inserts the literal string, for example, `actian-mcp`. This is required by the MCP server and the recommended option.
 
-    Recommended to use **Included Custom Audience**.
-
-1. Go to **Clients** → select your client (for example, `actian-mcp`).
+1. Navigate to **Clients** and select your client, for example, `actian-mcp`.
 2. Select the **Client scopes** tab.
-3. Select the **`actian-mcp-dedicated`** link (listed as "Dedicated").
-    > If you don't see the dedicated scope, check the **Mappers** tab directly.
-4. Select **Configure a new mapper** (or "Add Mapper").
-5. Select **Audience** from the list (not **Audience Resolve**).
+3. Select the **`actian-mcp-dedicated`** link (listed as "Dedicated"). If you don't see the dedicated scope, check the **Mappers** tab directly.
+4. Select **Configure a new mapper** or **Add Mapper**.
+5. Select **Audience** (not **Audience Resolve**) from the list.
 
-    !!! note "Audience vs Audience Resolve"
-       "Audience Resolve" is a different mapper that resolves audiences dynamically. It will not hardcode your audience into `aud`. You need the plain **Audience** mapper.
+    !!! note "Audience versus Audience Resolve"
+       "Audience Resolve" is a different mapper that resolves audiences dynamically. It does not hardcode your audience into `aud`. Therefore, you are required to select **Audience** mapper.
 
-6. Configure the following:
+6. Configure the following fields:
 
     | Field | Value | Notes |
     |-------|-------|-------|
-    | **Name** | `audience-mapping` | Any descriptive name. |
+    | **Name** | `audience-mapping` | Provide a descriptive name. |
     | **Included Client Audience** | _(leave empty)_ | Do not use this field. It resolves to an internal UUID. |
-    | **Included Custom Audience** | `actian-mcp` | The literal string that must match `FASTMCP_SERVER_AUTH_AUDIENCE` in your `conf.json`. |
-    | **Add to ID token** | `Off` | Not required. |
-    | **Add to access token** | `On` | **Required** — the MCP server checks the access token. |
+    | **Included Custom Audience** | `actian-mcp` | The literal string that must match `FASTMCP_SERVER_AUTH_AUDIENCE` in the `conf.json` file. |
+    | **Add to ID token** | `Off` | This field is not required. |
+    | **Add to access token** | `On` | **Required** - the MCP server checks the access token. |
 
 7. Select **Save**.
 
@@ -175,32 +171,32 @@ Expected output:
 ```
 
 !!! note "Token caching"
-    If you still see a UUID instead of `actian-mcp` in the `aud` claim, the old token may be cached. Wait for it to expire (default 5 minutes) or go to **Sessions** in the Keycloak Admin Console and sign out all sessions for the service account to force a fresh token.
+    If you still see a UUID instead of `actian-mcp` in the `aud` claim, the old token may be cached. Wait for it to expire (default 5 minutes) or go to **Sessions** in the Keycloak Admin Console and sign out of all sessions for the service account to force a fresh token.
 
 
-## Step 4: Add the Sub Override Mapper (Optional)
+## Step 4 (Optional): Add the Sub Override Mapper
 
 By default, Keycloak sets the `sub` claim to a UUID. You can override it to contain the login name for easier `user_impersonation` mapping.
 
-1. Go to **Clients** → your client → **Client scopes** tab.
+1. Navigate to **Clients** > your client > **Client scopes** tab.
 2. Select the **`actian-mcp-dedicated`** link.
-3. Select **Configure a new mapper** → select **User Property**.
-4. Configure the following:
+3. Select **Configure a new mapper** > **User Property**.
+4. Configure the following fields:
 
     | Field | Value | Notes |
     |-------|-------|-------|
-    | **Name** | `sub-override` | Just a label. |
-    | **Property** | `username` | Maps the login name. |
+    | **Name** | `sub-override` | Acts as a label |
+    | **Property** | `username` | Maps the login name |
     | **Token Claim Name** | `sub` | Overwrites the standard `sub` field. |
-    | **Claim JSON Type** | `String` | |
-    | **Add to ID token** | `On` | |
-    | **Add to access token** | `On` | |
+    | **Claim JSON Type** | `String` | NA |
+    | **Add to ID token** | `On` | NA |
+    | **Add to access token** | `On` | NA |
 
 5. Select **Save**.
 
 ### Verification
 
-After adding the mapper, the token contains:
+After adding the mapper, the token contains the following:
 
 ```json
 {
@@ -213,30 +209,30 @@ After adding the mapper, the token contains:
 ```
 
 !!! warning "OIDC spec trade-off"
-    The OIDC spec expects `sub` to be a stable, unique identifier (like a UUID). Overriding it with a username is fine for internal tools like the MCP Server, but if a user renames their account, database permissions tied to the old name will break.
+    The OIDC spec expects `sub` to be a stable, unique identifier (like a UUID). It is acceptable to override it with a username for internal tools like the MCP Server, but if a user renames their account, database permissions tied to the old name will break.
 
 !!! tip "Alternative: use preferred_username"
-    Instead of overriding `sub`, you can rely on the `preferred_username` claim (included by default when the `profile` scope is present). The MCP server's username extraction priority uses `preferred_username` before `sub`, to work this automatically without any mapper changes.
+    Instead of overriding `sub`, you can rely on the `preferred_username` claim (included by default when the `profile` scope is present). The MCP server's username extraction priority uses `preferred_username` before `sub`, so it works automatically without any mapper changes.
 
 
 ## Step 5: Create Keycloak Users (If Using User Impersonation)
 
-If `user_impersonation` is `true`, each Keycloak user contains matching database account, see [User Impersonation](../index.md#user-impersonation) for more information.
+If `user_impersonation` is `true`, each Keycloak user contains a matching database account. For more information, see [User Impersonation](../index.md#user-impersonation).
 
-1. Go to **Users** in the left sidebar.
+1. Navigate to **Users** in the left panel.
 2. Select **Add user**.
-3. Fill the form as follows::
+3. Fill the form as follows:
 
     | Field | Value | Notes |
     |-------|-------|-------|
-    | **Username** | `jdoe` | Must match the database account name. |
-    | **Email** | `jdoe@example.com` | Optional but recommended. |
+    | **Username** | `jdoe` | Must match with the database account name |
+    | **Email** | `jdoe@example.com` | Optional but recommended |
     | **First Name** | `John` | Optional |
     | **Last Name** | `Doe` | Optional |
-    | **Enabled** | `On` | |
+    | **Enabled** | `On` | NA |
 
 4. Select **Create**.
-5. Go to the **Credentials** tab → **Set password** → enter a password, toggle **Temporary** to `Off` → **Save**.
+5. Navigate to the **Credentials** tab > **Set password** > enter a password > toggle **Temporary** to `Off` > **Save**.
 
 ### Creating Matching Database User
 
@@ -252,14 +248,14 @@ GRANT SELECT ON TABLE orders TO jdoe;
 GRANT SELECT ON TABLE products TO jdoe;
 ```
 
-!!! note "Why `profile` scope is required"
+!!! note "`profile` scope is required"
     Keycloak's userinfo endpoint only returns `preferred_username` when the token includes the `profile` scope. Without it, the endpoint returns only the `sub` claim (a UUID by default).
 
-!!! important "Keycloak doesn't produce a `username` claim automatically"
-    The MCP server's username extraction priority is: `username` → `preferred_username` → email prefix → sanitized `sub`. Keycloak does **not** produce a `username` claim by default — it only appears if you explicitly configure a User Attribute mapper. In practice, `preferred_username` (item 2 in the priority) is the reliable choice for Keycloak, and it works automatically when the `profile` scope is present.
+!!! important "Keycloak does not produce a `username` claim automatically"
+    The MCP server's username extraction priority is - `username` > `preferred_username` > email prefix > sanitized `sub`. Keycloak **does not** produce a `username` claim by default. It only appears if you explicitly configure a User Attribute mapper. In practice, `preferred_username` (second in the priority) is the reliable choice for Keycloak, and it works automatically when the `profile` scope is present.
 
 !!! note "Federated identity (LDAP / Social login)"
-    If Keycloak federates users from an external LDAP or social provider, the `sub` claim may be a UUID that doesn't match a database account. Ensure federated users have `preferred_username` set, or add the sub override mapper ([Part 4](#part-4-add-the-sub-override-mapper-optional)), or set `user_impersonation: false`.
+    If Keycloak federates users from an external LDAP or social provider, the `sub` claim may be a UUID that does not match a database account. Ensure that the federated users have `preferred_username` set, or add the sub-override mapper ([Step 4](#step-4-add-the-sub-override-mapper-optional)), or set `user_impersonation: false`.
 
 
 ## Step 6: Assemble the Final Configuration
@@ -269,14 +265,14 @@ GRANT SELECT ON TABLE products TO jdoe;
 | `conf.json` Field | Keycloak Source | Example Value |
 |---|---|---|
 | `FASTMCP_SERVER_AUTH_CONFIG_URL` | `http://<keycloak-host>:8080/realms/<realm>/.well-known/openid-configuration` | `http://10.100.11.187:8080/realms/actian-mcp/.well-known/openid-configuration` |
-| `FASTMCP_SERVER_AUTH_CLIENT_ID` | Clients → your client → **Client ID**. | `actian-mcp` |
-| `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Clients → your client → **Credentials**. | (your secret). |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | Your MCP server's external URL | `https://<mcp-server-host>:8000` |
-| `FASTMCP_SERVER_AUTH_AUDIENCE` | The value from **Included Custom Audience** in the audience mapper. | `actian-mcp` |
-| `user_impersonation` | Your choice. | `true` or `false` |
+| `FASTMCP_SERVER_AUTH_CLIENT_ID` | Clients > your client > **Client ID**. | `actian-mcp` |
+| `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Clients > your client > **Credentials**. | (your secret). |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL | `https://<mcp-server-host>:8000` |
+| `FASTMCP_SERVER_AUTH_AUDIENCE` | Value from **Included Custom Audience** in the audience mapper | `actian-mcp` |
+| `user_impersonation` | As per your choice. | `true` or `false` |
 
-!!! info "Audience in Keycloak vs Auth0"
-    In Auth0, the audience is a separate API Identifier (often a URL). In Keycloak, you define the audience string via the **Included Custom Audience** field in the audience mapper ([Part 3](#part-3-add-the-audience-mapper-critical)). A common convention is to set it to the Client ID (for example, `actian-mcp`). If `FASTMCP_SERVER_AUTH_AUDIENCE` is omitted from config, the server falls back to `CLIENT_ID`.
+!!! info "Audience in Keycloak versus Auth0"
+    In Auth0, the audience is a separate API Identifier (often a URL). In Keycloak, you define the audience string through the **Included Custom Audience** field in the audience mapper ([Step 3](#step-3-add-the-audience-mapper-critical)). A common convention is to set it to the Client ID, for example, `actian-mcp`. If `FASTMCP_SERVER_AUTH_AUDIENCE` is omitted from config, the server falls back to `CLIENT_ID`.
 
 ### Example `conf.json`
 
