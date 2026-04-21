@@ -63,7 +63,7 @@ JWT Validation"]
         core["MCP Protocol Handler"]
         tools["Tools
 ─────────────
-• Run SQL Queries
+• Execute SQL Queries
 • List Tables & Views
 • Describe Table Schema
 • List Functions"]
