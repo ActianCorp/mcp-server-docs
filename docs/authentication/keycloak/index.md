@@ -51,7 +51,7 @@ A Realm is an isolated container for managing users, credentials, and roles.
 
     | Field | Value | Notes |
     |-------|-------|-------|
-    | **Realm name** | `actian-mcp` | Any descriptive name; it appears in all OIDC URLs. |
+    | **Realm name** | `actian-mcp` | Any descriptive name; it appears in all OIDC URLs |
     | **Enabled** | `On` | NA |
 
 4. Select **Create**.
@@ -110,7 +110,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 
 | Config Field | Where to find it in Keycloak |
 |---|---|
-| `FASTMCP_SERVER_AUTH_CLIENT_ID` | **Client ID** you entered (for example, `actian-mcp`) |
+| `FASTMCP_SERVER_AUTH_CLIENT_ID` | **Client ID** for example, `actian-mcp` |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Clients > your client > **Credentials** tab |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL, for example, `https://<mcp-server-host>:8000` |
 
@@ -272,7 +272,7 @@ GRANT SELECT ON TABLE products TO jdoe;
 | `user_impersonation` | As per your choice. | `true` or `false` |
 
 !!! info "Audience in Keycloak versus Auth0"
-    In Auth0, the audience is a separate API Identifier (often a URL). In Keycloak, you define the audience string through the **Included Custom Audience** field in the audience mapper ([Step 3](#step-3-add-the-audience-mapper-critical)). A common convention is to set it to the Client ID, for example, `actian-mcp`. If `FASTMCP_SERVER_AUTH_AUDIENCE` is omitted from config, the server falls back to `CLIENT_ID`.
+    In Auth0, the audience is a separate API Identifier (often a URL). In Keycloak, you define the audience string through the **Included Custom Audience** field in the audience mapper ([Step 3](#step-3-add-the-audience-mapper-critical)). A common convention is to set it to the Client ID, for example, `actian-mcp`. If `FASTMCP_SERVER_AUTH_AUDIENCE` is omitted from the configuration, the server falls back to `CLIENT_ID`.
 
 ### Example `conf.json`
 
@@ -300,9 +300,9 @@ GRANT SELECT ON TABLE products TO jdoe;
 ```
 
 !!! note
-    Replace `<db-host>` with the database server address. Inside a Docker container, use the host's IP address or `host.docker.internal` — not `localhost` or `127.0.0.1`, which refer to the container itself.
+    Replace `<db-host>` with the database server address. In the Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
 
-For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see [HTTPS / TLS for Remote Deployments](../index.md#https-tls-for-remote-deployments).
+For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see [HTTPS / TLS for Remote Deployments](../index.md#https-tls-for-remote-deployments).
 
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](../index.md#security-best-practices).
 
@@ -311,8 +311,8 @@ For security best practices (file permissions, `.gitignore`, secrets management)
 
 After starting the MCP server container with OAuth configured:
 
-1. Open a browser and navigate to your server's `/mcp` endpoint, for example, `https://<mcp-server-host>:8000/mcp`.
-2. You should be **redirected to the Keycloak login page**.
+1. Open a browser and navigate to the server's `/mcp` endpoint, for example, `https://<mcp-server-host>:8000/mcp`.
+2. You are **redirected to the Keycloak login page**.
 3. Log in with a Keycloak user, for example, `jdoe`.
 4. After logging in, Keycloak redirects you back to the MCP server with a valid token.
 5. Check server logs for `Stored database username: jdoe` to confirm user impersonation is active.
@@ -341,9 +341,9 @@ curl -s -X POST \
   | python3 -m json.tool
 ```
 
-Decode the `access_token` at [jwt.io](https://jwt.io) and verify:
+Decode the `access_token` at [jwt.io](https://jwt.io) and verify the following:
 
-- `aud` contains your Client ID (for example, `actian-mcp`).
+- `aud` contains Client ID, for example, `actian-mcp`.
 - `sub` contains the username (if you added the sub override mapper) or a UUID.
 - `preferred_username` contains the login name.
 
@@ -351,47 +351,47 @@ Decode the `access_token` at [jwt.io](https://jwt.io) and verify:
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| `audience mismatch` | Audience string not in token's `aud` claim. | [Step 3](#step-3-add-the-audience-mapper-required) — add the audience mapper using **Included Custom Audience** (not Included Client Audience, which resolves to a UUID). |
-| `invalid_client` | Wrong `client_id` or `client_secret`. | Re-copy from Clients → Credentials tab. |
+| `audience mismatch` | Audience string not in the token's `aud` claim. | [Step 3](#step-3-add-the-audience-mapper-required) - add the audience mapper using **Included Custom Audience** (not Included Client Audience, which resolves to a UUID). |
+| `invalid_client` | Wrong `client_id` or `client_secret`. | Re-copy from Clients > Credentials tab. |
 | `invalid_grant` | Wrong username/password, or user disabled. | Check user exists and is enabled. |
-| `KeyError` on startup (for example, `CLIENT_SECRET`) | Some OAuth fields present but others missing. | Provide **all** required fields or remove `oauth` entirely. |
-| `Could not extract username` | No usable username claim in token. | Add sub override mapper ([Step 4](#step-4-add-the-sub-override-mapper-optional)), ensure `preferred_username` is present, or set `user_impersonation: false`. |
-| `unauthorized` / 401 on every request | OAuth misconfigured or token expired. | Check server logs, verify OIDC discovery URL is reachable. |
-| `Client not enabled` / `Realm not found` | Realm or client is disabled. | Ensure both are Enabled in admin console. |
+| `KeyError` on startup (for example, `CLIENT_SECRET`) | Some OAuth fields are present but others missing. | Provide **all** required fields or remove `oauth` entirely. |
+| `Could not extract username` | No usable username claim in token. | Add sub-override mapper ([Step 4](#step-4-add-the-sub-override-mapper-optional)). Ensure `preferred_username` is present or set `user_impersonation: false`. |
+| `unauthorized` / 401 on every request | OAuth misconfigured or token expired. | Check server logs and verify the OIDC discovery URL is reachable. |
+| `Client not enabled` / `Realm not found` | Realm or client is disabled. | Ensure both  Realm and client are enabled in the Admin console. |
 | `ValueError: Issuer URL must be HTTPS` | OAuth without TLS configured. | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL`. |
 | `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://`. | Update `BASE_URL` to `https://`. |
-| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start. | Mount cert/key as volumes when starting the container (see [Docker deployment](../index.md#step-3-deploy-the-docker)). |
+| `ssl.SSLError: PEM lib` | Missing certificate/key environment variables before Docker starts. | Mount cert/key as volumes when starting the container (see [Docker deployment](../index.md#step-3-deploy-the-docker)). |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN. | Regenerate with `-addext "subjectAltName=IP:<ip>"`. |
-| `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by `Node.js`. | Trust cert + set `NODE_EXTRA_CA_CERTS`. |
-| Token validation behaves unexpectedly | OIDC endpoint unreachable at startup. | The server falls back to default verification without `TokenCapturingJWTVerifier` — `user_impersonation` won't work even though the server appears to be running. Restart after endpoint is accessible. |
+| `TypeError: fetch failed` (VS Code) | Self-signed certificate not trusted by `Node.js`. | Trust cert + set `NODE_EXTRA_CA_CERTS`. |
+| Token validation behaves unexpectedly | OIDC endpoint is unreachable at startup. | The server falls back to default verification without `TokenCapturingJWTVerifier` - `user_impersonation` does not work even though the server appears to be running. Restart after the endpoint is accessible. |
 
 ### Token Expiration
 
 Keycloak tokens have a configurable lifetime:
 
-1. Go to **Realm Settings** → **Tokens** tab.
-2. Key settings:
+1. Navigate to **Realm Settings** > **Tokens** tab.
+2. Do the following key settings:
 
     | Setting | Default | Notes |
     |---------|---------|-------|
-    | **Access Token Lifespan** | 5 minutes | Increase for long-running MCP sessions (for example, 1 hour). |
-    | **SSO Session Idle** | 30 minutes | How long before an idle session expires. |
-    | **SSO Session Max** | 10 hours | Maximum session duration. |
+    | **Access Token Lifespan** | 5 minutes | Increase for long-running MCP sessions, for example, 1 hour |
+    | **SSO Session Idle** | 30 minutes | How long before an idle session expires |
+    | **SSO Session Max** | 10 hours | Maximum session duration |
 
 3. Adjust as needed and select **Save**.
 
 
-## Keycloak versus Auth0 — Key Differences
+## Keycloak versus Auth0 - Key Differences
 
 | Aspect | Auth0 | Keycloak |
 |--------|-------|----------|
 | **Provider class** | Dedicated Auth0 support in FastMCP. | Generic `OIDCProxy` (standard OIDC). |
-| **Audience** | Separate API Identifier (often a URL). | Configured via **Included Custom Audience** in the audience mapper (typically set to the Client ID). |
+| **Audience** | Separate API Identifier (often a URL). | Configured through **Included Custom Audience** in the audience mapper (typically set to the Client ID). |
 | **`sub` claim** | `auth0\|<id>` or `google-oauth2\|<id>` | UUID by default (can override to username). |
 | **`preferred_username`** | Not always present. | Always present by default. |
 | **Discovery URL format** | `https://<domain>/.well-known/openid-configuration` | `http://<host>/realms/<realm>/.well-known/openid-configuration` |
 | **Self-hosted** | No (SaaS only). | Yes (self-hosted or cloud). |
-| **Token lifetime config** | API Settings → Token Expiration. | Realm Settings → Tokens. |
+| **Token lifetime config** | API Settings > Token Expiration. | Realm Settings > Tokens. |
 
 
 ## Staging versus Production
