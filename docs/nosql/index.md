@@ -19,10 +19,12 @@ Use the MCP Server to perform the following tasks:
 
 ## Prerequisites
 
-- Docker installed and running.
-- Access credentials for your Actian NoSQL database
-- (Optional) TLS certificate and key files for secure deployments.
-- (Optional) An OIDC provider if using OAuth authentication.
+Before starting the server, ensure the following requirements are met:
+
+- **Container Engine:** Docker installed and running on the host machine.
+- **Database credentials:** Access details for the Actian NoSQL database.
+- **Secure deployment files (Optional):** TLS certificate and key files for secure deployments.
+- **OIDC provider (Optional):** Required if you are using OAuth authentication.
 
 ## Configuration
 
