@@ -23,7 +23,7 @@ The following tools are available through the server:
 
 ## Prerequisites
 
-Before you start, ensure to meet the following requirements:
+Before starting the server, ensure the following requirements are met:
 
 - **Container Engine:** Docker installed and running on the host machine.
 - **Database credentials:** Valid access for the Analytics Engine database.
