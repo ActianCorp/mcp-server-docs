@@ -189,7 +189,7 @@ Reference the container paths in `conf.json`:
 !!! note "Docker Key Permissions"
     If mounting the key as a volume, the container user must be able to read it:
 
-    - **Best practice**: `Ensure that server.key and conf.json` has 600 permission.
+    - **Best practice**: `Ensure that server.key and conf.json file permissions are set to 600.
 
 
 ### Step 4: Trust the Certificate in the MCP Client

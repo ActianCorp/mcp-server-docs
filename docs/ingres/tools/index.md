@@ -15,7 +15,7 @@ Use the following tools to interact with the database:
 |------|-------------|
 | [`execute_query`](#execute_query) | Runs a read-only SQL query against the connected database. |
 | [`list_tables`](#list_tables) | Lists all available user tables and views. |
-| [`describe_table`](#describe_table) | Displays column definitions and comments for a specific table. |
+| [`describe_table`](#describe_table) | Displays column definitions and comments for a given table. |
 | [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
 
 ## execute_query

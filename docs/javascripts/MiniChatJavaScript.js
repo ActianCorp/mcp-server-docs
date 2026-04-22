@@ -153,7 +153,7 @@ function addWelcomeMessage() {
   welcomeMessage.className = 'mini-chat-message ai';
   const messageText = document.createElement('div');
   messageText.className = 'message-text';
-  messageText.innerHTML = '<p>Hi, 😊 Welcome to Zeenea! How can I assist you today?</p>';
+  messageText.innerHTML = '<p>Hi, 😊 Welcome to Actian MCP Server! How can I assist you today?</p>';
   welcomeMessage.appendChild(messageText);
   messagesContainer.appendChild(welcomeMessage);
 }
@@ -259,7 +259,7 @@ function createMiniChatElements() {
   miniChatContainer.innerHTML = `
     <div class="mini-chat-resize-handle"></div>
     <div class="mini-chat-header">
-      <h3>Zeenea</h3>
+      <h3>Actian MCP Server</h3>
       <div class="mini-chat-header-controls">
         <button id="mini-chat-refresh" class="mini-chat-control-btn" title="Start new conversation">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -273,7 +273,7 @@ function createMiniChatElements() {
     <div id="mini-chat-messages" class="mini-chat-messages">
       <div class="mini-chat-message ai">
         <div class="message-text">
-          <p>Hi, 😊 Welcome to Zeenea! How can I assist you today?</p>
+          <p>Hi, 😊 Welcome to Actian MCP Server! How can I assist you today?</p>
         </div>
       </div>
     </div>
@@ -291,9 +291,9 @@ function createMiniChatElements() {
     </div>
     <div class="mini-chat-quick-actions">
       <button class="mini-chat-quick-action">What is this product?</button>
-      <button class="mini-chat-quick-action">How to setup Zeenea Scanner</button>
+      <button class="mini-chat-quick-action">How to setup Actian MCP Server?</button>
       <button class="mini-chat-quick-action">How do I get started?</button>
-      <button class="mini-chat-quick-action">How do I install the Oracle connector plugin?</button>
+      <button class="mini-chat-quick-action">How authentication works?</button>
     </div>
    
   `;

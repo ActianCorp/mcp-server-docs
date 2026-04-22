@@ -115,7 +115,7 @@ edit_uri: "browse"
 # Customization
 extra_css:
   - assets/stylesheets/style.css?v=2
-  # - stylesheets/minichat.css  # disabled: Zeenea chatbot
+  - stylesheets/minichat.css  # disabled: MCP chatbot
   - stylesheets/dx_style.css
   - assets/stylesheets/actian-landing.css?v=4
   - stylesheets/extra.css
@@ -130,8 +130,8 @@ extra_javascript:
   - javascripts/comprehensive-nav.js
   - path: javascripts/current.js
     defer: true
-  # - path: javascripts/MiniChatJavaScript.js  # disabled: Zeenea chatbot
-  #   defer: true
+  - path: javascripts/MiniChatJavaScript.js  # disabled: MCP chatbot
+    defer: true
 
 plugins:
   - search:
