@@ -5,11 +5,11 @@ description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Da
 
 # Actian NoSQL MCP Server
 
-Connect your MCP-compatible client to **Actian NoSQL Database** using the Actian MCP Server. Once configured, clients can explore schema metadata, run read-only JPQL queries, and access all details of the persistent objects retrieved.
+Connect your MCP-compatible client to Actian NoSQL using the Actian MCP Server. Once configured, clients can explore schema metadata, execute read-only JPQL queries, and inspect the full details of retrieved persistent objects.
 
 ## Capabilities
 
-Use the MCP Server to perform the following tasks:
+The Actian NoSQL MCP Server supports the following operations:
 
 | Action | Description |
 |--------|-------------|
@@ -84,7 +84,7 @@ See the [Quarkus logging guide](https://quarkus.io/guides/logging) for the full 
 
 ## Start the Server
 
-Add your settings to `application.properties` and mount it into the container:
+Add settings to `application.properties` and mount it into the container:
 
 ```properties
 nsql.connectionURL=<connection-url>
@@ -97,7 +97,7 @@ docker run \
   actian/nsql-mcp-server:1.0.0
 ```
 
-Once the container is running, connect your MCP client to the exposed server endpoint using the host and port from your configuration.
+Once the container is running, connect the MCP client to the exposed server endpoint using the host and port from the configuration.
 
 ---
 
@@ -243,7 +243,7 @@ if __name__ == "__main__":
 <div class="grid cards" markdown>
 
 - :material-lock: **[Authentication](authentication/index.md)**  
-  Configure OAuth 2.0 and TLS for the Actian MCP Server with Actian NoSQL Database.
+  Secure the server with OAuth 2.0 and an external identity provider.
 
 - :material-tools: **[Tools](tools/index.md)**  
   Explore the available MCP tools for NoSQL database operations.

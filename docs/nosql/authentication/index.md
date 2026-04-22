@@ -5,12 +5,12 @@ description: OAuth 2.0 and TLS configuration for the Actian NoSQL MCP Server.
 
 # Authentication
 
-The Actian MCP Server for **Actian NoSQL Database** supports **OAuth 2.0** and OpenID Connect (OIDC) authentication. When you enable this feature, every client request must include a valid JSON Web Token (JWT) issued by a trusted identity provider (IdP).
+The Actian MCP Server for Actian NoSQL supports OAuth 2.0 and OpenID Connect (OIDC) authentication. When you enable this feature, every client request must include a valid JSON Web Token (JWT) issued by a trusted identity provider (IdP).
 
 !!! info "Database credentials vs. OAuth:"
-    This setup uses two types of authentication:
+    There are two types of authentication:
 
-     - **Database credentials:** The `user:password` portion of the NoSQL connection URL (for example, `cars@localhost#admin:secret`) authenticates you to the database itself.
+     - **Database credentials:** The `user:password` portion of the NoSQL connection URL (for example, `cars@localhost#admin:secret`) is always used to authenticate with the database itself when the server starts.
      - **OAuth 2.0:** This controls access to the MCP Server endpoint.
 
 ## Working with OAuth
@@ -57,7 +57,7 @@ sequenceDiagram
 | Property | Required | Description |
 |---|---|---|
 | `mcp.auth.enabled` | Yes (to enable) | Set to `true` to enable OAuth2 authentication. Disabled by default. |
-| `quarkus.oidc.auth-server-url` | Yes (when enabled) | Issuer URL of your OIDC provider — for example, `https://your-idp.example.com/realms/your-realm`. |
+| `quarkus.oidc.auth-server-url` | Yes (when enabled) | Issuer URL of your OIDC provider — for example, `https://your-idp.example.com/`. |
 | `quarkus.oidc.sse-tenant.auth-server-url` | No | Override the OIDC provider for the SSE endpoint (`/mcp/sse`) only. Defaults to `quarkus.oidc.auth-server-url`. |
 
 !!! note "Quarkus OIDC configuration"

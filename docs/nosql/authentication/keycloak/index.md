@@ -5,7 +5,7 @@ description: Step-by-step guide to configure Keycloak as the OAuth identity prov
 
 # Keycloak Setup Guide
 
-This guide describes how to create and configure a Keycloak **Realm** and **Client** for OAuth 2.0 authentication with the Actian MCP Server for **Actian NoSQL Database**.
+This guide describes how to create and configure a Keycloak **Realm** and **Client** for OAuth 2.0 authentication with the Actian MCP Server for Actian NoSQL.
 
 !!! note "Manual client registration"
     This guide uses **manually created clients**. Dynamic Client Registration (DCR) is not covered here.
@@ -27,11 +27,11 @@ By the end, you will have the **issuer URL** needed for `quarkus.oidc.auth-serve
 
 ## Prerequisites
 
-- A running Keycloak instance accessible from both the MCP server and the MCP client.
+- A running Keycloak instance (version 22 or higher) is accessible from both the MCP server and the MCP client.
 - Admin access to the Keycloak Admin Console.
 - The Actian MCP Server installed and ready to run.
 
-## Part 1: Create a Keycloak Realm
+## Step 1: Create a Keycloak Realm
 
 A **Realm** is the top-level container in Keycloak that holds users, clients, roles, and configuration.
 
@@ -48,13 +48,13 @@ A **Realm** is the top-level container in Keycloak that holds users, clients, ro
 
 4. Select **Create**.
 
-### What You Get from This Step
+### Output of Step 1
 
 | Value | Where to find it |
 |---|---|
 | **Issuer URL** | `http://<keycloak-host>:8080/realms/actian-nosql-mcp` — use this for `quarkus.oidc.auth-server-url`. |
 
-## Part 2: Create Keycloak Clients
+## Step 2: Create Keycloak Clients
 
 The **Client** in Keycloak represents the OAuth client used by your **MCP client application** to request tokens. The Actian MCP Server itself does not need a Keycloak client — it only validates tokens.
 
@@ -84,9 +84,6 @@ Create one client per flow:
     | **Standard flow** | Checked | Required for browser-based login. |
     | **Direct access grants** | Unchecked (production) | Enable only for local `curl`-based testing. |
 
-    !!! warning "Disable direct access grants in production"
-        The `password` grant is insecure for production use and is only intended for local debugging.
-
 5. Select **Next**.
 6. On the **Login settings** screen:
 
@@ -114,11 +111,12 @@ Create one client per flow:
     |---------|-------|-------|
     | **Client authentication** | `On` | Makes the client confidential and generates a client secret. |
     | **Service accounts roles** | Checked | Enables the `client_credentials` grant type, required for M2M token requests. |
+    | **Direct access grants** | Unchecked (production) | Enable only for local `curl`-based testing. |
 
 5. Select **Next**, then **Save** (no redirect URI needed).
 6. Go to the **Credentials** tab and copy the **Client secret**.
 
-### What You Get from This Step
+### Output of Step 2
 
 | Value | Where to find it in Keycloak                                                               |
 |---|--------------------------------------------------------------------------------------------|
@@ -126,7 +124,7 @@ Create one client per flow:
 | **Client Secret** | Clients → your client → **Credentials** tab. Only needed for the Client Credentials client |
 
 
-## Part 3: Create Keycloak Users
+## Step 3: Create Keycloak Users
 
 Create users in Keycloak that your MCP client users will log in as.
 
@@ -150,7 +148,7 @@ Create users in Keycloak that your MCP client users will log in as.
 5. Go to the **Credentials** tab → **Set password** → enter a password, toggle **Temporary** to `Off` → **Save**.
 
 
-## Part 4: Configure and Start the Server
+## Step 4: Configure and Start the Server
 
 The Actian MCP Server only needs the Keycloak **realm issuer URL** to validate incoming tokens. It does not need the client ID or secret — those belong to the MCP client.
 
@@ -185,10 +183,9 @@ After starting the Actian MCP Server with OAuth configured:
 1. Connect to the server from your MCP client.
 2. The MCP client fetches `/.well-known/oauth-protected-resource` and discovers the Keycloak realm issuer URL.
 3. The MCP client redirects you to the Keycloak login page.
-4. Log in with a Keycloak user (for example, `jdoe`).
-5. Keycloak issues an access token to the MCP client.
-6. The MCP client includes the Bearer token in all subsequent requests.
-7. The server validates the token signature against Keycloak's JWKS endpoint and grants access.
+4. After logging in, Keycloak issues an access token to the MCP client.
+5. The MCP client includes the Bearer token in all subsequent requests.
+6. The server validates the token signature against Keycloak's JWKS endpoint and grants access.
 
 ### Client Credentials Flow
 

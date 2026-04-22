@@ -5,10 +5,10 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 # Tools
 
-The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for database discovery and read-only query execution.
+The Actian MCP Server for Actian NoSQL provides built-in tools for database discovery and read-only query execution.
 
 !!! note "Response format"
-    All tools return results as **structured content** (`structuredContent`). For compatibility with older MCP clients, each response also includes the same data serialised as a JSON string in the `text` field.
+    All tools return results as structured content (`structuredContent`). For compatibility with older MCP clients, each response also includes the same data serialized as a JSON string in a text content item within the `content` array.    
 
 ## Available Tools
 
@@ -22,17 +22,6 @@ The Actian MCP Server for **Actian NoSQL Database** exposes a set of tools for d
 | [`list_classes `](#list_classes) | List class names and inheritance. |
 | [`describe_class `](#describe_class) | Describe one class in detail. |
 | [`get_complete_schema `](#get_complete_schema) | Return full schema for all classes. |
-
-<!-- 
-### Write tools (full mode only)
-
-| Tool | Purpose |
-|------|---------|
-| `insert_document` | Insert a document into a collection. |
-| `update_document` | Update an existing document. |
-| `delete_document` | Delete a document from a collection. |
-
--->
 
 ---
 
@@ -532,9 +521,9 @@ This tool takes no input parameters.
 <div class="grid cards" markdown>
 
 - :material-folder-open: **[Resources](../resources/index.md)**  
-  Explore the resource types available through the NoSQL server.
+  Learn more about schema metadata resources.
 
 - :material-chat-processing: **[Prompts](../prompts/index.md)**  
-  Discover pre-built prompt templates for common NoSQL workflows.
+  Use pre-built prompt templates for common workflows.
   
 </div>

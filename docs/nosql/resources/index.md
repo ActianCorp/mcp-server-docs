@@ -5,10 +5,10 @@ description: Overview of the resources available when using the Actian MCP Serve
 
 # Resources
 
-The Actian MCP Server for **Actian NoSQL Database** exposes built-in resources for database schema discovery.
+The Actian MCP Server for Actian NoSQL provides built-in resources that enables comprehensive database schema discovery.
 
 !!! note "Response format"
-    Resources return results as **text content** — the data is serialised as a JSON string in the `text` field. Unlike tools, resources do not use structured content.
+    Resources return results as text content — the data is serialized as a JSON string in a text content item within the `contents` array. Unlike tools, resources do not use `structuredContent`.
 
 ## Available Resources
 
@@ -24,6 +24,10 @@ The Actian MCP Server for **Actian NoSQL Database** exposes built-in resources f
 ## db://schema/classes
 
 Lists all classes in the database schema and their inheritance hierarchy. Returns each class name and its direct parent classes (if any).
+
+### Parameters
+
+This resource takes no input parameters.
 
 ### Output Schema
 
@@ -61,6 +65,10 @@ Lists all classes in the database schema and their inheritance hierarchy. Return
 ## db://schema/classes/count
 
 Returns the total number of classes in the database schema.
+
+### Parameters
+
+This resource takes no input parameters.
 
 ### Output Schema
 
@@ -141,6 +149,10 @@ Describes the schema of a specific class, including its direct superclasses, dec
 
 Returns the complete database schema with detailed field information for every class. Each entry includes the class name, direct superclasses, declared fields, and all inherited fields. Prefer this resource when you need a complete picture of the data model upfront, instead of calling `db://schema/classes` followed by multiple `db://schema/class/{className}` reads.
 
+### Parameters
+
+This resource takes no input parameters.
+
 ### Output Schema
 
 ```json
@@ -220,9 +232,9 @@ Returns the complete database schema with detailed field information for every c
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](../tools/index.md)**  
-  Learn about the query and schema tools exposed by the NoSQL server.
+  Explore the available MCP tools for NoSQL database operations.
 
 - :material-chat-processing: **[Prompts](../prompts/index.md)**  
-  Discover pre-built prompt templates for common NoSQL workflows.
+  Use pre-built prompt templates for common workflows.
 
 </div>
