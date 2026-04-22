@@ -3,13 +3,13 @@ title: Actian Ingres
 description: Use the Actian MCP Server to connect MCP clients to Actian Ingres.
 ---
 
-# Actian Ingres MCP Server
+# Actian MCP Server for Ingres
 
 Connect the MCP-compatible client to Actian Ingres using the Actian MCP Server. This bridge allows the clients to explore schema metadata and execute read-only SQL queries through a standard interface. The server manages connection pooling, response formatting, and schema discovery automatically, allowing you to focus on data analysis.
 
 ## Capabilities
 
-The Actian Ingres MCP Server supports the following operations:
+The Actian MCP Server for Ingres supports the following operations:
 
 | Action | Description |
 | :--- | :--- |

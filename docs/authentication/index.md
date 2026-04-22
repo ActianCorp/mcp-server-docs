@@ -147,7 +147,7 @@ chmod 600 server.key
 ### Step 2: Configure TLS in `conf.json`
 
 !!! note "TLS configuration for NoSQL"
-    The Actian NoSQL MCP Server uses different configuration properties. See [NoSQL TLS guide](../nosql/authentication/index.md#tls) for more information.
+    The Actian MCP Server for NoSQL uses different configuration properties. See [NoSQL TLS guide](../nosql/authentication/index.md#tls) for more information.
 
 Add the `ssl_certfile` certificate and `ssl_keyfile` key paths to the top level of the `conf.json` file (outside the `oauth` block). Ensure the usage of `https://` in `BASE_URL`:
 

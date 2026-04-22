@@ -134,7 +134,7 @@ hide:
     </div>
     <div class="code-side">
       <div class="code-block">
-        <pre><code># Example: Launch the HCL Informix® MCP Server
+        <pre><code># Example: Launch the MCP Server for HCL Informix®
 docker pull actian/informix-mcp-server:latest
 
 # Run with your secure environment variables

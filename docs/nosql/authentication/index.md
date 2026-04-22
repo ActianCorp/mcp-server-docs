@@ -1,6 +1,6 @@
 ---
 title: Authentication
-description: OAuth 2.0 and TLS configuration for the Actian NoSQL MCP Server.
+description: OAuth 2.0 and TLS configuration for the Actian MCP Server for NoSQL.
 ---
 
 # Authentication
