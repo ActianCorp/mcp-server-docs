@@ -70,14 +70,14 @@ Create a file named `conf.json` in your working directory using the following st
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `driver` | `string` | ODBC driver name used to connect to Analytics Engine. |
-| `server` | `string` | Host or connection target for the Analytics Engine database. |
+| `driver` | `string` | ODBC driver name used to connect to Analytics Engine |
+| `server` | `string` | Host or connection target for the Analytics Engine database |
 | `database` | `string` | Name of the database. |
-| `max_connections` | `integer` | Maximum concurrent database connections in the pool. |
-| `host` | `string` | Host address that the MCP Server listens to in the container. |
-| `port` | `string` | Port that the MCP Server listens to in the container. |
-| `database_user` | `string` | Database username. |
-| `database_password` | `string` | Database password. |
+| `max_connections` | `integer` | Maximum concurrent database connections in the pool|
+| `host` | `string` | Host address that the MCP Server listens to in the container |
+| `port` | `string` | Port that the MCP Server listens to in the container |
+| `database_user` | `string` | Database username|
+| `database_password` | `string` | Database password |
 
 **Optional fields**
 

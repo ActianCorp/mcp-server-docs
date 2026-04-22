@@ -2,8 +2,8 @@
 
 > Built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) · Light/dark theme · Versioned with [mike](https://github.com/jimporter/mike)
 
-**Repository:** https://alm.actian.com/bitbucket/users/alokaj/repos/actian_mcp_server  
-**Branch:** `mcpdocs`
+**Repository:** https://github.com/ActianCorp/mcp-server-docs  
+**Branch:** `main`
 
 ---
 
@@ -26,7 +26,7 @@ This repository contains the MkDocs-based documentation portal for the **Actian 
 | **SEO** | Auto-generated meta descriptions, robots.txt, sitemap |
 | **Code blocks** | Copy button, syntax highlighting, annotations |
 | **Custom 404** | Branded 404 page |
-| **Edit on Bitbucket** | Per-page edit button linking to `mcpdocs` branch |
+| **Edit on GitHub** | Per-page edit button linking to `main` branch |
 
 ---
 
@@ -76,9 +76,9 @@ actian_mcp_server/
 ### 1. Clone the repository
 
 ```bash
-git clone https://alm.actian.com/bitbucket/users/alokaj/repos/actian_mcp_server
-cd actian_mcp_server
-git checkout mcpdocs
+git clone https://github.com/ActianCorp/mcp-server-docs.git
+cd mcp-server-docs
+git checkout main
 ```
 
 ### 2. Install dependencies
@@ -240,7 +240,7 @@ Key sections:
 
 - **`site_name`** — Documentation title
 - **`site_url`** — Production URL
-- **`repo_url`** — Bitbucket repo link
+-- **`repo_url`** — GitHub repo link
 - **`theme.palette`** — Light/dark mode (light is default)
 - **`theme.features`** — Navigation behaviour toggles
 - **`plugins`** — Search, versioning, minification, etc.
@@ -297,20 +297,20 @@ Every page on the published documentation site has a **pencil (✏️) edit icon
 ### How it works
 
 1. **Click the edit icon** on any documentation page.  
-   You will be taken directly to the source `.md` file for that page in Bitbucket, on the `mcpdocs` branch.
+   You will be taken directly to the source `.md` file for that page in GitHub, on the `main` branch.
 
-2. **Edit the file** in Bitbucket's web editor:
-   - Click **Edit** (pencil icon) in Bitbucket's file toolbar.
+2. **Edit the file** in GitHub's web editor:
+   - Click **Edit** (pencil icon) in GitHub's file toolbar.
    - Make your changes to the Markdown content.
 
 3. **Commit your changes:**
    - Scroll down to the **Commit changes** section.
    - Add a short commit message describing what you changed.
-   - Choose **"Create a new branch"** if you do not have write access to `mcpdocs`, then open a Pull Request.
-   - If you have write access, you can commit directly to `mcpdocs`.
+   - Choose **"Create a new branch"** if you do not have write access to `main`, then open a Pull Request.
+   - If you have write access, you can commit directly to `main`.
 
 4. **Open a Pull Request** (if on a feature branch):
-   - Target branch: `mcpdocs`
+   - Target branch: `main`
    - Add a description of your change and assign a reviewer.
 
 ### Edit URL format
@@ -318,7 +318,7 @@ Every page on the published documentation site has a **pencil (✏️) edit icon
 The edit button points to:
 
 ```
-https://alm.actian.com/bitbucket/users/alokaj/repos/actian_mcp_server/browse/docs/{page-path}?at=refs%2Fheads%2Fmcpdocs&mode=edit
+https://github.com/ActianCorp/mcp-server-docs/edit/main/docs/{page-path}
 ```
 
 > **Tip:** If the edit icon is not visible, ensure you are viewing the published HTML portal (served via mike or the deployed site), not a local `mkdocs serve` preview.
