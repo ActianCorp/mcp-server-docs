@@ -108,9 +108,10 @@ extra:
 
 
 # Repository
-repo_url: https://alm.actian.com/bitbucket/users/alokaj/repos/actian_mcp_server
-repo_name: actian_mcp_server
-edit_uri: "browse"
+repo_url: https://github.com/ActianCorp/mcp-server-docs
+repo_name: mcp-server-docs
+repo_branch: main
+edit_uri: "edit"
 
 # Customization
 extra_css:
@@ -158,5 +159,5 @@ plugins:
 
 # Hooks
 hooks:
-  - hooks/bitbucket_edit_url.py
+  - hooks/github_edit_url.py
   - hooks/custom_lexers.py
