@@ -5,7 +5,7 @@ description: Step-by-step guide to configure Auth0 as the OAuth identity provide
 
 # Auth0 Setup Guide
 
-This guide describes how to create and configure an Auth0 **API** and **Application** for OAuth 2.0 authentication with the Actian MCP Server for **Actian NoSQL Database**.
+This guide describes how to create and configure an Auth0 **API** and **Application** for OAuth 2.0 authentication with the Actian MCP Server for Actian NoSQL.
 
 !!! note "Manual client registration"
     This guide uses **manually created applications**. Dynamic Client Registration (DCR) is not covered here.
@@ -35,23 +35,20 @@ By the end, you will have the **issuer URL** needed for `quarkus.oidc.auth-serve
 - An Auth0 **Tenant** (created automatically on signup, for example, `dev-abc123`).
 - The Actian MCP Server installed and ready to run.
 
-## Part 1: Create a Database Connection
+## Step 1: Create a Database Connection
 
-Before creating users, ensure a database connection exists to authenticate them against.
+Create a database connection to authenticate users against it.
 
 1. In the Auth0 Dashboard, go to **Authentication → Database**.
 2. If no connection exists, select **+ Create DB Connection**.
 3. Give it a name (for example, `Username-Password-Authentication`) and select **Create**.
 
-
-## Part 2: Create Auth0 Users
+## Step 2: Create Auth0 Users
 
 Users in Auth0 represent the people who will log in via the Authorization Code flow.
 
 !!! note
     This step is only needed for the Authorization Code flow. Machine to Machine clients authenticate using their own credentials — no user account is required.
-
-### Steps
 
 1. In the Auth0 Dashboard, go to **User Management → Users**.
 2. Select **+ Create User**.
@@ -65,17 +62,13 @@ Users in Auth0 represent the people who will log in via the Authorization Code f
 
 4. Select **Create**.
 
-
-## Part 3: Create an Auth0 API
+## Step 3: Create an Auth0 API
 
 The API represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 include the API's identifier as the audience claim.
 
-### Steps
-
-1. Log in to the [Auth0 Dashboard](https://manage.auth0.com/).
-2. In the left sidebar, navigate to **Applications → APIs**.
-3. Select **+ Create API**.
-4. Fill in the form:
+1. In the Auth0 Dashboard, go to **Applications → APIs**.
+2. Select **+ Create API**.
+3. Fill in the form:
 
      | Field | Value | Notes |
      |-------|-------|-------|
@@ -83,18 +76,16 @@ The API represents the Actian MCP Server as a protected resource in Auth0. Token
      | **Identifier (Audience)** | `https://<mcp-server-host>:8443/mcp` | A logical identifier — it does not need to be a reachable URL. |
      | **Signing Algorithm** | `RS256` | Default; leave as-is. |
 
-5. Select **Create**.
+4. Select **Create**.
 
-## Part 4: Create an Auth0 Application
+## Step 4: Create an Auth0 Application
 
 The **Application** represents the OAuth client — the **MCP client** (such as Claude Desktop or Cursor) that requests tokens on behalf of the user.
 
 !!! note "Machine to Machine application"
-    When you created the API in Part 3, Auth0 automatically created a **Machine to Machine** application with Client Access already granted to that API. You can use that application directly for Client Credentials flow.
+    When you created the API in Step 3, Auth0 automatically created a **Machine to Machine** application with Client Access already granted to that API. You can use that application directly for Client Credentials flow.
 
 The steps below cover creating an application for the **Authorization Code flow** (interactive login).
-
-### Steps
 
 1. In the Auth0 Dashboard, go to **Applications → Applications**.
 2. Select **+ Create Application**.
@@ -122,10 +113,10 @@ Select **Save**.
 ### Grant API Access
 
 1. Go to the **APIs** tab of your application.
-2. Find the API you created in Part 3 (`Actian MCP Server`).
+2. Find the API you created in Step 3 (`Actian MCP Server`).
 3. Click edit and toggle it to **Authorized**.
 
-### What You Get from This Step
+### Output of Step 4
 
 These values are used in your **MCP client configuration**:
 
@@ -135,7 +126,7 @@ These values are used in your **MCP client configuration**:
 | **Client Secret** | **Client Secret** on the Settings tab (only for the **Machine to Machine** client). |
 
 
-## Part 5: Enable Resource Parameter Compatibility Profile
+## Step 5: Enable Resource Parameter Compatibility Profile
 
 This is a **tenant-level** setting required for MCP clients to pass the audience parameter during the authorization flow:
 
@@ -144,8 +135,7 @@ This is a **tenant-level** setting required for MCP clients to pass the audience
 3. Enable **Resource Parameter Compatibility Profile**.
 4. Select **Save**.
 
-
-## Part 6: Configure and Start the Server
+## Step 6: Configure and Start the Server
 
 The Actian MCP Server only needs the Auth0 **issuer URL** to validate incoming tokens.
 
@@ -160,7 +150,7 @@ The Actian MCP Server only needs the Auth0 **issuer URL** to validate incoming t
 
 ### Example `application.properties`
 
-Add the following to your `application.properties` and start the server as described in [Start the Server](../../index.md#start-the-server):
+Add the following to the `application.properties` and start the server as described in [Start the Server](../../index.md#start-the-server):
 
 ```properties
 nsql.connectionURL=<connection-url>
