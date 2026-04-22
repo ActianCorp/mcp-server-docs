@@ -1,0 +1,171 @@
+/* Comprehensive Navigation Styles */
+.comprehensive-nav {
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+}
+
+/* Hide the checkbox */
+.comprehensive-nav .md-nav__toggle {
+  display: none;
+}
+
+/* Section headings with subsections */
+.comprehensive-nav .md-nav__item--section > .md-nav__link {
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  pointer-events: auto !important;
+  padding: 0.35rem 0.6rem;
+  margin-bottom: 0.05rem;
+  line-height: 1.5;
+  min-height: auto;
+  height: auto;
+}
+
+.comprehensive-nav .md-nav__item--section > .md-nav__link:hover {
+  background-color: var(--md-default-fg-color--lightest) !important;
+}
+
+/* Section link inside the nav item */
+.comprehensive-nav .md-nav__item--section > .md-nav__link a {
+  color: inherit;
+  text-decoration: none;
+  line-height: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.comprehensive-nav .md-nav__item--section > .md-nav__link a:hover {
+  text-decoration: none;
+}
+
+/* Active section link inside toggle sections */
+.comprehensive-nav .md-nav__item--section > .md-nav__link a.md-nav__link--active {
+  color: var(--md-primary-fg-color);
+  font-weight: 600;
+}
+
+.comprehensive-nav .md-nav__item--section > .md-nav__link.md-nav__link--active {
+  color: var(--md-primary-fg-color);
+}
+
+/* Simple links without subsections */
+.comprehensive-nav .md-nav__item:not(.md-nav__item--section) > .md-nav__link {
+  font-weight: 400;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.6rem;
+  margin-bottom: 0.05rem;
+  line-height: 1.5;
+  height: auto;
+}
+
+.comprehensive-nav .md-nav__item {
+  padding: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.comprehensive-nav .md-nav__link {
+  margin-top: 0;
+  border-radius: 0.2rem;
+  transition: background-color 0.2s;
+  display: block;
+}
+
+.comprehensive-nav .md-nav__link:hover {
+  background-color: var(--md-default-fg-color--lightest);
+}
+
+/* Subsection links - smaller and lighter like TOC */
+.comprehensive-nav .md-nav[data-md-level="1"] .md-nav__link {
+  padding: 0.35rem 0.6rem 0.35rem 1.8rem;
+  font-size: 0.64rem;
+  font-weight: 400;
+  margin-bottom: 0.05rem;
+  line-height: 1.5;
+  font-family: inherit;
+  color: var(--md-default-fg-color--light);
+}
+
+/* Subsection container spacing */
+.comprehensive-nav .md-nav[data-md-level="1"] {
+  margin: 0;
+  padding: 0;
+  /* Let JavaScript control visibility */
+  max-height: none;
+  overflow: visible;
+}
+
+/* Ensure subsections are visible when expanded */
+.comprehensive-nav .md-nav__item--section.expanded .md-nav[data-md-level="1"] {
+  display: block !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Make sections collapsible - handled by JavaScript now */
+.comprehensive-nav .md-nav__toggle {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Active state */
+.comprehensive-nav .md-nav__link--active {
+  color: var(--md-primary-fg-color);
+  font-weight: 500;
+}
+
+/* Toggle arrow - lighter, thinner */
+.comprehensive-nav .nav-toggle-btn {
+  font-weight: 300;
+  opacity: 0.55;
+  font-size: 0.95rem !important;
+}
+
+.comprehensive-nav .nav-toggle-btn:hover {
+  opacity: 0.85;
+}
+
+/* Collapsible subsection header (e.g. Authentication inside NoSQL) */
+.comprehensive-nav .md-nav__link--subsection-header {
+  font-size: 0.64rem;
+  font-weight: 400;
+  padding: 0.35rem 0.6rem 0.35rem 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  color: var(--md-default-fg-color--light);
+  border-radius: 0.2rem;
+  transition: background-color 0.2s;
+}
+
+.comprehensive-nav .md-nav__link--subsection-header:hover {
+  background-color: var(--md-default-fg-color--lightest);
+}
+
+.comprehensive-nav .md-nav__link--subsection-header a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.comprehensive-nav .md-nav__link--subsection-header.md-nav__link--active,
+.comprehensive-nav .md-nav__link--subsection-header a.md-nav__link--active {
+  color: var(--md-primary-fg-color);
+}
+
+/* Nested level-2 links (Auth0, Keycloak) */
+.comprehensive-nav .md-nav[data-md-level="2"] .md-nav__link {
+  padding: 0.3rem 0.6rem 0.3rem 2.8rem;
+  font-size: 0.62rem;
+  font-weight: 400;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 0.05rem;
+  line-height: 1.5;
+}

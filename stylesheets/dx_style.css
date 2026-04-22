@@ -1,0 +1,333 @@
+/* Table header styling */
+.md-typeset table:not([class]) th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+}
+
+/* Font stack */
+:root {
+  --md-text-font: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+    background-color: #2e303e;
+}
+
+/* ── Footer navigation (prev / next) inside content column ── */
+.md-content-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-default-bg-color);
+}
+
+.md-content-footer__link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--md-default-fg-color);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.md-content-footer__link:hover {
+  color: var(--md-typeset-a-color);
+}
+
+.md-content-footer__link--next {
+  margin-left: auto;
+}
+
+.md-content-footer__direction {
+  display: block;
+  font-size: 0.64rem;
+  color: var(--md-default-fg-color--light);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.md-content-footer__title .md-ellipsis {
+  color: var(--md-typeset-a-color);
+}
+
+.md-content-footer__button svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: var(--md-default-fg-color--light);
+}
+
+/* Hide the original full-width footer nav */
+.md-footer__inner {
+  display: none;
+}
+
+/* Remove announcement banner completely */
+.md-banner {
+  display: none;
+}
+
+/* Header logo sizing */
+.md-header__button.md-logo img {
+  height: 1.2rem;
+  width: auto;
+}
+
+/* ── Text feedback form ── */
+.feedback-text-form {
+  margin-top: 0.75rem;
+}
+
+.feedback-text-prompt {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color);
+}
+
+.feedback-optional {
+  color: var(--md-default-fg-color--light);
+}
+
+.feedback-textarea {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  padding: 0.5rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.2rem;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  font-family: inherit;
+  font-size: 0.72rem;
+  resize: vertical;
+}
+
+.feedback-textarea:focus {
+  outline: 2px solid var(--md-accent-fg-color);
+  border-color: transparent;
+}
+
+.feedback-text-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.feedback-submit {
+  font-size: 0.7rem;
+  padding: 0.3rem 1rem;
+  cursor: pointer;
+}
+
+.feedback-skip {
+  background: none;
+  border: none;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.feedback-skip:hover {
+  color: var(--md-default-fg-color);
+}
+
+.feedback-thanks {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-tabs__link--active {
+    border-bottom: 2px solid #FFF;
+    font-weight: 600;
+}
+
+.md-tabs__link {
+    opacity: 1;
+}
+
+.md-typeset h1 {
+    font-weight: 500;
+}
+
+[dir=ltr] .md-header__title {
+	margin-left: 1.2rem;
+}
+
+[dir=rtl] .md-header__title {
+    margin-right: 0;
+}
+
+.announcement__link {
+    color: white !important;
+    text-decoration: underline;
+}
+
+/* ============================================================
+   Custom Syntax Highlighting – Ingres SQL & OpenROAD 4GL
+   Scoped to only our custom language blocks; no side-effects
+   on other code blocks. Uses a dark background palette for
+   maximum readability.
+   ============================================================ */
+
+/* Dark code block background for our custom languages */
+.language-ingres-sql .highlight,
+.language-ingres-sql.highlight,
+.language-openroad-4gl .highlight,
+.language-openroad-4gl.highlight,
+.language-ingres-sql pre,
+.language-openroad-4gl pre {
+    background-color: #1e2430 !important;
+    color: #cdd6f4 !important;
+    border-radius: 6px;
+}
+
+/* Keywords – exec, sql, begin, end, type, var, on, event, declare … */
+.language-ingres-sql .kr,
+.language-ingres-sql .kd,
+.language-ingres-sql .k,
+.language-openroad-4gl .kr,
+.language-openroad-4gl .kd,
+.language-openroad-4gl .k  { color: #89b4fa !important; font-weight: 600; }
+
+/* Type keywords – integer, varchar, Alpha, float … */
+.language-ingres-sql .kt,
+.language-openroad-4gl .kt  { color: #fab387 !important; font-weight: 600; }
+
+/* Comments – { ... }  -- ...  (* ... *) */
+.language-ingres-sql .c,
+.language-ingres-sql .c1,
+.language-ingres-sql .cm,
+.language-openroad-4gl .c,
+.language-openroad-4gl .c1,
+.language-openroad-4gl .cm { color: #6c7086 !important; font-style: italic; }
+
+/* Strings – 'text' "text" */
+.language-ingres-sql .s,
+.language-ingres-sql .s1,
+.language-ingres-sql .s2,
+.language-openroad-4gl .s,
+.language-openroad-4gl .s1,
+.language-openroad-4gl .s2 { color: #a6e3a1 !important; }
+
+/* Operators – := = .. + - */
+.language-ingres-sql .o,
+.language-openroad-4gl .o  { color: #89dceb !important; }
+
+/* Punctuation – ; , . [ ] ( ) */
+.language-ingres-sql .p,
+.language-openroad-4gl .p  { color: #cba6f7 !important; }
+
+/* Numbers */
+.language-ingres-sql .mi,
+.language-ingres-sql .mf,
+.language-ingres-sql .m,
+.language-openroad-4gl .mi,
+.language-openroad-4gl .mf,
+.language-openroad-4gl .m  { color: #fab387 !important; }
+
+/* Identifiers / plain names */
+.language-ingres-sql .n,
+.language-openroad-4gl .n  { color: #cdd6f4 !important; }
+
+/* Variables  :var  ::globalvar */
+.language-ingres-sql .nv,
+.language-openroad-4gl .nv { color: #f5c2e7 !important; }
+
+.language-openroad-4gl .vg { color: #f38ba8 !important; }
+
+/* Builtins / functions */
+.language-ingres-sql .nb,
+.language-openroad-4gl .nb { color: #94e2d5 !important; }
+
+/* Attributes – obj.attr */
+.language-ingres-sql .na,
+.language-openroad-4gl .na { color: #f9e2af !important; }
+
+/* Whitespace */
+.language-ingres-sql .w,
+.language-openroad-4gl .w  { color: transparent; }
+
+/* Suppress red error markers – shouldn't appear after lexer fix */
+.language-ingres-sql .err,
+.language-openroad-4gl .err {
+    color: #cdd6f4 !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* ============================================================
+   Search Results Window – UI improvements
+   ALL rules scoped to .md-search__output so nothing on the
+   main page is affected.
+   ============================================================ */
+
+/* ── Clear (×) button ──────────────────────────────────────── */
+/* Material hides the reset button when input is empty (:placeholder-shown).
+   Show it whenever the search form has typed content, and make it
+   always accessible (pointer-events + hover accent). */
+.md-search__form:has(.md-search__input:not(:placeholder-shown)) button[type="reset"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+/* Slight hover accent on the clear button */
+.md-search__form button[type="reset"]:hover {
+    color: var(--md-accent-fg-color, #527bbd);
+    opacity: 1 !important;
+}
+
+/* Make the result scroll area much taller (Material default is ~11rem) */
+.md-search__output .md-search__scrollwrap {
+    max-height: min(70vh, 640px) !important;
+    overflow-y: auto !important;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+}
+
+/* Thinner scrollbar inside the panel */
+.md-search__output .md-search__scrollwrap::-webkit-scrollbar {
+    width: 5px;
+}
+.md-search__output .md-search__scrollwrap::-webkit-scrollbar-track {
+    background: transparent;
+}
+.md-search__output .md-search__scrollwrap::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+}
+
+/* Keyboard-focus highlight on result links (native :focus) */
+.md-search-result__list .md-search-result__link:focus {
+    outline: none;
+    background-color: var(--md-accent-fg-color, #527bbd) !important;
+    border-radius: 4px;
+}
+.md-search-result__list .md-search-result__link:focus .md-search-result__article {
+    background-color: transparent;
+}
+.md-search-result__list .md-search-result__link:focus .md-search-result__title,
+.md-search-result__list .md-search-result__link:focus .md-search-result__teaser {
+    color: #fff !important;
+}
+.md-search-result__list .md-search-result__link:focus mark {
+    background-color: rgba(255,255,255,0.35) !important;
+    color: #fff !important;
+}
+
+/* Keyboard hint row below the meta bar */
+.md-search-result__meta::after {
+    content: "↑↓ navigate · Enter open · Esc clear · PgDn/PgUp jump";
+    display: block;
+    font-size: 0.6rem;
+    opacity: 0.5;
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+}

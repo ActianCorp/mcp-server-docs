@@ -1,0 +1,445 @@
+/* Actian Landing Page Styles — layout only, no theme overrides */
+
+:root {
+  --serif-font: Georgia, 'Times New Roman', serif;
+  --mono-font: 'Courier New', Consolas, monospace;
+  --theme-yellow: #ffd848;
+  --link-blue: #0066cc;
+  --code-bg: #0a2540;
+  --code-text: #e3e8ef;
+}
+
+/* ===================
+   Hero Section 
+   =================== */
+
+.actian-hero {
+  max-width: 1200px;
+  margin: 0 auto 0 max(2rem, calc((100% - 1200px) / 4));
+  padding: 2.5rem 2rem 1rem;
+  text-align: left;
+}
+
+.hero-quote {
+  font-family: var(--md-text-font);
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0 0 0.5rem 0;
+  max-width: 100%;
+  color: var(--md-default-fg-color);
+  border: 0 !important;
+  border-left: 0 !important;
+  padding: 0 !important;
+  padding-left: 0 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero-cta {
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  align-items: center;
+}
+
+.hero-description {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--md-default-fg-color);
+  max-width: 100%;
+  margin: 0.75rem 0 0 0;
+}
+
+.primary-link {
+  color: var(--link-blue) !important;
+  text-decoration: none !important;
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  transition: opacity 300ms ease;
+}
+
+.primary-link:hover {
+  opacity: 0.75;
+}
+
+.primary-link::after {
+  content: '';
+  display: inline-block;
+  transition: transform 300ms ease;
+}
+
+.primary-link:hover::after {
+  transform: translateX(3px);
+}
+
+/* ===================
+   Value Props Section
+   =================== */
+
+.value-props-section {
+  max-width: 1200px;
+  margin: 2rem auto 4rem max(2rem, calc((100% - 1200px) / 4));
+  padding: 0 2rem;
+}
+
+.value-props-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.value-prop-item {
+  text-align: left;
+}
+
+.jumbo-heading {
+  font-family: var(--serif-font);
+  font-size: 36px;
+  line-height: 44px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0;
+}
+
+.value-prop-text {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--md-default-fg-color);
+  margin: 0;
+  padding-bottom: 0;
+}
+
+/* ===================
+   Get Started Section
+   =================== */
+
+.get-started-section {
+  width: 100%;
+  margin: 2rem 0;
+  padding: 2rem 2rem;
+  background: var(--theme-yellow);
+}
+
+.get-started-section .side-by-side {
+  max-width: 1200px;
+  margin: 0 auto 0 max(2rem, calc((100% - 1200px) / 4));
+}
+
+.side-by-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.content-side h2.jumbo-heading {
+  font-family: var(--serif-font);
+  font-size: 38px;
+  line-height: 48px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0;
+}
+
+.section-description {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--md-default-fg-color);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0;
+}
+
+.section-cta {
+  margin-top: 1.5rem;
+}
+
+.code-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.code-block {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.code-block pre {
+  margin: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.code-block code {
+  font-family: var(--mono-font);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--code-text);
+  background: transparent;
+}
+
+/* ===================
+   Supported Databases Section
+   =================== */
+
+.databases-section {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 2rem 1.5rem;
+}
+
+.databases-header {
+  text-align: left;
+  margin-bottom: 1.25rem;
+}
+
+.databases-header h3.jumbo-heading {
+  font-family: var(--serif-font);
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0;
+}
+
+.databases-subtitle {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--md-default-fg-color);
+  max-width: 100%;
+  margin: 0;
+  padding-bottom: 0;
+  text-align: left;
+}
+
+.databases-section .md-typeset table,
+.databases-section table {
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
+}
+
+.databases-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+}
+
+.database-card {
+  display: block;
+  text-decoration: none !important;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.database-card:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.database-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0;
+  color: var(--md-default-fg-color);
+}
+
+.database-description {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--md-default-fg-color--light);
+  margin: 0;
+  padding-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .databases-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .databases-header h3.jumbo-heading {
+    font-size: 36px;
+    line-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .databases-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===================
+   Features Section
+   =================== */
+
+.features-section {
+  max-width: 1400px;
+  margin: 0 auto 1.5rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.features-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.features-header h3.jumbo-heading {
+  font-family: var(--serif-font);
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0;
+}
+
+.features-subtitle {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--md-default-fg-color);
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 0;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+  margin-left: 0;
+}
+
+.feature-item {
+  text-align: left;
+}
+
+.feature-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0;
+  color: var(--md-default-fg-color);
+}
+
+.feature-description {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--md-default-fg-color);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0;
+}
+
+/* ===================
+   Responsive Design
+   =================== */
+
+@media (max-width: 1024px) {
+  .hero-quote {
+    font-size: 32px;
+    white-space: normal;
+  }
+  
+  .content-side h2.jumbo-heading {
+    font-size: 56px;
+    line-height: 68px;
+  }
+  
+  .side-by-side {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-quote {
+    font-size: 28px;
+    line-height: 1.3;
+    white-space: normal;
+  }
+  
+  .actian-hero {
+    padding: 2rem 1.5rem 1.5rem;
+  }
+  
+  .jumbo-heading {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  
+  .content-side h2.jumbo-heading {
+    font-size: 42px;
+    line-height: 52px;
+  }
+  
+  .features-header h3.jumbo-heading {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  
+  .value-props-grid,
+  .features-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  
+  .actian-hero {
+    padding: 3rem 1.5rem 2rem;
+  }
+  
+  .get-started-section,
+  .features-section {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-quote {
+    font-size: 22px;
+    white-space: normal;
+  }
+  
+  .jumbo-heading {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  
+  .content-side h2.jumbo-heading {
+    font-size: 32px;
+    line-height: 40px;
+  }
+  
+  .typewriter-text {
+    font-size: 12px;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .hero-quote,
+  .md-header__button.md-logo img,
+  .md-header__button.md-logo svg,
+  .primary-link::after,
+  .not-found-links a {
+    transition: none !important;
+    animation: none !important;
+  }
+}
