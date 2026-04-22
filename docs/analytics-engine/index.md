@@ -25,7 +25,7 @@ The following tools are available through the server:
 
 Before you start, ensure to meet the following requirements:
 
-- **Docker:** Installed and running on the system.
+- **Container Engine:** Docker installed and running on the host machine.
 - **Database credentials:** Valid access for the Analytics Engine database.
 - **Security files (optional):** TLS certificate and key files for secure deployments.
 - **OIDC provider (optional):** Required if you are using OAuth authentication.

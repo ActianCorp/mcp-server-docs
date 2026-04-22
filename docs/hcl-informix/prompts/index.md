@@ -17,7 +17,7 @@ Use the following prompt to help you format the database inquiries:
 
 ## ask_question
 
-This tool takes a standard question and returns a formatted prompt string. The server applies a template that instructs the database engine to act as an expert analyst
+This tool takes a standard question and returns a formatted prompt string. The server applies a template that instructs the database engine to act as an expert analyst.
 
 ### Parameters
 

@@ -23,9 +23,9 @@ The HCL Informix® MCP Server supports the following operations:
 
 ## Prerequisites
 
-Before starting the server, ensure to meet the following requirements:
+Before starting the server, ensure the following requirements are met:
 
-- **Docker or Podman:** Installed and running on the host machine.
+- **Container Engine:** Docker or Podman installed and running on the host machine.
 - **Database credentials:** Access details for the HCL Informix database.
 - **Secure deployment files (Optional):** TLS certificate and key files.
 - **OIDC provider (Optional):** Required if you are using OAuth authentication.
@@ -33,7 +33,7 @@ Before starting the server, ensure to meet the following requirements:
 
 ## Configuration
 
-The server runs as a Docker container. To configure it, you can provide a single JSON file (`conf.json`) and mount it to the container at `/app/conf.json`.
+The server runs as a Docker container. To configure the server, mount the (`conf.json`) file to the container at `/app/conf.json`.
 
 ### Create Configuration File
 
@@ -72,16 +72,16 @@ Create a file named `conf.json` in the working directory and include the specifi
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `servername` | `string` | HCL Informix® database server name. |
-| `service` | `integer` | HCL Informix® server port number. |
-| `dsn` | `string` | Data source name. |
-| `server` | `string` | Host address for the HCL Informix® database. |
-| `database` | `string` | Name of the database to connect to. |
-| `max_connections` | `integer` | Maximum concurrent database connections in the pool. |
-| `host` | `string` | Host address that the MCP Server listens on inside the container. |
-| `port` | `string` | Port that the MCP Server listens on inside the container. |
-| `database_user` | `string` | Database username. You can also provided in the command line |
-| `database_password` | `string` | Database password. You can also provided in the command line. |
+| `servername` | `string` | HCL Informix® database server name |
+| `service` | `integer` | HCL Informix® server port number |
+| `dsn` | `string` | Data source name |
+| `server` | `string` | Host address for the HCL Informix® database |
+| `database` | `string` | Name of the database to connect to target database |
+| `max_connections` | `integer` | Maximum concurrent database connections in the pool|
+| `host` | `string` | Host address that the MCP Server listens on inside the container|
+| `port` | `string` | Port that the MCP Server listens on inside the container |
+| `database_user` | `string` | Database username. You can also provide in the command line |
+| `database_password` | `string` | Database password. You can also provide in the command line |
 
 **Optional fields**
 

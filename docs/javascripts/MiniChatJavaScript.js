@@ -128,6 +128,14 @@ function loadChatHistory() {
           link.setAttribute('target', '_blank');
           link.setAttribute('rel', 'noopener noreferrer');
         });
+        
+        // Re-apply image click handlers
+        const images = messageTextDiv.querySelectorAll('img');
+        images.forEach(img => {
+          img.addEventListener('click', function() {
+            openImageModal(img.src, img.alt || 'Image');
+          });
+        });
        
         messagesContainer.appendChild(messageElement);
       }
@@ -224,6 +232,63 @@ function checkSessionExpiration() {
 }
 
 
+// Function to open image modal
+function openImageModal(imageSrc, imageAlt) {
+  let modal = document.getElementById('mini-chat-image-modal');
+  
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'mini-chat-image-modal';
+    modal.className = 'mini-chat-image-modal';
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'mini-chat-image-modal-close';
+    closeBtn.innerHTML = '&times;';
+    closeBtn.title = 'Close';
+    
+    const img = document.createElement('img');
+    img.alt = imageAlt;
+    
+    modal.appendChild(closeBtn);
+    modal.appendChild(img);
+    document.body.appendChild(modal);
+    
+    closeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeImageModal();
+    });
+    
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeImageModal();
+      }
+    });
+    
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeImageModal();
+      }
+    });
+  }
+  
+  const img = modal.querySelector('img');
+  img.src = imageSrc;
+  img.alt = imageAlt;
+  
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+// Function to close image modal
+function closeImageModal() {
+  const modal = document.getElementById('mini-chat-image-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
   // Load persisted data first
   loadPersistedData();
@@ -265,6 +330,14 @@ function createMiniChatElements() {
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
             <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+          </svg>
+        </button>
+        <button id="mini-chat-maximize" class="mini-chat-control-btn" title="Maximize">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="maximize-icon">
+            <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"/>
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="restore-icon" style="display: none;">
+            <path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5zm5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5zM0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zm10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4z"/>
           </svg>
         </button>
         <button id="mini-chat-close" class="mini-chat-close">&times;</button>
@@ -382,8 +455,29 @@ function initMiniChatEventListeners() {
   // Close mini chat
   miniChatClose.addEventListener('click', function() {
     miniChatContainer.classList.remove('active');
+    miniChatContainer.classList.remove('maximized');
   });
  
+  // Maximize/Restore button functionality
+  const miniChatMaximize = document.getElementById('mini-chat-maximize');
+  if (miniChatMaximize) {
+    miniChatMaximize.addEventListener('click', function() {
+      const isMaximized = miniChatContainer.classList.toggle('maximized');
+      const maximizeIcon = miniChatMaximize.querySelector('.maximize-icon');
+      const restoreIcon = miniChatMaximize.querySelector('.restore-icon');
+      
+      if (isMaximized) {
+        maximizeIcon.style.display = 'none';
+        restoreIcon.style.display = 'block';
+        miniChatMaximize.setAttribute('title', 'Restore');
+      } else {
+        maximizeIcon.style.display = 'block';
+        restoreIcon.style.display = 'none';
+        miniChatMaximize.setAttribute('title', 'Maximize');
+      }
+    });
+  }
+
   // Refresh button - start new conversation
   const miniChatRefresh = document.getElementById('mini-chat-refresh');
   miniChatRefresh.addEventListener('click', function() {
@@ -565,6 +659,14 @@ function initMiniChatEventListeners() {
         link.setAttribute('target', '_blank');
         link.setAttribute('rel', 'noopener noreferrer');
       });
+      
+      // Make images clickable to expand
+      const images = messageTextDiv.querySelectorAll('img');
+      images.forEach(img => {
+        img.addEventListener('click', function() {
+          openImageModal(img.src, img.alt || 'Image');
+        });
+      });
     } catch (error) {
       console.error('Error parsing markdown:', error);
       messageTextDiv.textContent = message;
@@ -601,6 +703,18 @@ function initMiniChatEventListeners() {
    
     feedbackContainer.appendChild(thumbsUpBtn);
     feedbackContainer.appendChild(thumbsDownBtn);
+    
+    // Create copy button
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'mini-chat-feedback-btn mini-chat-copy-btn';
+    copyBtn.setAttribute('title', 'Copy response');
+    copyBtn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+      </svg>
+    `;
+    feedbackContainer.appendChild(copyBtn);
    
     messageElement.appendChild(feedbackContainer);
    
@@ -611,6 +725,11 @@ function initMiniChatEventListeners() {
    
     thumbsDownBtn.addEventListener('click', function() {
       handleFeedback(messageElement, false, message);
+    });
+    
+    // Add event listener for copy button
+    copyBtn.addEventListener('click', function() {
+      handleCopyResponse(messageElement, copyBtn);
     });
    
     miniChatMessages.appendChild(messageElement);
@@ -765,6 +884,49 @@ function initMiniChatEventListeners() {
     miniChatMessages.scrollTop = miniChatMessages.scrollHeight;
   }
  
+  // Function to handle copy response
+  async function handleCopyResponse(messageElement, copyBtn) {
+    try {
+      const messageTextDiv = messageElement.querySelector('.message-text');
+      if (!messageTextDiv) {
+        showFeedbackToast('Unable to copy response');
+        return;
+      }
+      
+      const htmlContent = messageTextDiv.innerHTML;
+      const textContent = messageTextDiv.innerText;
+      
+      try {
+        const clipboardItem = new ClipboardItem({
+          'text/html': new Blob([htmlContent], { type: 'text/html' }),
+          'text/plain': new Blob([textContent], { type: 'text/plain' })
+        });
+        await navigator.clipboard.write([clipboardItem]);
+      } catch (err) {
+        await navigator.clipboard.writeText(textContent);
+      }
+      
+      const originalHTML = copyBtn.innerHTML;
+      copyBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+        </svg>
+      `;
+      copyBtn.style.color = '#4CAF50';
+      
+      showFeedbackToast('Response copied to clipboard!');
+      
+      setTimeout(() => {
+        copyBtn.innerHTML = originalHTML;
+        copyBtn.style.color = '';
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Error copying response:', error);
+      showFeedbackToast('Failed to copy response');
+    }
+  }
+
   // Function to handle feedback (thumbs up/down)
   async function handleFeedback(messageElement, isPositive, responseText) {
   const feedbackButtons = messageElement.querySelectorAll('.mini-chat-feedback-btn');
@@ -974,6 +1136,3 @@ function initMiniChatEventListeners() {
     }, 3000);
   }
 }
-
-
-

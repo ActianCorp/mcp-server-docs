@@ -22,9 +22,9 @@ The Actian Ingres MCP Server supports the following operations:
 ---
 
 ## Prerequisites
-Before starting the server, ensure to meet the following requirements:
+Before starting the server, ensure the following requirements are met:
 
-* **Docker:** Installed and running on the host machine
+* **Container Engine:** Docker installed and running on the host machine.
 * **Database Access:** Valid credentials for the Actian Ingres instance
 * **Security (Optional):** TLS certificate and key files for secure deployments
 * **Authentication (Optional):** An OIDC provider, if you require OAuth

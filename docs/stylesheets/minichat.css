@@ -62,13 +62,50 @@
             }
         }
 
+        /* Maximized state - cover full screen below header */
+        .mini-chat-container.maximized {
+            position: fixed !important;
+            top: 60px !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: calc(100vh - 60px) !important;
+            max-width: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            animation: maximizeAnimation 0.3s ease;
+            z-index: 9999;
+        }
+
+        @keyframes maximizeAnimation {
+            from {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Hide resize handle when maximized */
+        .mini-chat-container.maximized .mini-chat-resize-handle {
+            display: none;
+        }
+
+        /* Adjust header border radius when maximized */
+        .mini-chat-container.maximized .mini-chat-header {
+            border-radius: 0;
+        }
+
         /* Resize Handle */
         .mini-chat-resize-handle {
             position: absolute;
             left: 0;
             top: 0;
             bottom: 0;
-            width: 2px;
+            width: 6px;
             cursor: ew-resize;
             z-index: 10;
             background: transparent;
@@ -82,15 +119,15 @@
         .mini-chat-resize-handle::before {
             content: '';
             position: absolute;
-            left: 2px;
+            left: 1px;
             top: 50%;
             transform: translateY(-50%);
             width: 4px;
             height: 50px;
             background: rgba(102, 126, 234, 0.5);
-            border-radius: 2px;
-            opacity: 0.6;
-            transition: opacity 0.2s;
+            border-radius: 3px;
+            opacity: 1;
+            transition: opacity 0.2s, background 0.2s;
         }
 
         .mini-chat-resize-handle:hover::before {
@@ -179,12 +216,17 @@
         }
 
         .mini-chat-messages::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 3px;
         }
 
         .mini-chat-messages::-webkit-scrollbar-thumb {
-            background: #cbd5e0;
+            background: rgba(102, 126, 234, 0.5);
             border-radius: 3px;
+        }
+
+        .mini-chat-messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.8);
         }
 
         /* Message Bubbles */
@@ -725,4 +767,68 @@
 
         [data-md-color-scheme="slate"] .mini-chat-feedback-container button:hover {
             color: #e0e0e0;
+        }
+
+        /* Image Lightbox Modal */
+        .mini-chat-image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+
+        .mini-chat-image-modal.active {
+            display: flex;
+        }
+
+        .mini-chat-image-modal img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            cursor: default;
+        }
+
+        .mini-chat-image-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            color: #1a202c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .mini-chat-image-modal-close:hover {
+            background: white;
+            transform: rotate(90deg);
+        }
+
+        /* Style images in messages for zoom cursor */
+        .message-text img {
+            cursor: zoom-in;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-text img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
