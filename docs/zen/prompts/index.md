@@ -5,7 +5,7 @@ description: Overview of the prompts available when using the Actian MCP Server 
 
 # Prompts
 
-The Actian MCP Server for Actian Zen includes a built-in prompt template. This feature acts as a bridge, transforming the natural-language questions into the specific context needed for a database expert to provide accurate answers.
+The Actian MCP Server for Actian Zen includes a built-in prompt template. This feature acts as a bridge, transforming the plain language questions into the specific context needed for a database expert to provide accurate answers.
 
 ## Available Prompts
 
@@ -15,7 +15,7 @@ The Actian MCP Server for Actian Zen includes a built-in prompt template. This f
 
 ## ask_question
 
-The `ask_question` prompt takes a plain-language question and wraps it in a template that identifies the AI assistant as a Zen (formerly Actian PSQL) database expert. This ensures the model approaches the query with the correct dialect and structural knowledge.
+The `ask_question` prompt takes a plain language question and wraps it in a template that identifies the AI assistant as a Zen (formerly Actian PSQL) database expert. This ensures the model approaches the query with the correct dialect and structural knowledge.
 
 ### Parameters
 

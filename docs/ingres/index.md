@@ -34,7 +34,7 @@ Before starting the server, ensure the following requirements are met:
 
 ## Configuration
 
-The server runs as a Docker container. You must provide a `conf.json` configuration file and mount it to the `/app/conf.json` path in the container.
+The server runs as a Docker container. To configure the server, mount the (`conf.json`) file to the container at `/app/conf.json`.
 
 ### Create Configuration File
 Create a file named `conf.json` in the working directory and define the environment variables:

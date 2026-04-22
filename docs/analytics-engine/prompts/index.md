@@ -5,7 +5,7 @@ description: Built-in prompts available when using the Actian MCP Server with Ac
 
 # Prompts
 
-The Actian MCP Server for the Actian Analytics Engine includes a built-in prompt template. This tool bridges the gap between natural-language inquiries and the structured context an LLM needs to function as a database expert.
+The Actian MCP Server for the Actian Analytics Engine includes a built-in prompt template. This tool bridges the gap between plain language inquiries and the structured context an LLM needs to function as a database expert.
 
 
 ## Available Prompts
@@ -16,7 +16,7 @@ Use the following prompt to help you format the database inquiries:
 
 | Prompt | Description |
 |--------|-------------|
-| [`ask_question`](#ask_question) | Formats a plain-language question into a structured prompt template designed for database experts. |
+| [`ask_question`](#ask_question) | Formats a plain language question into a structured prompt template designed for database experts. |
 
 
 

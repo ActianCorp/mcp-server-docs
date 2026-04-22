@@ -10,15 +10,15 @@ Connect the MCP-compatible client to the Actian Analytics Engine using the Actia
 
 ### Capabilities
 
-The following tools are available through the server:
+The Actian Analytics Engine MCP Server supports the following operations:
 
 | Action | Description |
 |--------|-------------|
-| **Run SQL queries** | Execute read-only SQL against the database. |
-| **List tables and views** | Discover available objects in the schema. |
-| **Inspect table structure** | Retrieve column definitions and types. |
-| **Read schema metadata** | Explore database-level metadata. |
-| **List functions and procedures** | View available user-defined routines. |
+| **Execute SQL queries** | Execute read-only SQL against the database |
+| **List tables and views** | Discover available objects in the schema |
+| **Inspect table structure** | Retrieve column definitions and types |
+| **Read schema metadata** | Explore database-level metadata |
+| **List functions and procedures** | View available user-defined functions and procedures |
 
 
 ## Prerequisites
@@ -33,7 +33,7 @@ Before starting the server, ensure the following requirements are met:
 
 ## Configuration
 
-The server is distributed as a Docker container. You can provide a single `JSON` configuration file that is mounted into the container at `/app/conf.json`.
+The server runs as a Docker container. To configure the server, mount the (`conf.json`) file to the container at `/app/conf.json`.
 
 ### Create the Configuration File
 
@@ -74,8 +74,8 @@ Create a file named `conf.json` in your working directory using the following st
 | `server` | `string` | Host or connection target for the Analytics Engine database. |
 | `database` | `string` | Name of the database. |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool. |
-| `host` | `string` | Host address that the MCP Server listens on inside the container. |
-| `port` | `string` | Port that the MCP Server listens on inside the container. |
+| `host` | `string` | Host address that the MCP Server listens to in the container. |
+| `port` | `string` | Port that the MCP Server listens to in the container. |
 | `database_user` | `string` | Database username. |
 | `database_password` | `string` | Database password. |
 
@@ -84,10 +84,10 @@ Create a file named `conf.json` in your working directory using the following st
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Default is `1000`.|
-| `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
-| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` inside the container. |
-| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` inside the container. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) for more information. |
+| `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
+| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` in the container. |
+| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` in the container. |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block).|
 
 
 ## Start the Server
@@ -103,7 +103,7 @@ docker run -d \
 !!! important
 	The container reads its configuration from `/app/conf.json`. Do not change the mount target path.
 
-After the container starts, connect the MCP client to the server endpoint using the host and port you specified in `conf.json`.
+After the container starts, connect the MCP client to the server endpoint using the host and port specified in `conf.json`.
 
 
 ## Usage
