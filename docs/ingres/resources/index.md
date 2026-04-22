@@ -104,7 +104,7 @@ The server returns a nested JSON object where each top-level key is a table name
 <div class="grid cards" markdown>
 
 - :material-tools: **[Tools](../tools/index.md)**  
-  Learn about the SQL and schema tools provided by the Ingres MCP Server.
+  Learn about the SQL and schema tools provided by the MCP Server for Ingres.
 
 - :material-chat-processing: **[Prompts](../prompts/index.md)**  
   Use pre-built prompt templates for common Ingres workflows.

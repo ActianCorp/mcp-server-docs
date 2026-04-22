@@ -3,13 +3,13 @@ title: Actian Zen
 description: Connect MCP clients to Actian Zen for database exploration and read-only SQL queries.
 ---
 
-# Actian Zen MCP Server
+# Actian MCP Server for Zen
 
 Connect the MCP-compatible client to Actian Zen using the Actian MCP Server. The server handles automatic Zen dialect translation, allowing you to explore schema metadata, execute read-only SQL queries, and perform ORM operations through a standard interface.
 
 ### Capabilities
 
-The Actian Zen MCP Server supports the following operations:
+The Actian MCP Server for Zen supports the following operations:
 
 | Action | Description |
 |--------|-------------|
@@ -34,7 +34,7 @@ Before starting the server, ensure to meet the following requirements:
 
 ## Configuration
 
-You can configure the Zen MCP Server using a `conf.json` file. Mount this file into the container at `/app/conf.json`. Choose one of the two connection formats below based on the security requirements (credentials).
+You can configure the MCP Server for Zen using a `conf.json` file. Mount this file into the container at `/app/conf.json`. Choose one of the two connection formats below based on the security requirements (credentials).
 
 ### Connection Formats
 
