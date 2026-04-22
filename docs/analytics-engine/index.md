@@ -8,7 +8,7 @@ description: Connect MCP clients to Actian Analytics Engine for schema explorati
 Connect the MCP-compatible client to the Actian Analytics Engine using the Actian MCP Server. This setup allows you to explore schema metadata and execute read-only SQL queries through a standard interface. The MCP Server for Analytics Engine bridges the gap between the MCP client and the Actian database. The server manages connection pooling, response formatting, and schema discovery automatically, allowing you to focus on the data.
 
 
-### Capabilities
+## Capabilities
 
 The Actian Analytics Engine MCP Server supports the following operations:
 
