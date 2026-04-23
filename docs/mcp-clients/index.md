@@ -44,6 +44,7 @@ You can connect to popular AI clients like Claude Desktop, Cursor, fast-agent, a
           "args": [
             "mcp-remote",
             "https://<your-server-host>:<port>/mcp"
+            "--allow-http"
           ]
         }
         ```
@@ -57,6 +58,7 @@ You can connect to popular AI clients like Claude Desktop, Cursor, fast-agent, a
               "args": [
                 "mcp-remote",
                 "https://<your-server-host>:<port>/mcp"
+                "--allow-http"
               ],
               "env": {
                 "NODE_TLS_REJECT_UNAUTHORIZED": "0"
