@@ -43,14 +43,14 @@ You can connect to popular AI clients like Claude Desktop, Cursor, fast-agent, a
           "command": "npx",
           "args": [
             "mcp-remote",
-            "https://<your-server-host>:<port>/mcp"
+            "http://<your-server-host>:<port>/mcp",
             "--allow-http"
           ]
         }
         ```
 
         !!! note
-            If the server utilizes a self-signed TLS certificate, include the `env` block shown below to bypass certificate verification:
+            If the server uses HTTPS and a self-signed TLS certificate, include the `env` block shown below to bypass certificate verification:
 
             ```json
             "actian-mcp-server": {
@@ -58,7 +58,6 @@ You can connect to popular AI clients like Claude Desktop, Cursor, fast-agent, a
               "args": [
                 "mcp-remote",
                 "https://<your-server-host>:<port>/mcp"
-                "--allow-http"
               ],
               "env": {
                 "NODE_TLS_REJECT_UNAUTHORIZED": "0"
