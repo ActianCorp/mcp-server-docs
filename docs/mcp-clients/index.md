@@ -72,6 +72,53 @@ You can connect to popular AI clients like Claude Desktop, Cursor, fast-agent, a
 
     For a remote deployment, replace localhost and <port> with the public hostname and port of the Actian MCP Server.
 
+### Connecting Claude Desktop to the Actian MCP Server
+
+Claude Desktop connects to the Actian MCP Server via the `mcp-remote` bridge. This connection requires Node.js (version 18 or later) to be installed on the local machine.
+
+#### Prerequisites
+
+Before starting the connection, ensure the following requirements are met:
+
+- **Node.js:** Version 18 or higher.
+- **Actian MCP Server:** Running and accessible over the network.
+
+
+#### Configuration
+
+1. Open the Claude Desktop configuration file located at the following path:
+    - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+    - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+2. Add the following entry under the `mcpServers` section and replace the placeholder URL with the specific server address:
+
+    ```json
+    "actian-mcp-server": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://<your-server-host>:8000/mcp"
+      ]
+    }
+    ```
+
+    !!! note 
+        If the server utilizes a self-signed TLS certificate, include the `env` block shown below to bypass certificate verification:
+
+        ```json
+        "actian-mcp-server": {
+          "command": "npx",
+          "args": [
+            "mcp-remote",
+            "https://<your-server-host>:8000/mcp"
+          ],
+          "env": {
+            "NODE_TLS_REJECT_UNAUTHORIZED": "0"
+          }
+        }
+        ```
+
+3. Save the file and restart Claude Desktop. The Actian MCP Server appears as an available tool within the conversations.    
+
 ## Connect Using Python Client
 
 !!! warning "Actian NoSQL"
