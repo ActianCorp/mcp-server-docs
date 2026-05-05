@@ -66,27 +66,27 @@ hide:
     <tbody>
       <tr>
         <td><a href="./ingres/index.html">Actian Ingres</a></td>
-        <td><code>actian/ingres-mcp-server</code></td>
+        <td><a href="https://hub.docker.com/r/actian/ingres-mcp-server"><code>actian/ingres-mcp-server</code></a></td>
         <td>Mission-critical relational data and enterprise logic</td>
       </tr>
       <tr>
         <td><a href="./hcl-informix/index.html">HCL Informix®</a></td>
-        <td><code>actian/informix-mcp-server</code></td>
+        <td><a href="https://hub.docker.com/r/actian/informix-mcp-server"><code>actian/informix-mcp-server</code></a></td>
         <td>Time-series, Internet of Things (IoT), and high-availability spatial data</td>
       </tr>
        <tr>
         <td><a href="./zen/index.html">Actian Zen</a></td>
-        <td><code>actian/zen-mcp-server</code></td>
+        <td><a href="https://hub.docker.com/r/actian/zen-mcp-server"><code>actian/zen-mcp-server</code></a></td>
         <td>Edge-based AI and zero-admin mobile applications</td>
       </tr>
       <tr>
         <td><a href="./nosql/index.html">Actian NoSQL</a></td>
-        <td><code>actian/nsql-mcp-server</code></td>
+        <td><a href="https://hub.docker.com/r/actian/nsql-mcp-server"><code>actian/nsql-mcp-server</code></a></td>
         <td>High-fidelity context from complex object structures</td>
       </tr>
       <tr>
         <td><a href="./analytics-engine/index.html">Actian Analytics Engine</a></td>
-        <td><code>actian/analytics-engine-mcp-server</code></td>
+        <td><a href="https://hub.docker.com/r/actian/analytics-engine-mcp-server"><code>actian/analytics-engine-mcp-server</code></a></td>
         <td>Large-scale retrieval-augmented generation (RAG) and high-performance vector analysis</td>
       </tr>
     </tbody>
