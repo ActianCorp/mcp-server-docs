@@ -572,3 +572,39 @@ pre code {
 [data-md-color-scheme="slate"] .step-item:not(:last-child)::before {
   background: var(--color-border);
 }
+
+/* ═══════════════════════════════════════════════
+   COPY DIALOG — black pill, white text, bottom-center
+   Material uses .md-dialog (not .md-toast)
+   ═══════════════════════════════════════════════ */
+.md-dialog {
+  position: fixed !important;
+  bottom: 1.5rem !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  z-index: 9999 !important;
+  width: auto !important;
+  max-width: 90vw !important;
+  pointer-events: none !important;
+  background-color: #1a1a1a !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+.md-dialog__inner {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-family: var(--md-text-font) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 0.65rem 1.5rem !important;
+  border-radius: 9999px !important;
+  white-space: nowrap !important;
+}
+
+.md-dialog .md-typeset {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
