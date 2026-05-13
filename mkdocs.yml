@@ -17,7 +17,6 @@ theme:
     - navigation.indexes
     - navigation.top
     - navigation.instant
-    - navigation.prune
     - navigation.expand
     - navigation.path
     - navigation.footer
@@ -128,7 +127,7 @@ extra_javascript:
   - javascripts/mermaid-init.js
   - javascripts/search_enhancement.js
   - javascripts/extra.js
-  - javascripts/comprehensive-nav.js
+  - javascripts/comprehensive-nav-mcp.js
   - path: javascripts/current.js
     defer: true
   - path: javascripts/MiniChatJavaScript.js  # disabled: MCP chatbot
