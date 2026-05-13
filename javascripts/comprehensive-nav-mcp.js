@@ -4,30 +4,35 @@
     {
       key: '',
       label: 'Home',
+      tabLabel: 'Home',
       href: 'index.html',
       pages: []
     },
     {
       key: 'intro',
       label: 'Introduction',
+      tabLabel: 'Introduction',
       href: 'intro/index.html',
       pages: []
     },
     {
       key: 'get-started',
       label: 'Get Started',
+      tabLabel: 'Get Started',
       href: 'get-started/index.html',
       pages: []
     },
     {
       key: 'mcp-clients',
       label: 'Connecting MCP Clients',
+      tabLabel: 'MCP Clients',
       href: 'mcp-clients/index.html',
       pages: []
     },
     {
       key: 'authentication',
       label: 'Authentication',
+      tabLabel: 'Authentication',
       href: 'authentication/index.html',
       pages: [
         { name: 'Auth0 Setup Guide', href: 'authentication/auth0/index.html' },
@@ -37,6 +42,7 @@
     {
       key: 'ingres',
       label: 'Actian Ingres',
+      tabLabel: 'Ingres',
       href: 'ingres/index.html',
       pages: [
         { name: 'Tools', href: 'ingres/tools/index.html' },
@@ -47,6 +53,7 @@
     {
       key: 'hcl-informix',
       label: 'HCL Informix\u00ae',
+      tabLabel: 'HCL Informix\u00ae',
       href: 'hcl-informix/index.html',
       pages: [
         { name: 'Tools', href: 'hcl-informix/tools/index.html' },
@@ -57,6 +64,7 @@
     {
       key: 'zen',
       label: 'Actian Zen',
+      tabLabel: 'Zen',
       href: 'zen/index.html',
       pages: [
         { name: 'Tools', href: 'zen/tools/index.html' },
@@ -67,6 +75,7 @@
     {
       key: 'nosql',
       label: 'Actian NoSQL Database',
+      tabLabel: 'NoSQL',
       href: 'nosql/index.html',
       pages: [
         { name: 'Authentication', href: 'nosql/authentication/index.html', pages: [
@@ -81,6 +90,7 @@
     {
       key: 'analytics-engine',
       label: 'Actian Analytics Engine',
+      tabLabel: 'Analytics Engine',
       href: 'analytics-engine/index.html',
       pages: [
         { name: 'Tools', href: 'analytics-engine/tools/index.html' },
@@ -210,10 +220,10 @@
       var tabLink = tabItem.querySelector('.md-tabs__link');
       if (!tabLink) return;
 
-      var labelText = getTabLabelText(tabLink);
+      var labelText = getTabLabelText(tabLink).trim();
       var section   = null;
       for (var i = 0; i < SECTIONS.length; i++) {
-        if (SECTIONS[i].label === labelText) { section = SECTIONS[i]; break; }
+        if ((SECTIONS[i].tabLabel || SECTIONS[i].label) === labelText) { section = SECTIONS[i]; break; }
       }
 
       if (section) {
