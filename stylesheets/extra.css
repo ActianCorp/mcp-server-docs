@@ -62,6 +62,7 @@
    ═══════════════════════════════════════════════ */
 html, body {
   background-color: var(--color-bg);
+  overscroll-behavior: none; /* prevents elastic bounce / page-jump at scroll edges */
 }
 
 body,
