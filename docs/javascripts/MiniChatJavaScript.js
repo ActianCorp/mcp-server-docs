@@ -12,10 +12,10 @@ const IDLE_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
 // Storage keys for persistence
 const STORAGE_KEYS = {
-  SESSION_ID: 'miniChat_sessionId',
-  CHAT_HISTORY: 'miniChat_history',
-  LAST_QUESTION: 'miniChat_lastQuestion',
-  LAST_ACTIVITY: 'miniChat_lastActivity'
+  SESSION_ID: 'mcp_miniChat_sessionId',
+  CHAT_HISTORY: 'mcp_miniChat_history',
+  LAST_QUESTION: 'mcp_miniChat_lastQuestion',
+  LAST_ACTIVITY: 'mcp_miniChat_lastActivity'
 };
 
 // Load persisted data from localStorage
