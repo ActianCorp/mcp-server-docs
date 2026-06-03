@@ -97,9 +97,10 @@ With the `conf.json` file ready, run the following Docker command to start the c
 
 ```bash
 docker run -d \
-  -v $(pwd)/conf.json:/app/conf.json:ro \
-  --name=actian-mcp \
-  actian/ingres-mcp-server:1.0.0
+    -v $(pwd)/conf.json:/app/conf.json:ro \
+    -p 8000:8000 \
+    --name=actian-mcp \
+    actian/ingres-mcp-server:1.0.0
 ```
 
 Once the container is running, you can connect the MCP client to the server using the host and port specified in the configuration.
