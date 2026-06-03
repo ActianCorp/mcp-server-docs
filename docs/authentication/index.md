@@ -175,7 +175,7 @@ docker run -p 8000:8000 \
   -v /path/to/server.crt:/app/server.crt:ro \
   -v /path/to/server.key:/app/server.key:ro \
   -v /path/to/conf.json:/app/conf.json:ro \
-  actian/analytics-engine-mcp-server:latest
+  actian/analytics-engine-mcp-server:1.0.0
 ```
 
 Reference the container paths in `conf.json`:

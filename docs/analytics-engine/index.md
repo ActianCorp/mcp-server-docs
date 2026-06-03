@@ -96,9 +96,12 @@ Once you have created the `conf.json` file, start the container and mount the co
 
 ```bash
 docker run -d \
-  -v $(pwd)/conf.json:/app/conf.json:ro \
-  actian/analytics-engine-mcp-server:1.0.0
+    -v $(pwd)/conf.json:/app/conf.json:ro \
+    -p 8000:8000 \
+    --name=actian-mcp \
+    actian/analytics-engine-mcp-server:1.0.0
 ```
+
 
 !!! important
 	The container reads its configuration from `/app/conf.json`. Do not change the mount target path.
