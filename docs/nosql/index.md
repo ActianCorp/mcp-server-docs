@@ -94,7 +94,7 @@ nsql.connectionURL=<connection-url>
 docker run \
   -v $(pwd)/application.properties:/home/jboss/config/application.properties:ro \
   -p 8080:8080 \
-  actian/nsql-mcp-server:1.0.0
+  actian/nsql-mcp-server:1.0.1
 ```
 
 Once the container is running, connect the MCP client to the exposed server endpoint using the host and port from the configuration.
