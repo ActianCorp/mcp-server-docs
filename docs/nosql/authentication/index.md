@@ -117,7 +117,7 @@ docker run \
   -v $(pwd)/certs:/certs:ro \
   -p 8080:8080 \
   -p 8443:8443 \
-  actian/nsql-mcp-server:1.0.0
+  actian/nsql-mcp-server:1.0.1
 ```
 
 
