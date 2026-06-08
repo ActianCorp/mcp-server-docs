@@ -2,8 +2,8 @@
    Custom Comprehensive Navigation (cn-nav)
    ============================================ */
 
-/* Hide native MkDocs nav immediately to prevent flash */
-.md-nav--primary {
+/* Hide native MkDocs nav only after cn-nav is injected */
+.md-sidebar__inner:has(.cn-nav) .md-nav--primary {
   display: none !important;
 }
 
