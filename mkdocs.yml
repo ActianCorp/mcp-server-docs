@@ -127,6 +127,7 @@ extra_javascript:
   - javascripts/mermaid-init.js
   - javascripts/search_enhancement.js
   - javascripts/extra.js
+  - javascripts/comprehensive-nav-sections.js
   - javascripts/comprehensive-nav-mcp.js
   - path: javascripts/current.js
     defer: true
@@ -158,5 +159,6 @@ plugins:
 
 # Hooks
 hooks:
+  - hooks/generate_comprehensive_nav.py
   - hooks/github_edit_url.py
   - hooks/custom_lexers.py
