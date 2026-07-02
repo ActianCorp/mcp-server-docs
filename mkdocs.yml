@@ -1,56 +1,46 @@
-#Project Information
+# Project Information
 site_name: Actian MCP Server
 site_url: https://docs.actian.com/mcp-server/
 site_description: >-
   Documentation for the Actian MCP Server — connect AI agents to Actian data sources via the Model Context Protocol.
 use_directory_urls: false
 docs_dir: docs
-site_dir: site 
+site_dir: site
+
 # Theme Configuration
 theme:
   name: material
-  logo: assets/images/actian-logo.svg
   language: en
+  custom_dir: theme_overrides/
+  logo: assets/images/actian-logo.svg
+  favicon: assets/favicon.png
+  icon:
+    repo: material/lifebuoy
   features:
-    - navigation.tabs
-    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
     - navigation.indexes
     - navigation.top
-    - navigation.instant
-    - navigation.expand
     - navigation.path
     - navigation.footer
-    - navigation.sections
     - search.highlight
     - search.share
     - search.suggest
-    - search.focus
     - content.code.copy
     - content.code.annotate
-    - content.action.edit
   palette:
     - scheme: default
-      primary: custom
+      primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-4
         name: Switch to dark mode
     - scheme: slate
-      primary: custom
+      primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-7
         name: Switch to light mode
-  custom_dir: theme_overrides/
-  icon:
-    repo: fontawesome/brands/github
-    edit: fontawesome/regular/pen-to-square
-  font: false
-  favicon: assets/favicon.png
-  
-  # Static files
-  static_templates:
-    - 404.html
 
 # Markdown Extensions
 markdown_extensions:
@@ -64,15 +54,13 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  - plantuml_markdown:
-      server: https://www.plantuml.com/plantuml
-      format: svg
   - admonition
   - pymdownx.details
   - attr_list
   - md_in_html
+  - tables
   - pymdownx.tabbed:
-      alternate_style: true 
+      alternate_style: true
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -85,10 +73,13 @@ markdown_extensions:
 copyright: >-
   Copyright &copy; 2026, Actian
 
+# Support link (shown as a button in the header)
+repo_url: https://www.actian.com/contact/
+repo_name: Support
+
+# Analytics (Google Analytics 4) + page feedback widget
 extra:
-  version:
-    provider: mike
-  analytics: 
+  analytics:
     provider: custom
     property: G-NHC5CN295F
     feedback:
@@ -105,60 +96,31 @@ extra:
           note: >-
             Thanks for your feedback!
 
-
-# Repository
-repo_url: https://github.com/ActianCorp/mcp-server-docs
-repo_name: mcp-server-docs
-repo_branch: main
-edit_uri: "edit"
-
 # Customization
 extra_css:
-  - assets/stylesheets/style.css?v=2
-  - stylesheets/minichat.css  # disabled: MCP chatbot
-  - stylesheets/dx_style.css
-  - assets/stylesheets/actian-landing.css?v=4
-  - stylesheets/extra.css
-  - stylesheets/comprehensive-nav.css
+  - stylesheets/site-theme.css
+  - stylesheets/minichat.css
 
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/marked/marked.min.js
   - https://unpkg.com/mermaid@10/dist/mermaid.min.js
   - javascripts/mermaid-init.js
-  - javascripts/search_enhancement.js
   - javascripts/extra.js
-  - javascripts/comprehensive-nav-sections.js
-  - javascripts/comprehensive-nav-mcp.js
-  - path: javascripts/current.js
-    defer: true
-  - path: javascripts/MiniChatJavaScript.js  # disabled: MCP chatbot
+  - path: javascripts/MiniChatJavaScript.js
     defer: true
 
 plugins:
   - search:
       lang: en
-      separator: '[\s\-\.,:!=\[\]()\"/]+|(?!\d)\.(?!\d)|\.(?!\d)|[0-9]+'
-      jieba_dict: null
-      use_headings: true
-      indexing: 'full'
-      prebuild_index: true
-      min_search_length: 2
   - awesome-pages
-  - tags:
+  - tags
   - swagger-ui-tag
-  - mike:
-      canonical_version: latest
-      alias_type: redirect
   - git-revision-date-localized:
       type: date
-  - minify:
-      minify_html: true
-  - meta:
-      meta_file: .meta.yml
+      enable_creation_date: false
+      fallback_to_build_date: true
   - meta-descriptions
 
 # Hooks
 hooks:
-  - hooks/generate_comprehensive_nav.py
-  - hooks/github_edit_url.py
-  - hooks/custom_lexers.py
+  - hooks/copy_md_sources.py

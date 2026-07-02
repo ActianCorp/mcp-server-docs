@@ -1,0 +1,12 @@
+{# Custom analytics provider: load Google Analytics 4 (gtag.js).
+   Using `provider: custom` (instead of `google`) means Material does NOT
+   attach its own feedback submit handler — so javascripts/extra.js is free to
+   intercept the thumbs up/down submit and show the extended comment form.
+   Rating + comment events are sent to GA4 from extra.js via gtag(). #}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NHC5CN295F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-NHC5CN295F');
+</script>
