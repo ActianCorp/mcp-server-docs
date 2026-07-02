@@ -1,0 +1,654 @@
+/* ============================================================
+   Actian MCP Server — focused theme overrides on top of the
+   default Material template.
+   Covers: white header/footer (Jaspersoft-style), stable
+   scrollbar (no layout "jumping"), and the "View as Markdown"
+   link styling.
+   ============================================================ */
+
+:root {
+  --actian-blue: #1267dc;
+  /* Tokens used by the "View as Markdown" link */
+  --color-bg: var(--md-default-bg-color);
+  --color-surface: var(--md-code-bg-color);
+  --color-border: var(--md-default-fg-color--lightest);
+  --color-text: var(--md-default-fg-color);
+  --color-accent: var(--actian-blue);
+}
+
+/* ---- Stop scroll "jumping": always keep a vertical scrollbar present so the
+   layout never shifts sideways when it appears/disappears between short and
+   long pages (or when scrolling up/down). `overflow-y: scroll` is the
+   broad-support fallback; `scrollbar-gutter: stable` avoids a doubled gutter on
+   modern browsers. ---- */
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+/* Stop the elastic "rubber-band" overscroll bounce when reaching the very
+   top or bottom of the page. */
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
+/* ---- White header (blend with content, no colored box) ---- */
+.md-header {
+  background-color: #ffffff;
+  color: var(--md-default-fg-color);
+  box-shadow: none;
+  /* Thin separator between the header and the main content (mirrors footer).
+     Extra bottom padding pushes the line a little lower than the header row. */
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  padding-bottom: 0.45rem;
+}
+.md-header[data-md-state="shadow"] {
+  box-shadow: none;
+}
+
+/* Reduce the large default gap between the header and the main content
+   (Material's default is 1.5rem). */
+.md-main__inner {
+  margin-top: 0.6rem;
+}
+.md-header__title,
+.md-header__topic,
+.md-header__title .md-ellipsis {
+  color: var(--actian-blue);
+  font-weight: 600;
+}
+.md-header__button,
+.md-header__button.md-icon {
+  color: var(--md-default-fg-color);
+}
+
+/* Search box on a white header — rounded pill shape */
+.md-search__form {
+  border-radius: 2rem;
+  background-color: #ffffff;
+  box-shadow: none;
+}
+.md-search__input {
+  background-color: #ffffff;
+  color: var(--md-default-fg-color);
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 2rem;
+  padding-left: 2.2rem;
+}
+.md-search__icon[for="__search"] {
+  left: 0.6rem;
+}
+[data-md-toggle="search"]:checked ~ .md-header .md-search__form {
+  border-radius: 2rem 2rem 0 0;
+}
+.md-search__input::placeholder {
+  color: var(--md-default-fg-color--light);
+}
+.md-search__icon,
+.md-search__icon svg {
+  color: var(--md-default-fg-color);
+  fill: var(--md-default-fg-color);
+}
+
+/* ---- White prev/next + meta footer ---- */
+.md-footer {
+  background-color: #ffffff;
+  color: var(--md-default-fg-color);
+}
+.md-footer__inner {
+  background-color: transparent;
+}
+.md-footer__link {
+  color: var(--md-default-fg-color);
+}
+.md-footer__link:focus,
+.md-footer__link:hover {
+  color: var(--md-primary-fg-color);
+}
+.md-footer__title {
+  color: var(--actian-blue);
+}
+.md-footer__direction {
+  color: var(--md-default-fg-color--light);
+}
+.md-footer-meta {
+  background-color: #ffffff;
+  color: var(--md-default-fg-color);
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+/* Give the copyright block room so both lines show fully */
+.md-footer-meta__inner {
+  flex-wrap: wrap;
+  row-gap: 0.2rem;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+.md-footer-meta .md-footer__link,
+.md-copyright,
+.md-copyright__highlight {
+  color: var(--md-default-fg-color);
+}
+.md-copyright {
+  line-height: 1.5;
+}
+/* Override Material's high-specificity rule (html .md-footer-meta.md-typeset a),
+   which otherwise paints this link the light footer colour — invisible on the
+   grey band. Use the site blue so "Material for MkDocs" is legible. */
+html .md-footer-meta.md-typeset a {
+  color: #0066cc;
+}
+html .md-footer-meta.md-typeset a:hover,
+html .md-footer-meta.md-typeset a:focus {
+  color: #004a99;
+}
+
+/* Dark-mode: keep header/footer readable on slate scheme */
+[data-md-color-scheme="slate"] .md-header,
+[data-md-color-scheme="slate"] .md-footer,
+[data-md-color-scheme="slate"] .md-footer-meta,
+[data-md-color-scheme="slate"] .md-search__form,
+[data-md-color-scheme="slate"] .md-search__input {
+  background-color: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+}
+
+/* ---- "Support" header button: blue pill, no icon ---- */
+.md-header__source {
+  width: auto;
+  max-width: none;
+  margin-left: 0.4rem;
+}
+.md-header__source .md-source__icon {
+  display: none;
+}
+.md-header .md-source {
+  display: inline-flex;
+  align-items: center;
+  height: auto;
+  background-color: var(--actian-blue);
+  border-radius: 2rem;
+  padding: 0.35rem 1rem;
+  font-size: 0.7rem;
+  transition: opacity 0.15s ease;
+}
+.md-header .md-source:hover {
+  opacity: 0.88;
+}
+.md-header .md-source__repository {
+  margin-left: 0;
+  padding-left: 0;
+  color: #ffffff;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* ---- Extended page-feedback form (injected by javascripts/extra.js after
+   a thumbs up/down): free-text comment + Submit / Skip ---- */
+.feedback-text-form {
+  margin-top: 0.75rem;
+}
+.feedback-text-prompt {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color);
+}
+.feedback-optional {
+  color: var(--md-default-fg-color--light);
+}
+.feedback-textarea {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  padding: 0.5rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.2rem;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  font-family: inherit;
+  font-size: 0.72rem;
+  resize: vertical;
+}
+.feedback-textarea:focus {
+  outline: 2px solid var(--md-accent-fg-color);
+  border-color: transparent;
+}
+.feedback-text-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.feedback-submit {
+  font-size: 0.7rem;
+  padding: 0.3rem 1rem;
+  cursor: pointer;
+}
+.feedback-skip {
+  background: none;
+  border: none;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+.feedback-skip:hover {
+  color: var(--md-default-fg-color);
+}
+.feedback-thanks {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color--light);
+}
+
+/* ---- Content headings: darker (more blackish) than Material's default, and a
+   modest weight bump so they match the sidebar section headings. ---- */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5,
+.md-typeset h6 {
+  color: var(--md-default-fg-color);
+  font-weight: 500;
+}
+
+/* ---- Sidebar main section headings + the site title ("Actian MCP Server"):
+   darker (more blackish). Weight/size unchanged. Adapts to light/dark via
+   --md-default-fg-color. ---- */
+.md-nav--primary > .md-nav__title,
+.md-nav--primary .md-nav__item--section > .md-nav__link,
+.md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
+  color: var(--md-default-fg-color);
+}
+
+/* ---- Code blocks: comfortable padding ---- */
+.md-typeset pre > code {
+  padding: 0.85em 1em;
+  border-radius: 0.3rem;
+}
+/* Fenced blocks with line numbers keep the code column padded */
+.md-typeset .highlighttable .linenos {
+  padding: 0.85em 0.6em;
+}
+.md-typeset .highlighttable .code td {
+  padding: 0;
+}
+/* Inline code: small breathing room */
+.md-typeset code {
+  padding: 0.1em 0.35em;
+}
+.md-typeset a > code {
+  padding: 0.1em 0.35em;
+}
+
+/* ---- Thin separators between the left nav, main content, and right TOC ----
+   The sidebars are only as tall as their own content, so borders on them stop
+   short. Instead put the dividers on the middle content column, which stretches
+   to the full height of the flex row — giving full-length lines regardless of
+   which column is tallest. ---- */
+@media screen and (min-width: 76.25em) {
+  .md-main__inner {
+    align-items: stretch;
+  }
+  /* Left divider (nav | content): full page height via the stretched content column */
+  .md-content {
+    border-left: 1px solid var(--md-default-fg-color--lightest);
+  }
+  /* Right divider (content | TOC): border the TOC nav itself so it spans from
+     the top down to exactly the last "On this page" entry — no further. */
+  .md-sidebar--secondary .md-nav--secondary {
+    border-left: 1px solid var(--md-default-fg-color--lightest);
+  }
+  .md-sidebar--secondary .md-nav--secondary .md-nav__title {
+    padding-left: 0.6rem;
+  }
+  .md-sidebar--secondary .md-nav--secondary > .md-nav__list {
+    padding-left: 0.6rem;
+  }
+
+  /* Landing page (hide: navigation sets [hidden] on the sidebar):
+     no left border since there is no sidebar to divide from. */
+  .md-main__inner:has(.md-sidebar--primary[hidden]) .md-content {
+    border-left: none;
+  }
+}
+
+/* Landing page: hide the auto-injected page title h1. */
+.md-main__inner:has(.md-sidebar--primary[hidden]) .md-content__inner > h1:first-child {
+  display: none;
+}
+
+/* ============================================================
+   "View as Markdown" link (injected by theme_overrides/main.html)
+   ============================================================ */
+.md-raw-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  float: right;
+  margin: 0 0 0.8rem 1.2rem;
+  padding: 0.3em 0.55em;
+  font-family: var(--md-text-font);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.35rem;
+  text-decoration: none !important;
+  transition: border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+  max-width: 170px;
+}
+.md-raw-link:hover {
+  border-color: var(--color-accent);
+  background: var(--color-bg);
+  text-decoration: none !important;
+}
+.md-raw-link__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.3em;
+  height: 1.3em;
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-radius: 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.md-raw-link__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  min-width: 0;
+}
+.md-raw-link__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  font-size: 0.52rem;
+  font-weight: 500;
+  color: var(--color-text) !important;
+  line-height: 1.3;
+}
+.md-raw-link:hover .md-raw-link__title {
+  color: var(--color-accent) !important;
+}
+
+/* ============================================================
+   Home / Landing page layout
+   ============================================================ */
+
+:root {
+  --serif-font: Georgia, 'Times New Roman', serif;
+  --mono-font: 'Courier New', Consolas, monospace;
+  --theme-yellow: #ffd848;
+  --link-blue: #0066cc;
+  --code-bg: #0a2540;
+  --code-text: #e3e8ef;
+}
+
+.primary-link {
+  color: var(--link-blue) !important;
+  text-decoration: none !important;
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  transition: opacity 300ms ease;
+}
+.primary-link:hover {
+  opacity: 0.75;
+}
+
+/* ---- Landing hero banner ---- */
+
+/* Break out of .md-content__inner's horizontal margins (0.8rem base, 1.2rem at wide) */
+.landing-hero {
+  margin-left: -0.8rem;
+  margin-right: -0.8rem;
+  margin-top: -0.6rem; /* cancel content__inner's padding-top */
+  margin-bottom: 1.5rem;
+  background: url(../assets/homepage-images/dx-doc-home-banner.png) center / cover no-repeat;
+  display: flex;
+  align-items: center;
+  min-height: auto;
+}
+@media screen and (min-width: 76.25em) {
+  .landing-hero {
+    margin-left: -1.2rem;
+    margin-right: -1.2rem;
+  }
+}
+.landing-hero__content {
+  max-width: 61rem;
+  margin: 0.3rem 2rem 0.5rem;
+  padding: 0.5rem 1rem;
+}
+.landing-hero__heading {
+  font-size: 1.5625em;
+  line-height: 1.3;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.4rem;
+  padding: 0;
+}
+.landing-hero__sub {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0;
+  padding: 0;
+}
+
+/* ---- Databases / intro section ---- */
+.databases-section {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 2rem 1.5rem;
+}
+.databases-header {
+  text-align: left;
+  margin-bottom: 1.25rem;
+}
+.databases-header h3.jumbo-heading {
+  font-family: var(--serif-font);
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0;
+}
+.databases-subtitle {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--md-default-fg-color);
+  max-width: 100%;
+  margin: 0;
+  padding-bottom: 0;
+  text-align: left;
+}
+
+/* ---- Features section ---- */
+.features-section {
+  max-width: 1400px;
+  margin: 0 auto 1.5rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+.features-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.features-header h3.jumbo-heading {
+  font-family: var(--serif-font);
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0;
+}
+.features-subtitle {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--md-default-fg-color);
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 0;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+}
+.feature-item {
+  text-align: left;
+}
+.feature-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0;
+  color: var(--md-default-fg-color);
+}
+.feature-description {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--md-default-fg-color);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0;
+}
+
+/* ---- Get Started section ---- */
+.get-started-section {
+  width: 100%;
+  margin: 2rem 0;
+  padding: 2rem;
+  background: var(--theme-yellow);
+}
+.get-started-section .side-by-side {
+  max-width: 1200px;
+  margin: 0 auto 0 max(2rem, calc((100% - 1200px) / 4));
+}
+.side-by-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+.content-side h2.jumbo-heading {
+  font-family: var(--serif-font);
+  font-size: 38px;
+  line-height: 48px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0;
+}
+.section-description {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--md-default-fg-color);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0;
+}
+.section-cta {
+  margin-top: 1.5rem;
+}
+.code-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.code-block {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+.code-block pre {
+  margin: 0;
+  background: transparent;
+  padding: 0;
+}
+.code-block code {
+  font-family: var(--mono-font);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--code-text);
+  background: transparent;
+}
+
+/* ---- CTA section ---- */
+.cta-section {
+  text-align: center;
+  padding: 2rem;
+  background: transparent;
+  margin-top: 1.5rem;
+}
+.cta-section h4 {
+  color: var(--md-default-fg-color);
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+}
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ---- Shared heading style ---- */
+.jumbo-heading {
+  font-family: var(--serif-font);
+  font-size: 36px;
+  line-height: 44px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0;
+}
+.hero-cta {
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  align-items: center;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .side-by-side {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+@media (max-width: 768px) {
+  .features-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .get-started-section,
+  .features-section {
+    padding: 2rem 1.5rem;
+  }
+}
+@media (max-width: 480px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  .jumbo-heading {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}

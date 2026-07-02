@@ -1,11 +1,17 @@
 ---
 title: Home
-template: home-blocks.html
 hide:
   - navigation
   - toc
   - feedback
 ---
+
+<div class="landing-hero">
+  <div class="landing-hero__content">
+    <h1 class="landing-hero__heading">Connect Actian and HCL Informix® Databases to AI Applications</h1>
+    <p class="landing-hero__sub">Deploy specialized MCP servers from our central hub to turn your data into actionable intelligence</p>
+  </div>
+</div>
 
 <div class="databases-section">
   <div class="features-header">
