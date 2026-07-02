@@ -386,8 +386,8 @@ html .md-footer-meta.md-typeset a:focus {
    ============================================================ */
 
 :root {
-  --serif-font: Georgia, 'Times New Roman', serif;
-  --mono-font: 'Courier New', Consolas, monospace;
+  --serif-font: var(--md-text-font-family);
+  --mono-font: var(--md-code-font-family);
   --theme-yellow: #ffd848;
   --link-blue: #0066cc;
   --code-bg: #0a2540;
