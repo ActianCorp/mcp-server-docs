@@ -1,62 +1,3554 @@
-<!-- Elements added to main will be displayed on all pages --> <!--March2023--> <!doctype html><html lang=en class=no-js> <head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Step-by-step guide to configure Auth0 as the OAuth identity provider for the Actian MCP Server."><link rel=canonical href=https://docs.actian.com/mcp-server/authentication/auth0/index.html><link rel=prev href=../index.html><link rel=next href=../keycloak/index.html><link rel=icon href=../../assets/favicon.png><meta name=generator content="mkdocs-1.6.1, mkdocs-material-9.7.6"><title>Auth0 Setup Guide - Actian MCP Server</title><link rel=stylesheet href=../../assets/stylesheets/main.484c7ddc.min.css><link rel=stylesheet href=../../assets/stylesheets/palette.ab4e12ef.min.css><link rel=stylesheet href="../../assets/stylesheets/style.css?v=2"><link rel=stylesheet href=../../stylesheets/minichat.css><link rel=stylesheet href=../../stylesheets/dx_style.css><link rel=stylesheet href="../../assets/stylesheets/actian-landing.css?v=4"><link rel=stylesheet href=../../stylesheets/extra.css><link rel=stylesheet href=../../stylesheets/comprehensive-nav.css><script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script><!--Jan2025--><!-- SmartCat script--><script id=sc-script src="https://cdn.smartcat-proxy.com/168fc4fe410c474eb1f6043205ededea/script-v1/__translator.js?hash=6a6a63c258c09df66a084cf91cd87ede"></script><!-- End SmartCat script --><!-- OneTrust Cookies Consent Notice start for actian-software.com --><!--
-<script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="c65f43b5-068e-4e4b-80d3-bdc8c41cf93d" ></script>
-<script type="text/javascript">
-function OptanonWrapper() { }
-</script>
---><!-- OneTrust Cookies Consent Notice end for actian-software.com --><!--  Global site tag (gtag.js) - Google Analytics start --><script async src="https://www.googletagmanager.com/gtag/js?id=G-NHC5CN295F"></script><script>
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Step-by-step guide to configure Auth0 as the OAuth identity provider for the Actian MCP Server.">
+      
+      
+      
+        <link rel="canonical" href="https://docs.actian.com/mcp-server/authentication/auth0/index.html">
+      
+      
+        <link rel="prev" href="../index.html">
+      
+      
+        <link rel="next" href="../keycloak/index.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Auth0 Setup Guide - Actian MCP Server</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/site-theme.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/minichat.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NHC5CN295F"></script>
+<script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag(){ dataLayer.push(arguments); }
   gtag('js', new Date());
-
   gtag('config', 'G-NHC5CN295F');
-</script><!--  Global site tag (gtag.js) - Google Analytics end --><script src=https://cdn.jsdelivr.net/npm/marked/marked.min.js></script><meta name=robots content="index, follow"><meta property=og:image content=https://opensource.actian.com/digital-experience/site-thumbnail.png></head> <body dir=ltr data-md-color-scheme=default data-md-color-primary=custom data-md-color-accent=indigo> <input class=md-toggle data-md-toggle=drawer type=checkbox id=__drawer autocomplete=off> <input class=md-toggle data-md-toggle=search type=checkbox id=__search autocomplete=off> <label class=md-overlay for=__drawer></label> <div data-md-component=skip> <a href=#configuring-auth0 class=md-skip> Skip to content </a> </div> <div data-md-component=announce> <aside class=md-banner> <div class="md-banner__inner md-grid md-typeset"> </div> </aside> </div> <div data-md-color-scheme=default data-md-component=outdated hidden> <aside class="md-banner md-banner--warning"> <div class="md-banner__inner md-grid md-typeset"> You're not viewing the latest version. <a href=../../../latest/authentication/auth0/index.html> <strong>Click here to go to latest.</strong> </a> </div> <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script> </aside> </div> <header class="md-header md-header--shadow md-header--lifted" data-md-component=header> <nav class="md-header__inner md-grid" aria-label=Header> <a href=../../index.html title="Actian MCP Server" class="md-header__button md-logo" aria-label="Actian MCP Server" data-md-component=logo> <img src=../../assets/images/actian-logo.svg alt=logo> </a> <label class="md-header__button md-icon" for=__drawer> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg> </label> <div class=md-header__title data-md-component=header-title> <div class=md-header__ellipsis> <div class=md-header__topic> <span class=md-ellipsis> Actian MCP Server </span> </div> <div class=md-header__topic data-md-component=header-topic> <span class=md-ellipsis> Auth0 Setup Guide </span> </div> </div> </div> <form class=md-header__option data-md-component=palette> <input class=md-option data-md-color-media data-md-color-scheme=default data-md-color-primary=custom data-md-color-accent=indigo aria-label="Switch to dark mode" type=radio name=__palette id=__palette_0> <label class="md-header__button md-icon" title="Switch to dark mode" for=__palette_1 hidden> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg> </label> <input class=md-option data-md-color-media data-md-color-scheme=slate data-md-color-primary=custom data-md-color-accent=indigo aria-label="Switch to light mode" type=radio name=__palette id=__palette_1> <label class="md-header__button md-icon" title="Switch to light mode" for=__palette_0 hidden> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg> </label> </form> <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script> <label class="md-header__button md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg> </label> <div class=md-search data-md-component=search role=dialog> <label class=md-search__overlay for=__search></label> <div class=md-search__inner role=search> <form class=md-search__form name=search> <input type=text class=md-search__input name=query aria-label=Search placeholder=Search autocapitalize=off autocorrect=off autocomplete=off spellcheck=false data-md-component=search-query required> <label class="md-search__icon md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg> </label> <nav class=md-search__options aria-label=Search> <a href=javascript:void(0) class="md-search__icon md-icon" title=Share aria-label=Share data-clipboard data-clipboard-text data-md-component=search-share tabindex=-1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg> </a> <button type=reset class="md-search__icon md-icon" title=Clear aria-label=Clear tabindex=-1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> </button> </nav> <div class=md-search__suggest data-md-component=search-suggest></div> </form> <div class=md-search__output> <div class=md-search__scrollwrap tabindex=0 data-md-scrollfix> <div class=md-search-result data-md-component=search-result> <div class=md-search-result__meta> Initializing search </div> <ol class=md-search-result__list role=presentation></ol> </div> </div> </div> </div> </div> <div class=md-header__source> <a href=https://github.com/ActianCorp/mcp-server-docs title="Go to repository" class=md-source data-md-component=source> <div class="md-source__icon md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 512 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg> </div> <div class=md-source__repository> mcp-server-docs </div> </a> </div> </nav> <nav class=md-tabs aria-label=Tabs data-md-component=tabs> <div class=md-grid> <ul class=md-tabs__list> <li class=md-tabs__item> <a href=../../index.html class=md-tabs__link> Home </a> </li> <li class=md-tabs__item> <a href=../../intro/index.html class=md-tabs__link> Introduction </a> </li> <li class=md-tabs__item> <a href=../../get-started/index.html class=md-tabs__link> Get Started </a> </li> <li class=md-tabs__item> <a href=../../mcp-clients/index.html class=md-tabs__link> MCP Clients </a> </li> <li class="md-tabs__item md-tabs__item--active"> <a href=../index.html class=md-tabs__link> Authentication </a> </li> <li class=md-tabs__item> <a href=../../ingres/index.html class=md-tabs__link> Ingres </a> </li> <li class=md-tabs__item> <a href=../../hcl-informix/index.html class=md-tabs__link> HCL Informix® </a> </li> <li class=md-tabs__item> <a href=../../zen/index.html class=md-tabs__link> Zen </a> </li> <li class=md-tabs__item> <a href=../../nosql/index.html class=md-tabs__link> NoSQL </a> </li> <li class=md-tabs__item> <a href=../../analytics-engine/index.html class=md-tabs__link> Analytics Engine </a> </li> </ul> </div> </nav> </header> <div class=md-container data-md-component=container> <main class=md-main data-md-component=main> <div class="md-main__inner md-grid"> <div class="md-sidebar md-sidebar--primary" data-md-component=sidebar data-md-type=navigation> <div class=md-sidebar__scrollwrap> <div class=md-sidebar__inner> <nav class="md-nav md-nav--primary md-nav--lifted" aria-label=Navigation data-md-level=0> <label class=md-nav__title for=__drawer> <a href=../../index.html title="Actian MCP Server" class="md-nav__button md-logo" aria-label="Actian MCP Server" data-md-component=logo> <img src=../../assets/images/actian-logo.svg alt=logo> </a> Actian MCP Server </label> <div class=md-nav__source> <a href=https://github.com/ActianCorp/mcp-server-docs title="Go to repository" class=md-source data-md-component=source> <div class="md-source__icon md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 512 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg> </div> <div class=md-source__repository> mcp-server-docs </div> </a> </div> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../index.html class=md-nav__link> <span class=md-ellipsis> Home </span> </a> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_2> <div class="md-nav__link md-nav__container"> <a href=../../intro/index.html class="md-nav__link "> <span class=md-ellipsis> Introduction </span> </a> </div> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_2_label aria-expanded=false> <label class=md-nav__title for=__nav_2> <span class="md-nav__icon md-icon"></span> Introduction </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_3> <div class="md-nav__link md-nav__container"> <a href=../../get-started/index.html class="md-nav__link "> <span class=md-ellipsis> Get Started </span> </a> </div> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_3_label aria-expanded=false> <label class=md-nav__title for=__nav_3> <span class="md-nav__icon md-icon"></span> Get Started </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_4> <div class="md-nav__link md-nav__container"> <a href=../../mcp-clients/index.html class="md-nav__link "> <span class=md-ellipsis> MCP Clients </span> </a> </div> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_4_label aria-expanded=false> <label class=md-nav__title for=__nav_4> <span class="md-nav__icon md-icon"></span> MCP Clients </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested"> <input class="md-nav__toggle md-toggle " type=checkbox id=__nav_5 checked> <div class="md-nav__link md-nav__container"> <a href=../index.html class="md-nav__link "> <span class=md-ellipsis> Authentication </span> </a> <label class="md-nav__link " for=__nav_5 id=__nav_5_label tabindex> <span class="md-nav__icon md-icon"></span> </label> </div> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_5_label aria-expanded=true> <label class=md-nav__title for=__nav_5> <span class="md-nav__icon md-icon"></span> Authentication </label> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested"> <input class="md-nav__toggle md-toggle " type=checkbox id=__nav_5_2 checked> <div class="md-nav__link md-nav__container"> <a href=index.html class="md-nav__link md-nav__link--active"> <span class=md-ellipsis> Auth0 </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_5_2_label aria-expanded=true> <label class=md-nav__title for=__nav_5_2> <span class="md-nav__icon md-icon"></span> Auth0 </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--section md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_5_3> <div class="md-nav__link md-nav__container"> <a href=../keycloak/index.html class="md-nav__link "> <span class=md-ellipsis> Keycloak </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_5_3_label aria-expanded=false> <label class=md-nav__title for=__nav_5_3> <span class="md-nav__icon md-icon"></span> Keycloak </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_6> <div class="md-nav__link md-nav__container"> <a href=../../ingres/index.html class="md-nav__link "> <span class=md-ellipsis> Ingres </span> </a> <label class="md-nav__link " for=__nav_6 id=__nav_6_label tabindex=0> <span class="md-nav__icon md-icon"></span> </label> </div> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_6_label aria-expanded=false> <label class=md-nav__title for=__nav_6> <span class="md-nav__icon md-icon"></span> Ingres </label> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_6_2> <div class="md-nav__link md-nav__container"> <a href=../../ingres/tools/index.html class="md-nav__link "> <span class=md-ellipsis> Tools </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_6_2_label aria-expanded=false> <label class=md-nav__title for=__nav_6_2> <span class="md-nav__icon md-icon"></span> Tools </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_6_3> <div class="md-nav__link md-nav__container"> <a href=../../ingres/resources/index.html class="md-nav__link "> <span class=md-ellipsis> Resources </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_6_3_label aria-expanded=false> <label class=md-nav__title for=__nav_6_3> <span class="md-nav__icon md-icon"></span> Resources </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_6_4> <div class="md-nav__link md-nav__container"> <a href=../../ingres/prompts/index.html class="md-nav__link "> <span class=md-ellipsis> Prompts </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_6_4_label aria-expanded=false> <label class=md-nav__title for=__nav_6_4> <span class="md-nav__icon md-icon"></span> Prompts </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_7> <div class="md-nav__link md-nav__container"> <a href=../../hcl-informix/index.html class="md-nav__link "> <span class=md-ellipsis> HCL Informix® </span> </a> <label class="md-nav__link " for=__nav_7 id=__nav_7_label tabindex=0> <span class="md-nav__icon md-icon"></span> </label> </div> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_7_label aria-expanded=false> <label class=md-nav__title for=__nav_7> <span class="md-nav__icon md-icon"></span> HCL Informix® </label> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_7_2> <div class="md-nav__link md-nav__container"> <a href=../../hcl-informix/tools/index.html class="md-nav__link "> <span class=md-ellipsis> Tools </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_7_2_label aria-expanded=false> <label class=md-nav__title for=__nav_7_2> <span class="md-nav__icon md-icon"></span> Tools </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_7_3> <div class="md-nav__link md-nav__container"> <a href=../../hcl-informix/resources/index.html class="md-nav__link "> <span class=md-ellipsis> Resources </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_7_3_label aria-expanded=false> <label class=md-nav__title for=__nav_7_3> <span class="md-nav__icon md-icon"></span> Resources </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_7_4> <div class="md-nav__link md-nav__container"> <a href=../../hcl-informix/prompts/index.html class="md-nav__link "> <span class=md-ellipsis> Prompts </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_7_4_label aria-expanded=false> <label class=md-nav__title for=__nav_7_4> <span class="md-nav__icon md-icon"></span> Prompts </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_8> <div class="md-nav__link md-nav__container"> <a href=../../zen/index.html class="md-nav__link "> <span class=md-ellipsis> Zen </span> </a> <label class="md-nav__link " for=__nav_8 id=__nav_8_label tabindex=0> <span class="md-nav__icon md-icon"></span> </label> </div> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_8_label aria-expanded=false> <label class=md-nav__title for=__nav_8> <span class="md-nav__icon md-icon"></span> Zen </label> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_8_2> <div class="md-nav__link md-nav__container"> <a href=../../zen/tools/index.html class="md-nav__link "> <span class=md-ellipsis> Tools </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_8_2_label aria-expanded=false> <label class=md-nav__title for=__nav_8_2> <span class="md-nav__icon md-icon"></span> Tools </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_8_3> <div class="md-nav__link md-nav__container"> <a href=../../zen/resources/index.html class="md-nav__link "> <span class=md-ellipsis> Resources </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_8_3_label aria-expanded=false> <label class=md-nav__title for=__nav_8_3> <span class="md-nav__icon md-icon"></span> Resources </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_8_4> <div class="md-nav__link md-nav__container"> <a href=../../zen/prompts/index.html class="md-nav__link "> <span class=md-ellipsis> Prompts </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_8_4_label aria-expanded=false> <label class=md-nav__title for=__nav_8_4> <span class="md-nav__icon md-icon"></span> Prompts </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_9> <div class="md-nav__link md-nav__container"> <a href=../../nosql/index.html class="md-nav__link "> <span class=md-ellipsis> NoSQL </span> </a> <label class="md-nav__link " for=__nav_9 id=__nav_9_label tabindex=0> <span class="md-nav__icon md-icon"></span> </label> </div> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_9_label aria-expanded=false> <label class=md-nav__title for=__nav_9> <span class="md-nav__icon md-icon"></span> NoSQL </label> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_9_2> <div class="md-nav__link md-nav__container"> <a href=../../nosql/authentication/index.html class="md-nav__link "> <span class=md-ellipsis> Authentication </span> </a> <label class="md-nav__link " for=__nav_9_2 id=__nav_9_2_label tabindex=0> <span class="md-nav__icon md-icon"></span> </label> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_9_2_label aria-expanded=false> <label class=md-nav__title for=__nav_9_2> <span class="md-nav__icon md-icon"></span> Authentication </label> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_9_2_2> <div class="md-nav__link md-nav__container"> <a href=../../nosql/authentication/auth0/index.html class="md-nav__link "> <span class=md-ellipsis> Auth0 </span> </a> </div> <nav class=md-nav data-md-level=3 aria-labelledby=__nav_9_2_2_label aria-expanded=false> <label class=md-nav__title for=__nav_9_2_2> <span class="md-nav__icon md-icon"></span> Auth0 </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_9_2_3> <div class="md-nav__link md-nav__container"> <a href=../../nosql/authentication/keycloak/index.html class="md-nav__link "> <span class=md-ellipsis> Keycloak </span> </a> </div> <nav class=md-nav data-md-level=3 aria-labelledby=__nav_9_2_3_label aria-expanded=false> <label class=md-nav__title for=__nav_9_2_3> <span class="md-nav__icon md-icon"></span> Keycloak </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_9_3> <div class="md-nav__link md-nav__container"> <a href=../../nosql/tools/index.html class="md-nav__link "> <span class=md-ellipsis> Tools </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_9_3_label aria-expanded=false> <label class=md-nav__title for=__nav_9_3> <span class="md-nav__icon md-icon"></span> Tools </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_9_4> <div class="md-nav__link md-nav__container"> <a href=../../nosql/resources/index.html class="md-nav__link "> <span class=md-ellipsis> Resources </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_9_4_label aria-expanded=false> <label class=md-nav__title for=__nav_9_4> <span class="md-nav__icon md-icon"></span> Resources </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_9_5> <div class="md-nav__link md-nav__container"> <a href=../../nosql/prompts/index.html class="md-nav__link "> <span class=md-ellipsis> Prompts </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_9_5_label aria-expanded=false> <label class=md-nav__title for=__nav_9_5> <span class="md-nav__icon md-icon"></span> Prompts </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_10> <div class="md-nav__link md-nav__container"> <a href=../../analytics-engine/index.html class="md-nav__link "> <span class=md-ellipsis> Analytics Engine </span> </a> <label class="md-nav__link " for=__nav_10 id=__nav_10_label tabindex=0> <span class="md-nav__icon md-icon"></span> </label> </div> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_10_label aria-expanded=false> <label class=md-nav__title for=__nav_10> <span class="md-nav__icon md-icon"></span> Analytics Engine </label> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_10_2> <div class="md-nav__link md-nav__container"> <a href=../../analytics-engine/tools/index.html class="md-nav__link "> <span class=md-ellipsis> Tools </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_10_2_label aria-expanded=false> <label class=md-nav__title for=__nav_10_2> <span class="md-nav__icon md-icon"></span> Tools </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_10_3> <div class="md-nav__link md-nav__container"> <a href=../../analytics-engine/resources/index.html class="md-nav__link "> <span class=md-ellipsis> Resources </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_10_3_label aria-expanded=false> <label class=md-nav__title for=__nav_10_3> <span class="md-nav__icon md-icon"></span> Resources </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_10_4> <div class="md-nav__link md-nav__container"> <a href=../../analytics-engine/prompts/index.html class="md-nav__link "> <span class=md-ellipsis> Prompts </span> </a> </div> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_10_4_label aria-expanded=false> <label class=md-nav__title for=__nav_10_4> <span class="md-nav__icon md-icon"></span> Prompts </label> <ul class=md-nav__list data-md-scrollfix> </ul> </nav> </li> </ul> </nav> </li> </ul> </nav> </div> </div> </div> <div class="md-sidebar md-sidebar--secondary" data-md-component=sidebar data-md-type=toc> <div class=md-sidebar__scrollwrap> <div class=md-sidebar__inner> <nav class="md-nav md-nav--secondary" aria-label="On this page"> <label class=md-nav__title for=__toc> <span class="md-nav__icon md-icon"></span> On this page </label> <ul class=md-nav__list data-md-component=toc data-md-scrollfix> <li class=md-nav__item> <a href=#quick-start-existing-auth0-user class=md-nav__link> <span class=md-ellipsis> Quick Start - Existing Auth0 User </span> </a> </li> <li class=md-nav__item> <a href=#prerequisites-new-auth0-user class=md-nav__link> <span class=md-ellipsis> Prerequisites - New Auth0 User </span> </a> </li> <li class=md-nav__item> <a href=#step-1-create-an-auth0-api class=md-nav__link> <span class=md-ellipsis> Step 1: Create an Auth0 API </span> </a> <nav class=md-nav aria-label="Step 1: Create an Auth0 API"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#output-of-step-1 class=md-nav__link> <span class=md-ellipsis> Output of Step 1 </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#step-2-create-an-auth0-application class=md-nav__link> <span class=md-ellipsis> Step 2: Create an Auth0 Application </span> </a> <nav class=md-nav aria-label="Step 2: Create an Auth0 Application"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#configure-application-settings class=md-nav__link> <span class=md-ellipsis> Configure Application Settings </span> </a> </li> <li class=md-nav__item> <a href=#configure-grant-types class=md-nav__link> <span class=md-ellipsis> Configure Grant Types </span> </a> </li> <li class=md-nav__item> <a href=#output-of-step-2 class=md-nav__link> <span class=md-ellipsis> Output of Step 2 </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#step-3-authorize-the-application-for-the-api class=md-nav__link> <span class=md-ellipsis> Step 3: Authorize the Application for the API </span> </a> </li> <li class=md-nav__item> <a href=#step-4-create-auth0-users-if-using-user-impersonation class=md-nav__link> <span class=md-ellipsis> Step 4: Create Auth0 Users (if Using User Impersonation) </span> </a> <nav class=md-nav aria-label="Step 4: Create Auth0 Users (if Using User Impersonation)"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#step-41-create-the-user-in-auth0 class=md-nav__link> <span class=md-ellipsis> Step 4.1: Create the User in Auth0 </span> </a> </li> <li class=md-nav__item> <a href=#step-42-create-the-matching-database-user class=md-nav__link> <span class=md-ellipsis> Step 4.2: Create the Matching Database User </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#step-5-assemble-the-final-configuration class=md-nav__link> <span class=md-ellipsis> Step 5: Assemble the Final Configuration </span> </a> <nav class=md-nav aria-label="Step 5: Assemble the Final Configuration"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#mapping-summary class=md-nav__link> <span class=md-ellipsis> Mapping Summary </span> </a> </li> <li class=md-nav__item> <a href=#example-confjson class=md-nav__link> <span class=md-ellipsis> Example conf.json </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#verify-end-to-end class=md-nav__link> <span class=md-ellipsis> Verify End-to-End </span> </a> </li> <li class=md-nav__item> <a href=#troubleshooting class=md-nav__link> <span class=md-ellipsis> Troubleshooting </span> </a> <nav class=md-nav aria-label=Troubleshooting> <ul class=md-nav__list> <li class=md-nav__item> <a href=#verify-oidc-discovery-endpoint class=md-nav__link> <span class=md-ellipsis> Verify OIDC Discovery Endpoint </span> </a> </li> <li class=md-nav__item> <a href=#common-errors class=md-nav__link> <span class=md-ellipsis> Common Errors </span> </a> </li> <li class=md-nav__item> <a href=#clearing-visual-studio-code-oauth-cache class=md-nav__link> <span class=md-ellipsis> Clearing Visual Studio Code OAuth Cache </span> </a> </li> <li class=md-nav__item> <a href=#token-expiration class=md-nav__link> <span class=md-ellipsis> Token Expiration </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#staging-versus-production class=md-nav__link> <span class=md-ellipsis> Staging versus Production </span> </a> </li> </ul> </nav> </div> </div> </div> <div class=md-content data-md-component=content> <nav class=md-path aria-label=Navigation> <ol class=md-path__list> <li class=md-path__item> <a href=../../index.html class=md-path__link> <span class=md-ellipsis> Home </span> </a> </li> <li class=md-path__item> <a href=../index.html class=md-path__link> <span class=md-ellipsis> Authentication </span> </a> </li> <li class=md-path__item> <a href=index.html class=md-path__link> <span class=md-ellipsis> Auth0 </span> </a> </li> </ol> </nav> <article class="md-content__inner md-typeset"> <a href=https://github.com/ActianCorp/mcp-server-docs/edit/main/docs/authentication/auth0/index.md title="Edit this page" class="md-content__button md-icon" rel=edit> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 512 512"><!-- Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M441 58.9 453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2 344 121.9l46.1 46.1-134.3 134.2c-2.9 2.9-6.5 5-10.4 6.1L186.9 325l16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25 175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25c-28.1-28.1-73.7-28.1-101.8 0M88 64c-48.6 0-88 39.4-88 88v272c0 48.6 39.4 88 88 88h272c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24v112c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40h112c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg> </a> <h1 id=configuring-auth0>Configuring Auth0<a class=headerlink href=#configuring-auth0 title="Permanent link">&para;</a></h1> <p>Set up an Auth0 application and API to enable OAuth 2.0 and OpenID Connect (OIDC) authentication for your Actian MCP Server. After you complete these steps, you can see the credentials required for the <code>oauth</code> block in the <code>conf.json</code> configuration file.</p> <p>For details on shared security concepts like TLS and user impersonation, see <a href=../index.html>Authentication Overview</a>.</p> <div class="admonition info"> <p class=admonition-title>Reference</p> <p><a href=https://gofastmcp.com/integrations/auth0>FastMCP Auth0 Integration</a></p> </div> <h2 id=quick-start-existing-auth0-user>Quick Start - Existing Auth0 User<a class=headerlink href=#quick-start-existing-auth0-user title="Permanent link">&para;</a></h2> <p>If you are an experienced Auth0 user, use the following checklist to set up the environment:</p> <ol> <li><strong>Create an API:</strong> Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>Create API</strong>. The <strong>Identifier</strong> serves as the <code>FASTMCP_SERVER_AUTH_AUDIENCE</code>.</li> <li><strong>Create an Application:</strong> Navigate to <strong>Applications</strong> &gt; <strong>Applications</strong> &gt; <strong>Create Application</strong>. Select <strong>Machine to Machine</strong>. Authorize it for the API when prompted. Copy the <strong>Client ID</strong> and <strong>Client Secret</strong>.</li> <li> <p><strong>Authorize the Application:</strong> In your API settings, verify that <strong>User Access</strong> and <strong>Client Access</strong> are set to <strong>Authorized</strong>.</p> <div class="admonition warning"> <p class=admonition-title>Warning</p> <p>If you skip this step, Auth0 returns an <code>invalid_request</code> error.</p> </div> </li> <li> <p><strong>Enable Authorization Code Grant:</strong> In <strong>Advanced Settings</strong> &gt; <strong>Grant Types</strong>, select <strong>Authorization Code</strong>.</p> </li> <li><strong>Set Callback URLs:</strong> Add <code>&lt;BASE_URL&gt;/auth/callback</code> to <strong>Allowed Callback URLs</strong>.</li> <li><strong>Update Configuration:</strong> Add your Auth0 domain and credentials to <code>conf.json</code>.</li> <li><strong>Start the server:</strong> Launch the server using the <code>--transport sse</code> or <code>http</code> / <code>streamable-http</code> flag.</li> </ol> <h2 id=prerequisites-new-auth0-user>Prerequisites - New Auth0 User<a class=headerlink href=#prerequisites-new-auth0-user title="Permanent link">&para;</a></h2> <ul> <li>An Auth0 account (<a href=https://auth0.com/signup>sign up free</a>).</li> <li>An Auth0 <strong>Tenant</strong> (created automatically on sign-up, for example, <code>dev-abc123</code>).</li> <li>Actian MCP Server installed and ready to run.</li> </ul> <h2 id=step-1-create-an-auth0-api>Step 1: Create an Auth0 API<a class=headerlink href=#step-1-create-an-auth0-api title="Permanent link">&para;</a></h2> <p>The <strong>API</strong> represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 include the API's identifier as the <code>audience</code> claim.</p> <ol> <li>Log in to the <a href=https://manage.auth0.com/ >Auth0 Dashboard</a>.</li> <li>In the left sidebar, navigate to <strong>Applications</strong> &gt; APIs**.</li> <li>Select <strong>+ Create API</strong>.</li> <li> <p>Fill the form as follows:</p> <table> <thead> <tr> <th>Field</th> <th>Value</th> <th>Notes</th> </tr> </thead> <tbody> <tr> <td><strong>Name</strong></td> <td><code>Actian MCP Server</code></td> <td>Display name (any descriptive string).</td> </tr> <tr> <td><strong>Identifier (Audience)</strong></td> <td><code>https://&lt;mcp-server-host&gt;:8000/mcp</code></td> <td>Logical identifier (may not be a reachable URL). This becomes your <code>FASTMCP_SERVER_AUTH_AUDIENCE</code>.</td> </tr> <tr> <td><strong>Signing Algorithm</strong></td> <td><code>RS256</code></td> <td>Default, leave the value as is.</td> </tr> </tbody> </table> </li> <li> <p>Select <strong>Create</strong>.</p> </li> </ol> <h3 id=output-of-step-1>Output of Step 1<a class=headerlink href=#output-of-step-1 title="Permanent link">&para;</a></h3> <table> <thead> <tr> <th>Config Field</th> <th>Where to find it</th> </tr> </thead> <tbody> <tr> <td><code>FASTMCP_SERVER_AUTH_AUDIENCE</code></td> <td>The <strong>Identifier</strong> that you entered, for example, <code>https://&lt;mcp-server-host&gt;:8000/mcp</code>.</td> </tr> </tbody> </table> <h2 id=step-2-create-an-auth0-application>Step 2: Create an Auth0 Application<a class=headerlink href=#step-2-create-an-auth0-application title="Permanent link">&para;</a></h2> <p>The <strong>Application</strong> represents the MCP server's OAuth client. It holds <code>client_id</code> and <code>client_secret</code> used during the OAuth handshake.</p> <div class="admonition note"> <p class=admonition-title>Why Machine to Machine?</p> <p>The MCP server's OAuth proxy (OIDCProxy) acts as a <strong>confidential client</strong> — it authenticates with Auth0 using a <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code> pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.</p> </div> <div class="admonition warning"> <p class=admonition-title>Do not use "Regular Web Application"</p> <p>Auth0 enforces PKCE validation differently for Web applications, which conflicts with the forwarding of OIDCProxy authorization requests. This causes <code>code_challenge: Field required</code> errors.</p> </div> <ol> <li>In the Auth0 Dashboard, navigate to <strong>Applications</strong> &gt; <strong>Applications</strong>.</li> <li>Select <strong>+ Create Application</strong>.</li> <li> <p>Enter the values for the following fields:</p> <table> <thead> <tr> <th>Field</th> <th>Value</th> </tr> </thead> <tbody> <tr> <td><strong>Name</strong></td> <td><code>Actian MCP Server App</code></td> </tr> <tr> <td><strong>Application Type</strong></td> <td>Machine to Machine Applications</td> </tr> </tbody> </table> </li> <li> <p>Select <strong>Create</strong>.</p> </li> <li>When prompted, select your <strong>Actian MCP Server</strong> API and grant all scopes (You can also do this later in <a href=#step-3-authorize-the-application-for-the-api>Step 3</a>.</li> <li>The application's <strong>Settings</strong> tab opens.</li> </ol> <h3 id=configure-application-settings>Configure Application Settings<a class=headerlink href=#configure-application-settings title="Permanent link">&para;</a></h3> <p>On the <strong>Settings</strong> tab, configure the following:</p> <table> <thead> <tr> <th>Setting</th> <th>Value</th> <th>Notes</th> </tr> </thead> <tbody> <tr> <td><strong>Allowed Callback URLs</strong></td> <td><code>https://&lt;mcp-server-host&gt;:8000/auth/callback</code></td> <td>Must exactly match <code>&lt;BASE_URL&gt;/auth/callback</code>. Multiple URLs can be comma-separated.</td> </tr> <tr> <td><strong>Allowed Logout URLs</strong></td> <td><code>https://&lt;mcp-server-host&gt;:8000</code></td> <td>(Optional) For logout redirect</td> </tr> <tr> <td><strong>Allowed Web Origins</strong></td> <td><code>https://&lt;mcp-server-host&gt;:8000</code></td> <td>(Optional) For CORS</td> </tr> </tbody> </table> <div class="admonition warning"> <p class=admonition-title>Callback URL must match exactly</p> <p>The <strong>Allowed Callback URLs</strong> value must match <code>&lt;FASTMCP_SERVER_AUTH_BASE_URL&gt;/auth/callback</code> exactly, including scheme (<code>http</code> or <code>https</code>), host, and port. A mismatch causes Auth0 to reject the login with a <code>redirect_uri_mismatch</code> error.</p> </div> <p>Select <strong>Save Changes</strong>.</p> <h3 id=configure-grant-types>Configure Grant Types<a class=headerlink href=#configure-grant-types title="Permanent link">&para;</a></h3> <p>Machine to Machine applications should have <strong>Authorization Code</strong> enabled by default, but you should always verify since some tenants or configurations may differ.</p> <ol> <li>On the <strong>Settings</strong> tab, select <strong>Show Advanced Settings</strong>.</li> <li>Select the <strong>Grant Types</strong> tab.</li> <li>Enable <strong>Authorization Code</strong> (required for the browser-based OAuth login flow).</li> <li>Keep <strong>Client Credentials</strong> enabled.</li> <li>Optionally enable <strong>Refresh Token</strong> for token refresh support.</li> <li>Select <strong>Save Changes</strong>.</li> </ol> <div class="admonition warning"> <p class=admonition-title>Authorization Code grant is required</p> <p>Without <strong>Authorization Code</strong> enabled, Auth0 returns <code>Grant type 'authorization_code' not allowed for the client</code>. This grant type is enabled by default for Machine to Machine applications. If not, re-enable it.</p> </div> <h3 id=output-of-step-2>Output of Step 2<a class=headerlink href=#output-of-step-2 title="Permanent link">&para;</a></h3> <p>All values appear on the <strong>Settings</strong> tab of your application:</p> <table> <thead> <tr> <th>Config Field</th> <th>Where to find it in Auth0</th> </tr> </thead> <tbody> <tr> <td><code>FASTMCP_SERVER_AUTH_CLIENT_ID</code></td> <td><strong>Client ID</strong> (at the top of the Settings tab)</td> </tr> <tr> <td><code>FASTMCP_SERVER_AUTH_CLIENT_SECRET</code></td> <td><strong>Client Secret</strong> (click the eye icon to reveal)</td> </tr> <tr> <td><code>FASTMCP_SERVER_AUTH_CONFIG_URL</code></td> <td>Constructed from <strong>Domain</strong>: <code>https://&lt;your-domain&gt;/.well-known/openid-configuration</code></td> </tr> <tr> <td><code>FASTMCP_SERVER_AUTH_BASE_URL</code></td> <td>MCP server's external URL, for example, <code>https://&lt;mcp-server-host&gt;:8000</code>.</td> </tr> </tbody> </table> <div class="admonition tip"> <p class=admonition-title>Finding the Domain</p> <p>The <strong>Domain</strong> is shown at the top of the Settings tab, for example, <code>dev-abc123.us.auth0.com</code>. The OIDC discovery URL is always <code>https://&lt;domain&gt;/.well-known/openid-configuration</code>.</p> </div> <h2 id=step-3-authorize-the-application-for-the-api>Step 3: Authorize the Application for the API<a class=headerlink href=#step-3-authorize-the-application-for-the-api title="Permanent link">&para;</a></h2> <div class="admonition warning"> <p class=admonition-title>This step is critical</p> <p>Auth0 requires an explicit grant between an application and an API before it issues tokens. Without this authorization, token requests fail with <code>invalid_request</code>.</p> </div> <p>You can authorize from either the application's APIs tab or the API's Application Access tab:</p> <p><strong>Option A - Authorize from Application:</strong></p> <ol> <li>Navigate to <strong>Applications</strong> &gt; <strong>Applications</strong> &gt; <strong>your app</strong>. For example, <code>Actian MCP Server App</code>.</li> <li>Select the <strong>APIs</strong> tab.</li> <li>Search your API. For example, <code>mcp_server</code> with the identifier <code>https://&lt;mcp-server-host&gt;:8000/mcp</code>.</li> <li>Select <strong>Edit</strong> next to your API.</li> <li>Authorize both access types:<ul> <li><strong>User Access</strong>: Set to <strong>Authorized</strong>. This is required for the browser-based login flow and user impersonation.</li> <li><strong>Client Access</strong>: Set to <strong>Authorized</strong>. This may already be authorized if you selected the API during Machine to Machine application creation.</li> </ul> </li> <li>Select <strong>Update</strong> to save.</li> </ol> <p><strong>Option B - Authorize From API:</strong></p> <ol> <li>Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>your API</strong>. For example, <code>mcp_server</code>.</li> <li>Select the <strong>Application Access</strong> tab.</li> <li>Search your application and select <strong>Edit</strong>.</li> <li>Authorize both <strong>User Access</strong> and <strong>Client Access</strong> as described in Option A, step 5.</li> </ol> <p>After saving, the application displays two <strong>AUTHORIZED</strong> badges — User Access and Client Access.</p> <div class="admonition important"> <p class=admonition-title>User Access is required for user impersonation</p> <p>If you plan to use <code>user_impersonation: true</code>, the <strong>User Access</strong> column must show AUTHORIZED. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server will not be able to extract a database username.</p> </div> <h2 id=step-4-create-auth0-users-if-using-user-impersonation>Step 4: Create Auth0 Users (if Using User Impersonation)<a class=headerlink href=#step-4-create-auth0-users-if-using-user-impersonation title="Permanent link">&para;</a></h2> <p>If <code>user_impersonation</code> is <code>true</code>, the authenticated user's identity is forwarded to the database through <code>SET SESSION AUTHORIZATION</code>. Each Auth0 user must have a matching database account. For more information, see <a href=../index.html#user-impersonation>User Impersonation</a>.</p> <h3 id=step-41-create-the-user-in-auth0>Step 4.1: Create the User in Auth0<a class=headerlink href=#step-41-create-the-user-in-auth0 title="Permanent link">&para;</a></h3> <ol> <li>In the Auth0 Dashboard, navigate to <strong>User Management</strong> &gt; <strong>Users</strong>.</li> <li>Select <strong>+ Create User</strong>.</li> <li> <p>Enter the values for the following fields:</p> <table> <thead> <tr> <th>Field</th> <th>Value</th> <th>Notes</th> </tr> </thead> <tbody> <tr> <td><strong>Email</strong></td> <td><code>jdoe@example.com</code></td> <td>Value before <code>@</code> (<code>jdoe</code>) becomes the database username</td> </tr> <tr> <td><strong>Password</strong></td> <td>A secure password</td> <td>Used for Auth0 login</td> </tr> <tr> <td><strong>Connection</strong></td> <td><code>Username-Password-Authentication</code></td> <td>Default database connection</td> </tr> </tbody> </table> </li> <li> <p>Select <strong>Create</strong>.</p> </li> </ol> <div class="admonition important"> <p class=admonition-title>Database username = email prefix</p> <p>The MCP server extracts the database username from the <strong>email prefix</strong> (the value before <code>@</code>). For example, <code>jdoe@example.com</code> &gt; <code>jdoe</code>. Ensure the email prefix exactly matches the database account name.</p> <p><strong>Auth0 default behaviour</strong>: Auth0's userinfo endpoint does not return a <code>username</code> or <code>preferred_username</code> claim by default. In practice, the server uses the <strong>email prefix</strong> as the database username. Always create database users to match this email prefix.</p> </div> <div class="admonition note"> <p class=admonition-title>Case sensitivity</p> <p>If the database is case-sensitive, for example, <code>jdoe</code> ≠ <code>Jdoe</code>, ensure the email prefix exactly matches the database account name.</p> </div> <h3 id=step-42-create-the-matching-database-user>Step 4.2: Create the Matching Database User<a class=headerlink href=#step-42-create-the-matching-database-user title="Permanent link">&para;</a></h3> <p>=== Example</p> <p>Auth0 handles authentication, but the Actian database still needs the user to exist for impersonation to work:</p> <p><div class="language-sql highlight"><pre><span></span><code><span class=c1>-- Create the user account (no DB password needed — Auth0 handles authentication)</span>
-<span class=k>CREATE</span><span class=w> </span><span class=k>USER</span><span class=w> </span><span class=n>jdoe</span><span class=p>;</span>
+</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
 
-<span class=c1>-- Grant access to the database</span>
-<span class=k>GRANT</span><span class=w> </span><span class=k>ACCESS</span><span class=w> </span><span class=k>ON</span><span class=w> </span><span class=k>DATABASE</span><span class=w> </span><span class=n>mydb</span><span class=w> </span><span class=k>TO</span><span class=w> </span><span class=n>jdoe</span><span class=p>;</span>
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuring-auth0" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
 
-<span class=c1>-- Grant the necessary table permissions (adjust per your schema)</span>
-<span class=k>GRANT</span><span class=w> </span><span class=k>SELECT</span><span class=w> </span><span class=k>ON</span><span class=w> </span><span class=k>TABLE</span><span class=w> </span><span class=n>orders</span><span class=w> </span><span class=k>TO</span><span class=w> </span><span class=n>jdoe</span><span class=p>;</span>
-<span class=k>GRANT</span><span class=w> </span><span class=k>SELECT</span><span class=w> </span><span class=k>ON</span><span class=w> </span><span class=k>TABLE</span><span class=w> </span><span class=n>products</span><span class=w> </span><span class=k>TO</span><span class=w> </span><span class=n>jdoe</span><span class=p>;</span>
-</code></pre></div> === Informix <div class="language-sql highlight"><pre><span></span><code><span class=c1>-- Create the user account (DB password not used — Auth0 handles authentication)</span>
-<span class=k>CREATE</span><span class=w> </span><span class=k>USER</span><span class=w> </span><span class=n>mcpuser</span><span class=w> </span><span class=k>with</span><span class=w> </span><span class=n>password</span><span class=w> </span><span class=s1>&#39;mcpuser&#39;</span><span class=w> </span><span class=n>properties</span><span class=w> </span><span class=k>user</span><span class=w> </span><span class=s1>&#39;daemon&#39;</span><span class=p>;;</span>
+  
 
-<span class=c1>-- Grant access to the database</span>
-<span class=k>GRANT</span><span class=w> </span><span class=k>CONNECT</span><span class=w> </span><span class=k>TO</span><span class=w> </span><span class=n>mcpuser</span><span class=p>;</span>
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../index.html" title="Actian MCP Server" class="md-header__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
+      
+  <img src="../../assets/images/actian-logo.svg" alt="logo">
 
-<span class=c1>-- Grant the necessary table permissions (adjust per your schema)</span>
-<span class=k>GRANT</span><span class=w> </span><span class=k>SELECT</span><span class=w> </span><span class=k>ON</span><span class=w> </span><span class=k>TABLE</span><span class=w> </span><span class=n>orders</span><span class=w> </span><span class=k>TO</span><span class=w> </span><span class=n>mcpuser</span><span class=p>;</span>
-<span class=k>GRANT</span><span class=w> </span><span class=k>SELECT</span><span class=w> </span><span class=k>ON</span><span class=w> </span><span class=k>TABLE</span><span class=w> </span><span class=n>products</span><span class=w> </span><span class=k>TO</span><span class=w> </span><span class=n>mcpuser</span><span class=p>;</span>
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Actian MCP Server
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Auth0 Setup Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://www.actian.com/contact/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.79 15.41c.95-2.17.95-4.66 0-6.82l-2.74 1.24c.6 1.38.6 2.95.01 4.34zm-4.37-11.2a8.54 8.54 0 0 0-6.83 0l1.24 2.73c1.39-.59 2.96-.59 4.35.01zM4.21 8.58a8.56 8.56 0 0 0 0 6.84l2.74-1.25c-.6-1.38-.6-2.96 0-4.35zm4.38 11.21a8.5 8.5 0 0 0 6.83-.01l-1.24-2.73a5.5 5.5 0 0 1-4.34.01zM12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 6a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Support
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
 
-<span class=c1>-- Set session authorization to the privleged database_user passed to mcp server in conf.json</span>
-<span class=k>GRANT</span><span class=w> </span><span class=n>SETSESSIONAUTH</span><span class=w> </span><span class=k>ON</span><span class=w> </span><span class=s1>&#39;mcpuser&#39;</span><span class=w> </span><span class=k>TO</span><span class=w> </span><span class=s1>&#39;database_user&#39;</span><span class=p>;</span>
-</code></pre></div></p> <div class="admonition note"> <p class=admonition-title>Federated identity caveat</p> <p>If users sign in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0, the <code>sub</code> claim looks like <code>google-oauth2|12345</code>. The server removes the provider prefix, leaving <code>12345</code>, which is unlikely to match a database account. For SSO setups, set <code>user_impersonation</code> to <code>false</code> unless you can ensure the Auth0 user profile contains a matching username.</p> </div> <h2 id=step-5-assemble-the-final-configuration>Step 5: Assemble the Final Configuration<a class=headerlink href=#step-5-assemble-the-final-configuration title="Permanent link">&para;</a></h2> <h3 id=mapping-summary>Mapping Summary<a class=headerlink href=#mapping-summary title="Permanent link">&para;</a></h3> <table> <thead> <tr> <th><code>conf.json</code> Field</th> <th>Auth0 Source</th> <th>Example Value</th> </tr> </thead> <tbody> <tr> <td><code>FASTMCP_SERVER_AUTH_CONFIG_URL</code></td> <td><code>https://&lt;Domain&gt;/.well-known/openid-configuration</code></td> <td><code>https://dev-abc123.us.auth0.com/.well-known/openid-configuration</code></td> </tr> <tr> <td><code>FASTMCP_SERVER_AUTH_CLIENT_ID</code></td> <td>Application → Settings → <strong>Client ID</strong></td> <td><code>wNXUdrp9aBcDeFgHiJkLmN</code></td> </tr> <tr> <td><code>FASTMCP_SERVER_AUTH_CLIENT_SECRET</code></td> <td>Application → Settings → <strong>Client Secret</strong></td> <td><code>a1B2c3D4e5F6g7H8i9J0...</code></td> </tr> <tr> <td><code>FASTMCP_SERVER_AUTH_BASE_URL</code></td> <td>Your MCP server's external URL</td> <td><code>https://&lt;mcp-server-host&gt;:8000</code></td> </tr> <tr> <td><code>FASTMCP_SERVER_AUTH_AUDIENCE</code></td> <td>API → <strong>Identifier</strong></td> <td><code>https://&lt;mcp-server-host&gt;:8000/mcp</code></td> </tr> <tr> <td><code>user_impersonation</code></td> <td>Your choice</td> <td><code>true</code> or <code>false</code></td> </tr> </tbody> </table> <div class="admonition info"> <p class=admonition-title>Audience fallback</p> <p>If <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> is omitted, the server uses <code>FASTMCP_SERVER_AUTH_CLIENT_ID</code> as the audience. This is common for Keycloak setups, but for Auth0 you should always set an explicit audience, the Client ID will not match the API Identifier.</p> </div> <div class="admonition note"> <p class=admonition-title>Note</p> <p>The <code>AUDIENCE</code> is a logical identifier used for token validation. It may not need be a reachable HTTPS URL.</p> </div> <h3 id=example-confjson>Example <code>conf.json</code><a class=headerlink href=#example-confjson title="Permanent link">&para;</a></h3> <div class="language-json highlight"><pre><span></span><code><span class=p>{</span>
-<span class=w>    </span><span class=nt>&quot;driver&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;{Ingres}&quot;</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;server&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;@&lt;db-host&gt;,tcp_ip,&lt;port&gt;&quot;</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;database&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;mydb&quot;</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;database_user&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;&lt;database_user&gt;&quot;</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;database_password&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;&lt;database_password&gt;&quot;</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;max_connections&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>10</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;host&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;0.0.0.0&quot;</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;port&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>8000</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;ssl_certfile&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;/app/server.crt&quot;</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;ssl_keyfile&quot;</span><span class=p>:</span><span class=w>  </span><span class=s2>&quot;/app/server.key&quot;</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;oauth&quot;</span><span class=p>:</span><span class=w> </span><span class=p>{</span>
-<span class=w>        </span><span class=nt>&quot;FASTMCP_SERVER_AUTH_CONFIG_URL&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;https://&lt;your-auth0-domain&gt;/.well-known/openid-configuration&quot;</span><span class=p>,</span>
-<span class=w>        </span><span class=nt>&quot;FASTMCP_SERVER_AUTH_CLIENT_ID&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;&lt;your-client-id&gt;&quot;</span><span class=p>,</span>
-<span class=w>        </span><span class=nt>&quot;FASTMCP_SERVER_AUTH_CLIENT_SECRET&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;&lt;your-client-secret&gt;&quot;</span><span class=p>,</span>
-<span class=w>        </span><span class=nt>&quot;FASTMCP_SERVER_AUTH_BASE_URL&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;https://&lt;your-server-host&gt;:8000&quot;</span><span class=p>,</span>
-<span class=w>        </span><span class=nt>&quot;FASTMCP_SERVER_AUTH_AUDIENCE&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;&lt;your-api-identifier&gt;&quot;</span><span class=p>,</span>
-<span class=w>        </span><span class=nt>&quot;user_impersonation&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>true</span>
-<span class=w>    </span><span class=p>}</span>
-<span class=p>}</span>
-</code></pre></div> <div class="admonition note"> <p class=admonition-title>Note</p> <p>Replace <code>&lt;db-host&gt;</code> with the database server address. In a Docker container, use the host's IP address or <code>host.docker.internal</code>(not <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself).</p> </div> <p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see <a href=../index.html#https-tls-for-remote-deployments>HTTPS / TLS for Remote Deployments</a>.</p> <p>For security best practices (file permissions, <code>.gitignore</code>, secrets management), see <a href=../index.html#security-best-practices>Security Best Practices</a>.</p> <h2 id=verify-end-to-end>Verify End-to-End<a class=headerlink href=#verify-end-to-end title="Permanent link">&para;</a></h2> <p>After starting the MCP server container with OAuth configured:</p> <ol> <li>Open a browser and navigate to your server's <code>/mcp</code> endpoint, for example, <code>https://&lt;your-server-host&gt;:8000/mcp</code>.</li> <li>You should be <strong>redirected to the Auth0 login page</strong>.</li> <li>After logging in, Auth0 redirects you back to the MCP server with a valid token.</li> <li>Check the server logs for <code>Stored database username: &lt;username&gt;</code> to confirm user impersonation is active.</li> </ol> <h2 id=troubleshooting>Troubleshooting<a class=headerlink href=#troubleshooting title="Permanent link">&para;</a></h2> <h3 id=verify-oidc-discovery-endpoint>Verify OIDC Discovery Endpoint<a class=headerlink href=#verify-oidc-discovery-endpoint title="Permanent link">&para;</a></h3> <div class="language-bash highlight"><pre><span></span><code>curl<span class=w> </span>https://dev-abc123.us.auth0.com/.well-known/openid-configuration<span class=w> </span><span class=se>\</span>
-<span class=w>  </span><span class=p>|</span><span class=w> </span>python3<span class=w> </span>-m<span class=w> </span>json.tool
-</code></pre></div> <p>You should see <code>issuer</code>, <code>authorization_endpoint</code>, <code>token_endpoint</code>, <code>jwks_uri</code>, and similar.</p> <h3 id=common-errors>Common Errors<a class=headerlink href=#common-errors title="Permanent link">&para;</a></h3> <table> <thead> <tr> <th>Error</th> <th>Cause</th> <th>Fix</th> </tr> </thead> <tbody> <tr> <td><code>code_challenge: Field required</code></td> <td>Auth0 Application type is "Regular Web Application".</td> <td>Recreate as <strong>Machine to Machine</strong> application. Auth0 does not allow changing app type after creation. See <a href=#step-2-create-an-auth0-application>Step 2</a>.</td> </tr> <tr> <td><code>Grant type 'authorization_code' not allowed</code></td> <td>Machine to Machine application is missing Authorization Code grant.</td> <td>Enable <strong>Authorization Code</strong> in Advanced Settings &gt; Grant Types. See <a href=#configure-grant-types>Configure Grant Types</a>.</td> </tr> <tr> <td><code>invalid_request</code> when requesting a token</td> <td>Application not authorized for the API.</td> <td><a href=#step-3-authorize-the-application-for-the-api>Step 3</a> - authorize the application.</td> </tr> <tr> <td><code>audience mismatch</code></td> <td><code>FASTMCP_SERVER_AUTH_AUDIENCE</code> does not match the API Identifier.</td> <td>Ensure they are identical strings.</td> </tr> <tr> <td><code>invalid_client</code></td> <td>Wrong <code>client_id</code> or <code>client_secret</code>.</td> <td>Re-copy from Application &gt; Settings.</td> </tr> <tr> <td><code>KeyError</code> on startup (for example, <code>CLIENT_SECRET</code>).</td> <td>Some OAuth fields are present but others missing.</td> <td>Provide <strong>all</strong> required fields or remove <code>oauth</code> entirely.</td> </tr> <tr> <td><code>Could not extract username</code></td> <td>Token lacks <code>username</code>, <code>preferred_username</code>, or <code>email</code>.</td> <td>Add email/profile scopes or set <code>user_impersonation: false</code>.</td> </tr> <tr> <td><code>unauthorized</code> / 401 on every request</td> <td>OAuth misconfigured or token expired.</td> <td>Check server logs and verify OIDC discovery URL is reachable.</td> </tr> <tr> <td><code>redirect_uri_mismatch</code></td> <td>Callback URL does not match <code>&lt;BASE_URL&gt;/auth/callback</code>.</td> <td>Fix <strong>Allowed Callback URLs</strong> in Auth0 - scheme, host, and port must match exactly.</td> </tr> <tr> <td><code>ValueError: Issuer URL must be HTTPS</code></td> <td>OAuth without TLS configured.</td> <td>Add <code>ssl_certfile</code>/<code>ssl_keyfile</code> and use <code>https://</code> for <code>BASE_URL</code>.</td> </tr> <tr> <td><code>ValueError: BASE_URL must start with https://</code></td> <td>SSL configured but <code>BASE_URL</code> still uses <code>http://</code>.</td> <td>Update <code>BASE_URL</code> to <code>https://</code>.</td> </tr> <tr> <td><code>ssl.SSLError: PEM lib</code></td> <td>Missing cert/key env vars before Docker start.</td> <td>Mount cert/key as volumes when starting the container (see <a href=../index.html#step-3-deploy-the-docker>Docker Deployment</a>).</td> </tr> <tr> <td><code>ERR_TLS_CERT_ALTNAME_INVALID</code></td> <td>Certificate missing SAN.</td> <td>Regenerate with <code>-addext "subjectAltName=IP:&lt;ip&gt;"</code>.</td> </tr> <tr> <td><code>TypeError: fetch failed</code> (VS Code)</td> <td>Self-signed cert not trusted by <code>Node.js</code>.</td> <td>Launch Visual Studio Code with <code>NODE_EXTRA_CA_CERTS=/path/to/server.crt code .</code></td> </tr> <tr> <td><code>Client Not Registered</code> (VS Code)</td> <td>Server's Docker container was recreated, wiping client registrations, but Visual Studio Code caches the old client ID.</td> <td>Quit Visual Studio Code, then delete stale registrations from the state DB (see <a href=#clearing-visual-studio-code-oauth-cache>Clearing Visual Studio Code OAuth cache</a> below) and reopen Visual Studio Code. To prevent recurrence, mount a Docker volume for <code>/root/.local/share/fastmcp</code>.</td> </tr> <tr> <td><code>Service not found: https://...</code> / <code>access_denied</code></td> <td><code>AUDIENCE</code> mismatch between client request and server config (often <code>http</code> versus <code>https</code>).</td> <td>Ensure <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> in <code>conf.json</code> exactly matches the Auth0 API Identifier.</td> </tr> <tr> <td>Token validation behaves unexpectedly</td> <td>OIDC endpoint is unreachable at startup.</td> <td>Restart server after endpoint is accessible.</td> </tr> </tbody> </table> <h3 id=clearing-visual-studio-code-oauth-cache>Clearing Visual Studio Code OAuth Cache<a class=headerlink href=#clearing-visual-studio-code-oauth-cache title="Permanent link">&para;</a></h3> <p>If the MCP server's Docker container is recreated, Visual Studio Code's cached OAuth client registration becomes stale. To clear it:</p> <ol> <li>Quit Visual Studio Code completely (Cmd+Q on macOS, or close all windows on Linux/Windows).</li> <li> <p>Run the appropriate command for your OS:</p> <div class="tabbed-set tabbed-alternate" data-tabs=1:3><input checked=checked id=__tabbed_1_1 name=__tabbed_1 type=radio><input id=__tabbed_1_2 name=__tabbed_1 type=radio><input id=__tabbed_1_3 name=__tabbed_1 type=radio><div class=tabbed-labels><label for=__tabbed_1_1>macOS</label><label for=__tabbed_1_2>Linux</label><label for=__tabbed_1_3>Windows</label></div> <div class=tabbed-content> <div class=tabbed-block> <div class="language-bash highlight"><pre><span></span><code>sqlite3<span class=w> </span>~/Library/<span class=s2>&quot;Application Support&quot;</span>/Code/User/globalStorage/state.vscdb<span class=w> </span><span class=se>\</span>
-<span class=w>  </span><span class=s2>&quot;DELETE FROM ItemTable WHERE key LIKE &#39;%dynamicAuth%&lt;your-server-host&gt;%&#39;;&quot;</span>
-</code></pre></div> </div> <div class=tabbed-block> <div class="language-bash highlight"><pre><span></span><code>sqlite3<span class=w> </span>~/.config/Code/User/globalStorage/state.vscdb<span class=w> </span><span class=se>\</span>
-<span class=w>  </span><span class=s2>&quot;DELETE FROM ItemTable WHERE key LIKE &#39;%dynamicAuth%&lt;your-server-host&gt;%&#39;;&quot;</span>
-</code></pre></div> </div> <div class=tabbed-block> <div class="language-powershell highlight"><pre><span></span><code><span class=n>sqlite3</span> <span class=s2>&quot;$env:APPDATA\Code\User\globalStorage\state.vscdb&quot;</span> <span class=p>`</span>
-  <span class=s2>&quot;DELETE FROM ItemTable WHERE key LIKE &#39;%dynamicAuth%&lt;your-server-host&gt;%&#39;;&quot;</span>
-</code></pre></div> </div> </div> </div> </li> <li> <p>Reopen Visual Studio Code. It will re-register with the server automatically.</p> </li> </ol> <p>Replace <code>&lt;your-server-host&gt;</code> with your server's IP or hostname, for example, <code>35.185.60.76</code>. This only clears the registration for that specific server.</p> <div class="admonition tip"> <p class=admonition-title>Prevent recurrence</p> <p>Mount a Docker volume for the server's OAuth state, so client registrations survive container recreation: <div class="language-bash highlight"><pre><span></span><code>docker<span class=w> </span>run<span class=w> </span>...<span class=w> </span>-v<span class=w> </span>mcp-auth-data:/root/.local/share/fastmcp<span class=w> </span>...
-</code></pre></div></p> </div> <h3 id=token-expiration>Token Expiration<a class=headerlink href=#token-expiration title="Permanent link">&para;</a></h3> <p>Auth0 tokens have a configurable lifetime:</p> <ol> <li>Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>your API</strong> &gt; <strong>Settings</strong>.</li> <li>Check <strong>Token Expiration (Seconds)</strong>. Default is 86400 (24 hours).</li> <li>Adjust as needed.</li> </ol> <div class="admonition note"> <p class=admonition-title>Note</p> <p>Token refresh is handled automatically by the OAuth flow when using browser-based authentication.</p> </div> <h2 id=staging-versus-production>Staging versus Production<a class=headerlink href=#staging-versus-production title="Permanent link">&para;</a></h2> <table> <thead> <tr> <th>Environment</th> <th>Recommendation</th> </tr> </thead> <tbody> <tr> <td><strong>Development</strong></td> <td>Use a free Auth0 tenant.</td> </tr> <tr> <td><strong>Staging / Production</strong></td> <td>Use a dedicated Auth0 tenant or separate Application and API. Always use HTTPS for <code>BASE_URL</code> and callback URLs.</td> </tr> </tbody> </table> <aside class=md-source-file> <span class=md-source-file__fact> <span class=md-icon title="Last update"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg> </span> <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 8, 2026 07:05:36 UTC">June 8, 2026</span> </span> </aside> <form class=md-feedback name=feedback hidden> <fieldset> <legend class=md-feedback__title> Was this page helpful? </legend> <div class=md-feedback__inner> <div class=md-feedback__list> <button class="md-feedback__icon md-icon" type=submit title="This page was helpful" data-md-value=1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg> </button> <button class="md-feedback__icon md-icon" type=submit title="This page could be improved" data-md-value=0> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M19 15V3h4v12zM15 3a2 2 0 0 1 2 2v10c0 .55-.22 1.05-.59 1.41L9.83 23l-1.06-1.06c-.27-.27-.44-.64-.44-1.06l.03-.31.95-4.57H3a2 2 0 0 1-2-2v-2c0-.26.05-.5.14-.73l3.02-7.05C4.46 3.5 5.17 3 6 3zm0 2H5.97L3 12v2h8.78l-1.13 5.32L15 14.97z"/></svg> </button> </div> <div class=md-feedback__note> <div data-md-value=1 hidden> Thanks for your feedback! </div> <div data-md-value=0 hidden> Thanks for your feedback! </div> </div> </div> </fieldset> </form> <!-- Giscus feedback removed — using GA4 feedback widget instead --> <nav class=md-content-footer aria-label=Footer> <a href=../index.html class="md-content-footer__link md-content-footer__link--prev" aria-label="Previous: Authentication"> <div class="md-content-footer__button md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg> </div> <div class=md-content-footer__title> <span class=md-content-footer__direction> Previous </span> <div class=md-ellipsis> Authentication </div> </div> </a> <a href=../keycloak/index.html class="md-content-footer__link md-content-footer__link--next" aria-label="Next: Keycloak Setup Guide"> <div class=md-content-footer__title> <span class=md-content-footer__direction> Next </span> <div class=md-ellipsis> Keycloak Setup Guide </div> </div> <div class="md-content-footer__button md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg> </div> </a> </nav> </article> </div> <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script> </div> <button type=button class="md-top md-icon" data-md-component=top hidden> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button> </main> <footer class=md-footer> <div class="md-footer-meta md-typeset"> <div class="md-footer-meta__inner md-grid"> <div class=md-copyright> <div class=md-copyright__highlight> Copyright &copy; 2026, Actian </div> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a> </div> </div> </div> </footer> </div> <div class=md-dialog data-md-component=dialog> <div class="md-dialog__inner md-typeset"></div> </div> <script id=__config type=application/json>{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.top", "navigation.instant", "navigation.expand", "navigation.path", "navigation.footer", "navigation.sections", "search.highlight", "search.share", "search.suggest", "search.focus", "content.code.copy", "content.code.annotate", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script> <script src=../../assets/javascripts/bundle.79ae519e.min.js></script> <script src=https://cdn.jsdelivr.net/npm/marked/marked.min.js></script> <script src=https://unpkg.com/mermaid@10/dist/mermaid.min.js></script> <script src=../../javascripts/mermaid-init.js></script> <script src=../../javascripts/search_enhancement.js></script> <script src=../../javascripts/extra.js></script> <script src=../../javascripts/comprehensive-nav-sections.js></script> <script src=../../javascripts/comprehensive-nav-mcp.js></script> <script src=../../javascripts/current.js defer></script> <script src=../../javascripts/MiniChatJavaScript.js defer></script> </body> </html>
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../index.html" title="Actian MCP Server" class="md-nav__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
+      
+  <img src="../../assets/images/actian-logo.svg" alt="logo">
+
+    </a>
+    Actian MCP Server
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://www.actian.com/contact/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.79 15.41c.95-2.17.95-4.66 0-6.82l-2.74 1.24c.6 1.38.6 2.95.01 4.34zm-4.37-11.2a8.54 8.54 0 0 0-6.83 0l1.24 2.73c1.39-.59 2.96-.59 4.35.01zM4.21 8.58a8.56 8.56 0 0 0 0 6.84l2.74-1.25c-.6-1.38-.6-2.96 0-4.35zm4.38 11.21a8.5 8.5 0 0 0 6.83-.01l-1.24-2.73a5.5 5.5 0 0 1-4.34.01zM12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 6a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Support
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../intro/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Introduction
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../get-started/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Get Started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Get Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../mcp-clients/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Clients
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP Clients
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth0
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Auth0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../keycloak/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Keycloak
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../ingres/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingres
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ingres
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../ingres/tools/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../ingres/resources/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../ingres/prompts/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prompts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../hcl-informix/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HCL Informix®
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    HCL Informix®
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../hcl-informix/tools/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../hcl-informix/resources/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../hcl-informix/prompts/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prompts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../zen/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zen
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Zen
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../zen/tools/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../zen/resources/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../zen/prompts/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prompts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../nosql/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NoSQL
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NoSQL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../nosql/authentication/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9_2" id="__nav_9_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../nosql/authentication/auth0/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth0
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Auth0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../nosql/authentication/keycloak/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Keycloak
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../nosql/tools/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../nosql/resources/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../nosql/prompts/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prompts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../analytics-engine/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analytics Engine
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Analytics Engine
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../analytics-engine/tools/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../analytics-engine/resources/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../analytics-engine/prompts/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prompts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-existing-auth0-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start - Existing Auth0 User
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites-new-auth0-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites - New Auth0 User
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-create-an-auth0-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create an Auth0 API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Create an Auth0 API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-of-step-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output of Step 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-create-an-auth0-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create an Auth0 Application
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Create an Auth0 Application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-application-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Application Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-grant-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Grant Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-of-step-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output of Step 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-authorize-the-application-for-the-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Authorize the Application for the API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-create-auth0-users-if-using-user-impersonation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Create Auth0 Users (if Using User Impersonation)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Create Auth0 Users (if Using User Impersonation)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-41-create-the-user-in-auth0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4.1: Create the User in Auth0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-42-create-the-matching-database-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4.2: Create the Matching Database User
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-assemble-the-final-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Assemble the Final Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Assemble the Final Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapping-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapping Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-confjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example conf.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-end-to-end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify End-to-End
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verify-oidc-discovery-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify OIDC Discovery Endpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing-visual-studio-code-oauth-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing Visual Studio Code OAuth Cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-expiration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Expiration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#staging-versus-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Staging versus Production
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../index.html" class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../index.html" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Authentication
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="index.html" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Auth0
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  <a href="index.md" class="md-raw-link" target="_blank" rel="noopener" title="View this page as plain text Markdown">
+      <span class="md-raw-link__icon">M&#x2193;</span>
+      <span class="md-raw-link__body">
+        <span class="md-raw-link__title">View as Markdown &#x2197;</span>
+      </span>
+    </a>
+  
+  
+                  
+
+
+
+<h1 id="configuring-auth0">Configuring Auth0<a class="headerlink" href="#configuring-auth0" title="Permanent link">&para;</a></h1>
+<p>Set up an Auth0 application and API to enable OAuth 2.0 and OpenID Connect (OIDC) authentication for your Actian MCP Server. After you complete these steps, you can see the credentials required for the <code>oauth</code> block in the <code>conf.json</code> configuration file.</p>
+<p>For details on shared security concepts like TLS and user impersonation, see <a href="../index.html">Authentication Overview</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Reference</p>
+<p><a href="https://gofastmcp.com/integrations/auth0">FastMCP Auth0 Integration</a></p>
+</div>
+<h2 id="quick-start-existing-auth0-user">Quick Start - Existing Auth0 User<a class="headerlink" href="#quick-start-existing-auth0-user" title="Permanent link">&para;</a></h2>
+<p>If you are an experienced Auth0 user, use the following checklist to set up the environment:</p>
+<ol>
+<li><strong>Create an API:</strong> Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>Create API</strong>. The <strong>Identifier</strong> serves as the <code>FASTMCP_SERVER_AUTH_AUDIENCE</code>.</li>
+<li><strong>Create an Application:</strong> Navigate to <strong>Applications</strong> &gt; <strong>Applications</strong> &gt; <strong>Create Application</strong>. Select <strong>Machine to Machine</strong>. Authorize it for the API when prompted. Copy the <strong>Client ID</strong> and <strong>Client Secret</strong>.</li>
+<li>
+<p><strong>Authorize the Application:</strong> In your API settings, verify that <strong>User Access</strong> and <strong>Client Access</strong> are set to <strong>Authorized</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you skip this step, Auth0 returns an <code>invalid_request</code> error.</p>
+</div>
+</li>
+<li>
+<p><strong>Enable Authorization Code Grant:</strong> In <strong>Advanced Settings</strong> &gt; <strong>Grant Types</strong>, select <strong>Authorization Code</strong>.</p>
+</li>
+<li><strong>Set Callback URLs:</strong> Add <code>&lt;BASE_URL&gt;/auth/callback</code> to <strong>Allowed Callback URLs</strong>.</li>
+<li><strong>Update Configuration:</strong> Add your Auth0 domain and credentials to <code>conf.json</code>.</li>
+<li><strong>Start the server:</strong> Launch the server using the <code>--transport sse</code> or <code>http</code> / <code>streamable-http</code> flag.</li>
+</ol>
+<h2 id="prerequisites-new-auth0-user">Prerequisites - New Auth0 User<a class="headerlink" href="#prerequisites-new-auth0-user" title="Permanent link">&para;</a></h2>
+<ul>
+<li>An Auth0 account (<a href="https://auth0.com/signup">sign up free</a>).</li>
+<li>An Auth0 <strong>Tenant</strong> (created automatically on sign-up, for example, <code>dev-abc123</code>).</li>
+<li>Actian MCP Server installed and ready to run.</li>
+</ul>
+<h2 id="step-1-create-an-auth0-api">Step 1: Create an Auth0 API<a class="headerlink" href="#step-1-create-an-auth0-api" title="Permanent link">&para;</a></h2>
+<p>The <strong>API</strong> represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 include the API's identifier as the <code>audience</code> claim.</p>
+<ol>
+<li>Log in to the <a href="https://manage.auth0.com/">Auth0 Dashboard</a>.</li>
+<li>In the left sidebar, navigate to <strong>Applications</strong> &gt; APIs**.</li>
+<li>Select <strong>+ Create API</strong>.</li>
+<li>
+<p>Fill the form as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Actian MCP Server</code></td>
+<td>Display name (any descriptive string).</td>
+</tr>
+<tr>
+<td><strong>Identifier (Audience)</strong></td>
+<td><code>https://&lt;mcp-server-host&gt;:8000/mcp</code></td>
+<td>Logical identifier (may not be a reachable URL). This becomes your <code>FASTMCP_SERVER_AUTH_AUDIENCE</code>.</td>
+</tr>
+<tr>
+<td><strong>Signing Algorithm</strong></td>
+<td><code>RS256</code></td>
+<td>Default, leave the value as is.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Select <strong>Create</strong>.</p>
+</li>
+</ol>
+<h3 id="output-of-step-1">Output of Step 1<a class="headerlink" href="#output-of-step-1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Config Field</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FASTMCP_SERVER_AUTH_AUDIENCE</code></td>
+<td>The <strong>Identifier</strong> that you entered, for example, <code>https://&lt;mcp-server-host&gt;:8000/mcp</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="step-2-create-an-auth0-application">Step 2: Create an Auth0 Application<a class="headerlink" href="#step-2-create-an-auth0-application" title="Permanent link">&para;</a></h2>
+<p>The <strong>Application</strong> represents the MCP server's OAuth client. It holds <code>client_id</code> and <code>client_secret</code> used during the OAuth handshake.</p>
+<div class="admonition note">
+<p class="admonition-title">Why Machine to Machine?</p>
+<p>The MCP server's OAuth proxy (OIDCProxy) acts as a <strong>confidential client</strong> — it authenticates with Auth0 using a <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code> pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Do not use "Regular Web Application"</p>
+<p>Auth0 enforces PKCE validation differently for Web applications, which conflicts with the forwarding of OIDCProxy authorization requests. This causes <code>code_challenge: Field required</code> errors.</p>
+</div>
+<ol>
+<li>In the Auth0 Dashboard, navigate to <strong>Applications</strong> &gt; <strong>Applications</strong>.</li>
+<li>Select <strong>+ Create Application</strong>.</li>
+<li>
+<p>Enter the values for the following fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Actian MCP Server App</code></td>
+</tr>
+<tr>
+<td><strong>Application Type</strong></td>
+<td>Machine to Machine Applications</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Select <strong>Create</strong>.</p>
+</li>
+<li>When prompted, select your <strong>Actian MCP Server</strong> API and grant all scopes (You can also do this later in <a href="#step-3-authorize-the-application-for-the-api">Step 3</a>.</li>
+<li>The application's <strong>Settings</strong> tab opens.</li>
+</ol>
+<h3 id="configure-application-settings">Configure Application Settings<a class="headerlink" href="#configure-application-settings" title="Permanent link">&para;</a></h3>
+<p>On the <strong>Settings</strong> tab, configure the following:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Allowed Callback URLs</strong></td>
+<td><code>https://&lt;mcp-server-host&gt;:8000/auth/callback</code></td>
+<td>Must exactly match <code>&lt;BASE_URL&gt;/auth/callback</code>. Multiple URLs can be comma-separated.</td>
+</tr>
+<tr>
+<td><strong>Allowed Logout URLs</strong></td>
+<td><code>https://&lt;mcp-server-host&gt;:8000</code></td>
+<td>(Optional) For logout redirect</td>
+</tr>
+<tr>
+<td><strong>Allowed Web Origins</strong></td>
+<td><code>https://&lt;mcp-server-host&gt;:8000</code></td>
+<td>(Optional) For CORS</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Callback URL must match exactly</p>
+<p>The <strong>Allowed Callback URLs</strong> value must match <code>&lt;FASTMCP_SERVER_AUTH_BASE_URL&gt;/auth/callback</code> exactly, including scheme (<code>http</code> or <code>https</code>), host, and port. A mismatch causes Auth0 to reject the login with a <code>redirect_uri_mismatch</code> error.</p>
+</div>
+<p>Select <strong>Save Changes</strong>.</p>
+<h3 id="configure-grant-types">Configure Grant Types<a class="headerlink" href="#configure-grant-types" title="Permanent link">&para;</a></h3>
+<p>Machine to Machine applications should have <strong>Authorization Code</strong> enabled by default, but you should always verify since some tenants or configurations may differ.</p>
+<ol>
+<li>On the <strong>Settings</strong> tab, select <strong>Show Advanced Settings</strong>.</li>
+<li>Select the <strong>Grant Types</strong> tab.</li>
+<li>Enable <strong>Authorization Code</strong> (required for the browser-based OAuth login flow).</li>
+<li>Keep <strong>Client Credentials</strong> enabled.</li>
+<li>Optionally enable <strong>Refresh Token</strong> for token refresh support.</li>
+<li>Select <strong>Save Changes</strong>.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Authorization Code grant is required</p>
+<p>Without <strong>Authorization Code</strong> enabled, Auth0 returns <code>Grant type 'authorization_code' not allowed for the client</code>. This grant type is enabled by default for Machine to Machine applications. If not, re-enable it.</p>
+</div>
+<h3 id="output-of-step-2">Output of Step 2<a class="headerlink" href="#output-of-step-2" title="Permanent link">&para;</a></h3>
+<p>All values appear on the <strong>Settings</strong> tab of your application:</p>
+<table>
+<thead>
+<tr>
+<th>Config Field</th>
+<th>Where to find it in Auth0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FASTMCP_SERVER_AUTH_CLIENT_ID</code></td>
+<td><strong>Client ID</strong> (at the top of the Settings tab)</td>
+</tr>
+<tr>
+<td><code>FASTMCP_SERVER_AUTH_CLIENT_SECRET</code></td>
+<td><strong>Client Secret</strong> (click the eye icon to reveal)</td>
+</tr>
+<tr>
+<td><code>FASTMCP_SERVER_AUTH_CONFIG_URL</code></td>
+<td>Constructed from <strong>Domain</strong>: <code>https://&lt;your-domain&gt;/.well-known/openid-configuration</code></td>
+</tr>
+<tr>
+<td><code>FASTMCP_SERVER_AUTH_BASE_URL</code></td>
+<td>MCP server's external URL, for example, <code>https://&lt;mcp-server-host&gt;:8000</code>.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Finding the Domain</p>
+<p>The <strong>Domain</strong> is shown at the top of the Settings tab, for example, <code>dev-abc123.us.auth0.com</code>. The OIDC discovery URL is always <code>https://&lt;domain&gt;/.well-known/openid-configuration</code>.</p>
+</div>
+<h2 id="step-3-authorize-the-application-for-the-api">Step 3: Authorize the Application for the API<a class="headerlink" href="#step-3-authorize-the-application-for-the-api" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">This step is critical</p>
+<p>Auth0 requires an explicit grant between an application and an API before it issues tokens. Without this authorization, token requests fail with <code>invalid_request</code>.</p>
+</div>
+<p>You can authorize from either the application's APIs tab or the API's Application Access tab:</p>
+<p><strong>Option A - Authorize from Application:</strong></p>
+<ol>
+<li>Navigate to <strong>Applications</strong> &gt; <strong>Applications</strong> &gt; <strong>your app</strong>. For example, <code>Actian MCP Server App</code>.</li>
+<li>Select the <strong>APIs</strong> tab.</li>
+<li>Search your API. For example, <code>mcp_server</code> with the identifier <code>https://&lt;mcp-server-host&gt;:8000/mcp</code>.</li>
+<li>Select <strong>Edit</strong> next to your API.</li>
+<li>Authorize both access types:<ul>
+<li><strong>User Access</strong>: Set to <strong>Authorized</strong>. This is required for the browser-based login flow and user impersonation.</li>
+<li><strong>Client Access</strong>: Set to <strong>Authorized</strong>. This may already be authorized if you selected the API during Machine to Machine application creation.</li>
+</ul>
+</li>
+<li>Select <strong>Update</strong> to save.</li>
+</ol>
+<p><strong>Option B - Authorize From API:</strong></p>
+<ol>
+<li>Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>your API</strong>. For example, <code>mcp_server</code>.</li>
+<li>Select the <strong>Application Access</strong> tab.</li>
+<li>Search your application and select <strong>Edit</strong>.</li>
+<li>Authorize both <strong>User Access</strong> and <strong>Client Access</strong> as described in Option A, step 5.</li>
+</ol>
+<p>After saving, the application displays two <strong>AUTHORIZED</strong> badges — User Access and Client Access.</p>
+<div class="admonition important">
+<p class="admonition-title">User Access is required for user impersonation</p>
+<p>If you plan to use <code>user_impersonation: true</code>, the <strong>User Access</strong> column must show AUTHORIZED. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server will not be able to extract a database username.</p>
+</div>
+<h2 id="step-4-create-auth0-users-if-using-user-impersonation">Step 4: Create Auth0 Users (if Using User Impersonation)<a class="headerlink" href="#step-4-create-auth0-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
+<p>If <code>user_impersonation</code> is <code>true</code>, the authenticated user's identity is forwarded to the database through <code>SET SESSION AUTHORIZATION</code>. Each Auth0 user must have a matching database account. For more information, see <a href="../index.html#user-impersonation">User Impersonation</a>.</p>
+<h3 id="step-41-create-the-user-in-auth0">Step 4.1: Create the User in Auth0<a class="headerlink" href="#step-41-create-the-user-in-auth0" title="Permanent link">&para;</a></h3>
+<ol>
+<li>In the Auth0 Dashboard, navigate to <strong>User Management</strong> &gt; <strong>Users</strong>.</li>
+<li>Select <strong>+ Create User</strong>.</li>
+<li>
+<p>Enter the values for the following fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Email</strong></td>
+<td><code>jdoe@example.com</code></td>
+<td>Value before <code>@</code> (<code>jdoe</code>) becomes the database username</td>
+</tr>
+<tr>
+<td><strong>Password</strong></td>
+<td>A secure password</td>
+<td>Used for Auth0 login</td>
+</tr>
+<tr>
+<td><strong>Connection</strong></td>
+<td><code>Username-Password-Authentication</code></td>
+<td>Default database connection</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Select <strong>Create</strong>.</p>
+</li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Database username = email prefix</p>
+<p>The MCP server extracts the database username from the <strong>email prefix</strong> (the value before <code>@</code>). For example, <code>jdoe@example.com</code> &gt; <code>jdoe</code>. Ensure the email prefix exactly matches the database account name.</p>
+<p><strong>Auth0 default behaviour</strong>: Auth0's userinfo endpoint does not return a <code>username</code> or <code>preferred_username</code> claim by default. In practice, the server uses the <strong>email prefix</strong> as the database username. Always create database users to match this email prefix.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Case sensitivity</p>
+<p>If the database is case-sensitive, for example, <code>jdoe</code> ≠ <code>Jdoe</code>, ensure the email prefix exactly matches the database account name.</p>
+</div>
+<h3 id="step-42-create-the-matching-database-user">Step 4.2: Create the Matching Database User<a class="headerlink" href="#step-42-create-the-matching-database-user" title="Permanent link">&para;</a></h3>
+<p>=== Example</p>
+<p>Auth0 handles authentication, but the Actian database still needs the user to exist for impersonation to work:</p>
+<p><div class="language-sql highlight"><pre><span></span><code><span class="c1">-- Create the user account (no DB password needed — Auth0 handles authentication)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
+
+<span class="c1">-- Grant access to the database</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ACCESS</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">mydb</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
+
+<span class="c1">-- Grant the necessary table permissions (adjust per your schema)</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
+</code></pre></div>
+=== Informix
+<div class="language-sql highlight"><pre><span></span><code><span class="c1">-- Create the user account (DB password not used — Auth0 handles authentication)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">mcpuser</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="s1">&#39;mcpuser&#39;</span><span class="w"> </span><span class="n">properties</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;daemon&#39;</span><span class="p">;;</span>
+
+<span class="c1">-- Grant access to the database</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">CONNECT</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">mcpuser</span><span class="p">;</span>
+
+<span class="c1">-- Grant the necessary table permissions (adjust per your schema)</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">mcpuser</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">mcpuser</span><span class="p">;</span>
+
+<span class="c1">-- Set session authorization to the privleged database_user passed to mcp server in conf.json</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">SETSESSIONAUTH</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="s1">&#39;mcpuser&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;database_user&#39;</span><span class="p">;</span>
+</code></pre></div></p>
+<div class="admonition note">
+<p class="admonition-title">Federated identity caveat</p>
+<p>If users sign in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0, the <code>sub</code> claim looks like <code>google-oauth2|12345</code>. The server removes the provider prefix, leaving <code>12345</code>, which is unlikely to match a database account. For SSO setups, set <code>user_impersonation</code> to <code>false</code> unless you can ensure the Auth0 user profile contains a matching username.</p>
+</div>
+<h2 id="step-5-assemble-the-final-configuration">Step 5: Assemble the Final Configuration<a class="headerlink" href="#step-5-assemble-the-final-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="mapping-summary">Mapping Summary<a class="headerlink" href="#mapping-summary" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><code>conf.json</code> Field</th>
+<th>Auth0 Source</th>
+<th>Example Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FASTMCP_SERVER_AUTH_CONFIG_URL</code></td>
+<td><code>https://&lt;Domain&gt;/.well-known/openid-configuration</code></td>
+<td><code>https://dev-abc123.us.auth0.com/.well-known/openid-configuration</code></td>
+</tr>
+<tr>
+<td><code>FASTMCP_SERVER_AUTH_CLIENT_ID</code></td>
+<td>Application → Settings → <strong>Client ID</strong></td>
+<td><code>wNXUdrp9aBcDeFgHiJkLmN</code></td>
+</tr>
+<tr>
+<td><code>FASTMCP_SERVER_AUTH_CLIENT_SECRET</code></td>
+<td>Application → Settings → <strong>Client Secret</strong></td>
+<td><code>a1B2c3D4e5F6g7H8i9J0...</code></td>
+</tr>
+<tr>
+<td><code>FASTMCP_SERVER_AUTH_BASE_URL</code></td>
+<td>Your MCP server's external URL</td>
+<td><code>https://&lt;mcp-server-host&gt;:8000</code></td>
+</tr>
+<tr>
+<td><code>FASTMCP_SERVER_AUTH_AUDIENCE</code></td>
+<td>API → <strong>Identifier</strong></td>
+<td><code>https://&lt;mcp-server-host&gt;:8000/mcp</code></td>
+</tr>
+<tr>
+<td><code>user_impersonation</code></td>
+<td>Your choice</td>
+<td><code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Audience fallback</p>
+<p>If <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> is omitted, the server uses <code>FASTMCP_SERVER_AUTH_CLIENT_ID</code> as the audience. This is common for Keycloak setups, but for Auth0 you should always set an explicit audience, the Client ID will not match the API Identifier.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code>AUDIENCE</code> is a logical identifier used for token validation. It may not need be a reachable HTTPS URL.</p>
+</div>
+<h3 id="example-confjson">Example <code>conf.json</code><a class="headerlink" href="#example-confjson" title="Permanent link">&para;</a></h3>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{Ingres}&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@&lt;db-host&gt;,tcp_ip,&lt;port&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mydb&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;database_user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_user&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;database_password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_password&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;max_connections&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ssl_certfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/app/server.crt&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ssl_keyfile&quot;</span><span class="p">:</span><span class="w">  </span><span class="s2">&quot;/app/server.key&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;oauth&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CONFIG_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://&lt;your-auth0-domain&gt;/.well-known/openid-configuration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;your-client-id&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_SECRET&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;your-client-secret&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_BASE_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://&lt;your-server-host&gt;:8000&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_AUDIENCE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;your-api-identifier&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;user_impersonation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <code>&lt;db-host&gt;</code> with the database server address. In a Docker container, use the host's IP address or <code>host.docker.internal</code>(not <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself).</p>
+</div>
+<p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see <a href="../index.html#https-tls-for-remote-deployments">HTTPS / TLS for Remote Deployments</a>.</p>
+<p>For security best practices (file permissions, <code>.gitignore</code>, secrets management), see <a href="../index.html#security-best-practices">Security Best Practices</a>.</p>
+<h2 id="verify-end-to-end">Verify End-to-End<a class="headerlink" href="#verify-end-to-end" title="Permanent link">&para;</a></h2>
+<p>After starting the MCP server container with OAuth configured:</p>
+<ol>
+<li>Open a browser and navigate to your server's <code>/mcp</code> endpoint, for example, <code>https://&lt;your-server-host&gt;:8000/mcp</code>.</li>
+<li>You should be <strong>redirected to the Auth0 login page</strong>.</li>
+<li>After logging in, Auth0 redirects you back to the MCP server with a valid token.</li>
+<li>Check the server logs for <code>Stored database username: &lt;username&gt;</code> to confirm user impersonation is active.</li>
+</ol>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="verify-oidc-discovery-endpoint">Verify OIDC Discovery Endpoint<a class="headerlink" href="#verify-oidc-discovery-endpoint" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code>curl<span class="w"> </span>https://dev-abc123.us.auth0.com/.well-known/openid-configuration<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>You should see <code>issuer</code>, <code>authorization_endpoint</code>, <code>token_endpoint</code>, <code>jwks_uri</code>, and similar.</p>
+<h3 id="common-errors">Common Errors<a class="headerlink" href="#common-errors" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code_challenge: Field required</code></td>
+<td>Auth0 Application type is "Regular Web Application".</td>
+<td>Recreate as <strong>Machine to Machine</strong> application. Auth0 does not allow changing app type after creation. See <a href="#step-2-create-an-auth0-application">Step 2</a>.</td>
+</tr>
+<tr>
+<td><code>Grant type 'authorization_code' not allowed</code></td>
+<td>Machine to Machine application is missing Authorization Code grant.</td>
+<td>Enable <strong>Authorization Code</strong> in Advanced Settings &gt; Grant Types. See <a href="#configure-grant-types">Configure Grant Types</a>.</td>
+</tr>
+<tr>
+<td><code>invalid_request</code> when requesting a token</td>
+<td>Application not authorized for the API.</td>
+<td><a href="#step-3-authorize-the-application-for-the-api">Step 3</a> - authorize the application.</td>
+</tr>
+<tr>
+<td><code>audience mismatch</code></td>
+<td><code>FASTMCP_SERVER_AUTH_AUDIENCE</code> does not match the API Identifier.</td>
+<td>Ensure they are identical strings.</td>
+</tr>
+<tr>
+<td><code>invalid_client</code></td>
+<td>Wrong <code>client_id</code> or <code>client_secret</code>.</td>
+<td>Re-copy from Application &gt; Settings.</td>
+</tr>
+<tr>
+<td><code>KeyError</code> on startup (for example, <code>CLIENT_SECRET</code>).</td>
+<td>Some OAuth fields are present but others missing.</td>
+<td>Provide <strong>all</strong> required fields or remove <code>oauth</code> entirely.</td>
+</tr>
+<tr>
+<td><code>Could not extract username</code></td>
+<td>Token lacks <code>username</code>, <code>preferred_username</code>, or <code>email</code>.</td>
+<td>Add email/profile scopes or set <code>user_impersonation: false</code>.</td>
+</tr>
+<tr>
+<td><code>unauthorized</code> / 401 on every request</td>
+<td>OAuth misconfigured or token expired.</td>
+<td>Check server logs and verify OIDC discovery URL is reachable.</td>
+</tr>
+<tr>
+<td><code>redirect_uri_mismatch</code></td>
+<td>Callback URL does not match <code>&lt;BASE_URL&gt;/auth/callback</code>.</td>
+<td>Fix <strong>Allowed Callback URLs</strong> in Auth0 - scheme, host, and port must match exactly.</td>
+</tr>
+<tr>
+<td><code>ValueError: Issuer URL must be HTTPS</code></td>
+<td>OAuth without TLS configured.</td>
+<td>Add <code>ssl_certfile</code>/<code>ssl_keyfile</code> and use <code>https://</code> for <code>BASE_URL</code>.</td>
+</tr>
+<tr>
+<td><code>ValueError: BASE_URL must start with https://</code></td>
+<td>SSL configured but <code>BASE_URL</code> still uses <code>http://</code>.</td>
+<td>Update <code>BASE_URL</code> to <code>https://</code>.</td>
+</tr>
+<tr>
+<td><code>ssl.SSLError: PEM lib</code></td>
+<td>Missing cert/key env vars before Docker start.</td>
+<td>Mount cert/key as volumes when starting the container (see <a href="../index.html#step-3-deploy-the-docker">Docker Deployment</a>).</td>
+</tr>
+<tr>
+<td><code>ERR_TLS_CERT_ALTNAME_INVALID</code></td>
+<td>Certificate missing SAN.</td>
+<td>Regenerate with <code>-addext "subjectAltName=IP:&lt;ip&gt;"</code>.</td>
+</tr>
+<tr>
+<td><code>TypeError: fetch failed</code> (VS Code)</td>
+<td>Self-signed cert not trusted by <code>Node.js</code>.</td>
+<td>Launch Visual Studio Code with <code>NODE_EXTRA_CA_CERTS=/path/to/server.crt code .</code></td>
+</tr>
+<tr>
+<td><code>Client Not Registered</code> (VS Code)</td>
+<td>Server's Docker container was recreated, wiping client registrations, but Visual Studio Code caches the old client ID.</td>
+<td>Quit Visual Studio Code, then delete stale registrations from the state DB (see <a href="#clearing-visual-studio-code-oauth-cache">Clearing Visual Studio Code OAuth cache</a> below) and reopen Visual Studio Code. To prevent recurrence, mount a Docker volume for <code>/root/.local/share/fastmcp</code>.</td>
+</tr>
+<tr>
+<td><code>Service not found: https://...</code> / <code>access_denied</code></td>
+<td><code>AUDIENCE</code> mismatch between client request and server config (often <code>http</code> versus <code>https</code>).</td>
+<td>Ensure <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> in <code>conf.json</code> exactly matches the Auth0 API Identifier.</td>
+</tr>
+<tr>
+<td>Token validation behaves unexpectedly</td>
+<td>OIDC endpoint is unreachable at startup.</td>
+<td>Restart server after endpoint is accessible.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="clearing-visual-studio-code-oauth-cache">Clearing Visual Studio Code OAuth Cache<a class="headerlink" href="#clearing-visual-studio-code-oauth-cache" title="Permanent link">&para;</a></h3>
+<p>If the MCP server's Docker container is recreated, Visual Studio Code's cached OAuth client registration becomes stale. To clear it:</p>
+<ol>
+<li>Quit Visual Studio Code completely (Cmd+Q on macOS, or close all windows on Linux/Windows).</li>
+<li>
+<p>Run the appropriate command for your OS:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">macOS</label><label for="__tabbed_1_2">Linux</label><label for="__tabbed_1_3">Windows</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code>sqlite3<span class="w"> </span>~/Library/<span class="s2">&quot;Application Support&quot;</span>/Code/User/globalStorage/state.vscdb<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;DELETE FROM ItemTable WHERE key LIKE &#39;%dynamicAuth%&lt;your-server-host&gt;%&#39;;&quot;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code>sqlite3<span class="w"> </span>~/.config/Code/User/globalStorage/state.vscdb<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;DELETE FROM ItemTable WHERE key LIKE &#39;%dynamicAuth%&lt;your-server-host&gt;%&#39;;&quot;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-powershell highlight"><pre><span></span><code><span class="n">sqlite3</span> <span class="s2">&quot;$env:APPDATA\Code\User\globalStorage\state.vscdb&quot;</span> <span class="p">`</span>
+  <span class="s2">&quot;DELETE FROM ItemTable WHERE key LIKE &#39;%dynamicAuth%&lt;your-server-host&gt;%&#39;;&quot;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Reopen Visual Studio Code. It will re-register with the server automatically.</p>
+</li>
+</ol>
+<p>Replace <code>&lt;your-server-host&gt;</code> with your server's IP or hostname, for example, <code>35.185.60.76</code>. This only clears the registration for that specific server.</p>
+<div class="admonition tip">
+<p class="admonition-title">Prevent recurrence</p>
+<p>Mount a Docker volume for the server's OAuth state, so client registrations survive container recreation:
+<div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>...<span class="w"> </span>-v<span class="w"> </span>mcp-auth-data:/root/.local/share/fastmcp<span class="w"> </span>...
+</code></pre></div></p>
+</div>
+<h3 id="token-expiration">Token Expiration<a class="headerlink" href="#token-expiration" title="Permanent link">&para;</a></h3>
+<p>Auth0 tokens have a configurable lifetime:</p>
+<ol>
+<li>Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>your API</strong> &gt; <strong>Settings</strong>.</li>
+<li>Check <strong>Token Expiration (Seconds)</strong>. Default is 86400 (24 hours).</li>
+<li>Adjust as needed.</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Token refresh is handled automatically by the OAuth flow when using browser-based authentication.</p>
+</div>
+<h2 id="staging-versus-production">Staging versus Production<a class="headerlink" href="#staging-versus-production" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Development</strong></td>
+<td>Use a free Auth0 tenant.</td>
+</tr>
+<tr>
+<td><strong>Staging / Production</strong></td>
+<td>Use a dedicated Auth0 tenant or separate Application and API. Always use HTTPS for <code>BASE_URL</code> and callback URLs.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 2, 2026 13:55:41 UTC">July 2, 2026</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 15V3h4v12zM15 3a2 2 0 0 1 2 2v10c0 .55-.22 1.05-.59 1.41L9.83 23l-1.06-1.06c-.27-.27-.44-.64-.44-1.06l.03-.31.95-4.57H3a2 2 0 0 1-2-2v-2c0-.26.05-.5.14-.73l3.02-7.05C4.46 3.5 5.17 3 6 3zm0 2H5.97L3 12v2h8.78l-1.13 5.32L15 14.97z"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Authentication">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Authentication
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../keycloak/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Keycloak Setup Guide">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Keycloak Setup Guide
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026, Actian
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.path", "navigation.footer", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/mermaid-init.js"></script>
+      
+        <script src="../../javascripts/extra.js"></script>
+      
+        <script src="../../javascripts/MiniChatJavaScript.js" defer></script>
+      
+    
+  </body>
+</html>
