@@ -62,8 +62,7 @@ actian_mcp_server/
 │   ├── assets/stylesheets/     # Landing page & theme CSS
 │   └── partials/               # Partial templates
 ├── hooks/                      # MkDocs build hooks
-│   ├── bitbucket_edit_url.py   # Generates edit URLs for mcpdocs branch
-│   └── custom_lexers.py        # Custom syntax highlighters
+│   └── copy_md_sources.py      # Publishes raw Markdown alongside built HTML
 ├── utils/                      # Utility scripts (audits, link checks)
 └── site/                       # Built output (auto-generated, do not edit)
 ```
@@ -188,8 +187,11 @@ nav:
 mkdocs serve              # Preview at http://127.0.0.1:8000
 git add .
 git commit -m "docs: add my_section"
-git push origin mcpdocs
+git push origin <your-branch>
 ```
+
+See [Contributing](#contributing) below for the full contribution workflow,
+including how to open a pull request against `main`.
 
 ---
 
@@ -290,51 +292,77 @@ mike serve
 
 ---
 
-## Using the Edit Button on the Documentation Portal
-
-Every page on the published documentation site has a **pencil (✏️) edit icon** in the top-right corner (next to the page title). Use it to suggest corrections, report errors, or improve content directly.
-
-### How it works
-
-1. **Click the edit icon** on any documentation page.  
-   You will be taken directly to the source `.md` file for that page in GitHub, on the `main` branch.
-
-2. **Edit the file** in GitHub's web editor:
-   - Click **Edit** (pencil icon) in GitHub's file toolbar.
-   - Make your changes to the Markdown content.
-
-3. **Commit your changes:**
-   - Scroll down to the **Commit changes** section.
-   - Add a short commit message describing what you changed.
-   - Choose **"Create a new branch"** if you do not have write access to `main`, then open a Pull Request.
-   - If you have write access, you can commit directly to `main`.
-
-4. **Open a Pull Request** (if on a feature branch):
-   - Target branch: `main`
-   - Add a description of your change and assign a reviewer.
-
-### Edit URL format
-
-The edit button points to:
-
-```
-https://github.com/ActianCorp/mcp-server-docs/edit/main/docs/{page-path}
-```
-
-> **Tip:** If the edit icon is not visible, ensure you are viewing the published HTML portal (served via mike or the deployed site), not a local `mkdocs serve` preview.
-
----
-
 ## Contributing
 
-1. Clone the repository and check out the `mcpdocs` branch
-2. Create a feature branch: `git checkout -b feature/my-update`
-3. Make your changes in the `docs/` directory
-4. Preview locally with `mkdocs serve`
-5. Commit and push to Bitbucket
-6. Open a Pull Request targeting `mcpdocs`
+Thank you for helping improve the Actian MCP Server documentation portal.
+`main` is the single source of truth for this repository. All contributions
+are made against `main`; there is no separate long-lived branch for a given
+release.
 
-> **Note:** Only edit files in `docs/` unless you are intentionally modifying the theme, build hooks, or CI pipeline.
+### Before you start
+
+- Contributors never run `mike`. Version deployment (`mike deploy`, `mike
+  set-default`, and similar) is handled separately by the documentation
+  maintainers.
+- Contributors never edit the `site/` directory. It is generated output and is
+  overwritten on every build.
+- All content changes belong under `docs/`. Only touch `mkdocs.yml`,
+  `theme_overrides/`, or `hooks/` if you are intentionally changing the site's
+  build or theme, and mention that clearly in your pull request.
+
+### Local setup
+
+Fork the repository, then follow [Installation](#installation) and
+[Running Locally](#running-locally) above to clone your fork, install
+dependencies, and start the live-reload development server.
+
+### Making changes
+
+1. Create a feature branch from `main`:
+
+   ```bash
+   git checkout -b docs/my-update
+   ```
+
+2. Edit or add Markdown files under `docs/`. See [Adding
+   Documentation](#adding-documentation) above for page structure, front
+   matter, and navigation ordering.
+
+3. Preview your changes with `mkdocs serve` and confirm the page renders and
+   navigates as expected.
+
+4. Validate the build in strict mode before committing. Strict mode fails on
+   warnings (broken links, missing nav entries, and so on), which is the same
+   check applied before a release build:
+
+   ```bash
+   mkdocs build --strict
+   ```
+
+5. Commit your changes with a `docs:` prefix:
+
+   ```bash
+   git add docs/
+   git commit -m "docs: describe your change here"
+   ```
+
+6. Push your branch and open a pull request targeting `main`. Describe the
+   change and, if relevant, why it was needed.
+
+### Style checklist
+
+Before submitting, check your writing against these rules:
+
+- [ ] Use Global English (avoid idioms, culturally specific references, and
+      regional spelling; prefer terms understood by a worldwide audience).
+- [ ] Follow the Chicago Manual of Style for punctuation, capitalization, and
+      numbers.
+- [ ] Expand acronyms on first use on a page, followed by the acronym in
+      parentheses, for example: Model Context Protocol (MCP).
+- [ ] Do not use em dashes or en dashes. Rewrite the sentence, or use a comma,
+      parentheses, or a period instead.
+- [ ] Use sentence case for headings (capitalize only the first word and
+      proper nouns), not title case.
 
 ---
 
