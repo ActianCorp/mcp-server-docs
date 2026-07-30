@@ -51,6 +51,8 @@ All database configurations except NoSQL share the following standard MCP server
 | `ssl_keyfile` | String | No | Path to the TLS private key file. In the container, this is always mapped to `/app/server.key` |
 | `log_level` | String | No | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. Defaults to `INFO` |
 | `oauth` | Object | No | OAuth 2.0 configuration settings for authentication. For more information, see [Authentication Guide](../authentication/index.md)|
+| `query_mode` | String | No | Whether data-modifying SQL is permitted. Valid values: `read-only`, `read-write`. Defaults to `read-only`. For more information, see [Write support](../intro/write-support.md)|
+| `write_confirmation` | Boolean | No | Whether a write requires human approval before it runs. Defaults to `true`. Applies only when `query_mode` is `read-write`. For more information, see [Write support](../intro/write-support.md#skipping-the-approval-prompt)|
 
 !!! note "Configuration File Protection"
     The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control.
@@ -131,6 +133,8 @@ For the complete list of available tools for each database, see database-specifi
 ## Step 6 (Optional): Add Authentication
 
 If you are deploying the server outside a secure, trusted local environment, it is recommended to use OAuth 2.0 authentication. You can secure the server using an external identity provider like Keycloak or Auth0. See the following authentication documentation for detailed setup instructions:
+
+If you also set `query_mode` to `read-write`, define the `mcp:write` scope in your identity provider. The server requests it automatically, and a token without it cannot write.
 
 - [Authentication overview](../authentication/index.md)
 - [Keycloak setup](../authentication/keycloak/index.md)

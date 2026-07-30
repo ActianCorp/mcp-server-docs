@@ -18,6 +18,10 @@ The Actian MCP Server for Ingres supports the following operations:
 | **Describe table structure** | Retrieve column definitions, types, and comments|
 | **Read schema metadata** | Explore database-level metadata and constraints |
 | **List functions** | View available user-defined functions and procedures|
+| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
+
+!!! note "Write support is opt-in"
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
 
 ---
 
@@ -88,6 +92,8 @@ Create a file named `conf.json` in the working directory and define the environm
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` in the container |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` in the container |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) |
+| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md) |
+| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt) |
 
 ---
 

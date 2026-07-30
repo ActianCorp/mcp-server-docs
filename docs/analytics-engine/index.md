@@ -19,6 +19,10 @@ The Actian Analytics Engine MCP Server supports the following operations:
 | **Inspect table structure** | Retrieve column definitions and types |
 | **Read schema metadata** | Explore database-level metadata |
 | **List functions and procedures** | View available user-defined functions and procedures |
+| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
+
+!!! note "Write support is opt-in"
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
 
 
 ## Prerequisites
@@ -88,6 +92,8 @@ Create a file named `conf.json` in your working directory using the following st
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` in the container. |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` in the container. |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block).|
+| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md).|
+| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt).|
 
 
 ## Start the Server

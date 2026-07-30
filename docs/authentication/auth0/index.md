@@ -27,8 +27,9 @@ If you are an experienced Auth0 user, use the following checklist to set up the 
 
 4. **Enable Authorization Code Grant:** In **Advanced Settings** > **Grant Types**, select **Authorization Code**.
 5. **Set Callback URLs:** Add `<BASE_URL>/auth/callback` to **Allowed Callback URLs**.
-6. **Update Configuration:** Add your Auth0 domain and credentials to `conf.json`.
-7. **Start the server:** Launch the server using the `--transport sse` or `http` / `streamable-http` flag.
+6. **Add the write scope**, if `query_mode` is `read-write`: define the `mcp:write` permission on the API, enable both **RBAC Settings** toggles, then grant it to users through a role. See [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) and [Step 4.3](#step-43-grant-the-write-scope-read-write-deployments-only).
+7. **Update Configuration:** Add your Auth0 domain and credentials to `conf.json`.
+8. **Start the server:** Launch the server using the `--transport sse` or `http` / `streamable-http` flag.
 
 
 ## Prerequisites - New Auth0 User
@@ -60,6 +61,33 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
 | Config Field | Where to find it |
 |---|---|
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** that you entered, for example, `https://<mcp-server-host>:8000/mcp`. |
+
+### Step 1.1: Add the Write Scope (Read-Write Deployments Only)
+
+Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
+
+When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../../intro/write-support.md).
+
+1. Open your API, for example `Actian MCP Server`, and select the **Permissions** tab.
+2. Under **Add a Permission**, enter the following and select **+ Add**:
+
+     | Field | Value |
+     |-------|-------|
+     | **Permission** | `mcp:write` |
+     | **Description** | `Write access` |
+
+3. Select the **Settings** tab and scroll to **RBAC Settings**.
+4. Enable both of the following:
+
+     | Setting | Why it is required |
+     |---------|--------------------|
+     | **Enable RBAC** | Auth0 evaluates role and permission assignments during login. |
+     | **Add Permissions in the Access Token** | Auth0 adds the granted permissions to the access token, where the server reads them. Available only after you enable RBAC. |
+
+5. Select **Save**.
+
+!!! note "Defining the permission does not grant it"
+    At this point `mcp:write` exists on the API, but no user holds it yet. Assign it to users through a role in [Step 4.3](#step-43-grant-the-write-scope-read-write-deployments-only).
 
 
 ## Step 2: Create an Auth0 Application
@@ -159,6 +187,9 @@ After saving, the application displays two **AUTHORIZED** badges — User Access
 !!! important "User Access is required for user impersonation"
     If you plan to use `user_impersonation: true`, the **User Access** column must show AUTHORIZED. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server will not be able to extract a database username.
 
+!!! note "This is not the write scope grant"
+    Authorizing the application lets it request tokens for the API. It does not give any user the `mcp:write` scope. That is a separate, per-user role assignment in [Step 4.3](#step-43-grant-the-write-scope-read-write-deployments-only).
+
 
 ## Step 4: Create Auth0 Users (if Using User Impersonation)
 
@@ -222,6 +253,23 @@ GRANT SETSESSIONAUTH ON 'mcpuser' TO 'database_user';
 
 !!! note "Federated identity caveat"
     If users sign in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0, the `sub` claim looks like `google-oauth2|12345`. The server removes the provider prefix, leaving `12345`, which is unlikely to match a database account. For SSO setups, set `user_impersonation` to `false` unless you can ensure the Auth0 user profile contains a matching username.
+
+### Step 4.3: Grant the Write Scope (Read-Write Deployments Only)
+
+Skip this step if `query_mode` is `read-only`.
+
+Defining `mcp:write` on the API in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) does not give it to anyone. Auth0 issues the scope only to users who hold it through a role, so grant it to each user who is allowed to write.
+
+1. In the Auth0 Dashboard, navigate to **User Management** > **Roles**.
+2. Select **+ Create Role**, name it, for example `MCP Writer`, and select **Create**.
+3. On the role's **Permissions** tab, select **Add Permissions**.
+4. Select your API, for example `Actian MCP Server`, select the `mcp:write` permission, and add it.
+5. On the role's **Users** tab, select **Add Users** and assign the users who are allowed to write.
+
+Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects their writes.
+
+!!! warning "The database still decides what a user can change"
+    The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Step 4.2](#step-42-create-the-matching-database-user).
 
 
 ## Step 5: Assemble the Final Configuration

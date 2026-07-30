@@ -74,7 +74,9 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
     You must either provide all four required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or none. If you include `CONFIG_URL` and `CLIENT_ID`, and omit `CLIENT_SECRET` or `BASE_URL`, the server fails to start and throws a `KeyError`. To disable OAuth, remove the entire `oauth` block.
 
 !!! info "Scopes"
-    You do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
+    For read access you do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
+
+    If you set `query_mode` to `read-write`, the server also requests the `mcp:write` scope, and a token without it cannot perform writes. You must define that scope in your identity provider first. See [Write support](../intro/write-support.md) for how writes are authorized, and [Auth0](auth0/index.md) or [Keycloak](keycloak/index.md) for the setup steps.
 
 
 ## User Impersonation

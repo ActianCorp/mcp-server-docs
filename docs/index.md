@@ -164,9 +164,9 @@ docker run -e INFORMIXSERVER=myserver \
       <a href="./authentication/index.html" class="primary-link">Set Up Authentication →</a>
     </div>
     <div class="feature-item">
-      <h4 class="feature-title">Enforced Read-only Mode</h4>
-      <p class="feature-description">Configuration toggles guarantee that AI agents can read data but can never modify or delete it.</p>
-      <a href="./intro/index.html" class="primary-link">Learn about Read-only Mode →</a>
+      <h4 class="feature-title">Read-only by Default</h4>
+      <p class="feature-description">Agents cannot modify or delete data unless you enable write mode. Once enabled, every write still requires an authorized scope and human approval.</p>
+      <a href="./intro/write-support.html" class="primary-link">Learn about Write Support →</a>
     </div>
     <div class="feature-item">
       <h4 class="feature-title"> Comprehensive Audit Trails</h4>
