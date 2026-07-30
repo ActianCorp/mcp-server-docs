@@ -136,7 +136,7 @@ sequenceDiagram
         Server->>Plugin: SET SESSION AUTHORIZATION
     end
 
-    Plugin->>DB: Execute read-only queries
+    Plugin->>DB: Execute query
     DB-->>Plugin: Query results
     Plugin-->>Server: Formatted response
     Server-->>Transport: MCP response
