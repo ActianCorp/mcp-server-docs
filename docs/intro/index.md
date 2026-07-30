@@ -84,7 +84,10 @@ JWT Validation"]
     end
 
     subgraph Security["Security Controls"]
-        readonly["Read-only Mode"]
+        readonly["Query Mode
+(read-only by default)"]
+        writegate["Write Gates
+(mcp:write scope + approval)"]
         impersonation["User Impersonation
 (SET SESSION AUTHORIZATION)"]
         tls["TLS / HTTPS"]
@@ -157,8 +160,11 @@ sequenceDiagram
 - :material-transit-connection-horizontal: **HTTP/HTTPS Transport**  
   Operates in `HTTP` transport mode to simplify network connectivity.
 
-- :material-eye-lock: **Read-only Mode**  
+- :material-eye-lock: **Read-only by Default**  
   Restricts AI agents to read-only operations, preventing unintended modifications to the data.
+
+- :material-database-edit: **Controlled Write Access**  
+  Allows `INSERT`, `UPDATE`, and `DELETE` when you opt in, with each write gated by an OAuth scope and human approval. See [Write support](write-support.md).
 
 - :material-database-search: **Schema Discovery**  
   Enables AI agents to review database structures and metadata before executing queries.
