@@ -1,0 +1,41 @@
+{
+    "database": "<your_database>",
+    "dsn": "<your_informix_odbc_dsn>",
+    "max_connections": 4,
+    "max_rows": 100,
+    "query_mode": "read-write",
+    "host": "0.0.0.0",
+    "port": 8000,
+    "extensions": [
+        {
+            "module": "order_ops",
+            "config": {
+                "orders_table": "orders",
+                "order_items_table": "order_items",
+                "products_table": "products",
+                "cart_table": "cart"
+            }
+        },
+        {
+            "module": "catalog_insights",
+            "config": { "products_table": "products", "low_stock_threshold": 10 }
+        },
+        {
+            "module": "approval_required",
+            "config": { "products_table": "products" }
+        },
+        {
+            "module": "catalog_resources",
+            "config": { "products_table": "products", "low_stock_threshold": 10 }
+        },
+        {
+            "module": "revenue_extension",
+            "config": {
+                "default_region": "NA",
+                "revenue_table": "customer_revenue",
+                "customers_table": "customers",
+                "sales_table": "sales"
+            }
+        }
+    ]
+}
