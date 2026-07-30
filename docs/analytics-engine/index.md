@@ -94,6 +94,7 @@ Create a file named `conf.json` in your working directory using the following st
 | `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block).|
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md).|
 | `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt).|
+| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md).|
 
 
 ## Start the Server
@@ -137,5 +138,8 @@ Once connected, the MCP client automatically discovers the server capabilities. 
 
 - :material-message-text: **[Prompts](prompts/index.md)**  
   Use the built-in prompt templates for common workflows.
+
+- :material-puzzle: **[Extensions](../extensions/index.md)**  
+  Add your own tools to the server with a Python extension.
 
 </div>

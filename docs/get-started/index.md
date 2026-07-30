@@ -53,6 +53,7 @@ All database configurations except NoSQL share the following standard MCP server
 | `oauth` | Object | No | OAuth 2.0 configuration settings for authentication. For more information, see [Authentication Guide](../authentication/index.md)|
 | `query_mode` | String | No | Whether data-modifying SQL is permitted. Valid values: `read-only`, `read-write`. Defaults to `read-only`. For more information, see [Write support](../intro/write-support.md)|
 | `write_confirmation` | Boolean | No | Whether a write requires human approval before it runs. Defaults to `true`. Applies only when `query_mode` is `read-write`. For more information, see [Write support](../intro/write-support.md#skipping-the-approval-prompt)|
+| `extensions` | Array | No | Extension modules that add your own tools to the server. For more information, see [Extensions](../extensions/index.md)|
 
 !!! note "Configuration File Protection"
     The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control.

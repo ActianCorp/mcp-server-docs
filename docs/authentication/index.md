@@ -83,6 +83,8 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 
 By default, the `user_impersonation` field is set to `true`. The server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
 
+Impersonation covers extension-authored tools as well as the built-in ones, so an extension is also bounded by the end user's own database privileges. See [Extensions](../extensions/index.md#statements-run-as-the-end-user).
+
 |  user_impersonation | Server |
 | :------------------- | :------- |
 | `true` (default) | Verify the `JWT` and run `SET SESSION AUTHORIZATION "<user>"` for each query. Every OAuth user needs a matching database account. |

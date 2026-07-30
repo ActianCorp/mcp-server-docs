@@ -94,6 +94,7 @@ Create a file named `conf.json` in the working directory and define the environm
 | `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) |
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md) |
 | `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt) |
+| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md) |
 
 ---
 
@@ -125,5 +126,8 @@ Once the container is running, you can connect the MCP client to the server usin
 
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
   Access pre-built templates for common database workflows
+
+- :material-puzzle: **[Extensions](../extensions/index.md)**  
+  Add your own tools to the server with a Python extension.
 
 </div>

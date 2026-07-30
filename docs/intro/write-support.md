@@ -9,6 +9,8 @@ By default, the Actian MCP Server permits only read queries. Set `query_mode` to
 
 Write support is off unless you turn it on. Existing read-only deployments are unaffected.
 
+Extensions can write too, through the same authorization checks described below. See [Extensions](../extensions/index.md).
+
 Which tools accept a write, and how, depends on the database. See the Tools page for your database, for example [Ingres tools](../ingres/tools/index.md) or [Analytics Engine tools](../analytics-engine/tools/index.md). The `query_mode` setting and the authorization checks described below apply the same way regardless of which tool performs the write.
 
 ## Enabling write mode
@@ -87,6 +89,8 @@ Some clients cannot display the approval prompt. For those deployments, set `wri
     With `write_confirmation` set to `false`, the server runs `INSERT`, `UPDATE`, and `DELETE` statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and you accept that the AI agent writes unattended.
 
     The `mcp:write` scope check still applies. Disabling the prompt does not grant write access to callers that lack the scope.
+
+    This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See [Extensions](../extensions/index.md#security-controls-that-apply-to-your-extension).
 
 The server records what it skipped. At startup it logs a warning banner stating that write confirmation is disabled, and it logs a warning for each write that ran without approval. Those entries name the tool only. They never include the statement text or the row values.
 
