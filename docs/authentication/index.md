@@ -124,7 +124,7 @@ flowchart TD
 !!! tip "Provider-Specific Behavior"
     - **Auth0**: Does not return `username` or `preferred_username` by default. The server usually falls back to the email prefix. Ensure that the database usernames match the email prefixes, for example, create database user `jdoe` for `jdoe@example.com`.
     - **Keycloak**: Returns `preferred_username` by default when the `profile` scope is present. Create database users that match the Keycloak login names.
-    - **Federated SSO (Google, SAML)**: The `sub` claim often generates a provider-specific ID (like `google-oauth2|12345`) that does not match a database account. For SSO setups, ensure the IdP profile passes a valid database `username` or set `user_impersonation` to `false`.  
+    - **Either provider, when users sign in through an upstream connection**: Auth0 and Keycloak can both broker logins from Google, Microsoft Entra, SAML, or corporate single sign-on. In that case the `sub` claim carries a provider-specific ID such as `google-oauth2|12345`. The server strips the prefix and is left with `12345`, which is unlikely to match a database account. Map a usable `username` in the provider's user profile, or set `user_impersonation` to `false`.  
 
 ## Secure Remote Deployments with HTTPS and TLS
 
