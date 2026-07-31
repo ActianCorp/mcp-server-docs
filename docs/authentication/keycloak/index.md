@@ -13,9 +13,9 @@ By the completion of this guide, you will have obtained the values that are requ
     FastMCP uses a generic OIDC provider. While there is no dedicated Keycloak class, the server uses the `OIDCProxy` provider, which is compatible with any OIDC-compliant identity provider.
 
 
-## Quick Start - Existing Keycloak User
+## Quick Start
 
-If you are an experienced Keycloak user, use the following checklist to set up the environment:
+The checklist below is the whole procedure in brief. Use it if you already know your way around the Keycloak Admin Console. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.
 
 1. **Create a realm** (or use an existing one).
 2. **Create a client** with _Client authentication_ enabled and record the **Client ID** and **Client Secret**.
@@ -31,7 +31,7 @@ If you are an experienced Keycloak user, use the following checklist to set up t
 8. **Start the server** with `--transport sse`or `http` / `streamable-http`.
 
 
-## Prerequisites - New Keycloak User
+## Prerequisites
 
 - A running Keycloak instance (version 22 or higher) is accessible by the MCP server.
 - Admin access is granted to the Keycloak Admin Console.

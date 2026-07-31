@@ -14,9 +14,9 @@ For details on shared security concepts like TLS and user impersonation, see [Au
     [FastMCP Auth0 Integration](https://gofastmcp.com/integrations/auth0)
 
 
-## Quick Start - Existing Auth0 User
+## Quick Start
 
-If you are an experienced Auth0 user, use the following checklist to set up the environment:
+The checklist below is the whole procedure in brief. Use it if you already know your way around the Auth0 Dashboard. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.
 
 1. **Create an API:** Navigate to **Applications** > **APIs** > **Create API**. The **Identifier** serves as the `FASTMCP_SERVER_AUTH_AUDIENCE`.
 2. **Create an Application:** Navigate to **Applications** > **Applications** > **Create Application**. Select **Machine to Machine**. Authorize it for the API when prompted. Copy the **Client ID** and **Client Secret**.
@@ -32,7 +32,7 @@ If you are an experienced Auth0 user, use the following checklist to set up the 
 8. **Start the server:** Launch the server using the `--transport sse` or `http` / `streamable-http` flag.
 
 
-## Prerequisites - New Auth0 User
+## Prerequisites
 
 - An Auth0 account ([sign up free](https://auth0.com/signup)).
 - An Auth0 **Tenant** (created automatically on sign-up, for example, `dev-abc123`).
