@@ -248,6 +248,15 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 !!! warning "Add it as Optional, not Default"
     An optional scope is issued only when the caller asks for it, which is what the MCP server does when `query_mode` is `read-write`. If you add `mcp:write` as a default scope instead, every token issued to this client carries write access whether it was requested or not, and the scope no longer distinguishes read-only callers from write-capable ones.
 
+### Which users can obtain the scope
+
+In Keycloak a client scope is attached to a **client**, not to a user. Any user who authenticates through this client and requests `scope=openid mcp:write` receives it. Keycloak roles do not change that, because the server authorizes writes from the token's `scope` claim rather than from roles.
+
+!!! important "Restrict writes per user in the database, not in Keycloak"
+    Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. Because `user_impersonation` runs each statement as the authenticated user, the effective control is the privileges you grant that user in the database. Grant `INSERT`, `UPDATE`, and `DELETE` only to the accounts that should have them, and leave the others with `SELECT`. A user who obtains `mcp:write` still cannot change a table they hold no write privilege on.
+
+    This differs from Auth0, where the permission is assigned through a role and users without that role cannot obtain it at all. If you need the scope itself withheld per user, use a separate Keycloak client for read-only callers and attach `mcp:write` only to the client used by writers.
+
 ### Verification
 
 Confirm the realm advertises the scope:
@@ -440,6 +449,7 @@ Keycloak tokens have a configurable lifetime:
 | **Discovery URL format** | `https://<domain>/.well-known/openid-configuration` | `http://<host>/realms/<realm>/.well-known/openid-configuration` |
 | **Self-hosted** | No (SaaS only) | Yes (self-hosted or cloud) |
 | **Token lifetime config** | API Settings > Token Expiration | Realm Settings > Tokens|
+| **`mcp:write` model** | An API permission granted through a role, so it can be withheld from individual users | An optional client scope attached to the client, so any user of that client can request it. Control writes with database privileges instead |
 
 
 ## Staging versus Production

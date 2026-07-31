@@ -266,7 +266,7 @@ Defining `mcp:write` on the API in [Step 1.1](#step-11-add-the-write-scope-read-
 4. Select your API, for example `Actian MCP Server`, select the `mcp:write` permission, and add it.
 5. On the role's **Users** tab, select **Add Users** and assign the users who are allowed to write.
 
-Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects their writes.
+Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see [which users can obtain the scope](../keycloak/index.md#which-users-can-obtain-the-scope) there.
 
 !!! warning "The database still decides what a user can change"
     The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Step 4.2](#step-42-create-the-matching-database-user).
