@@ -79,6 +79,11 @@ repo_name: Support
 
 # Analytics (Google Analytics 4) + page feedback widget
 extra:
+  # Version selector (powered by mike). `default` is the version the
+  # "you're viewing an older version" banner compares against.
+  version:
+    provider: mike
+    default: latest
   analytics:
     provider: custom
     property: G-NHC5CN295F

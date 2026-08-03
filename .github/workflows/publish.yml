@@ -1,4 +1,11 @@
-name: Publish MkDocs Documentation
+name: Publish MkDocs Documentation (v1.1 — latest)
+
+# Builds the docs from `main` and publishes them as version "1.1" with the
+# "latest" alias, using mike. mike commits each version into its own
+# subdirectory of the gh-pages branch and maintains versions.json, which the
+# Material theme reads to render the version selector. Version 1.0 is published
+# separately from the release/mcp-server-1.0.doc branch and is preserved here
+# because mike only touches the version it deploys.
 
 on:
   push:
@@ -6,12 +13,19 @@ on:
       - main
   workflow_dispatch:
 
+# Required so the default GITHUB_TOKEN can push to the gh-pages branch.
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Full history so mike can read/update the existing gh-pages branch.
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -21,14 +35,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install mkdocs mkdocs-material
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install -r requirements.txt
 
-      - name: Build documentation
-        run: mkdocs build
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+      - name: Deploy 1.1 as latest
+        run: |
+          mike deploy --push --update-aliases 1.1 latest
+          mike set-default --push latest
