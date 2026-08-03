@@ -652,3 +652,36 @@ html .md-footer-meta.md-typeset a:focus {
     line-height: 36px;
   }
 }
+
+/* ---- Announcement bar ("1.1 is latest" notification) ----
+   Teal background with centered content and the dismiss (×) button
+   pinned to the right, matching the docs.actian.com banner style. */
+.md-banner {
+  background-color: #0b7285;
+  color: #fff;
+  font-size: 0.7rem;
+  /* Match the main content font (same token used across the portal). */
+  font-family: var(--md-text-font);
+}
+.md-banner .md-announce-banner {
+  font-family: var(--md-text-font);
+}
+.md-banner__inner {
+  /* Center the message; the dismiss button floats to the right (Material
+     default), so pad the right side to keep the text visually centered.
+     Tight vertical margin keeps the bar short. */
+  text-align: center;
+  padding-right: 2.4rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+.md-banner .md-announce-banner strong {
+  font-weight: 700;
+}
+.md-banner a {
+  color: #fff;
+  text-decoration: underline;
+}
+.md-banner__button {
+  color: #fff;
+}
