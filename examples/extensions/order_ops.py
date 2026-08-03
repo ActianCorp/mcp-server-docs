@@ -50,6 +50,10 @@ def register(server, config):
         prod = await db.query(
             f"SELECT name, unit_price, stock_qty FROM {products_t} WHERE product_id = ?",
             [product_id])
+        # query() reports failure in the result dict rather than raising, so check
+        # success before indexing: a failed read has no "rows" key.
+        if not prod["success"]:
+            return json.dumps(prod, default=str)
         if not prod["rows"]:
             return json.dumps({"success": False, "error": f"product {product_id} does not exist"})
         name, unit_price, stock = prod["rows"][0]
@@ -116,12 +120,16 @@ def register(server, config):
         header = await db.query(
             f"SELECT order_id, customer_id, status, total FROM {orders_t} "
             f"WHERE order_id = ?", [order_id])
+        if not header["success"]:
+            return json.dumps(header, default=str)
         if not header["rows"]:
             return json.dumps({"success": False, "error": f"order {order_id} not found"})
         h = header["rows"][0]
         items = await db.query(
             f"SELECT product_id, qty, line_total FROM {items_t} WHERE order_id = ?",
             [order_id])
+        if not items["success"]:
+            return json.dumps(items, default=str)
         return json.dumps({
             "success": True,
             "order": {"order_id": h[0], "customer_id": h[1], "status": h[2], "total": h[3]},
