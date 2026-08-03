@@ -17,6 +17,7 @@ theme:
   icon:
     repo: material/lifebuoy
   features:
+    - announce.dismiss
     - navigation.sections
     - navigation.expand
     - navigation.indexes

@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 
+{# ── Announcement bar. The dismiss (×) button and its "remember dismissal"
+      behaviour come from Material automatically once the `announce.dismiss`
+      theme feature is enabled in mkdocs.yml. Text-only so it renders
+      correctly on any deploy host. ── #}
+{% block announce %}
+  <span class="md-announce-banner">
+    &#127881; Version <strong>1.1</strong> is now the latest release of the Actian MCP Server documentation.
+  </span>
+{% endblock %}
+
 {% block content %}
   {# ── Raw Markdown link — shown on every doc page (relative URL so it
         works regardless of deploy host). Skipped on pages with `hide`. ── #}
