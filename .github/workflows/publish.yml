@@ -1,10 +1,19 @@
-name: Publish MkDocs Documentation
+name: Publish MkDocs Documentation (v1.0)
+
+# Builds the docs from the 1.0 release branch and publishes them as version
+# "1.0" using mike. No alias and not the default: 1.0 is selectable in the
+# version dropdown but visitors land on the default ("latest" = 1.1). mike
+# writes 1.0 into its own subdirectory of gh-pages without disturbing 1.1.
 
 on:
   push:
     branches:
-      - main
+      - release/mcp-server-1.0.doc
   workflow_dispatch:
+
+# Required so the default GITHUB_TOKEN can push to the gh-pages branch.
+permissions:
+  contents: write
 
 jobs:
   deploy:
@@ -12,6 +21,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Full history so mike can read/update the existing gh-pages branch.
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -21,14 +33,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install mkdocs mkdocs-material
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install -r requirements.txt
 
-      - name: Build documentation
-        run: mkdocs build
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+      - name: Deploy 1.0
+        run: mike deploy --push 1.0
