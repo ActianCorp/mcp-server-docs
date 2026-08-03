@@ -5,6 +5,7 @@ nav:
   - get-started
   - mcp-clients
   - authentication
+  - extensions
   - ingres
   - hcl-informix
   - zen

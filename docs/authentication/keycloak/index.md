@@ -13,9 +13,9 @@ By the completion of this guide, you will have obtained the values that are requ
     FastMCP uses a generic OIDC provider. While there is no dedicated Keycloak class, the server uses the `OIDCProxy` provider, which is compatible with any OIDC-compliant identity provider.
 
 
-## Quick Start - Existing Keycloak User
+## Quick Start
 
-If you are an experienced Keycloak user, use the following checklist to set up the environment:
+The checklist below is the whole procedure in brief. Use it if you already know your way around the Keycloak Admin Console. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.
 
 1. **Create a realm** (or use an existing one).
 2. **Create a client** with _Client authentication_ enabled and record the **Client ID** and **Client Secret**.
@@ -25,12 +25,13 @@ If you are an experienced Keycloak user, use the following checklist to set up t
         If you skip this step, the MCP Server rejects tokens with `audience mismatch`.
 
 4. **(Optional)** Add a **sub override mapper** to the `sub` claim containing the username instead of a UUID.
-5. **Create users** in the realm, if using `user_impersonation: true`.
-6. **Fill `conf.json`** file with the values from [Step 1](#step-1-create-a-keycloak-realm) to [Step 3](#step-3-add-the-audience-mapper-required).
-7. **Start the server** with `--transport sse`or `http` / `streamable-http`.
+5. **Create an `mcp:write` client scope** and attach it to the client as **Optional**, if `query_mode` is `read-write`. See [Step 5](#step-5-add-the-write-scope-read-write-deployments-only).
+6. **Create users** in the realm, if using `user_impersonation: true`.
+7. **Fill `conf.json`** file with the values from [Step 1](#step-1-create-a-keycloak-realm) to [Step 3](#step-3-add-the-audience-mapper-required).
+8. **Start the server** with `--transport sse`or `http` / `streamable-http`.
 
 
-## Prerequisites - New Keycloak User
+## Prerequisites
 
 - A running Keycloak instance (version 22 or higher) is accessible by the MCP server.
 - Admin access is granted to the Keycloak Admin Console.
@@ -217,7 +218,61 @@ After adding the mapper, the token contains the following:
     Instead of overriding `sub`, you can rely on the `preferred_username` claim (included by default when the `profile` scope is present). The MCP server's username extraction priority uses `preferred_username` before `sub`, so it works automatically without any mapper changes.
 
 
-## Step 5: Create Keycloak Users (If Using User Impersonation)
+## Step 5: Add the Write Scope (Read-Write Deployments Only)
+
+Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
+
+When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../../intro/write-support.md).
+
+### Step 5.1: Create the Client Scope
+
+1. Navigate to **Client scopes** in the left sidebar and select **Create client scope**.
+2. Configure the following fields:
+
+    | Field | Value | Notes |
+    |-------|-------|-------|
+    | **Name** | `mcp:write` | Must match exactly. This is the value the server requests. |
+    | **Description** | `MCP database write access` | Acts as a label |
+    | **Type** | `None` | You attach it to the client in Step 5.2 |
+    | **Protocol** | `openid-connect` | NA |
+    | **Include in token scope** | `On` | Puts the scope in the token's `scope` claim, where the server reads it |
+
+3. Select **Save**.
+
+### Step 5.2: Attach the Scope to the Client as Optional
+
+1. Navigate to **Clients** > your client, for example `actian-mcp`, and select the **Client scopes** tab.
+2. Select **Add client scope**.
+3. Select `mcp:write`, then select **Add** > **Optional**.
+
+!!! warning "Add it as Optional, not Default"
+    An optional scope is issued only when the caller asks for it, which is what the MCP server does when `query_mode` is `read-write`. If you add `mcp:write` as a default scope instead, every token issued to this client carries write access whether it was requested or not, and the scope no longer distinguishes read-only callers from write-capable ones.
+
+### Which users can obtain the scope
+
+In Keycloak a client scope is attached to a **client**, not to a user. Any user who authenticates through this client and requests `scope=openid mcp:write` receives it. Keycloak roles do not change that, because the server authorizes writes from the token's `scope` claim rather than from roles.
+
+!!! important "Restrict writes per user in the database, not in Keycloak"
+    Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. Because `user_impersonation` runs each statement as the authenticated user, the effective control is the privileges you grant that user in the database. Grant `INSERT`, `UPDATE`, and `DELETE` only to the accounts that should have them, and leave the others with `SELECT`. A user who obtains `mcp:write` still cannot change a table they hold no write privilege on.
+
+    This differs from Auth0, where the permission is assigned through a role and users without that role cannot obtain it at all. If you need the scope itself withheld per user, use a separate Keycloak client for read-only callers and attach `mcp:write` only to the client used by writers.
+
+### Verification
+
+Confirm the realm advertises the scope:
+
+```bash
+curl -s https://<keycloak-host>:8443/realms/actian-mcp/.well-known/openid-configuration \
+  | grep -o '"scopes_supported":\[[^]]*\]'
+```
+
+The output contains `mcp:write`. Then, on the client's **Client scopes** tab, confirm `mcp:write` is listed with the **Optional** assigned type.
+
+!!! warning "The database still decides what a user can change"
+    The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Creating Matching Database User](#creating-matching-database-user).
+
+
+## Step 6: Create Keycloak Users (If Using User Impersonation)
 
 If `user_impersonation` is `true`, each Keycloak user contains a matching database account. For more information, see [User Impersonation](../index.md#user-impersonation).
 
@@ -260,7 +315,7 @@ GRANT SELECT ON TABLE products TO jdoe;
     If Keycloak federates users from an external LDAP or social provider, the `sub` claim may be a UUID that does not match a database account. Ensure that the federated users have `preferred_username` set, or add the sub-override mapper ([Step 4](#step-4-optional-add-the-sub-override-mapper)), or set `user_impersonation: false`.
 
 
-## Step 6: Assemble the Final Configuration
+## Step 7: Assemble the Final Configuration
 
 ### Mapping Summary
 
@@ -394,6 +449,7 @@ Keycloak tokens have a configurable lifetime:
 | **Discovery URL format** | `https://<domain>/.well-known/openid-configuration` | `http://<host>/realms/<realm>/.well-known/openid-configuration` |
 | **Self-hosted** | No (SaaS only) | Yes (self-hosted or cloud) |
 | **Token lifetime config** | API Settings > Token Expiration | Realm Settings > Tokens|
+| **`mcp:write` model** | An API permission granted through a role, so it can be withheld from individual users | An optional client scope attached to the client, so any user of that client can request it. Control writes with database privileges instead |
 
 
 ## Staging versus Production
