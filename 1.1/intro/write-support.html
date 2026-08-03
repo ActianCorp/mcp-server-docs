@@ -6,35 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Built-in resources available when using the Actian MCP Server with Actian Analytics Engine.">
+        <meta name="description" content="Enable data-modifying SQL on the Actian MCP Server with query_mode, and understand the scope check and human approval that authorize every write.">
       
       
       
-        <link rel="canonical" href="https://docs.actian.com/mcp-server/1.1/analytics-engine/resources/index.html">
+        <link rel="canonical" href="https://docs.actian.com/mcp-server/1.1/intro/write-support.html">
       
       
-        <link rel="prev" href="../tools/index.html">
+        <link rel="prev" href="index.html">
       
       
-        <link rel="next" href="../prompts/index.html">
+        <link rel="next" href="../get-started/index.html">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.png">
+      <link rel="icon" href="../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Resources - Actian MCP Server</title>
+        <title>Write Support - Actian MCP Server</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,11 +53,11 @@
       
     
     
-      <link rel="stylesheet" href="../../stylesheets/site-theme.css">
+      <link rel="stylesheet" href="../stylesheets/site-theme.css">
     
-      <link rel="stylesheet" href="../../stylesheets/minichat.css">
+      <link rel="stylesheet" href="../stylesheets/minichat.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#resources" class="md-skip">
+        <a href="#write-support" class="md-skip">
           Skip to content
         </a>
       
@@ -116,9 +116,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../index.html" title="Actian MCP Server" class="md-header__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
+    <a href="../index.html" title="Actian MCP Server" class="md-header__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
       
-  <img src="../../assets/images/actian-logo.svg" alt="logo">
+  <img src="../assets/images/actian-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -135,7 +135,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Resources
+              Write Support
             
           </span>
         </div>
@@ -258,9 +258,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../index.html" title="Actian MCP Server" class="md-nav__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
+    <a href="../index.html" title="Actian MCP Server" class="md-nav__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
       
-  <img src="../../assets/images/actian-logo.svg" alt="logo">
+  <img src="../assets/images/actian-logo.svg" alt="logo">
 
     </a>
     Actian MCP Server
@@ -287,7 +287,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../index.html" class="md-nav__link">
+      <a href="../index.html" class="md-nav__link">
         
   
   
@@ -311,6 +311,8 @@
       
   
   
+    
+  
   
   
     
@@ -331,17 +333,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../intro/index.html" class="md-nav__link ">
+            <a href="index.html" class="md-nav__link ">
               
   
   
@@ -365,7 +365,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -382,10 +382,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../intro/write-support.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write Support
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="write-support.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -401,6 +428,72 @@
   
 
       </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-write-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enabling write mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-a-write-is-authorized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a write is authorized
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skipping-the-approval-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skipping the approval prompt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -445,7 +538,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../get-started/index.html" class="md-nav__link ">
+            <a href="../get-started/index.html" class="md-nav__link ">
               
   
   
@@ -516,7 +609,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../mcp-clients/index.html" class="md-nav__link ">
+            <a href="../mcp-clients/index.html" class="md-nav__link ">
               
   
   
@@ -591,7 +684,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../authentication/index.html" class="md-nav__link ">
+            <a href="../authentication/index.html" class="md-nav__link ">
               
   
   
@@ -657,7 +750,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../authentication/auth0/index.html" class="md-nav__link ">
+            <a href="../authentication/auth0/index.html" class="md-nav__link ">
               
   
   
@@ -726,7 +819,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../authentication/keycloak/index.html" class="md-nav__link ">
+            <a href="../authentication/keycloak/index.html" class="md-nav__link ">
               
   
   
@@ -809,7 +902,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../extensions/index.html" class="md-nav__link ">
+            <a href="../extensions/index.html" class="md-nav__link ">
               
   
   
@@ -853,7 +946,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../extensions/examples.html" class="md-nav__link">
+      <a href="../extensions/examples.html" class="md-nav__link">
         
   
   
@@ -881,7 +974,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../extensions/api-reference.html" class="md-nav__link">
+      <a href="../extensions/api-reference.html" class="md-nav__link">
         
   
   
@@ -947,7 +1040,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../ingres/index.html" class="md-nav__link ">
+            <a href="../ingres/index.html" class="md-nav__link ">
               
   
   
@@ -1013,7 +1106,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../ingres/tools/index.html" class="md-nav__link ">
+            <a href="../ingres/tools/index.html" class="md-nav__link ">
               
   
   
@@ -1082,7 +1175,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../ingres/resources/index.html" class="md-nav__link ">
+            <a href="../ingres/resources/index.html" class="md-nav__link ">
               
   
   
@@ -1151,7 +1244,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../ingres/prompts/index.html" class="md-nav__link ">
+            <a href="../ingres/prompts/index.html" class="md-nav__link ">
               
   
   
@@ -1236,7 +1329,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/index.html" class="md-nav__link ">
               
   
   
@@ -1302,7 +1395,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/tools/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/tools/index.html" class="md-nav__link ">
               
   
   
@@ -1371,7 +1464,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/resources/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/resources/index.html" class="md-nav__link ">
               
   
   
@@ -1440,7 +1533,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/prompts/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/prompts/index.html" class="md-nav__link ">
               
   
   
@@ -1525,7 +1618,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/index.html" class="md-nav__link ">
+            <a href="../zen/index.html" class="md-nav__link ">
               
   
   
@@ -1591,7 +1684,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/tools/index.html" class="md-nav__link ">
+            <a href="../zen/tools/index.html" class="md-nav__link ">
               
   
   
@@ -1660,7 +1753,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/resources/index.html" class="md-nav__link ">
+            <a href="../zen/resources/index.html" class="md-nav__link ">
               
   
   
@@ -1729,7 +1822,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/prompts/index.html" class="md-nav__link ">
+            <a href="../zen/prompts/index.html" class="md-nav__link ">
               
   
   
@@ -1816,7 +1909,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/index.html" class="md-nav__link ">
+            <a href="../nosql/index.html" class="md-nav__link ">
               
   
   
@@ -1886,7 +1979,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/authentication/index.html" class="md-nav__link ">
+            <a href="../nosql/authentication/index.html" class="md-nav__link ">
               
   
   
@@ -1952,7 +2045,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/authentication/auth0/index.html" class="md-nav__link ">
+            <a href="../nosql/authentication/auth0/index.html" class="md-nav__link ">
               
   
   
@@ -2021,7 +2114,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/authentication/keycloak/index.html" class="md-nav__link ">
+            <a href="../nosql/authentication/keycloak/index.html" class="md-nav__link ">
               
   
   
@@ -2098,7 +2191,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/tools/index.html" class="md-nav__link ">
+            <a href="../nosql/tools/index.html" class="md-nav__link ">
               
   
   
@@ -2167,7 +2260,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/resources/index.html" class="md-nav__link ">
+            <a href="../nosql/resources/index.html" class="md-nav__link ">
               
   
   
@@ -2236,7 +2329,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/prompts/index.html" class="md-nav__link ">
+            <a href="../nosql/prompts/index.html" class="md-nav__link ">
               
   
   
@@ -2287,8 +2380,6 @@
       
   
   
-    
-  
   
   
     
@@ -2313,15 +2404,17 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../index.html" class="md-nav__link ">
+            <a href="../analytics-engine/index.html" class="md-nav__link ">
               
   
   
@@ -2345,7 +2438,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2387,7 +2480,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../tools/index.html" class="md-nav__link ">
+            <a href="../analytics-engine/tools/index.html" class="md-nav__link ">
               
   
   
@@ -2431,8 +2524,6 @@
                 
   
   
-    
-  
   
   
     
@@ -2448,15 +2539,17 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_3" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11_3" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="index.html" class="md-nav__link md-nav__link--active">
+            <a href="../analytics-engine/resources/index.html" class="md-nav__link ">
               
   
   
@@ -2475,7 +2568,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2525,7 +2618,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../prompts/index.html" class="md-nav__link ">
+            <a href="../analytics-engine/prompts/index.html" class="md-nav__link ">
               
   
   
@@ -2601,10 +2694,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#available-resources" class="md-nav__link">
+  <a href="#enabling-write-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Resources
+        Enabling write mode
       
     </span>
   </a>
@@ -2612,52 +2705,24 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#resourcedatabaseschema" class="md-nav__link">
+  <a href="#how-a-write-is-authorized" class="md-nav__link">
     <span class="md-ellipsis">
       
-        resource://database/schema
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="resource://database/schema">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        How a write is authorized
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#skipping-the-approval-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Schema
+        Skipping the approval prompt
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2697,7 +2762,7 @@
   
   
     <li class="md-path__item">
-      <a href="../../index.html" class="md-path__link">
+      <a href="../index.html" class="md-path__link">
         
   <span class="md-ellipsis">
     Home
@@ -2715,28 +2780,10 @@
     
     
       <li class="md-path__item">
-        <a href="../index.html" class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Analytics Engine
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-    
-    
-      <li class="md-path__item">
         <a href="index.html" class="md-path__link">
           
   <span class="md-ellipsis">
-    Resources
+    Introduction
   </span>
 
         </a>
@@ -2752,7 +2799,7 @@
               <article class="md-content__inner md-typeset">
                 
   
-  <a href="index.md" class="md-raw-link" target="_blank" rel="noopener" title="View this page as plain text Markdown">
+  <a href="write-support.md" class="md-raw-link" target="_blank" rel="noopener" title="View this page as plain text Markdown">
       <span class="md-raw-link__icon">M&#x2193;</span>
       <span class="md-raw-link__body">
         <span class="md-raw-link__title">View as Markdown &#x2197;</span>
@@ -2764,93 +2811,122 @@
 
 
 
-<h1 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h1>
-<p>The Actian MCP Server for the Actian Analytics Engine includes a built-in resource for exploring live schema metadata. This resource is particularly useful for providing context to an LLM, ensuring it understands the table relationships and data types of the specific environment.</p>
-<h2 id="available-resources">Available Resources<a class="headerlink" href="#available-resources" title="Permanent link">&para;</a></h2>
+<h1 id="write-support">Write support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
+<p>By default, the Actian MCP Server permits only read queries. Set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also allow Data Manipulation Language (DML) statements, that is <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>.</p>
+<p>Write support is off unless you turn it on. Existing read-only deployments are unaffected.</p>
+<p>Extensions can write too, through the same authorization checks described below. See <a href="../extensions/index.html">Extensions</a>.</p>
+<p>Which tools accept a write, and how, depends on the database. See the Tools page for your database, for example <a href="../ingres/tools/index.html">Ingres tools</a> or <a href="../analytics-engine/tools/index.html">Analytics Engine tools</a>. The <code>query_mode</code> setting and the authorization checks described below apply the same way regardless of which tool performs the write.</p>
+<h2 id="enabling-write-mode">Enabling write mode<a class="headerlink" href="#enabling-write-mode" title="Permanent link">&para;</a></h2>
+<p>Set <code>query_mode</code> in the <code>conf.json</code> file:</p>
 <table>
 <thead>
 <tr>
-<th>Resource URI</th>
-<th>Description</th>
+<th>Value</th>
+<th>Behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="#resourcedatabaseschema"><code>resource://database/schema</code></a></td>
-<td>Retrieves metadata for the connected database, including tables, columns, and constraints.</td>
+<td><code>read-only</code></td>
+<td>Default. Only read queries are permitted.</td>
+</tr>
+<tr>
+<td><code>read-write</code></td>
+<td>Read queries plus <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> are permitted.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="resourcedatabaseschema">resource://database/schema<a class="headerlink" href="#resourcedatabaseschema" title="Permanent link">&para;</a></h2>
-<p>Use the <code>resource://database/schema</code> URI to fetch the full database schema as a structured JSON object. You can use resource to inspect table and column definitions before you write or execute SQL queries.</p>
-<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
-<p>This resource does not require input parameters.</p>
-<h3 id="output-schema">Output Schema<a class="headerlink" href="#output-schema" title="Permanent link">&para;</a></h3>
-<p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;&lt;table_name&gt;&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;&lt;column_name&gt;&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;dtype&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;column_datatype&gt;&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;column_comment&gt;&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;constraint_definition&gt;&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;table_comment&gt;&quot;</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">&quot;query_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;read-write&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong>Error handling</strong></p>
-<p>If the schema cannot be retrieved, the server returns an error message:</p>
-<div class="language-text highlight"><pre><span></span><code>The database schema could not be retrieved. Error: &lt;error_message&gt;
-</code></pre></div>
-<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-text highlight"><pre><span></span><code>resource://database/schema
-</code></pre></div>
-<p><strong>Response</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Data Definition Language is always blocked</p>
+<p>Enabling write mode does not permit Data Definition Language (DDL) or administrative statements. <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, and <code>GRANT</code> are rejected, and so are <code>SET</code>, <code>ENABLE</code>, <code>DISABLE</code>, and <code>SELECT ... INTO</code>. This is not configurable. Use your database's own tools for schema changes.</p>
+</div>
+<h2 id="how-a-write-is-authorized">How a write is authorized<a class="headerlink" href="#how-a-write-is-authorized" title="Permanent link">&para;</a></h2>
+<p>In <code>read-write</code> mode, every DML statement must pass two independent checks before it reaches the database. Either one can reject it.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>What it requires</th>
+<th>When it applies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mcp:write</code> scope</td>
+<td>The access token must carry the <code>mcp:write</code> scope.</td>
+<td>Only when OAuth is enabled. A read-only server never requests or requires this scope.</td>
+</tr>
+<tr>
+<td>Human approval</td>
+<td>A person must approve the statement in the connected client.</td>
+<td>Always, unless you disable it with <code>write_confirmation</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The scope is checked first, so a caller without it is rejected before anyone is asked to approve anything.</p>
+<pre class="mermaid"><code>%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
+sequenceDiagram
+    participant User as User
+    participant Client as MCP Client
+    participant Server as MCP Server
+    participant DB as Database
+
+    Client-&gt;&gt;Server: Write request (INSERT / UPDATE / DELETE)
+    Server-&gt;&gt;Server: Check mcp:write scope
+    alt Scope missing
+        Server--&gt;&gt;Client: Rejected (authorization error)
+    else Scope present
+        Server-&gt;&gt;Client: Request approval
+        Client-&gt;&gt;User: Show statement, table, and database
+        alt User approves
+            User--&gt;&gt;Client: Approve
+            Client--&gt;&gt;Server: Approved
+            Server-&gt;&gt;DB: Run statement
+            DB--&gt;&gt;Server: Rows affected
+            Server--&gt;&gt;Client: Success
+        else Declined, no response, or client cannot prompt
+            Client--&gt;&gt;Server: Not approved
+            Server--&gt;&gt;Client: Rejected (write not approved)
+        end
+    end</code></pre>
+<p>The approval prompt uses the Model Context Protocol (MCP) elicitation capability, which not every client implements. If the connected client cannot display the prompt, the write is rejected, exactly as if a person had declined it. See <a href="../mcp-clients/index.html#elicitation-support-for-write-approval">Connecting MCP Clients</a> for which clients support it.</p>
+<p>To configure the <code>mcp:write</code> scope in your identity provider, see <a href="../authentication/auth0/index.html">Auth0</a> or <a href="../authentication/keycloak/index.html">Keycloak</a>.</p>
+<h2 id="skipping-the-approval-prompt">Skipping the approval prompt<a class="headerlink" href="#skipping-the-approval-prompt" title="Permanent link">&para;</a></h2>
+<p>Some clients cannot display the approval prompt. For those deployments, set <code>write_confirmation</code> to <code>false</code> in <code>conf.json</code> to run the server's built-in write tools without asking for approval:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;customers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;customer_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;dtype&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Primary key&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;customer_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;dtype&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;varchar&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Customer display name&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;PRIMARY KEY (customer_id)&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Customer master data&quot;</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;orders&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;dtype&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Primary key&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;customer_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;dtype&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Customer reference&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;PRIMARY KEY (order_id)&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sales orders&quot;</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">&quot;query_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;read-write&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;write_confirmation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="p">}</span>
 </code></pre></div>
-<hr />
+<div class="admonition warning">
+<p class="admonition-title">This removes human oversight of every write</p>
+<p>With <code>write_confirmation</code> set to <code>false</code>, the server runs <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and you accept that the AI agent writes unattended.</p>
+<p>The <code>mcp:write</code> scope check still applies. Disabling the prompt does not grant write access to callers that lack the scope.</p>
+<p>This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See <a href="../extensions/index.html#security-controls-that-apply-to-your-extension">Extensions</a>.</p>
+</div>
+<p>The server records what it skipped. At startup it logs a warning banner stating that write confirmation is disabled, and it logs a warning for each write that ran without approval. Those entries name the tool only. They never include the statement text or the row values.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.71 20.29-1.42 1.42a1 1 0 0 1-1.41 0L7 9.85A3.8 3.8 0 0 1 6 10a4 4 0 0 1-3.78-5.3l2.54 2.54.53-.53 1.42-1.42.53-.53L4.7 2.22A4 4 0 0 1 10 6a3.8 3.8 0 0 1-.15 1l11.86 11.88a1 1 0 0 1 0 1.41M2.29 18.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0l5.47-5.46-2.83-2.83M20 2l-4 2v2l-2.17 2.17 2 2L18 8h2l2-4Z"/></svg></span> <strong><a href="../tools/index.html">Tools</a></strong><br />
-  Learn more about the SQL and schema tools provided by the Analytics Engine server.</p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4-3.58 4-8 4-8-1.79-8-4m8.08 11H12c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4h.29a7.4 7.4 0 0 1-.29-2c0-.34.03-.67.08-1M20 12.08V9c0 2.21-3.58 4-8 4s-8-1.79-8-4v3c0 2.21 3.58 4 8 4h.69c1.13-2.37 3.53-4 6.31-4 .34 0 .67.03 1 .08m3.8 8.32c.1 0 .1.1 0 .2l-1 1.7c-.1.1-.2.1-.3.1l-1.2-.4c-.3.2-.5.3-.8.5l-.2 1.3c0 .1-.1.2-.2.2h-2c-.1 0-.2-.1-.3-.2l-.2-1.3c-.3-.1-.6-.3-.8-.5l-1.2.5c-.1 0-.2 0-.3-.1l-1-1.7c-.1-.1 0-.2.1-.3l1.1-.8v-1l-1.1-.8c-.1-.1-.1-.2-.1-.3l1-1.7c.1-.1.2-.1.3-.1l1.2.5c.3-.2.5-.3.8-.5l.2-1.3c0-.1.1-.2.3-.2h2c.1 0 .2.1.2.2l.2 1.3c.3.1.6.3.9.5l1.2-.5c.1 0 .3 0 .3.1l1 1.7c.1.1 0 .2-.1.3l-1.1.8v1zM20.5 19c0-.8-.7-1.5-1.5-1.5s-1.5.7-1.5 1.5.7 1.5 1.5 1.5 1.5-.7 1.5-1.5"/></svg></span> <strong><a href="../ingres/index.html#configuration-reference">Ingres configuration</a></strong><br />
+  The <code>query_mode</code> and <code>write_confirmation</code> fields for Actian Ingres.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2M6 9h12v2H6m8 3H6v-2h8m4-4H6V6h12"/></svg></span> <strong><a href="../prompts/index.html">Prompts</a></strong><br />
-  Use the built-in prompt templates for common workflows.</p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M9 17H7v-7h2zm4 0h-2V7h2zm4 0h-2v-4h2z"/></svg></span> <strong><a href="../analytics-engine/index.html#configuration-reference">Analytics Engine configuration</a></strong><br />
+  The same fields for Actian Analytics Engine.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong><a href="../authentication/index.html">Authentication</a></strong><br />
+  Set up the <code>mcp:write</code> scope in Auth0 or Keycloak.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.4 7.5c.8.8.8 2.1 0 2.8l-2.8 2.8-7.8-7.8 2.8-2.8c.8-.8 2.1-.8 2.8 0l1.8 1.8 3-3 1.4 1.4-3 3zm-5.8 5.8-1.4-1.4-2.8 2.8-2.1-2.1 2.8-2.8-1.4-1.4-2.8 2.8-1.5-1.4-2.8 2.8c-.8.8-.8 2.1 0 2.8l1.8 1.8-4 4 1.4 1.4 4-4 1.8 1.8c.8.8 2.1.8 2.8 0l2.8-2.8-1.4-1.4z"/></svg></span> <strong><a href="../mcp-clients/index.html#elicitation-support-for-write-approval">MCP clients</a></strong><br />
+  Which clients can display the write approval prompt.</p>
 </li>
 </ul>
 </div>
@@ -2874,7 +2950,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 19, 2026 15:33:26 UTC">April 19, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 30, 2026 23:27:07 UTC">July 30, 2026</span>
   </span>
 
     
@@ -2963,7 +3039,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../tools/index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tools">
+          <a href="index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2973,20 +3049,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Tools
+                Introduction
               </div>
             </div>
           </a>
         
         
           
-          <a href="../prompts/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Prompts">
+          <a href="../get-started/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Get Started">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Prompts
+                Get Started
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -3027,20 +3103,20 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.path", "navigation.footer", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.path", "navigation.footer", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
       
         <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
       
-        <script src="../../javascripts/mermaid-init.js"></script>
+        <script src="../javascripts/mermaid-init.js"></script>
       
-        <script src="../../javascripts/extra.js"></script>
+        <script src="../javascripts/extra.js"></script>
       
-        <script src="../../javascripts/MiniChatJavaScript.js" defer></script>
+        <script src="../javascripts/MiniChatJavaScript.js" defer></script>
       
     
   </body>

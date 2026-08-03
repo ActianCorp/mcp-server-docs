@@ -74,12 +74,16 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
     You must either provide all four required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or none. If you include `CONFIG_URL` and `CLIENT_ID`, and omit `CLIENT_SECRET` or `BASE_URL`, the server fails to start and throws a `KeyError`. To disable OAuth, remove the entire `oauth` block.
 
 !!! info "Scopes"
-    You do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
+    For read access you do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
+
+    If you set `query_mode` to `read-write`, the server also requests the `mcp:write` scope, and a token without it cannot perform writes. You must define that scope in your identity provider first. See [Write support](../intro/write-support.md) for how writes are authorized, and [Auth0](auth0/index.md) or [Keycloak](keycloak/index.md) for the setup steps.
 
 
 ## User Impersonation
 
 By default, the `user_impersonation` field is set to `true`. The server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
+
+Impersonation covers extension-authored tools as well as the built-in ones, so an extension is also bounded by the end user's own database privileges. See [Extensions](../extensions/index.md#statements-run-as-the-end-user).
 
 |  user_impersonation | Server |
 | :------------------- | :------- |
@@ -120,7 +124,7 @@ flowchart TD
 !!! tip "Provider-Specific Behavior"
     - **Auth0**: Does not return `username` or `preferred_username` by default. The server usually falls back to the email prefix. Ensure that the database usernames match the email prefixes, for example, create database user `jdoe` for `jdoe@example.com`.
     - **Keycloak**: Returns `preferred_username` by default when the `profile` scope is present. Create database users that match the Keycloak login names.
-    - **Federated SSO (Google, SAML)**: The `sub` claim often generates a provider-specific ID (like `google-oauth2|12345`) that does not match a database account. For SSO setups, ensure the IdP profile passes a valid database `username` or set `user_impersonation` to `false`.  
+    - **Either provider, when users sign in through an upstream connection**: Auth0 and Keycloak can both broker logins from Google, Microsoft Entra, SAML, or corporate single sign-on. In that case the `sub` claim carries a provider-specific ID such as `google-oauth2|12345`. The server strips the prefix and is left with `12345`, which is unlikely to match a database account. Map a usable `username` in the provider's user profile, or set `user_impersonation` to `false`.  
 
 ## Secure Remote Deployments with HTTPS and TLS
 

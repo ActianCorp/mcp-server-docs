@@ -17,6 +17,9 @@ The Actian NoSQL MCP Server supports the following operations:
 | **Run JPQL queries** | Execute read-only queries against your database. |
 | **Retrieve objects by ID** | Fetch one or many objects directly by LOID for the fastest retrieval path. |
 
+!!! note "Extensions for NoSQL"
+    NoSQL supports extensions, but through a different interface with its own API and examples. Documentation for it is not yet available. The [Extensions](../extensions/index.md) guide covers the other databases and does not apply here.
+
 ## Prerequisites
 
 Before starting the server, ensure the following requirements are met:

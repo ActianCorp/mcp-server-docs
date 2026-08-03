@@ -5,7 +5,7 @@ description: Use the Actian MCP Server to connect MCP clients to Actian Ingres.
 
 # Actian MCP Server for Ingres
 
-Connect the MCP-compatible client to Actian Ingres using the Actian MCP Server. This bridge allows the clients to explore schema metadata and execute read-only SQL queries through a standard interface. The server manages connection pooling, response formatting, and schema discovery automatically, allowing you to focus on data analysis.
+Connect the MCP-compatible client to Actian Ingres using the Actian MCP Server. This bridge allows the clients to explore schema metadata and run SQL queries through a standard interface. Queries are read-only unless you enable write mode. The server manages connection pooling, response formatting, and schema discovery automatically, allowing you to focus on data analysis.
 
 ## Capabilities
 
@@ -18,6 +18,10 @@ The Actian MCP Server for Ingres supports the following operations:
 | **Describe table structure** | Retrieve column definitions, types, and comments|
 | **Read schema metadata** | Explore database-level metadata and constraints |
 | **List functions** | View available user-defined functions and procedures|
+| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
+
+!!! note "Write support is opt-in"
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
 
 ---
 
@@ -88,6 +92,9 @@ Create a file named `conf.json` in the working directory and define the environm
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` in the container |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` in the container |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) |
+| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md) |
+| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt) |
+| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md) |
 
 ---
 
@@ -119,5 +126,8 @@ Once the container is running, you can connect the MCP client to the server usin
 
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
   Access pre-built templates for common database workflows
+
+- :material-puzzle: **[Extensions](../extensions/index.md)**  
+  Add your own tools to the server with a Python extension.
 
 </div>
