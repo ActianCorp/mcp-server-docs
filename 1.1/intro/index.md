@@ -169,6 +169,9 @@ sequenceDiagram
 - :material-database-search: **Schema Discovery**  
   Enables AI agents to review database structures and metadata before executing queries.
 
+- :material-puzzle: **Custom Extensions**  
+  Add your own tools, resources, and prompts in Python, served through the same endpoint as the built-in tools and subject to the same authentication and write controls. See [Extensions](../extensions/index.md).
+
 </div>
 
 ## MCP Server Deployment
