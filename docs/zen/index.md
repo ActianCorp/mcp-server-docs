@@ -86,24 +86,25 @@ Use this format when the database requires authentication. This bypasses the con
     Actian Zen does not support `SET SESSION AUTHORIZATION`. If you use OAuth, set `user_impersonation: false` in the `oauth` block. The server logs the authenticated user but does not enforce it at the database level.
 
 
-## Start the Server
+## Start the server
 
-Once the `conf.json` is ready, start the container and mount the configuration file:
+With `conf.json` ready, start the container and mount the configuration file as a
+read-only volume:
 
 ```bash
 docker run -d \
-  --name zen-mcp \
-  -p 8000:8000 \
-  --add-host=host.docker.internal:host-gateway \
-  -v $(pwd)/conf.json:/app/conf.json:ro \
-  actian/zen-mcp-server:latest
+    --name=actian-mcp \
+    -p 8000:8000 \
+    --add-host=host.docker.internal:host-gateway \
+    -v $(pwd)/conf.json:/app/conf.json:ro \
+    actian/zen-mcp-server:latest
 ```
 
 !!! note "Container networking"
     `-p 8000:8000` exposes the server port on the host. `--add-host=host.docker.internal:host-gateway` allows the container to reach services on the host machine (such as the Zen engine on port 1583). Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically; Linux requires the `--add-host` flag.
 
-Once the container is running, connect the MCP client to the exposed server endpoint using the host and port from the configuration.
-
+--8<-- "docker/mount-path-note.md"
+--8<-- "conf/protection-note.md"
 
 ## Usage
 

@@ -93,9 +93,10 @@ Create a file named `conf.json` in your working directory using the following st
 --8<-- "conf/write-fields.md"
 
 
-## Start the Server
+## Start the server
 
-Once you have created the `conf.json` file, start the container and mount the configuration file:
+With `conf.json` ready, start the container and mount the configuration file as a
+read-only volume:
 
 ```bash
 docker run -d \
@@ -105,12 +106,8 @@ docker run -d \
     actian/analytics-engine-mcp-server:1.0.0
 ```
 
-
-!!! important
-	The container reads its configuration from `/app/conf.json`. Do not change the mount target path.
-
-After the container starts, connect the MCP client to the server endpoint using the host and port specified in `conf.json`.
-
+--8<-- "docker/mount-path-note.md"
+--8<-- "conf/protection-note.md"
 
 ## Usage
 

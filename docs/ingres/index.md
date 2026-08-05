@@ -94,9 +94,10 @@ Create a file named `conf.json` in the working directory and define the environm
 
 ---
 
-## Start the Server
+## Start the server
 
-With the `conf.json` file ready, run the following Docker command to start the container. This command mounts the configuration file as a read-only volume.
+With `conf.json` ready, start the container and mount the configuration file as a
+read-only volume:
 
 ```bash
 docker run -d \
@@ -106,9 +107,8 @@ docker run -d \
     actian/ingres-mcp-server:1.0.0
 ```
 
-Once the container is running, you can connect the MCP client to the server using the host and port specified in the configuration.
-
---- 
+--8<-- "docker/mount-path-note.md"
+--8<-- "conf/protection-note.md"
 
 ## Next Steps
 

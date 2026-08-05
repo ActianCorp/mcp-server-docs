@@ -93,31 +93,22 @@ Create a file named `conf.json` in the working directory and include the specifi
 
 ---
 
-## Start the Server
+## Start the server
 
-In the `conf.json` set host address to `0.0.0.0`. Once the `conf.json` file is ready, start the container and mount the configuration file as `/app/conf.json`:
+Set `host` to `0.0.0.0` in `conf.json` so the server is reachable from outside the
+container. Then start the container and mount the configuration file as a read-only
+volume:
 
+```bash
+docker run -d \
+    -v $(pwd)/conf.json:/app/conf.json:ro \
+    -p 8000:8000 \
+    --name=actian-mcp \
+    actian/informix-mcp-server:1.0.0
+```
 
-1. Load the image:
-
-    ```bash
-    docker load -i ifx_mcp_image.tar
-    ```
-
-2. Run the container:
-
-    ```bash
-    docker run -p 8000:8000 -d --name ifx-mcp \
-      -v $(pwd)/conf_temp.json:/app/conf.json:ro,Z \
-      actian/informix-mcp-server-linux:1.0.0
-    ```
-
-!!! note 
-    The container must read its configuration from `/app/conf.json`. Do not change the mount target path.
-
-Once the container is running, connect the MCP client to the exposed server endpoint using the host and port from the configuration `"https://<host machine ip address>:8000/mcp"`
-
----
+--8<-- "docker/mount-path-note.md"
+--8<-- "conf/protection-note.md"
 
 ## Next Steps
 
