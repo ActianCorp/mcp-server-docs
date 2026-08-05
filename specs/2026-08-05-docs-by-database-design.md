@@ -311,12 +311,39 @@ comes last. Every phase leaves the site buildable and publishable.
 
 | # | Content | Risk | Verification |
 |---|---|---|---|
-| 1 | **Infrastructure.** Snippets, redirects plugin, hook change, `templates/` + authoring README, `check-templates`. No content change yet. | Very low | Rendered site must be **byte-identical** to before, apart from new files |
+| 1 | **Infrastructure.** Snippets, redirects plugin, hook change, `templates/` + authoring README, `check-templates`. Then `validation.anchors: warn` plus the six anchor fixes it exposes (§10.1). | Very low | Rendered site **byte-identical** to before through the scaffolding tasks; then exactly twelve changed files for the six anchor fixes |
 | 2 | **SQL setup pages deduplicated.** `includes/conf/*`, `includes/docker/*`, `verify-connection.md`; four setup pages from the template; `get-started/` becomes chooser + arc; NoSQL admonitions removed. | Low | `mkdocs build --strict`; rendered pages materially equivalent to before |
 | 3 | **Tools pages deduplicated, write gap closed.** `includes/tools/*`, `includes/write/*`; write examples added for Zen and Informix. | **Factual** — this is where a new claim is made | Requires product verification, see §11 |
 | 4 | **Write support promoted, stubs added.** `intro/write-support.md` → `write-support/index.md`; `write-support/nosql.md` and `extensions/nosql.md` as published stubs; admonition at `nosql/index.md:20-21` replaced. | Low | Redirect stub present in build; `STUB` marker rendered, no `TODO(fill)` |
 | 5 | **Python client extracted, nav reordered.** `mcp-clients/python.md` from `nosql/index.md` with SQL and NoSQL variants as tabs; `content.tabs.link` enabled; setup page shortened; `docs/.pages` reordered. | Low | Link check — inbound anchors may point at `nosql/index.md#connect-using-a-python-client` |
 | 6 | **Authentication merge.** `authentication/` with tabs at diverging steps; `nosql/authentication/**` removed; redirects live. | **Highest** | Read both guides step by step against the previous state; separately revertible |
+
+### 10.1 `--strict` is not a gate until anchor validation is enabled
+
+MkDocs 1.6 reports broken internal anchors at `INFO` level, so `mkdocs build --strict`
+currently passes while six links are broken. Adding
+
+```yaml
+validation:
+  anchors: warn
+```
+
+promotes them to warnings, at which point `--strict` aborts. Verified: it fails with
+`Aborted with 6 warnings in strict mode!` The six, with the correct targets read from
+the built HTML rather than inferred from heading text:
+
+| File:line | Broken anchor | Correct anchor |
+|---|---|---|
+| `docs/analytics-engine/index.md:94` | `#the-oauth-configuration-block` | `#configuring-oauth-block` |
+| `docs/hcl-informix/index.md:94` | `#the-oauth-configuration-block` | `#configuring-oauth-block` |
+| `docs/ingres/index.md:94` | `#the-oauth-configuration-block` | `#configuring-oauth-block` |
+| `docs/authentication/index.md:154` | `#tls` | `#secure-remote-deployments-with-https-and-tls` |
+| `docs/authentication/auth0/index.md:322` | `#https-tls-for-remote-deployments` | `#secure-remote-deployments-with-https-and-tls` |
+| `docs/mcp-clients/index.md:279` | `#https-tls-for-remote-deployments` | `#secure-remote-deployments-with-https-and-tls` |
+
+This lands at the end of phase 1, after the byte-identical gate, because it is the only
+part of phase 1 that changes rendered output. Without it the `--strict` verification
+promised in §12 would not actually catch anything.
 
 ## 11. Open questions requiring product verification
 
