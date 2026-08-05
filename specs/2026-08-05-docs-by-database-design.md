@@ -445,11 +445,16 @@ rearranging existing ones. These cannot be answered from this repository:
    `docs/ingres/index.md:104`, `docs/hcl-informix/index.md:106`,
    `docs/analytics-engine/index.md:106` and `docs/authentication/index.md:182`. The five
    untagged references in tables and Docker Hub links need no change.
-6. **Is `max_rows` = 1000 a hard cap or a default?** Ingres says "Maximum value:
-   `1000`", the other three say "Default is `1000`". These are different claims and
-   only one can be right per engine. Until answered, `max_rows` stays a per-page row
-   instead of moving into `conf/common-optional-fields.md`. — *does not block, but
-   leaves one row duplicated 4×*
+6. **Is `max_rows` = 1000 a hard cap or a default?** **Partly resolved 2026-08-05: it is
+   a hard cap of `1000` on Ingres and Analytics Engine.** Ingres already said so; the
+   Analytics Engine page said "Default is `1000`", which was wrong — a reader would take
+   1000 for a starting value they could raise. Both now share
+   `conf/max-rows-capped.md`.
+
+   **Still open for HCL Informix and Zen.** Informix documents no ceiling at all, and Zen
+   still says "Default is `1000`". If they are also capped, they join that include and it
+   reaches four consumers; if not, they need a second variant that says so explicitly.
+   Until then those two rows stay written out per page. — *does not block*
 8. **Zen's `execute_query` response for a write.** Write support is confirmed identical
    on Zen (§11.1), and its capability and configuration are documented, but its tools page
    has no worked write example: Zen's response shape differs from the other three, so the

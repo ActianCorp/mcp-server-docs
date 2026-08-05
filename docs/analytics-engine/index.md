@@ -87,7 +87,7 @@ Create a file named `conf.json` in your working directory using the following st
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Default is `1000`.|
+--8<-- "conf/max-rows-capped.md"
 --8<-- "conf/common-optional-fields.md"
 --8<-- "conf/tls-fields.md"
 --8<-- "conf/write-fields.md"
