@@ -28,7 +28,9 @@ The split between `TODO(fill)` and `STUB` is the point. Published stubs are want
 | `{{IMAGE}}` | `actian/ingres-mcp-server` | `actian/informix-mcp-server` | `actian/zen-mcp-server` | `actian/analytics-engine-mcp-server` | `actian/nsql-mcp-server` |
 | `{{PORT}}` | `8000` | `8000` | `8000` | `8000` | `8080` |
 
-All five images come from Docker Hub under `hub.docker.com/u/actian`.
+All five images come from Docker Hub under `hub.docker.com/u/actian`. The current tag is
+`1.1.0` for every image (resolved 2026-08-05) — always write it explicitly, never
+`:latest`.
 
 `{{VARIANT_TITLE}}` is used only by the two variant templates. Its values are
 `SQL databases` and `Actian NoSQL`.

@@ -390,16 +390,22 @@ promised in §12 would not actually catch anything.
 Phase 3 is the only phase that produces new factual claims rather than
 rearranging existing ones. These cannot be answered from this repository:
 
-1. **Write support on Zen and Informix.** Evidenced by
-   `examples/extensions/conf.example.zen.json` and `examples/extensions/README.md`,
-   but not by product documentation. Does the same semantics apply unchanged
-   (`query_mode`, `mcp:write`, `write_confirmation`)? — *blocks phase 3*
-2. **Does Zen really have no `list_functions`?** It is absent from
-   `docs/zen/tools/index.md` and from its capabilities table. This is the same
-   class of omission as the write gap, so it needs confirming rather than
-   assuming. — *blocks phase 3*
-3. **`user_impersonation` on NoSQL** — supported or not? Zen is documented as
-   unsupported (`docs/zen/index.md:87-88`); NoSQL is unstated. — *blocks phase 3*
+1. ~~**Write support on Zen and Informix.**~~ **Resolved 2026-08-05: yes, identical
+   semantics.** `query_mode`, the `mcp:write` scope and `write_confirmation` behave the
+   same on all four SQL engines. Consequences: `conf/write-fields.md` goes from two
+   consumers to four; the Zen and Informix capabilities tables must list write; their
+   tools pages need the write examples; and `write-support.md` must stop presenting this
+   as an Ingres and Analytics Engine feature. Phase 3 is unblocked.
+2. ~~**Does Zen really have no `list_functions`?**~~ **Resolved 2026-08-05: correct,
+   Zen has none.** Verified consistent: `list_functions` appears nowhere under
+   `docs/zen/`, and its capabilities table omits it. No documentation change needed —
+   `tools/list-functions.md` simply has three consumers, not four.
+3. ~~**`user_impersonation` on NoSQL**~~ **Resolved 2026-08-05: not supported.**
+   Nothing in the docs currently claims otherwise — `user_impersonation` appears nowhere
+   under `docs/nosql/`, so no statement is wrong today. Open follow-up, small: whether the
+   NoSQL authentication page should say so explicitly, the way `docs/zen/index.md` does
+   for `SET SESSION AUTHORIZATION`. That depends on whether `user_impersonation` is even
+   a valid `application.properties` key, which is not established here.
 4. ~~**The Informix image contradiction.**~~ **Resolved 2026-08-05: Docker Hub.**
    `actian/informix-mcp-server` from Docker Hub is correct, as stated in
    `docs/index.md:80` and `docs/get-started/index.md:25`. The instructions at
@@ -407,10 +413,13 @@ rearranging existing ones. These cannot be answered from this repository:
    `docker load -i ifx_mcp_image.tar` step does not apply, and the image name
    `actian/informix-mcp-server-linux:1.0.0` is not the published one. Phase 2
    re-authors that page from the template and must drop both. Phase 2 is unblocked.
-5. **Inconsistent version tags** (not blocking, but should be resolved while
-   touching these pages): `:1.0.0` (Ingres, Analytics Engine), `:latest` (Zen),
-   `:1.0.1` (NoSQL), `:1.0.0` (Informix), while `theme_overrides/main.html:9`
-   announces 1.1 as the latest release.
+5. ~~**Inconsistent version tags**~~ **Resolved 2026-08-05: `1.1.0` everywhere.** Eight
+   tagged references need changing, in seven files: `docs/index.md:144` (`:latest`),
+   `docs/zen/index.md:100` (`:latest`), `docs/nosql/index.md:100` and
+   `docs/nosql/authentication/index.md:120` (`:1.0.1`), and `:1.0.0` in
+   `docs/ingres/index.md:104`, `docs/hcl-informix/index.md:106`,
+   `docs/analytics-engine/index.md:106` and `docs/authentication/index.md:182`. The five
+   untagged references in tables and Docker Hub links need no change.
 6. **Is `max_rows` = 1000 a hard cap or a default?** Ingres says "Maximum value:
    `1000`", the other three say "Default is `1000`". These are different claims and
    only one can be right per engine. Until answered, `max_rows` stays a per-page row
