@@ -142,7 +142,7 @@ matter, a parent directory can be introduced later at the cost of five redirects
 | `{ingres,hcl-informix,zen,analytics-engine}/tools/index.md` | unchanged paths | `execute_query`, `list_tables`, `describe_table`, `list_functions` come from `includes/tools/`. Zen keeps its three extras written out. **Write examples are added everywhere**, closing the gap from §1.2. |
 | `nosql/tools/index.md` | unchanged path | Stays standalone; no include sharing (JPQL, LOIDs, pagination). |
 | `nosql/authentication/**` (4 files) | **removed** | Merged into `authentication/**` with tabs at the diverging steps. Redirects required. |
-| `intro/write-support.md` | `write-support/index.md` | Promoted, because it needs a NoSQL sibling. Redirect required. |
+| `intro/write-support.md` | `write-support/index.md` | **Done (phase 4).** Promoted; 18 references rewritten and one redirect added. All 15 depth-1 and depth-2 Markdown references took one substitution — see §7.4. |
 | — | `write-support/nosql.md` | New, published stub. |
 | — | `extensions/nosql.md` | New, published stub. Replaces the admonition at `nosql/index.md:20-21`. |
 | — | `mcp-clients/python.md` | New, extracted from `nosql/index.md`, with a SQL and a NoSQL variant. |
@@ -238,6 +238,18 @@ the table *count* stayed correct — so a table-count check alone does not catch
 Check for `^<p>| ` in the rendered HTML instead.
 
 Standalone includes (admonitions, whole sections) are unaffected.
+
+When a page moves between two locations at the same depth, one substitution handles
+referring pages at **every** depth: `../intro/x.md` is a substring of `../../intro/x.md`,
+so replacing it leaves the extra `../` in place. Phase 4 moved write support with a single
+sed across 15 references at two depths. The counterexample is phase 3, which over-applied
+a `../` to `../../` transformation to a file already at depth 2 and produced `../../../`.
+Substitute the *tail* of the path, never prepend to it.
+
+Grepping for the old path does not find every reference. Phase 4's inventory searched for
+`intro/write-support` and counted 17, missing an 18th in `docs/intro/index.md` that wrote
+the sibling-relative `write-support.md` with no directory part at all. `mkdocs build
+--strict` caught it. Trust the build, not the grep.
 
 ### 7.5 Measured: the tools split three-plus-Zen, not four
 
@@ -463,6 +475,11 @@ rearranging existing ones. These cannot be answered from this repository:
    `docs/intro/write-support.md` carries a note until it is supplied.
 7. **NoSQL write semantics and NoSQL extension API** — needed to fill the two
    stub pages. Out of scope for this design; the stubs exist to hold the slot.
+
+   The two stub pages exist as of phase 4 (`docs/write-support/nosql.md` and
+   `docs/extensions/nosql.md`), each carrying `includes/stub-notice.md`. They state that
+   the feature exists and the documentation does not, and describe no behaviour. Answering
+   this question fills them; it no longer blocks any structural work.
 
 ## 12. Verification
 

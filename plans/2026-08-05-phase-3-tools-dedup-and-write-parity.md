@@ -88,7 +88,7 @@ Two further measurements that shape the includes:
 | **Zen's write example** | Zen's `execute_query` returns a different response shape, so the write response cannot be copied from Ingres. Writing one would mean inventing the payload. | Someone supplies Zen's actual `execute_query` response for an `INSERT`/`UPDATE`/`DELETE` |
 | Moving `max_rows` into `conf/common-optional-fields.md` | Spec §11.6: Ingres documents `1000` as a hard cap, the other three as a default. Unresolved. | §11.6 is answered |
 | `conf/tls-fields.md` reaching a fourth consumer | Whether Zen supports `ssl_certfile` / `ssl_keyfile` is unestablished | That question is answered |
-| `includes/write/authorization-flow.md` | It would have exactly one consumer today (`intro/write-support.md`). Extracting a fragment for a single caller is premature. | Phase 4 gives it a second consumer (`write-support/nosql.md`) |
+| `includes/write/authorization-flow.md` | It would have exactly one consumer today (`write-support/index.md`). Extracting a fragment for a single caller is premature. | NoSQL write content is written. Phase 4 does **not** unblock it: `write-support/nosql.md` ships as a stub, and NoSQL's authorization behaviour is unknown (§11.7), so a stub must not include the SQL flow. |
 
 ## File Structure
 
