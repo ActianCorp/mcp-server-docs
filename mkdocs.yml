@@ -129,6 +129,8 @@ plugins:
       enable_creation_date: false
       fallback_to_build_date: true
   - meta-descriptions
+  - redirects:
+      redirect_maps: {}
 
 # Hooks
 hooks:
