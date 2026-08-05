@@ -723,14 +723,20 @@ check-templates:
 	@! grep -rn -e '{{' -e 'TODO(fill)' docs/ --include='*.md' \
 	  || (echo "Unfilled template placeholder in docs/" && exit 1)
 
+# Guards against a missing site/ on purpose: grep exits non-zero on a missing
+# directory, which the leading "!" would otherwise turn into a silent pass.
 check-raw-md:
+	@test -d site || (echo "site/ not built - run 'mkdocs build' first" && exit 1)
 	@! grep -rn -e '--8<--' site/ --include='*.md' \
 	  || (echo "Unresolved snippet include in published raw Markdown" && exit 1)
 ```
 
 - [ ] **Step 7: Verify both guards pass on the current tree**
 
+`check-raw-md` inspects `site/`, so build to the default output directory first:
+
 ```bash
+python3 -m mkdocs build -q
 make check-templates && echo "templates ok"
 make check-raw-md && echo "raw md ok"
 ```
@@ -820,6 +826,9 @@ validation:
 ```
 
 - [ ] **Step 2: Run the strict build and watch it fail**
+
+Do **not** pass `-q` here. It suppresses the warning lines, so the build still aborts
+but gives no indication why.
 
 ```bash
 python3 -m mkdocs build --strict -d /tmp/phase1-anchors 2>&1 | grep -E "WARNING|Aborted"
