@@ -18,122 +18,11 @@ The Actian MCP Server for HCL Informix® provides built-in tools for database di
 
 ## execute_query
 
-Use this tool to run read-only SQL queries. The results are returned as structured JSON.
-
-!!! note "Result truncation"
-    The `truncated` and `warning` fields appear only when the number of result rows exceeds the `max_rows` configuration.
-
-### Parameters
-
-| Field | Type | Required | Description |
-|-------|------|:--------:|-------------|
-| `query` | `string` | ✓ |The read-only SQL statement you want to execute. |
-
-### Output Schema
-
-**On Success**
-
-```json
-{
-	"success": true,
-	"columns": ["<result_columns>"],
-	"rows": [["<result_rows>"]],
-	"row_count": "<num_rows>",
-	"truncated": true,
-	"warning": "Results were truncated to <max_rows> rows."
-}
-```
-
-**On Error**
-
-```json
-{
-	"success": false,
-	"error": "<error_message>"
-}
-```
-
-### Example
-
-**User Request**
-
-```
-Show me all the rows in the customers table
-```
-
-**Input**
-
-```json
-{
-	"query": "SELECT * FROM customers"
-}
-```
-
-**Response**
-
-```json
-{
-	"success": true,
-	"columns": ["customer_id", "customer_email"],
-	"rows": [
-		[101, "alice@tech.com"],
-		[102, "bob@corp.net"]
-	],
-	"row_count": 2
-}
-```
+--8<-- "tools/execute-query-sql.md"
 
 ## list_tables
 
-Returns all user tables and views available in the connected database as structured JSON.
-
-### Parameters
-
-This resource does not require any input parameters.
-
-### Output Schema
-
-**On Success**
-
-```json
-{
-	"success": true,
-	"columns": ["table_name"],
-	"rows": [["<table_name>"]],
-	"row_count": 1
-}
-```
-
-**On Error**
-
-```json
-{
-	"success": false,
-	"error": "<error_message>"
-}
-```
-
-### Example
-
-**User Request**
-
-```
-Show me all the tables in my database
-```
-
-**Response**
-
-```json
-{
-	"success": true,
-	"columns": ["table_name"],
-	"rows": [
-		["customers"],
-		["orders"]
-	],
-	"row_count": 2
-}
-```
+--8<-- "tools/list-tables.md"
 
 ## describe_table
 
@@ -220,55 +109,7 @@ Show me schema information about the customers table
 
 ## list_functions
 
-Returns user-defined functions and procedures, including their stored definitions, as structured JSON.
-
-### Parameters
-
-This resource does not require any input parameters.
-
-### Output Schema
-
-**On Success**
-
-```json
-{
-	"success": true,
-	"columns": ["function_name","type", "function_ddl"],
-	"rows": [["<function_name>", "<type>","<function_ddl>"]],
-	"row_count": 1
-}
-```
-
-**On Error**
-
-```json
-{
-	"success": false,
-	"error": "<error_message>"
-}
-```
-
-### Example
-
-**User Request**
-
-```
-Show me all the functions in my database
-```
-
-**Response**
-
-```json
-{
-	"success": true,
-	"columns": ["function_name", "function_ddl"],
-	"rows": [
-		["calculate_discount","FUNCTION", "CREATE FUNCTION calculate_discount(...) ..."],
-		["refresh_sales_summary","PROCEDURE", "CREATE PROCEDURE refresh_sales_summary() ..."]
-	],
-	"row_count": 2
-}
-```
+--8<-- "tools/list-functions.md"
 
 ## Next Steps
 
