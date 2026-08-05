@@ -117,6 +117,10 @@ docker run -d \
 
 <div class="grid cards" markdown>
 
+- :material-connection: **[Connect a client](../mcp-clients/index.md)**  
+  Point Claude Desktop, Cursor, GitHub Copilot, Codex, or fast-agent at the server
+  endpoint.
+
 - :material-tools: **[Tools](tools/index.md)**  
   Learn more about the Analytics Engine tools used by the MCP Server.
 

@@ -114,16 +114,20 @@ docker run -d \
 
 <div class="grid cards" markdown>
 
-- :material-tools: **[Tools](tools/index.md)**
+- :material-connection: **[Connect a client](../mcp-clients/index.md)**  
+  Point Claude Desktop, Cursor, GitHub Copilot, Codex, or fast-agent at the server
+  endpoint.
+
+- :material-tools: **[Tools](tools/index.md)**  
   Learn more about the SQL, ORM, and blob tools exposed by the Zen server.
 
-- :material-folder-open: **[Resources](resources/index.md)**
+- :material-folder-open: **[Resources](resources/index.md)**  
   Explore the resource types available through the server.
 
-- :material-message-text: **[Prompts](prompts/index.md)**
+- :material-message-text: **[Prompts](prompts/index.md)**  
   Use the built-in prompt templates for common workflows.
 
-- :material-puzzle: **[Extensions](../extensions/index.md)**
+- :material-puzzle: **[Extensions](../extensions/index.md)**  
   Add your own tools to the server with a Python extension.
 
 </div>
