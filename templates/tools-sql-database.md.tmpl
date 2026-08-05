@@ -1,0 +1,43 @@
+<!-- Template: SQL/ODBC tools page. Target: docs/{{DB_SLUG}}/tools/index.md
+     Expects includes (phase 3): tools/execute-query-sql.md, tools/list-tables.md,
+     tools/describe-table.md, tools/list-functions.md, tools/write-example-sql.md -->
+---
+title: Tools
+description: MCP tools exposed by the Actian MCP Server for {{DB_NAME}}.
+---
+
+# {{DB_NAME}} tools
+
+## Available tools
+
+<!-- TODO(fill): summary table of the tools below, plus any engine-specific tools.
+     Drop rows for tools this engine does not expose. -->
+
+| Tool | Purpose |
+|------|---------|
+
+--8<-- "tools/execute-query-sql.md"
+
+--8<-- "tools/write-example-sql.md"
+
+--8<-- "tools/list-tables.md"
+
+--8<-- "tools/describe-table.md"
+
+--8<-- "tools/list-functions.md"
+
+<!-- TODO(fill): engine-specific tools, written out in full. Zen adds orm_operation,
+     blob_operation and database_manage. Other engines add nothing today.
+     Delete this comment if the engine has no extra tools. -->
+
+## Next steps
+
+<div class="grid cards" markdown>
+
+- :material-folder-open: **[Resources](../resources/index.md)**
+  Schema metadata exposed as MCP resources.
+
+- :material-database-edit: **[Write support](../../write-support/index.md)**
+  How `query_mode`, the `mcp:write` scope, and write approval work.
+
+</div>

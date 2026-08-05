@@ -1,0 +1,75 @@
+<!-- Template: SQL/ODBC setup page. Target: docs/{{DB_SLUG}}/index.md
+     Expects includes (phase 2): conf/common-fields.md, conf/protection-note.md,
+     docker/run-sql.md, docker/mount-path-note.md, verify-connection.md -->
+---
+title: {{DB_NAME}}
+description: Use the Actian MCP Server to connect MCP clients to {{DB_NAME}}.
+---
+
+# Actian MCP Server for {{DB_NAME}}
+
+<!-- TODO(fill): one paragraph. What the reader connects, what they can do once
+     connected, and what the server handles for them. Keep to four sentences. -->
+
+## Capabilities
+
+<!-- TODO(fill): capability table. Engine-specific on purpose — do not copy another
+     engine's table. One row per operation the server exposes for this engine. -->
+
+| Action | Description |
+| :--- | :--- |
+
+## Prerequisites
+
+<!-- TODO(fill): engine-specific prerequisites. Deliberately not shared: Informix
+     mentions Podman, Zen needs --add-host, NoSQL needs no ODBC driver. -->
+
+## Configuration
+
+The server runs as a Docker container. To configure it, mount `conf.json` into the
+container at `/app/conf.json`.
+
+### Create the configuration file
+
+<!-- TODO(fill): the conf.json example for this engine, with its connection fields. -->
+
+### Configuration reference
+
+**Required fields**
+
+<!-- TODO(fill): only the connection fields specific to this engine. The fields shared
+     across all SQL engines come from the include below — do not repeat them here. -->
+
+| Field | Type | Description |
+|-------|------|-------------|
+
+**Optional fields**
+
+--8<-- "conf/common-fields.md"
+
+--8<-- "conf/protection-note.md"
+## Start the server
+
+--8<-- "docker/run-sql.md"
+
+--8<-- "docker/mount-path-note.md"
+## Verify the connection
+
+--8<-- "verify-connection.md"
+## Next steps
+
+<div class="grid cards" markdown>
+
+- :material-tools: **[Tools](tools/index.md)**
+  The MCP tools available for {{DB_NAME}}.
+
+- :material-folder-open: **[Resources](resources/index.md)**
+  Schema metadata exposed as MCP resources.
+
+- :material-chat-processing: **[Prompts](prompts/index.md)**
+  Prompt templates for common workflows.
+
+- :material-puzzle: **[Extensions](../extensions/index.md)**
+  Add your own tools with a Python extension.
+
+</div>
