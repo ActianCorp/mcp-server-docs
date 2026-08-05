@@ -109,15 +109,9 @@ docker run -d \
 --8<-- "docker/mount-path-note.md"
 --8<-- "conf/protection-note.md"
 
-## Usage
+## Verify the connection
 
-Once connected, the MCP client automatically discovers the server capabilities. You can perform the following tasks:
-
-- **Inspect before querying**: List tables and review structure before writing SQL.
-- **Run a query**: Execute a SQL statement and receive formatted results.
-- **Explore functions**: Look up available user-defined functions and stored procedures.
-- **Summarize results**: Ask the client to interpret or summarize query output.
-
+--8<-- "verify-connection.md"
 
 ## Next Steps
 

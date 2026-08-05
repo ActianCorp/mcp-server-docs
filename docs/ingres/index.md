@@ -110,6 +110,10 @@ docker run -d \
 --8<-- "docker/mount-path-note.md"
 --8<-- "conf/protection-note.md"
 
+## Verify the connection
+
+--8<-- "verify-connection.md"
+
 ## Next Steps
 
 <div class="grid cards" markdown>
