@@ -55,9 +55,7 @@ All database configurations except NoSQL share the following standard MCP server
 | `write_confirmation` | Boolean | No | Whether a write requires human approval before it runs. Defaults to `true`. Applies only when `query_mode` is `read-write`. For more information, see [Write support](../intro/write-support.md#skipping-the-approval-prompt)|
 | `extensions` | Array | No | Extension modules that add your own tools to the server. For more information, see [Extensions](../extensions/index.md)|
 
-!!! note "Configuration File Protection"
-    The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control.
-
+--8<-- "conf/protection-note.md"
 ## Step 3: Start the Container
 
 !!! warning "Actian NoSQL users"
