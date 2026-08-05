@@ -19,6 +19,10 @@ The Actian MCP Server for Zen supports the following operations:
 | **Blob and file data** | List and download blob or file data stored in the database. |
 | **Server management** | Query server capabilities, list DSNs, and release locks.|
 | **Schema metadata** | View the database schema as a structured resource. |
+| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
+
+!!! note "Write support is opt-in"
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
 
 
 
@@ -81,6 +85,7 @@ Use this format when the database requires authentication. This bypasses the con
 | `database` | `string` | — | Logical database name used for display purposes. |
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Default is `1000`. |
 --8<-- "conf/common-optional-fields.md"
+--8<-- "conf/write-fields.md"
 
 !!! note "OAuth and user impersonation"
     Actian Zen does not support `SET SESSION AUTHORIZATION`. If you use OAuth, set `user_impersonation: false` in the `oauth` block. The server logs the authenticated user but does not enforce it at the database level.

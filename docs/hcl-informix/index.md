@@ -19,6 +19,10 @@ The MCP Server for HCL Informix® supports the following operations:
 | **Inspect table structure** | Retrieve column definitions, data types, and key information. |
 | **Read schema metadata** | Explore comprehensive database-level metadata. |
 | **List functions and procedures** | View available user-defined routines. |
+| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
+
+!!! note "Write support is opt-in"
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
 
 
 ## Prerequisites
@@ -90,6 +94,7 @@ Create a file named `conf.json` in the working directory and include the specifi
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. |
 --8<-- "conf/common-optional-fields.md"
 --8<-- "conf/tls-fields.md"
+--8<-- "conf/write-fields.md"
 
 
 ## Start the server
