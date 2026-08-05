@@ -88,13 +88,9 @@ Create a file named `conf.json` in your working directory using the following st
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Default is `1000`.|
-| `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
-| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` in the container. |
-| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` in the container. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#configuring-oauth-block).|
-| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md).|
-| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt).|
-| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md).|
+--8<-- "conf/common-optional-fields.md"
+--8<-- "conf/tls-fields.md"
+--8<-- "conf/write-fields.md"
 
 
 ## Start the Server

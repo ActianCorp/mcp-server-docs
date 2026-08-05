@@ -1,0 +1,2 @@
+| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` in the container. |
+| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` in the container. |
