@@ -24,9 +24,20 @@ Python-Markdown 3.9, mkdocs-redirects (new), GNU make, Python 3.10+
 
 ## Global Constraints
 
-- **Tasks 1–4 must not change any rendered output.** The built site must be
-  byte-identical to the baseline, apart from files that did not exist before. This is
-  verified by `diff -rq` against a baseline built from commit `fb9347e`.
+- **Tasks 1–4 must not change any rendered output.** The built site must be identical
+  to a baseline built from commit `fb9347e`, apart from files that did not exist
+  before, verified with:
+
+  ```bash
+  diff -r -I 'git-revision-date-localized-plugin-date' /tmp/phase1-baseline-site <build>
+  ```
+
+  The `-I` is **required**, not cosmetic. `git-revision-date-localized` renders each
+  page's last-commit date into its footer, so committing a source file changes that
+  page's HTML even when the content is untouched. Plain `diff -rq` therefore reports a
+  false positive for every page whose source this phase commits. `-I` excludes changes
+  whose only differing lines match that pattern, and still catches every real change —
+  verified during execution.
 - **Task 5 is the only task that changes rendered output**, and only by fixing six
   anchor targets. It runs last, after the byte-identical gate has passed.
 - Baseline commit: `fb9347e` (`docs: add design spec for database-first doc restructure`).
@@ -182,7 +193,7 @@ untouched. After the edit, line 58 is the directive and line 59 is the heading.
 
 ```bash
 python3 -m mkdocs build -q -d /tmp/phase1-check
-diff -rq /tmp/phase1-baseline-site /tmp/phase1-check
+diff -r -I 'git-revision-date-localized-plugin-date' /tmp/phase1-baseline-site /tmp/phase1-check
 ```
 
 Expected: `diff` reports **only** this one difference and nothing else:
@@ -325,10 +336,10 @@ This is the payoff step. The raw `.md` difference from Task 1 must now be gone,
 because the hook reproduces the original text exactly.
 
 ```bash
-diff -rq /tmp/phase1-baseline-site /tmp/phase1-check2 && echo "BYTE-IDENTICAL"
+diff -r -I 'git-revision-date-localized-plugin-date' /tmp/phase1-baseline-site /tmp/phase1-check2 && echo "IDENTICAL"
 ```
 
-Expected: `BYTE-IDENTICAL` with no preceding lines.
+Expected: `IDENTICAL` with no preceding lines.
 
 If `get-started/index.md` still differs, the cause is almost certainly whitespace
 around the include. Inspect it with:
@@ -411,10 +422,10 @@ In `mkdocs.yml`, add as the last entry of the `plugins:` list, after
 
 ```bash
 python3 -m mkdocs build -q -d /tmp/phase1-check3
-diff -rq /tmp/phase1-baseline-site /tmp/phase1-check3 && echo "BYTE-IDENTICAL"
+diff -r -I 'git-revision-date-localized-plugin-date' /tmp/phase1-baseline-site /tmp/phase1-check3 && echo "IDENTICAL"
 ```
 
-Expected: `BYTE-IDENTICAL`. An empty map must emit no files.
+Expected: `IDENTICAL`. An empty map must emit no files.
 
 - [ ] **Step 5: Commit**
 
@@ -758,13 +769,13 @@ find /tmp/phase1-check4 -name '*.tmpl' -o -name 'README.md' | grep -c . || echo 
 Expected: `none published`. `templates/` sits outside `docs_dir`, so neither MkDocs
 nor the hook touches it.
 
-- [ ] **Step 10: The phase gate — verify the site is still byte-identical**
+- [ ] **Step 10: The phase gate — verify the site is still unchanged**
 
 ```bash
-diff -rq /tmp/phase1-baseline-site /tmp/phase1-check4 && echo "BYTE-IDENTICAL"
+diff -r -I 'git-revision-date-localized-plugin-date' /tmp/phase1-baseline-site /tmp/phase1-check4 && echo "IDENTICAL"
 ```
 
-Expected: `BYTE-IDENTICAL`. This is the acceptance criterion for the whole
+Expected: `IDENTICAL`. This is the acceptance criterion for the whole
 infrastructure half of phase 1. Do not proceed to Task 5 until it passes.
 
 - [ ] **Step 11: Commit**
@@ -883,7 +894,7 @@ Expected: no `WARNING` and no `Aborted` lines. The build completes.
 - [ ] **Step 7: Confirm the only site changes are the six links**
 
 ```bash
-diff -rq /tmp/phase1-baseline-site /tmp/phase1-anchors2
+diff -rq -I 'git-revision-date-localized-plugin-date' /tmp/phase1-baseline-site /tmp/phase1-anchors2
 ```
 
 Expected: exactly twelve `differ` lines — the `.html` and the raw `.md` for each of the
