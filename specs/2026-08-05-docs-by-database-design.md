@@ -189,12 +189,12 @@ where they do not belong.
 | `docker/run-sql.md` | 4 SQL setup pages, `get-started/` | The `docker run` pattern; image name is a placeholder the surrounding page names |
 | `docker/mount-path-note.md` | 5 setup pages | "The container reads from `/app/conf.json`; do not change the path" |
 | `verify-connection.md` | 4 SQL setup pages | The three verification steps from `get-started/` step 5 |
-| `tools/execute-query-sql.md` | 4 SQL tools pages | Identical parameters, output schema, example |
-| `tools/list-tables.md` | 4 SQL tools pages | as above |
-| `tools/describe-table.md` | 4 SQL tools pages | as above |
-| `tools/list-functions.md` | 3 SQL tools pages (Zen has none — pending §11.2) | as above |
-| `tools/write-example-sql.md` | 4 SQL tools pages | **Closes the Zen and Informix gap** — written once, present everywhere |
-| `write/authorization-flow.md` | `write-support/index.md`, 4 SQL tools pages | Scope check + approval + Mermaid sequence |
+| `tools/execute-query-sql.md` | 3 SQL tools pages | Identical parameters, output schema, example. Not Zen — see §7.5 |
+| `tools/list-tables.md` | 3 SQL tools pages | as above |
+| `tools/describe-table.md` | 3 SQL tools pages | as above, with an engine-neutral example — see §7.5 |
+| `tools/list-functions.md` | 3 SQL tools pages (Zen has none, confirmed §11.2) | as above |
+| `tools/write-example-sql.md` | 3 SQL tools pages | **Closes the Informix gap.** Zen's response shape differs, so its example cannot be derived — see §11.8 |
+| `write/authorization-flow.md` | deferred to phase 4 | Would have one consumer today; extracting a fragment for a single caller is premature |
 | `stub-notice.md` | all stub pages | So "in progress" looks identical everywhere |
 
 Deliberately **not** shared, despite the temptation: prerequisites lists (they
@@ -238,6 +238,31 @@ the table *count* stayed correct — so a table-count check alone does not catch
 Check for `^<p>| ` in the rendered HTML instead.
 
 Standalone includes (admonitions, whole sections) are unaffected.
+
+### 7.5 Measured: the tools split three-plus-Zen, not four
+
+Parsing every `Output Schema` JSON block and comparing key structures shows Ingres,
+Informix and Analytics Engine are structurally identical for all four tools, while Zen
+returns a different shape for each of the three it has and lacks `list_functions`
+entirely:
+
+| Tool | Ingres / Informix / Analytics Engine | Zen |
+|---|---|---|
+| `execute_query` | `success` `columns` `rows` `row_count` `truncated` `warning` `error` | `method` `original_sql` `translated` `translation_note` `results[].column` `row_count` `truncated` `truncation_note` |
+| `list_tables` | `success` `columns` `rows` `row_count` `error` | `tables` `count` |
+| `describe_table` | `success` `columns` `rows` `row_count` `error` | `table_name` `columns[].name/type/nullable/default/precision/scale/primary_key` `primary_keys` `foreign_keys` |
+| `list_functions` | `success` `columns` `rows` `row_count` `error` | **absent** |
+
+So `includes/tools/*` has three consumers and Zen keeps its own descriptions — the same
+pattern `conf/tls-fields.md` follows. The remaining textual differences among the three
+were wording, tabs versus spaces, and placeholder convention, all harmonized.
+
+One content change was needed to make `describe_table` shareable: Ingres and Analytics
+Engine described `ii_tables`, an Ingres system catalog, which is wrong for Informix. It
+is now `customers`, the demo table the rest of the page already uses.
+
+`row_count` is written as `"<num_rows>"` in the read includes but stays the literal `1`
+in the write include: there it means one row was written, not "some number of rows".
 
 ### 7.2 Hook change
 
@@ -425,6 +450,11 @@ rearranging existing ones. These cannot be answered from this repository:
    only one can be right per engine. Until answered, `max_rows` stays a per-page row
    instead of moving into `conf/common-optional-fields.md`. — *does not block, but
    leaves one row duplicated 4×*
+8. **Zen's `execute_query` response for a write.** Write support is confirmed identical
+   on Zen (§11.1), and its capability and configuration are documented, but its tools page
+   has no worked write example: Zen's response shape differs from the other three, so the
+   example cannot be derived and would have to be invented. Blocks nothing else;
+   `docs/intro/write-support.md` carries a note until it is supplied.
 7. **NoSQL write semantics and NoSQL extension API** — needed to fill the two
    stub pages. Out of scope for this design; the stubs exist to hold the slot.
 

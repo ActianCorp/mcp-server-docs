@@ -1,6 +1,10 @@
 <!-- Template: SQL/ODBC tools page. Target: docs/{{DB_SLUG}}/tools/index.md
-     Expects includes (phase 3): tools/execute-query-sql.md, tools/list-tables.md,
-     tools/describe-table.md, tools/list-functions.md, tools/write-example-sql.md -->
+     Expects includes: tools/execute-query-sql.md, tools/write-example-sql.md,
+     tools/list-tables.md, tools/describe-table.md, tools/list-functions.md
+     These describe the response shape shared by Ingres, HCL Informix and Analytics
+     Engine. Zen returns a different shape and must not use them - write its
+     descriptions out. Links inside these includes already use ../../ because
+     consumers sit at depth 2; do not re-prefix them. -->
 ---
 title: Tools
 description: MCP tools exposed by the Actian MCP Server for {{DB_NAME}}.
@@ -16,13 +20,21 @@ description: MCP tools exposed by the Actian MCP Server for {{DB_NAME}}.
 | Tool | Purpose |
 |------|---------|
 
+## execute_query
+
 --8<-- "tools/execute-query-sql.md"
 
 --8<-- "tools/write-example-sql.md"
 
+## list_tables
+
 --8<-- "tools/list-tables.md"
 
+## describe_table
+
 --8<-- "tools/describe-table.md"
+
+## list_functions
 
 --8<-- "tools/list-functions.md"
 
