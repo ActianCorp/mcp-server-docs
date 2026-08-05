@@ -76,8 +76,6 @@ in a later phase, once answered. Each is tracked in §11 of the spec.
 | Does Zen support `ssl_certfile` / `ssl_keyfile`? | `conf/tls-fields.md` is consumed by three pages, not four | A fourth consumer |
 | ~~Informix and Zen write semantics~~ **resolved 2026-08-05: identical** | was: two consumers for `conf/write-fields.md` | now four — apply in phase 3 |
 | ~~Image tag~~ **resolved 2026-08-05: `1.1.0`** | was: tags left as found | eight references in seven files — apply in phase 3 |
-| Do Informix and Zen use the same write semantics (spec §11.1)? | `conf/write-fields.md` is consumed by two pages, not four | Two more consumers |
-| Which image tag is current — pages pin `:1.0.0` / `:latest` while the site banner announces 1.1 (spec §11.5)? | Existing tags are left exactly as they are | A single harmonized tag |
 
 ## File Structure
 
