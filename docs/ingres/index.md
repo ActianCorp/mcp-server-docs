@@ -23,7 +23,6 @@ The Actian MCP Server for Ingres supports the following operations:
 !!! note "Write support is opt-in"
     The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
 
----
 
 ## Prerequisites
 Before starting the server, ensure the following requirements are met:
@@ -33,14 +32,13 @@ Before starting the server, ensure the following requirements are met:
 * **Security (Optional):** TLS certificate and key files for secure deployments
 * **Authentication (Optional):** An OIDC provider, if you require OAuth
 
----
 
 
 ## Configuration
 
 The server runs as a Docker container. To configure the server, mount the (`conf.json`) file to the container at `/app/conf.json`.
 
-### Create Configuration File
+### Create the configuration file
 Create a file named `conf.json` in the working directory and define the environment variables:
 
 ```json
@@ -68,9 +66,9 @@ Create a file named `conf.json` in the working directory and define the environm
 }
 ```
 
-### Configuration Reference
+### Configuration reference
 
-**Required Fields**
+**Required fields**
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -83,7 +81,7 @@ Create a file named `conf.json` in the working directory and define the environm
 | `database_user` | `string` | The username for database authentication|
 | `database_password` | `string` | The password for database authentication |
 
-**Optional Fields**
+**Optional fields**
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -92,7 +90,6 @@ Create a file named `conf.json` in the working directory and define the environm
 --8<-- "conf/tls-fields.md"
 --8<-- "conf/write-fields.md"
 
----
 
 ## Start the server
 
@@ -114,7 +111,7 @@ docker run -d \
 
 --8<-- "verify-connection.md"
 
-## Next Steps
+## Next steps
 
 <div class="grid cards" markdown>
 

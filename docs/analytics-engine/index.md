@@ -39,7 +39,7 @@ Before starting the server, ensure the following requirements are met:
 
 The server runs as a Docker container. To configure the server, mount the (`conf.json`) file to the container at `/app/conf.json`.
 
-### Create the Configuration File
+### Create the configuration file
 
 Create a file named `conf.json` in your working directory using the following structure:
 
@@ -68,9 +68,9 @@ Create a file named `conf.json` in your working directory using the following st
 }
 ```
 
-### Configuration Reference
+### Configuration reference
 
-**Required Fields**
+**Required fields**
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -113,7 +113,7 @@ docker run -d \
 
 --8<-- "verify-connection.md"
 
-## Next Steps
+## Next steps
 
 <div class="grid cards" markdown>
 

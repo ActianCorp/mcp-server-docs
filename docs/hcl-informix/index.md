@@ -35,7 +35,7 @@ Before starting the server, ensure the following requirements are met:
 
 The server runs as a Docker container. To configure the server, mount the (`conf.json`) file to the container at `/app/conf.json`.
 
-### Create Configuration File
+### Create the configuration file
 
 Create a file named `conf.json` in the working directory and include the specific database details:
 
@@ -66,9 +66,9 @@ Create a file named `conf.json` in the working directory and include the specifi
 }
 ```
 
-### Configuration Reference
+### Configuration reference
 
-**Required Fields**
+**Required fields**
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -91,7 +91,6 @@ Create a file named `conf.json` in the working directory and include the specifi
 --8<-- "conf/common-optional-fields.md"
 --8<-- "conf/tls-fields.md"
 
----
 
 ## Start the server
 
@@ -114,7 +113,7 @@ docker run -d \
 
 --8<-- "verify-connection.md"
 
-## Next Steps
+## Next steps
 
 <div class="grid cards" markdown>
 

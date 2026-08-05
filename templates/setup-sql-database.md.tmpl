@@ -1,6 +1,9 @@
 <!-- Template: SQL/ODBC setup page. Target: docs/{{DB_SLUG}}/index.md
-     Expects includes (phase 2): conf/common-fields.md, conf/protection-note.md,
-     docker/run-sql.md, docker/mount-path-note.md, verify-connection.md -->
+     Expects includes: conf/common-optional-fields.md, conf/tls-fields.md,
+     conf/write-fields.md, conf/protection-note.md, docker/mount-path-note.md,
+     verify-connection.md
+     Row-fragment includes (conf/*-fields.md) must have no trailing newline: it would
+     render as a blank line and split the table. -->
 ---
 title: {{DB_NAME}}
 description: Use the Actian MCP Server to connect MCP clients to {{DB_NAME}}.
@@ -45,14 +48,24 @@ container at `/app/conf.json`.
 
 **Optional fields**
 
---8<-- "conf/common-fields.md"
+<!-- TODO(fill): the engine-specific optional rows go here, directly after the header,
+     before the shared includes. max_rows is engine-specific for now: Ingres documents
+     1000 as a hard cap, the others as a default. -->
 
---8<-- "conf/protection-note.md"
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+--8<-- "conf/common-optional-fields.md"
+--8<-- "conf/tls-fields.md"
+--8<-- "conf/write-fields.md"
+
 ## Start the server
 
---8<-- "docker/run-sql.md"
+<!-- TODO(fill): one sentence, then the docker run block for this engine. The command
+     cannot be an include: it names the image and snippets has no substitution. Keep
+     the flags in the same order as the other engines. -->
 
 --8<-- "docker/mount-path-note.md"
+--8<-- "conf/protection-note.md"
 ## Verify the connection
 
 --8<-- "verify-connection.md"

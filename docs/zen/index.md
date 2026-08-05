@@ -36,7 +36,7 @@ Before starting the server, ensure the following requirements are met:
 
 You can configure the MCP Server for Zen using a `conf.json` file. Mount this file into the container at `/app/conf.json`. Choose one of the two connection formats below based on the security requirements (credentials).
 
-### Connection Formats
+### Create the configuration file
 
 **DSN connection (no credentials)**
 
@@ -64,9 +64,9 @@ Use this format when the database requires authentication. This bypasses the con
 }
 ```
 
-### Configuration Reference
+### Configuration reference
 
-**Required Fields**
+**Required fields**
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -74,7 +74,7 @@ Use this format when the database requires authentication. This bypasses the con
 | `host` | `string` | Bind address for the MCP server inside the container. Set this to `0.0.0.0` so the server is reachable from outside the container.|
 | `port` | `integer` | Port the MCP server listens on. This must match the port exposed by Docker (default `8000`). |
 
-**Optional Fields**
+**Optional fields**
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -110,7 +110,7 @@ docker run -d \
 
 --8<-- "verify-connection.md"
 
-## Next Steps
+## Next steps
 
 <div class="grid cards" markdown>
 
