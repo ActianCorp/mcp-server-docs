@@ -18,7 +18,7 @@ The Actian NoSQL MCP Server supports the following operations:
 | **Retrieve objects by ID** | Fetch one or many objects directly by LOID for the fastest retrieval path. |
 
 !!! note "Extensions for NoSQL"
-    NoSQL supports extensions, but through a different interface with its own API and examples. Documentation for it is not yet available. The [Extensions](../extensions/index.md) guide covers the other databases and does not apply here.
+    NoSQL supports extensions through a different interface from the SQL engines. See [Extensions for Actian NoSQL](../extensions/nosql.md).
 
 ## Prerequisites
 
