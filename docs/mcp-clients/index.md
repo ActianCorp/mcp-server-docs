@@ -30,7 +30,7 @@ When write support is enabled, the server asks a person to approve each `INSERT`
 !!! warning "A client that cannot prompt cannot write"
     If the connected client does not support elicitation, the server rejects the write, exactly as if a person had declined it. There is no silent approval. Reads are unaffected.
 
-    To let such a client write, set `write_confirmation` to `false` in `conf.json`. That runs writes without asking anyone first. See [Write support](../intro/write-support.md#skipping-the-approval-prompt).
+    To let such a client write, set `write_confirmation` to `false` in `conf.json`. That runs writes without asking anyone first. See [Write support](../write-support/index.md#skipping-the-approval-prompt).
 
 #### Client Configuration Examples
 

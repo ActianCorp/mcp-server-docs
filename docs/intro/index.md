@@ -164,7 +164,7 @@ sequenceDiagram
   Restricts AI agents to read-only operations, preventing unintended modifications to the data.
 
 - :material-database-edit: **Controlled Write Access**  
-  Allows `INSERT`, `UPDATE`, and `DELETE` when you opt in, with each write gated by an OAuth scope and human approval. See [Write support](write-support.md).
+  Allows `INSERT`, `UPDATE`, and `DELETE` when you opt in, with each write gated by an OAuth scope and human approval. See [Write support](../write-support/index.md).
 
 - :material-database-search: **Schema Discovery**  
   Enables AI agents to review database structures and metadata before executing queries.

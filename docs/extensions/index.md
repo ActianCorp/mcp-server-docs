@@ -104,7 +104,7 @@ Always bind user input to `?` placeholders rather than building SQL strings.
 
 There is no one-shot write. Every write goes through a transaction opened with `get_database().transaction()`. A single write is a one-statement transaction, and several statements run all or nothing. A transaction pins one connection for its lifetime.
 
-Set `"query_mode": "read-write"` in `conf.json` to allow writes. The default is `read-only`, and in that mode starting a transaction raises and nothing is written. See [Write support](../intro/write-support.md).
+Set `"query_mode": "read-write"` in `conf.json` to allow writes. The default is `read-only`, and in that mode starting a transaction raises and nothing is written. See [Write support](../write-support/index.md).
 
 The recommended form is the asynchronous context manager. It commits on a clean exit, rolls back if anything raises, and always releases the connection:
 
@@ -218,7 +218,7 @@ If your extension calls `request_write_confirmation()`, the prompt always appear
 - :material-book-open-variant: **[API reference](api-reference.md)**  
   Every function, signature, and return shape.
 
-- :material-database-edit: **[Write support](../intro/write-support.md)**  
+- :material-database-edit: **[Write support](../write-support/index.md)**  
   How `query_mode` and the write authorization gates work.
 
 </div>

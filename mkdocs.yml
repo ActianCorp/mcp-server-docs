@@ -134,7 +134,8 @@ plugins:
       fallback_to_build_date: true
   - meta-descriptions
   - redirects:
-      redirect_maps: {}
+      redirect_maps:
+        'intro/write-support.md': 'write-support/index.md'
 
 # Hooks
 hooks:

@@ -54,7 +54,7 @@ them:
 - :material-shield-check: **[Secure the server](../authentication/index.md)**
   OAuth 2.0 with an external identity provider, and TLS for remote deployments.
 
-- :material-database-edit: **[Write support](../intro/write-support.md)**
+- :material-database-edit: **[Write support](../write-support/index.md)**
   Allow `INSERT`, `UPDATE`, and `DELETE`, gated by an OAuth scope and human approval.
 
 - :material-puzzle: **[Extensions](../extensions/index.md)**

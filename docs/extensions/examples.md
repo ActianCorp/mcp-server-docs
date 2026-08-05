@@ -32,7 +32,7 @@ The schema files create the same seven tables and seed data everywhere. They dif
 
 ## Running them
 
-The two transaction examples and the approval example need `"query_mode": "read-write"`. See [Write support](../intro/write-support.md).
+The two transaction examples and the approval example need `"query_mode": "read-write"`. See [Write support](../write-support/index.md).
 
 Mount each file under `/app/extensions/`, mount your configuration at `/app/conf.json`, and list the modules by name:
 

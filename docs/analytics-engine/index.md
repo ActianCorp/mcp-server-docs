@@ -22,7 +22,7 @@ The Actian Analytics Engine MCP Server supports the following operations:
 | **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
 
 !!! note "Write support is opt-in"
-    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../write-support/index.md).
 
 
 ## Prerequisites

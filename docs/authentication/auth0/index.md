@@ -66,7 +66,7 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
-When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../../intro/write-support.md).
+When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../../write-support/index.md).
 
 1. Open your API, for example `Actian MCP Server`, and select the **Permissions** tab.
 2. Under **Add a Permission**, enter the following and select **+ Add**:
