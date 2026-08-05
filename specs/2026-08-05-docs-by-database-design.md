@@ -136,7 +136,7 @@ matter, a parent directory can be introduced later at the cost of five redirects
 
 | Today | Target | Action |
 |---|---|---|
-| `get-started/index.md` | unchanged path | Becomes chooser + arc. The shared `conf.json` field table and the `docker run` pattern move to `includes/` and are included here *and* by the setup pages. |
+| `get-started/index.md` | unchanged path | Becomes chooser + arc, consuming **no** includes. Its `conf.json` field table is dropped rather than shared: a chooser must not carry a configuration reference, which is the duplication being removed. The four setup pages already hold that content. |
 | `{ingres,hcl-informix,zen,analytics-engine}/index.md` | unchanged paths | Re-authored from `setup-sql-database.md.tmpl`, structurally identical. Engine-specific: image, connection fields, engine quirks. Shared content included. |
 | `nosql/index.md` | unchanged path | The Python client section (lines 107–241) moves to `mcp-clients/python.md`; it does not belong on a setup page and the SQL family needs it equally. |
 | `{ingres,hcl-informix,zen,analytics-engine}/tools/index.md` | unchanged paths | `execute_query`, `list_tables`, `describe_table`, `list_functions` come from `includes/tools/`. Zen keeps its three extras written out. **Write examples are added everywhere**, closing the gap from §1.2. |
@@ -182,8 +182,10 @@ where they do not belong.
 
 | Include | Consumed by | Why shareable |
 |---|---|---|
-| `conf/common-fields.md` | 4 SQL setup pages, `get-started/` | `log_level`, `ssl_certfile`, `ssl_keyfile`, `oauth`, `query_mode`, `write_confirmation`, `extensions`, `max_rows` — already verbatim identical 4× |
-| `conf/protection-note.md` | 4 SQL setup pages, `get-started/` | The `chmod 600` admonition |
+| `conf/common-optional-fields.md` | 4 SQL setup pages | `log_level`, `oauth`, `extensions` — the only rows common to all four. See §7.3 |
+| `conf/tls-fields.md` | 3 SQL setup pages | `ssl_certfile`, `ssl_keyfile` — Zen documents neither |
+| `conf/write-fields.md` | 2 SQL setup pages | `query_mode`, `write_confirmation` — Ingres and Analytics Engine only, pending §11.1 |
+| `conf/protection-note.md` | 4 SQL setup pages | The `chmod 600` admonition |
 | `docker/run-sql.md` | 4 SQL setup pages, `get-started/` | The `docker run` pattern; image name is a placeholder the surrounding page names |
 | `docker/mount-path-note.md` | 5 setup pages | "The container reads from `/app/conf.json`; do not change the path" |
 | `verify-connection.md` | 4 SQL setup pages | The three verification steps from `get-started/` step 5 |
@@ -198,6 +200,33 @@ where they do not belong.
 Deliberately **not** shared, despite the temptation: prerequisites lists (they
 should stay engine-specific — Informix mentions Podman, Zen needs `--add-host`)
 and the capabilities tables (genuinely different per engine).
+
+### 7.3 Measured: the SQL family is less uniform than assumed
+
+An earlier draft of §7.1 claimed a single eight-field `conf/common-fields.md` was
+"already verbatim identical 4×". Measuring the four pages disproved it:
+
+| Field | Ingres | Informix | Zen | Analytics Engine |
+|---|---|---|---|---|
+| `extensions` | ✅ | ✅ | ✅ | ✅ (verbatim identical) |
+| `log_level`, `oauth` | ✅ | ✅ | ✅ | ✅ (phrasing differs only) |
+| `max_rows` | "Maximum value: 1000" | "Default is 1000" | "Default is 1000" | "Default is 1000" |
+| `ssl_certfile`, `ssl_keyfile` | ✅ | ✅ | ❌ absent | ✅ |
+| `query_mode`, `write_confirmation` | ✅ | ❌ absent | ❌ absent | ✅ |
+
+Hence three includes with three different consumer sets, each matching the evidence,
+rather than one include asserting uniformity that does not exist. Each grows a consumer
+as the §11 questions get answered — no rewrite needed.
+
+Two further consequences:
+
+- **`docker/run-sql.md` is impossible.** `pymdownx.snippets` has no variable
+  substitution, and the `docker run` block names the engine's image. Consistency there
+  comes from the template plus review, not from single-sourcing. The include is removed
+  from §7.1.
+- **Zen's startup genuinely differs.** It needs
+  `--add-host=host.docker.internal:host-gateway` to reach the Zen engine on the host;
+  the other three do not.
 
 ### 7.2 Hook change
 
@@ -371,7 +400,12 @@ rearranging existing ones. These cannot be answered from this repository:
    touching these pages): `:1.0.0` (Ingres, Analytics Engine), `:latest` (Zen),
    `:1.0.1` (NoSQL), `:1.0.0` (Informix), while `theme_overrides/main.html:9`
    announces 1.1 as the latest release.
-6. **NoSQL write semantics and NoSQL extension API** — needed to fill the two
+6. **Is `max_rows` = 1000 a hard cap or a default?** Ingres says "Maximum value:
+   `1000`", the other three say "Default is `1000`". These are different claims and
+   only one can be right per engine. Until answered, `max_rows` stays a per-page row
+   instead of moving into `conf/common-optional-fields.md`. — *does not block, but
+   leaves one row duplicated 4×*
+7. **NoSQL write semantics and NoSQL extension API** — needed to fill the two
    stub pages. Out of scope for this design; the stubs exist to hold the slot.
 
 ## 12. Verification
