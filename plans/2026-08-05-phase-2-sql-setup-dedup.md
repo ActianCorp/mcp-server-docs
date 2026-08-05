@@ -45,7 +45,12 @@ per-engine walkthrough content onto the per-engine pages where it belongs.
   in all of them. **Do not** consume these includes from a page at another depth
   without re-checking every link.
 - A row-fragment include (one that continues a Markdown table started by the page)
-  must not begin or end with a blank line, or the table breaks in two.
+  must have **no trailing newline at all**, not merely no trailing blank line. A file
+  ending in `\n` contributes one blank line when inlined, which terminates the table —
+  every include after it then renders as literal pipes in a paragraph. Confirmed during
+  execution: the first include joined the table and the next two broke out of it. Write
+  these files with `rstrip("\n")`. Standalone blocks (admonitions, whole sections) are
+  unaffected and keep their trailing newline.
 - Informix image, resolved 2026-08-05: `actian/informix-mcp-server` from Docker Hub.
   The `docker load -i ifx_mcp_image.tar` step and the name
   `actian/informix-mcp-server-linux:1.0.0` are both wrong and get dropped.
@@ -313,8 +318,10 @@ diff -rq -I 'git-revision-date-localized-plugin-date' \
   /tmp/phase2-baseline-site /tmp/phase2-t1 | sed 's|/tmp/phase2-[a-z0-9]*||g' | sort
 ```
 
-Expected: exactly eight lines — `index.html` and `index.md` for `ingres`,
-`hcl-informix`, `zen` and `analytics-engine`. Nothing else.
+Expected: nine lines — `index.html` and `index.md` for `ingres`, `hcl-informix`, `zen`
+and `analytics-engine`, plus `search/search_index.json`. The search index is expected:
+it embeds page text, and this phase changes wording. (Phase 1 did not touch it because
+only `href` attributes changed there, not text.)
 
 - [ ] **Step 11: Run the gates**
 
@@ -518,7 +525,7 @@ diff -rq -I 'git-revision-date-localized-plugin-date' \
   /tmp/phase2-baseline-site /tmp/phase2-t2 | sed 's|/tmp/phase2-[a-z0-9]*||g' | sort
 ```
 
-Expected: eight lines, the same four pages as Task 1.
+Expected: nine lines, the same four pages as Task 1 plus `search/search_index.json`.
 
 - [ ] **Step 10: Run the gates**
 
@@ -650,13 +657,17 @@ relationships" instead of "Explore functions". Replace it the same way:
 
 - [ ] **Step 6: Verify all four pages now carry the steps**
 
+Pygments splits every token of a shell command into its own `<span>`, so grepping the
+rendered HTML for a contiguous `docker ps --filter` finds nothing even when the block is
+correct. Match on single tokens instead:
+
 ```bash
 python3 -m mkdocs build -q -d /tmp/phase2-t3
 for p in ingres hcl-informix zen analytics-engine; do
-  printf "%-18s verify-heading=%s docker-ps=%s curl=%s\n" "$p" \
+  printf "%-18s heading=%s endpoint=%s tool=%s\n" "$p" \
     "$(grep -c 'id="verify-the-connection"' /tmp/phase2-t3/$p/index.html)" \
-    "$(grep -c 'docker ps --filter' /tmp/phase2-t3/$p/index.html)" \
-    "$(grep -c 'curl -i http' /tmp/phase2-t3/$p/index.html)"
+    "$(grep -c 'localhost:8000/mcp' /tmp/phase2-t3/$p/index.html)" \
+    "$(grep -c 'list_tables' /tmp/phase2-t3/$p/index.html)"
 done
 ```
 
@@ -677,7 +688,7 @@ diff -rq -I 'git-revision-date-localized-plugin-date' \
   /tmp/phase2-baseline-site /tmp/phase2-t3 | sed 's|/tmp/phase2-[a-z0-9]*||g' | sort
 ```
 
-Expected: eight lines, the same four pages.
+Expected: nine lines, the same four pages plus `search/search_index.json`.
 
 - [ ] **Step 9: Run the gates**
 
@@ -1068,8 +1079,8 @@ diff -rq -I 'git-revision-date-localized-plugin-date' \
   /tmp/phase2-baseline-site /tmp/phase2-t5 | sed 's|/tmp/phase2-[a-z0-9]*||g' | sort
 ```
 
-Expected: ten lines — `index.html` and `index.md` for the four setup pages plus
-`get-started`. An eleventh appears only if Step 6 required fixing a link on another
+Expected: eleven lines — `index.html` and `index.md` for the four setup pages plus
+`get-started`, and `search/search_index.json`. An eleventh appears only if Step 6 required fixing a link on another
 page, which is the one intended exception noted in Task 0 Step 3.
 
 - [ ] **Step 8: Run the remaining gates**
@@ -1095,11 +1106,60 @@ end of the Zen setup page. The test: can you get from "I have a Zen database" to
 running, verified server without jumping back out? Note anything that forces a detour —
 that is phase 2's real acceptance criterion and the reason the phase exists.
 
-- [ ] **Step 10: Commit**
+- [ ] **Step 10: Commit the chooser**
 
 ```bash
 git add docs/get-started/index.md
 git commit -m "docs: turn Get started into a database chooser"
+```
+
+- [ ] **Step 11: Close the gap the end-to-end read exposes**
+
+Step 9's read finds it every time, so it is written down here rather than left to the
+reader's judgement: **none of the four setup pages links to `mcp-clients/`.** They end
+with Tools / Resources / Prompts / Extensions, so a reader who has just verified a
+running server has no way forward and must go back to Get started. Spec §5 requires the
+setup page to run "prerequisites → configuration → start → verify → continue to a
+client", which makes this a gap against the spec, not a nice-to-have.
+
+Add this as the **first** card in the `## Next steps` grid on all four setup pages and
+in `templates/setup-sql-database.md.tmpl`:
+
+```markdown
+- :material-connection: **[Connect a client](../mcp-clients/index.md)**  
+  Point Claude Desktop, Cursor, GitHub Copilot, Codex, or fast-agent at the server
+  endpoint.
+```
+
+The two trailing spaces after `**` are load-bearing — they make the hard line break that
+puts the description on its own line. While adding the card, harmonize that: Ingres,
+Informix and Analytics Engine already use the two-space hard break, while Zen and the
+template use a soft break and render title and description on one line. Three against
+one, so Zen and the template follow.
+
+Verify all four pages now have five cards and the link resolves:
+
+```bash
+python3 -m mkdocs build --strict 2>&1 | grep -E "WARNING|ERROR|Aborted"; echo "(empty above = good)"
+python3 -m mkdocs build -q -d /tmp/phase2-t5b
+for p in ingres hcl-informix zen analytics-engine; do
+  printf "%-18s connect=%s cards=%s\n" "$p" \
+    "$(grep -c 'Connect a client' /tmp/phase2-t5b/$p/index.html)" \
+    "$(sed -n '/grid cards/,/<\/ul>/p' /tmp/phase2-t5b/$p/index.html | grep -c '<li>')"
+done
+```
+
+Expected: `connect=1 cards=5` on every line.
+
+- [ ] **Step 12: Commit the gap fix separately**
+
+Separate commit, because it is a deviation from the plan as written and a reviewer
+should be able to judge it on its own.
+
+```bash
+git add docs/ingres/index.md docs/hcl-informix/index.md docs/zen/index.md \
+  docs/analytics-engine/index.md templates/setup-sql-database.md.tmpl
+git commit -m "docs: link every setup page onward to the client guide"
 ```
 
 ---

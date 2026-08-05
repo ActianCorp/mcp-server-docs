@@ -1,7 +1,7 @@
 # Design: Restructure the documentation around "How do I use the MCP Server for my database?"
 
 - **Date:** 2026-08-05
-- **Status:** Approved, not yet implemented
+- **Status:** Phases 1 and 2 implemented. Phases 3-6 pending; 3 is blocked on §11.
 - **Branch:** `feat/docs-by-product`
 
 > This document lives outside `docs/` on purpose. Everything under `docs/` is built
@@ -227,6 +227,17 @@ Two further consequences:
 - **Zen's startup genuinely differs.** It needs
   `--add-host=host.docker.internal:host-gateway` to reach the Zen engine on the host;
   the other three do not.
+
+### 7.4 Row-fragment includes must have no trailing newline
+
+An include that continues a table the page has already opened must not end with a
+newline. A file ending in `\n` contributes one blank line when inlined, which terminates
+the table; every include after it renders as literal pipes in a paragraph. Measured
+during phase 2: the first include joined the table, the next two broke out of it, while
+the table *count* stayed correct — so a table-count check alone does not catch this.
+Check for `^<p>| ` in the rendered HTML instead.
+
+Standalone includes (admonitions, whole sections) are unaffected.
 
 ### 7.2 Hook change
 
