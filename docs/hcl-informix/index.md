@@ -103,7 +103,7 @@ docker run -d \
     -v $(pwd)/conf.json:/app/conf.json:ro \
     -p 8000:8000 \
     --name=actian-mcp \
-    actian/informix-mcp-server:1.0.0
+    actian/informix-mcp-server:1.1.0
 ```
 
 --8<-- "docker/mount-path-note.md"

@@ -97,7 +97,7 @@ docker run -d \
     -p 8000:8000 \
     --add-host=host.docker.internal:host-gateway \
     -v $(pwd)/conf.json:/app/conf.json:ro \
-    actian/zen-mcp-server:latest
+    actian/zen-mcp-server:1.1.0
 ```
 
 !!! note "Container networking"
