@@ -25,17 +25,19 @@ The split between `TODO(fill)` and `STUB` is the point. Published stubs are want
 |---|---|---|---|---|---|
 | `{{DB_NAME}}` | Actian Ingres | HCL Informix® | Actian Zen | Actian Analytics Engine | Actian NoSQL |
 | `{{DB_SLUG}}` | `ingres` | `hcl-informix` | `zen` | `analytics-engine` | `nosql` |
-| `{{IMAGE}}` | `actian/ingres-mcp-server` | see note | `actian/zen-mcp-server` | `actian/analytics-engine-mcp-server` | `actian/nsql-mcp-server` |
+| `{{IMAGE}}` | `actian/ingres-mcp-server` | `actian/informix-mcp-server` | `actian/zen-mcp-server` | `actian/analytics-engine-mcp-server` | `actian/nsql-mcp-server` |
 | `{{PORT}}` | `8000` | `8000` | `8000` | `8000` | `8080` |
+
+All five images come from Docker Hub under `hub.docker.com/u/actian`.
 
 `{{VARIANT_TITLE}}` is used only by the two variant templates. Its values are
 `SQL databases` and `Actian NoSQL`.
 
-The Informix image is unresolved: the landing page and Get Started say
-`actian/informix-mcp-server` from Docker Hub, while `docs/hcl-informix/index.md` says
-`docker load -i ifx_mcp_image.tar` and `actian/informix-mcp-server-linux:1.0.0`. See
-§11.4 of `specs/2026-08-05-docs-by-database-design.md`. Do not fill `{{IMAGE}}` for
-Informix until that is settled.
+!!! warning "Informix: drop the tarball instructions"
+    `docs/hcl-informix/index.md` currently tells the reader to run
+    `docker load -i ifx_mcp_image.tar` and use `actian/informix-mcp-server-linux:1.0.0`.
+    Both are wrong — the image is pulled from Docker Hub like the others. When you
+    re-author that page from `setup-sql-database.md.tmpl`, drop the load step entirely.
 
 ## Shared fragments
 

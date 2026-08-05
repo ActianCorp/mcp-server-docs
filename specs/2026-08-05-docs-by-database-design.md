@@ -360,12 +360,13 @@ rearranging existing ones. These cannot be answered from this repository:
    assuming. — *blocks phase 3*
 3. **`user_impersonation` on NoSQL** — supported or not? Zen is documented as
    unsupported (`docs/zen/index.md:87-88`); NoSQL is unstated. — *blocks phase 3*
-4. **The Informix image contradiction.** `docs/index.md:80` and
-   `docs/get-started/index.md:25` say `actian/informix-mcp-server` with a Docker
-   Hub link. `docs/hcl-informix/index.md:106-115` says
-   `docker load -i ifx_mcp_image.tar` and then
-   `actian/informix-mcp-server-linux:1.0.0` — not from Docker Hub, different
-   image name. One of the two is wrong. — *blocks phase 2*
+4. ~~**The Informix image contradiction.**~~ **Resolved 2026-08-05: Docker Hub.**
+   `actian/informix-mcp-server` from Docker Hub is correct, as stated in
+   `docs/index.md:80` and `docs/get-started/index.md:25`. The instructions at
+   `docs/hcl-informix/index.md:106-115` are therefore wrong on two counts: the
+   `docker load -i ifx_mcp_image.tar` step does not apply, and the image name
+   `actian/informix-mcp-server-linux:1.0.0` is not the published one. Phase 2
+   re-authors that page from the template and must drop both. Phase 2 is unblocked.
 5. **Inconsistent version tags** (not blocking, but should be resolved while
    touching these pages): `:1.0.0` (Ingres, Analytics Engine), `:latest` (Zen),
    `:1.0.1` (NoSQL), `:1.0.0` (Informix), while `theme_overrides/main.html:9`
