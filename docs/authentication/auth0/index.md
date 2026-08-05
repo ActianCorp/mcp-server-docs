@@ -319,7 +319,7 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
 !!! note
     Replace `<db-host>` with the database server address. In a Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
 
-For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see [HTTPS / TLS for Remote Deployments](../index.md#https-tls-for-remote-deployments).
+For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see [HTTPS / TLS for Remote Deployments](../index.md#secure-remote-deployments-with-https-and-tls).
 
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](../index.md#security-best-practices).
 

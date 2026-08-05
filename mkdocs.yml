@@ -73,6 +73,10 @@ markdown_extensions:
       permalink: true
   - meta
 
+# Treat broken internal anchors as warnings so --strict fails on them.
+validation:
+  anchors: warn
+
 # Copyright
 copyright: >-
   Copyright &copy; 2026, Actian

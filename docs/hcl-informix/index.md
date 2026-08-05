@@ -91,7 +91,7 @@ Create a file named `conf.json` in the working directory and include the specifi
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` inside the container. |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` inside the container. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) for more information. |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments, see [OAuth configuration](../authentication/index.md#configuring-oauth-block) for more information. |
 | `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md) |
 
 ---

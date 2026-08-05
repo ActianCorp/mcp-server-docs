@@ -276,4 +276,4 @@ Review the following guidelines to ensure a stable and secure connection:
 
 - **Port mapping:** Always connect using the specific port configured for the MCP Server container.
 - **Production security:** Enforce HTTPS and configure authentication whenever you expose the server outside a trusted local environment.
-- **Remote deployments:** If you enable OAuth on a non-localhost deployment, the server requires TLS and a public `https://` base URL. For detailed instructions on generating certificates, configuring Docker, and trusting self-signed certificates, see [HTTPS / TLS for remote deployments](../authentication/index.md#https-tls-for-remote-deployments).
+- **Remote deployments:** If you enable OAuth on a non-localhost deployment, the server requires TLS and a public `https://` base URL. For detailed instructions on generating certificates, configuring Docker, and trusting self-signed certificates, see [HTTPS / TLS for remote deployments](../authentication/index.md#secure-remote-deployments-with-https-and-tls).
