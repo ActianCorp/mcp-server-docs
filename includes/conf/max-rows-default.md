@@ -1,0 +1,1 @@
+| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. |

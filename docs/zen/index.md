@@ -83,7 +83,7 @@ Use this format when the database requires authentication. This bypasses the con
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `database` | `string` | — | Logical database name used for display purposes. |
-| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Default is `1000`. |
+--8<-- "conf/max-rows-default.md"
 --8<-- "conf/common-optional-fields.md"
 --8<-- "conf/write-fields.md"
 

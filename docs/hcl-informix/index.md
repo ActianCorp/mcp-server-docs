@@ -91,7 +91,7 @@ Create a file named `conf.json` in the working directory and include the specifi
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. |
+--8<-- "conf/max-rows-default.md"
 --8<-- "conf/common-optional-fields.md"
 --8<-- "conf/tls-fields.md"
 --8<-- "conf/write-fields.md"

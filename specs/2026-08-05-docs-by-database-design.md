@@ -445,16 +445,17 @@ rearranging existing ones. These cannot be answered from this repository:
    `docs/ingres/index.md:104`, `docs/hcl-informix/index.md:106`,
    `docs/analytics-engine/index.md:106` and `docs/authentication/index.md:182`. The five
    untagged references in tables and Docker Hub links need no change.
-6. **Is `max_rows` = 1000 a hard cap or a default?** **Partly resolved 2026-08-05: it is
-   a hard cap of `1000` on Ingres and Analytics Engine.** Ingres already said so; the
-   Analytics Engine page said "Default is `1000`", which was wrong — a reader would take
-   1000 for a starting value they could raise. Both now share
-   `conf/max-rows-capped.md`.
+6. ~~**Is `max_rows` = 1000 a hard cap or a default?**~~ **Resolved 2026-08-05: both,
+   depending on the engine.** `1000` is the default on all four, and *additionally* a hard
+   ceiling on Ingres and Analytics Engine. Two things were wrong before: the Analytics
+   Engine page called `1000` a default a reader could raise, and Zen repeated "Default is
+   `1000`" in the description where the Default column already says it.
 
-   **Still open for HCL Informix and Zen.** Informix documents no ceiling at all, and Zen
-   still says "Default is `1000`". If they are also capped, they join that include and it
-   reaches four consumers; if not, they need a second variant that says so explicitly.
-   Until then those two rows stay written out per page. — *does not block*
+   The two facts cannot share one table row, so there are two variants:
+   `conf/max-rows-capped.md` ("Cannot be set above `1000`") for Ingres and Analytics
+   Engine, and `conf/max-rows-default.md` for Informix and Zen. Two consumers each — the
+   same evidence-matched pattern as `conf/tls-fields.md`. A future author sees two include
+   names and has to choose, which is the point.
 8. **Zen's `execute_query` response for a write.** Write support is confirmed identical
    on Zen (§11.1), and its capability and configuration are documented, but its tools page
    has no worked write example: Zen's response shape differs from the other three, so the

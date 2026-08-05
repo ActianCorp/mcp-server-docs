@@ -1,1 +1,1 @@
-| `max_rows` | `integer` | `1000` | The maximum number of rows returned in a single query response. Maximum value: `1000` |
+| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Cannot be set above `1000`. |
