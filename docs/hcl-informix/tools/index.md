@@ -20,6 +20,8 @@ The Actian MCP Server for HCL Informix® provides built-in tools for database di
 
 --8<-- "tools/execute-query-sql.md"
 
+--8<-- "tools/write-example-sql.md"
+
 ## list_tables
 
 --8<-- "tools/list-tables.md"
