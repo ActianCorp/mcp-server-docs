@@ -31,6 +31,7 @@ then redirected back out by admonitions:
 | `docs/get-started/index.md:63-64` | "Actian NoSQL users — uses a different startup command" |
 | `docs/nosql/index.md:20-21` | "NoSQL supports extensions, but through a different interface … Documentation for it is not yet available" |
 | `docs/nosql/index.md:109-110` | "For connecting AI clients … see the Connecting MCP Clients guide" |
+| `docs/mcp-clients/index.md:128-129` | "Actian NoSQL uses different tools … For a NoSQL-specific Python client example, see [the NoSQL page]" — the other half of a mutual redirect with the row above |
 
 The workaround for authentication was to duplicate the entire subtree:
 `docs/nosql/authentication/` mirrors `docs/authentication/` with Auth0 (425 vs
@@ -138,7 +139,7 @@ matter, a parent directory can be introduced later at the cost of five redirects
 |---|---|---|
 | `get-started/index.md` | unchanged path | Becomes chooser + arc, consuming **no** includes. Its `conf.json` field table is dropped rather than shared: a chooser must not carry a configuration reference, which is the duplication being removed. The four setup pages already hold that content. |
 | `{ingres,hcl-informix,zen,analytics-engine}/index.md` | unchanged paths | Re-authored from `setup-sql-database.md.tmpl`, structurally identical. Engine-specific: image, connection fields, engine quirks. Shared content included. |
-| `nosql/index.md` | unchanged path | The Python client section (lines 107–241) moves to `mcp-clients/python.md`; it does not belong on a setup page and the SQL family needs it equally. |
+| `nosql/index.md` | unchanged path | **Done (phase 5).** Its Python client section moved to `mcp-clients/python.md`, merged with the SQL copy that lived on `mcp-clients/index.md`. Two defects in those examples were fixed in the merge: the SQL one replaced the TLS trust store instead of adding to it, so identity-provider requests would fail; the NoSQL one set `CALLBACK_PORT = <callback-port>`, a syntax error. The page also gained the `Connect a client` card phase 2 had given only the SQL pages. |
 | `{ingres,hcl-informix,zen,analytics-engine}/tools/index.md` | unchanged paths | `execute_query`, `list_tables`, `describe_table`, `list_functions` come from `includes/tools/`. Zen keeps its three extras written out. **Write examples are added everywhere**, closing the gap from §1.2. |
 | `nosql/tools/index.md` | unchanged path | Stays standalone; no include sharing (JPQL, LOIDs, pagination). |
 | `nosql/authentication/**` (4 files) | **removed** | Merged into `authentication/**` with tabs at the diverging steps. Redirects required. |
@@ -275,6 +276,37 @@ is now `customers`, the demo table the rest of the page already uses.
 
 `row_count` is written as `"<num_rows>"` in the read includes but stays the literal `1`
 in the write include: there it means one row was written, not "some number of rows".
+
+### 7.6 Tab labels are a cross-page contract
+
+`content.tabs.link` synchronises content tabs by their **label text**, across the whole
+site and across page navigations. That is what makes the tabs a database switcher rather
+than a per-block widget — and it means a typo in a label silently breaks the
+synchronisation for that block, with no build error.
+
+Two labels are established, first used in `docs/mcp-clients/python.md`:
+
+- `SQL databases`
+- `Actian NoSQL`
+
+Any page that adds tabs must reuse these verbatim. Phase 6's authentication merge is the
+next consumer. The rendered marker that proves the feature is active is Material's
+`querySelectorAll(".tabbed-set")` synchronisation script, injected only when
+`content.tabs.link` is set.
+
+### 7.7 Verify rendered output by content, not by theme markup
+
+Three plan verifications have now failed because they grepped for Material's or Pygments'
+markup rather than for content:
+
+- Phases 2 and 3 searched the rendered HTML for a contiguous `docker ps --filter`. Pygments
+  splits every shell token into its own `<span>`, so the match never succeeds even when the
+  block is correct. Match a single token, or the HTML-escaped form (`&quot;key&quot;`).
+- Phase 5 tried to read the navigation order by parsing `md-nav__link` label markup. Three
+  attempts failed. What works is extracting `href` targets in document order.
+
+Prefer a check that would survive a theme upgrade: parse the JSON, count the anchors, read
+the hrefs. Markup shape is not a stable interface.
 
 ### 7.2 Hook change
 
