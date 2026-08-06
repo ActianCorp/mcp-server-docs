@@ -20,7 +20,10 @@ check-raw-md:
 # The gate used through phases 1-6 grepped for WARNING/ERROR/Aborted, which cannot
 # see a plugin exception -- a crashing build reported success in phase 6. Check the
 # exit code instead.
+#
+# Output is held in a shell variable rather than a temp file. A fixed path under /tmp
+# is a symlink target an attacker can pre-create, and it collides when two builds run
+# at once (the container targets above make that plausible).
 check-build:
-	@python3 -m mkdocs build --strict > /tmp/mkdocs-build.log 2>&1 \
-	  || (echo "Build failed:" && grep -E 'WARNING|Aborted|Error|error' /tmp/mkdocs-build.log | tail -20 && exit 1)
-	@grep -E '^WARNING' /tmp/mkdocs-build.log && (echo "Build emitted warnings" && exit 1) || true
+	@out=$$(python3 -m mkdocs build --strict 2>&1) \
+	  || { echo "Build failed:"; printf '%s\n' "$$out" | grep -E 'WARNING|Aborted|Error' | tail -20; exit 1; }
