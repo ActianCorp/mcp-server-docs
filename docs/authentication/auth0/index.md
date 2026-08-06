@@ -360,7 +360,7 @@ You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`,
 | `redirect_uri_mismatch` | Callback URL does not match `<BASE_URL>/auth/callback`. | Fix **Allowed Callback URLs** in Auth0 - scheme, host, and port must match exactly. |
 | `ValueError: Issuer URL must be HTTPS` | OAuth without TLS configured. | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL`. |
 | `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://`. | Update `BASE_URL` to `https://`. |
-| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start. | Mount cert/key as volumes when starting the container (see [Docker Deployment](../index.md#step-3-deploy-the-docker)). |
+| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start. | Mount cert/key as volumes when starting the container (see [Docker Deployment](../index.md#step-3-deploy-the-container)). |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN. | Regenerate with `-addext "subjectAltName=IP:<ip>"`. |
 | `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by `Node.js`. | Launch Visual Studio Code with `NODE_EXTRA_CA_CERTS=/path/to/server.crt code .` |
 | `Client Not Registered` (VS Code) | Server's Docker container was recreated, wiping client registrations, but Visual Studio Code caches the old client ID. | Quit Visual Studio Code, then delete stale registrations from the state DB (see [Clearing Visual Studio Code OAuth cache](#clearing-visual-studio-code-oauth-cache) below) and reopen Visual Studio Code. To prevent recurrence, mount a Docker volume for `/root/.local/share/fastmcp`. |
