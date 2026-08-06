@@ -1,3 +1,4 @@
-title: MCP Clients
+title: Connect a Client
 nav:
   - index.md
+  - python.md

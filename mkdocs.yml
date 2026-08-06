@@ -29,6 +29,7 @@ theme:
     - search.suggest
     - content.code.copy
     - content.code.annotate
+    - content.tabs.link
   palette:
     - scheme: default
       primary: indigo
