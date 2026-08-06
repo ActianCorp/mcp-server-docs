@@ -381,14 +381,13 @@ By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed ce
 
 ## Provider Setup Guides
 
-Choose your identity provider for step-by-step setup instructions:
+Choose your identity provider and your database:
 
-<div class="grid cards" markdown>
+| Provider | SQL databases | Actian NoSQL |
+|----------|---------------|--------------|
+| Keycloak | [Keycloak setup](keycloak/index.md) | [Keycloak for NoSQL](keycloak/nosql.md) |
+| Auth0 | [Auth0 setup](auth0/index.md) | [Auth0 for NoSQL](auth0/nosql.md) |
 
-- :material-cloud: **[Auth0](auth0/index.md)**  
-  Cloud-hosted identity provider. Ideal for teams that want a managed service with no infrastructure to maintain.
-
-- :material-key: **[Keycloak](keycloak/index.md)**  
-  Open-source, self-hosted identity provider. Ideal for teams that need full control over their authentication infrastructure.
-
-</div>
+The NoSQL guides are separate rather than tabbed because they document different
+procedures, not variants of one — different step sequences, different client setups, and a
+different configuration system.

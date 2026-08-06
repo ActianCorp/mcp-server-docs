@@ -137,6 +137,9 @@ plugins:
   - redirects:
       redirect_maps:
         'intro/write-support.md': 'write-support/index.md'
+        'nosql/authentication/index.md': 'authentication/index.md'
+        'nosql/authentication/keycloak/index.md': 'authentication/keycloak/nosql.md'
+        'nosql/authentication/auth0/index.md': 'authentication/auth0/nosql.md'
 
 # Hooks
 hooks:

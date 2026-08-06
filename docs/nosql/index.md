@@ -49,7 +49,7 @@ The server is a **Quarkus** application. Any standard Quarkus configuration prop
 | `quarkus.http.ssl-port` | `8443` | HTTPS listening port. |
 
 !!! note "Securing the server"
-    To enable OAuth 2.0 or TLS, additional properties are required. See [Authentication](authentication/index.md) for the full configuration reference.
+    To enable OAuth 2.0 or TLS, additional properties are required. See [Authentication](../authentication/index.md) for the full configuration reference.
 
 #### Logging
 
@@ -112,7 +112,7 @@ Once the container is running, connect the MCP client to the exposed server endp
   Point Claude Desktop, Cursor, GitHub Copilot, Codex, or fast-agent at the server
   endpoint.
 
-- :material-lock: **[Authentication](authentication/index.md)**  
+- :material-lock: **[Authentication](../authentication/index.md)**  
   Secure the server with OAuth 2.0 and an external identity provider.
 
 - :material-tools: **[Tools](tools/index.md)**  

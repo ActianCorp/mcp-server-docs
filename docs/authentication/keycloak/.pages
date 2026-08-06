@@ -1,3 +1,4 @@
 title: Keycloak
 nav:
   - index.md
+  - nosql.md

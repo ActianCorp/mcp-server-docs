@@ -1,5 +1,5 @@
 ---
-title: Auth0 Setup Guide
+title: Actian NoSQL
 description: Step-by-step guide to configure Auth0 as the OAuth identity provider for the Actian MCP Server.
 ---
 
@@ -26,7 +26,7 @@ By the completion of this guide, you will have obtained the issuer URL needed fo
 6. **Grant API access:** Under the **APIs** tab of the application, authorize the API created in step 3.
 7. **Enable compatibility profile:** Under **Settings > Advanced**, enable the **Resource Parameter Compatibility Profile**.
 8. **Update properties:** Set `quarkus.oidc.auth-server-url` in `application.properties` to `https://<your-tenant>.auth0.com/`.
-9. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../index.md#start-the-server) documentation.
+9. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../nosql/index.md#start-the-server) documentation.
 
 
 ## Prerequisites
@@ -104,7 +104,7 @@ On the **Settings** tab, configure the redirect URI to match the MCP client's OA
 
 | Setting | Value | Notes |
 |---------|-------|-------|
-| **Allowed Callback URLs** | MCP client's callback URL | Consult the [MCP client documentation](../../../mcp-clients/index.md) for the exact value. |
+| **Allowed Callback URLs** | MCP client's callback URL | Consult the [MCP client documentation](../../mcp-clients/index.md) for the exact value. |
 | **Allowed Logout URLs** | MCP client's logout URL | Optional. |
 | **Allowed Web Origins** | MCP client's origin | Optional, for CORS. |
 
@@ -150,7 +150,7 @@ The Actian MCP Server requires the Auth0 issuer URL to validate incoming tokens.
 
 ### Example `application.properties`
 
-Add the following to the `application.properties` and start the server as described in [Start the Server](../../index.md#start-the-server):
+Add the following to the `application.properties` and start the server as described in [Start the Server](../../nosql/index.md#start-the-server):
 
 ```properties
 nsql.connectionURL=<connection-url>

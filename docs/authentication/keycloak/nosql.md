@@ -1,5 +1,5 @@
 ---
-title: Keycloak Setup Guide
+title: Actian NoSQL
 description: Step-by-step guide to configure Keycloak as the OAuth identity provider for the Actian MCP Server.
 ---
 
@@ -22,7 +22,7 @@ By the completion of this guide, you will have obtained the issuer URL needed fo
 3. **Create users** for those logging in via the Authorization Code flow. (This is not required for Client Credentials.)
 4. **Note the realm issuer URL**: `http://<keycloak-host>:8080/realms/<realm-name>`.
 5. **Set `quarkus.oidc.auth-server-url`** and **`quarkus.oidc.resource-metadata.scopes`** in `application.properties`.
-6. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../index.md#start-the-server) documentation.
+6. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../nosql/index.md#start-the-server) documentation.
 
 
 ## Prerequisites
@@ -87,7 +87,7 @@ Create one client for each required flow:
 
     | Setting | Value | Notes |
     |---------|-------|-------|
-    | **Valid redirect URIs** | MCP client's callback URL | Consult the [MCP client documentation](../../../mcp-clients/index.md) for the exact value. |
+    | **Valid redirect URIs** | MCP client's callback URL | Consult the [MCP client documentation](../../mcp-clients/index.md) for the exact value. |
     | **Web origins** | MCP client's origin | For CORS. |
 
 7. Select **Save**.
@@ -161,7 +161,7 @@ The Actian MCP Server requires the Keycloak realm issuer URL to validate tokens.
 
 ### Example `application.properties`
 
-Add the following to the `application.properties` and start the server as described in [Start the Server](../../index.md#start-the-server) documentation:
+Add the following to the `application.properties` and start the server as described in [Start the Server](../../nosql/index.md#start-the-server) documentation:
 
 ```properties
 nsql.connectionURL=<connection-url>
