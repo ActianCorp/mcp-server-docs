@@ -3,12 +3,12 @@ nav:
   - index.md
   - intro
   - get-started
+  - ingres
+  - hcl-informix
+  - zen
+  - analytics-engine
+  - nosql
   - mcp-clients
   - authentication
   - write-support
   - extensions
-  - ingres
-  - hcl-informix
-  - zen
-  - nosql
-  - analytics-engine
