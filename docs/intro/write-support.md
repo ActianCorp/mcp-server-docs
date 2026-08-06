@@ -13,6 +13,12 @@ Extensions can write too, through the same authorization checks described below.
 
 Which tools accept a write, and how, depends on the database. See the Tools page for your database, for example [Ingres tools](../ingres/tools/index.md) or [Analytics Engine tools](../analytics-engine/tools/index.md). The `query_mode` setting and the authorization checks described below apply the same way regardless of which tool performs the write.
 
+!!! note "Zen routes writes to a separate tool, and changes its tool list"
+    On Ingres and Analytics Engine, `execute_query` performs the write once `query_mode` is
+    `read-write`. On [Zen](../zen/tools/index.md) it never does: writes go to `execute_write_query`
+    and `batch_operation`, and enabling write mode also removes `blob_operation` and
+    `database_manage` from the registered tools.
+
 ## Enabling write mode
 
 Set `query_mode` in the `conf.json` file:
@@ -103,6 +109,9 @@ The server records what it skipped. At startup it logs a warning banner stating 
 
 - :material-chart-box: **[Analytics Engine configuration](../analytics-engine/index.md#configuration-reference)**  
   The same fields for Actian Analytics Engine.
+
+- :material-database: **[Zen configuration](../zen/index.md#configuration-reference)**  
+  The same fields for Actian Zen, which registers a different tool set per mode.
 
 - :material-shield-check: **[Authentication](../authentication/index.md)**  
   Set up the `mcp:write` scope in Auth0 or Keycloak.
