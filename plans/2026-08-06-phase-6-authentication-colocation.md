@@ -34,9 +34,15 @@ The SQL provider guides keep their paths; three redirects cover the NoSQL tree.
   switcher silently with no build error. This phase is the contract's second consumer.
 - Verify rendered output by content, not by theme markup (spec §7.7). Parse the JSON,
   count the anchors, read the hrefs.
-- Trust the build over the grep (spec §7.4). Phase 4's inventory missed a
-  sibling-relative link that `--strict` then caught. Every link-touching step here ends
-  with a strict build.
+- Trust the build over the grep (spec §7.4), and check the **exit code**, not the output.
+  Use `make check-build`. The `grep -E "WARNING|ERROR|Aborted"` pattern used through phases
+  1–5 cannot see a plugin exception, and this phase proved it: deleting
+  `docs/nosql/authentication/` while `docs/nosql/.pages` still listed it raised
+  `NavEntryNotFound`, produced no site at all, and the gate reported success.
+- **Deleting a directory and dropping its `.pages` entry must happen in the same task.**
+  The original plan put the deletion in Task 2 and the nav fix in Task 3, so every
+  verification step in Task 2 ran against a build that could not complete. Task 3's first
+  two steps are folded into Task 2.
 - `mkdocs-redirects` generates its redirect at the **source** path, so each moved file
   must be deleted, not left in place.
 - Accepted limitation (spec §9.1): raw Markdown at the three old addresses will 404 after

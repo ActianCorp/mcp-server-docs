@@ -1,7 +1,7 @@
 # Design: Restructure the documentation around "How do I use the MCP Server for my database?"
 
 - **Date:** 2026-08-05
-- **Status:** Phases 1 and 2 implemented. Phases 3-6 pending; 3 is blocked on §11.
+- **Status:** All six phases implemented. Open items are content, tracked in §11.
 - **Branch:** `feat/docs-by-product`
 
 > This document lives outside `docs/` on purpose. Everything under `docs/` is built
@@ -32,6 +32,12 @@ then redirected back out by admonitions:
 | `docs/nosql/index.md:20-21` | "NoSQL supports extensions, but through a different interface … Documentation for it is not yet available" |
 | `docs/nosql/index.md:109-110` | "For connecting AI clients … see the Connecting MCP Clients guide" |
 | `docs/mcp-clients/index.md:128-129` | "Actian NoSQL uses different tools … For a NoSQL-specific Python client example, see [the NoSQL page]" — the other half of a mutual redirect with the row above |
+| `docs/authentication/index.md:12` | "**Actian NoSQL users**: NoSQL uses a direct OAuth 2.0 flow … See [NoSQL Authentication Guide]" |
+| `docs/authentication/index.md:98` | "**NoSQL**: Uses a direct OAuth 2.0 flow … See [NoSQL Authentication Guide]" |
+| `docs/authentication/index.md:153-154` | "**TLS configuration for NoSQL** … See [NoSQL TLS guide]" — the other half of a mutual redirect with `docs/nosql/authentication/index.md:102` |
+
+Seven pointers out of a section in total, all removed: two in `get-started/` (phase 2), the
+extensions one (phase 4), the client-guide pair (phase 5), and these three (phase 6).
 
 The workaround for authentication was to duplicate the entire subtree:
 `docs/nosql/authentication/` mirrors `docs/authentication/` with Auth0 (425 vs
@@ -148,17 +154,44 @@ matter, a parent directory can be introduced later at the cost of five redirects
 | — | `extensions/nosql.md` | New, published stub. Replaces the admonition at `nosql/index.md:20-21`. |
 | — | `mcp-clients/python.md` | New, extracted from `nosql/index.md`, with a SQL and a NoSQL variant. |
 
-### 6.1 The authentication merge is the one risky step
+### 6.1 Measured: the authentication trees are parallel, not duplicated
 
-The NoSQL Keycloak guide is not merely worded differently; it has a different
-flow — two clients (authorization code + client credentials), no audience mapper,
-no sub-override mapper, and `application.properties` instead of `conf.json`. Only
-realm creation, prerequisites, and end-to-end verification are shared. With tabs
-at the four diverging steps the page grows to roughly 500 lines.
+An earlier draft said "Only realm creation, prerequisites, and end-to-end verification are
+shared. With tabs at the four diverging steps the page grows to roughly 500 lines."
+Measurement in phase 6 disproved both halves.
 
-**Fallback if that page becomes unwieldy:** keep NoSQL authentication as a
-separate `authentication/nosql.md`. Duplication remains, but at least in one
-place. This is a decision to make while implementing phase 6, not before.
+Heading-set overlap: `index.md` 4 common against 9 SQL-only and 2 NoSQL-only;
+`keycloak/index.md` 9 against 21 and 8; `auth0/index.md` 7 against 18 and 11. The common
+headings are labels that coincide, not shared content — every candidate section differed on
+comparison, including `## Step 1: Create a Keycloak Realm`, which is 18 lines on both sides
+but names a different realm (`actian-mcp` versus `actian-nosql-mcp`) and produces a
+different output value, because SQL needs `FASTMCP_SERVER_AUTH_CONFIG_URL` and NoSQL needs
+the issuer URL for `quarkus.oidc.auth-server-url`.
+
+The step *numbering* diverges outright: SQL Keycloak runs seven steps, NoSQL four, and
+"Step 3" means "Add the Audience Mapper" on one and "Create Keycloak Users" on the other.
+Auth0 diverges further, with a NoSQL-only "Enable Resource Parameter Compatibility".
+
+So the maintenance burden this section assumed does not exist: changing the SQL guide does
+not imply changing the NoSQL one. These are two parallel guides for two implementations,
+not two copies.
+
+**Decision taken in phase 6:** merge the index pages, which do overlap, and co-locate the
+provider guides as `authentication/keycloak/nosql.md` and `authentication/auth0/nosql.md`.
+The real problem was placement, not duplication: NoSQL authentication lived under
+`docs/nosql/`, so the section silently covered four of five databases while three pointers
+sent NoSQL readers out of it.
+
+The index merge is real. `nosql/authentication/index.md:102` deferred certificate generation
+*and* client trust to the SQL guide, so TLS steps 1 and 4 were shared in fact; the merge
+makes that structural and removes the cross-reference. Steps 2 and 3 are tabbed, along with
+the OAuth architecture (the SQL server is a relying party that redirects; the NoSQL server
+is a resource server and the client drives the flow), the configuration format, and user
+impersonation — five tabbed blocks in all.
+
+Renaming `` ## Configuring `oauth` Block `` to `## Configuring OAuth` cost one edit rather
+than six: phase 2 had centralised that link into `includes/conf/common-optional-fields.md`.
+The dedup work paid for itself here.
 
 ## 7. Single-sourcing layer
 
@@ -308,6 +341,14 @@ markup rather than for content:
 Prefer a check that would survive a theme upgrade: parse the JSON, count the anchors, read
 the hrefs. Markup shape is not a stable interface.
 
+**The same mistake applied to the build gate itself.** Phases 1–6 verified builds with
+`mkdocs build --strict 2>&1 | grep -E "WARNING|ERROR|Aborted"`, which cannot see a plugin
+exception: in phase 6 a deleted directory left a stale `nav` entry, `awesome-pages` raised
+`NavEntryNotFound`, the build produced no site at all — and the gate reported success,
+because a Python traceback contains none of those three words. Grepping output is not a
+substitute for checking an exit code. `make check-build` now does it properly and was
+verified to fail on a broken nav and pass on a healthy one.
+
 ### 7.2 Hook change
 
 `hooks/copy_md_sources.py` must resolve includes before copying, otherwise the
@@ -395,8 +436,8 @@ plugins:
       redirect_maps:
         'intro/write-support.md': 'write-support/index.md'
         'nosql/authentication/index.md': 'authentication/index.md'
-        'nosql/authentication/auth0/index.md': 'authentication/auth0/index.md'
-        'nosql/authentication/keycloak/index.md': 'authentication/keycloak/index.md'
+        'nosql/authentication/keycloak/index.md': 'authentication/keycloak/nosql.md'
+        'nosql/authentication/auth0/index.md': 'authentication/auth0/nosql.md'
 ```
 
 **Accepted limitation:** `mkdocs-redirects` generates HTML redirect stubs, but

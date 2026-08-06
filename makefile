@@ -16,3 +16,11 @@ check-raw-md:
 	@test -d site || (echo "site/ not built - run 'mkdocs build' first" && exit 1)
 	@! grep -rn -e '--8<--' site/ --include='*.md' \
 	  || (echo "Unresolved snippet include in published raw Markdown" && exit 1)
+
+# The gate used through phases 1-6 grepped for WARNING/ERROR/Aborted, which cannot
+# see a plugin exception -- a crashing build reported success in phase 6. Check the
+# exit code instead.
+check-build:
+	@python3 -m mkdocs build --strict > /tmp/mkdocs-build.log 2>&1 \
+	  || (echo "Build failed:" && grep -E 'WARNING|Aborted|Error|error' /tmp/mkdocs-build.log | tail -20 && exit 1)
+	@grep -E '^WARNING' /tmp/mkdocs-build.log && (echo "Build emitted warnings" && exit 1) || true
