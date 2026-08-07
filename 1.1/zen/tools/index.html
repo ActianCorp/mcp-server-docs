@@ -2831,15 +2831,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#blob_operation" class="md-nav__link">
+  <a href="#execute_write_query" class="md-nav__link">
     <span class="md-ellipsis">
       
-        blob_operation
+        execute_write_query
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="blob_operation">
+    <nav class="md-nav" aria-label="execute_write_query">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2881,19 +2881,58 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#database_manage" class="md-nav__link">
+  <a href="#batch_operation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        database_manage
+        batch_operation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="database_manage">
+    <nav class="md-nav" aria-label="batch_operation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#parameters_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blob_operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        blob_operation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="blob_operation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         Parameters
@@ -2915,7 +2954,57 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#example_5" class="md-nav__link">
+  <a href="#example_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database_manage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        database_manage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="database_manage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-schema_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         Example
@@ -3034,46 +3123,100 @@
 
 
 <h1 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h1>
-<p>The Actian MCP Server for Actian Zen includes six built-in tools for database access, ORM operations, blob handling, and server management.</p>
+<p>The Actian MCP Server for Actian Zen registers six built-in tools at a time. Which six depends on
+<code>query_mode</code>, so the tool list a client discovers differs between a read-only and a read-write
+deployment. See <a href="../../intro/write-support.html">Write support</a>.</p>
 <h2 id="available-tools">Available Tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
-<p>Use the following tools to interact with the database:</p>
 <table>
 <thead>
 <tr>
 <th>Tool</th>
+<th style="text-align: center;"><code>read-only</code></th>
+<th style="text-align: center;"><code>read-write</code></th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="#execute_query"><code>execute_query</code></a></td>
-<td>Runs read-only SQL with automatic Zen dialect translation.</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Runs <code>SELECT</code> with automatic Zen dialect translation. Never writes, in either mode.</td>
 </tr>
 <tr>
 <td><a href="#list_tables"><code>list_tables</code></a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>Lists all user tables from the Zen catalog.</td>
 </tr>
 <tr>
 <td><a href="#describe_table"><code>describe_table</code></a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>Returns column metadata, primary keys, and foreign keys for a table.</td>
 </tr>
 <tr>
 <td><a href="#orm_operation"><code>orm_operation</code></a></td>
-<td>Executes structured queries via SQLAlchemy with JOINs, WHERE, ORDER BY, GROUP BY, and LIMIT.</td>
+<td style="text-align: center;">✓ select</td>
+<td style="text-align: center;">✓ select, insert, update, delete</td>
+<td>Structured queries via SQLAlchemy with JOINs, WHERE, ORDER BY, GROUP BY, and LIMIT.</td>
+</tr>
+<tr>
+<td><a href="#execute_write_query"><code>execute_write_query</code></a></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td>Runs a single <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, or <code>MERGE</code>.</td>
+</tr>
+<tr>
+<td><a href="#batch_operation"><code>batch_operation</code></a></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✓</td>
+<td>Bulk insert, update, delete, and row counting.</td>
 </tr>
 <tr>
 <td><a href="#blob_operation"><code>blob_operation</code></a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
 <td>Lists and downloads file and blob data.</td>
 </tr>
 <tr>
 <td><a href="#database_manage"><code>database_manage</code></a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">—</td>
 <td>Queries server capabilities, lists DSNs, and releases locks.</td>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Enabling write mode removes two tools</p>
+<p><code>blob_operation</code> and <code>database_manage</code> are registered in <code>read-only</code> mode only. A <code>read-write</code>
+server does not expose them, and they will not appear in the client's tool list. This is
+deliberate, not a packaging fault.</p>
+</div>
+<p>Writes are authorized by the <code>mcp:write</code> scope and a human approval prompt, both described in
+<a href="../../intro/write-support.html">Write support</a>. Data Definition Language and explicit transactions
+are not available in any shipped mode.</p>
 <hr />
 <h2 id="execute_query">execute_query<a class="headerlink" href="#execute_query" title="Permanent link">&para;</a></h2>
 <p>Executes a read-only SQL query against Actian Zen with automatic dialect translation. It supports complex queries like JOINs, subqueries, aggregations, and UNION.</p>
+<div class="admonition warning">
+<p class="admonition-title">This tool never writes, even in read-write mode</p>
+<p>Unlike the Ingres and Analytics Engine servers, where the same tool performs writes once
+<code>query_mode</code> is <code>read-write</code>, Zen accepts <code>SELECT</code> here in every mode. DML sent to
+<code>execute_query</code> is rejected with a pointer to the tool that does the work:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DML not allowed in execute_query. Use execute_write_query for INSERT/UPDATE/DELETE.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;alternative&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;execute_write_query&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;sql_classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DML&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Data Definition Language is rejected the same way, and is not enabled by any mode:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DDL not allowed in this mode. Schema changes are blocked in 1.1 (deferred to full mode).&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;sql_classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DDL&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Auto-translations</p>
 <p>The following translations are applied automatically before execution:</p>
@@ -3082,7 +3225,6 @@
 <li><code>INFORMATION_SCHEMA</code> queries → <code>dbo.fSQL*()</code> catalog functions</li>
 <li>Constraint names are truncated to 20 characters (Zen limit)</li>
 </ul>
-<p>Only <code>SELECT</code> queries are permitted.</p>
 </div>
 <h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
 <table>
@@ -3233,8 +3375,10 @@
 </code></pre></div>
 <hr />
 <h2 id="orm_operation">orm_operation<a class="headerlink" href="#orm_operation" title="Permanent link">&para;</a></h2>
-<p>Performs structured read queries via SQLAlchemy with dynamic model creation. Handles the Zen SQL dialect automatically.</p>
+<p>Performs structured queries via SQLAlchemy with dynamic model creation. Handles the Zen SQL dialect automatically.</p>
 <p>Supports JOINs (up to 3 tables), WHERE conditions, ORDER BY, GROUP BY, HAVING, LIMIT, OFFSET, and aggregate functions (<code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code>).</p>
+<p>In <code>read-write</code> mode this tool also performs single-row writes. Those go through the same
+<code>mcp:write</code> scope check and approval prompt as <a href="#execute_write_query"><code>execute_write_query</code></a>.</p>
 <h3 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h3>
 <p><strong>Required</strong></p>
 <table>
@@ -3249,7 +3393,7 @@
 <tr>
 <td><code>operation</code></td>
 <td><code>string</code></td>
-<td>Must be <code>select</code>.</td>
+<td><code>select</code> in any mode. <code>insert</code>, <code>update</code>, and <code>delete</code> require <code>query_mode</code> set to <code>read-write</code>.</td>
 </tr>
 <tr>
 <td><code>table</code></td>
@@ -3317,6 +3461,18 @@
 <td>—</td>
 <td>HAVING conditions for grouped queries.</td>
 </tr>
+<tr>
+<td><code>data</code></td>
+<td><code>dict</code></td>
+<td>—</td>
+<td>Column values for <code>insert</code> and <code>update</code>. Requires <code>read-write</code>.</td>
+</tr>
+<tr>
+<td><code>entity_id</code></td>
+<td><code>integer</code></td>
+<td>—</td>
+<td>Primary-key value the <code>update</code> or <code>delete</code> targets. Requires <code>read-write</code>.</td>
+</tr>
 </tbody>
 </table>
 <h3 id="output-schema_3">Output Schema<a class="headerlink" href="#output-schema_3" title="Permanent link">&para;</a></h3>
@@ -3337,9 +3493,150 @@
 <span class="p">}</span>
 </code></pre></div>
 <hr />
+<h2 id="execute_write_query">execute_write_query<a class="headerlink" href="#execute_write_query" title="Permanent link">&para;</a></h2>
+<p>Runs a single Data Manipulation Language statement — <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, or <code>MERGE</code>.
+Registered only when <code>query_mode</code> is <code>read-write</code>.</p>
+<p>Every call is checked for the <code>mcp:write</code> scope and then put to a human for approval before it
+reaches the database. See <a href="../../intro/write-support.html">Write support</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Statements rejected before anyone is asked to approve them</p>
+<ul>
+<li><code>UPDATE</code> and <code>DELETE</code> without a <code>WHERE</code> clause</li>
+<li>Writes to the Zen system catalog (<code>X$</code> tables)</li>
+<li>Multiple statements in one call</li>
+<li>Data Definition Language — deferred, not permitted in this release</li>
+</ul>
+<p>These are refused on inspection, so no approval prompt appears. A prompt that never appears
+therefore does not on its own mean the write was declined.</p>
+</div>
+<h3 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th style="text-align: center;">Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sql</code></td>
+<td><code>string</code></td>
+<td style="text-align: center;">✓</td>
+<td>The DML statement to execute.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="output-schema_4">Output Schema<a class="headerlink" href="#output-schema_4" title="Permanent link">&para;</a></h3>
+<p><strong>On Success</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;sql&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;statement&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;rows_affected&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;execute_write_query&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>When the caller lacks the write scope</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;write operations require the &#39;mcp:write&#39; scope, which the access token does not carry&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="example_4">Example<a class="headerlink" href="#example_4" title="Permanent link">&para;</a></h3>
+<p><strong>Request</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;sql&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UPDATE Person SET Last_Name = &#39;Sanderson&#39; WHERE ID = 102&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Response</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;sql&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UPDATE Person SET Last_Name = &#39;Sanderson&#39; WHERE ID = 102&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;rows_affected&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;execute_write_query&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="batch_operation">batch_operation<a class="headerlink" href="#batch_operation" title="Permanent link">&para;</a></h2>
+<p>Bulk data operations and row counting. Registered only when <code>query_mode</code> is <code>read-write</code>.</p>
+<p>The three writing modes take the <code>mcp:write</code> scope check and the approval prompt. The prompt states
+how many rows the statement will touch: for <code>batch_insert</code> that is the length of <code>data</code>, and for
+<code>batch_update</code> and <code>batch_delete</code> the server runs a <code>COUNT(*)</code> with the same predicate first. The
+<code>count</code> mode reads only and needs neither.</p>
+<h3 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">&para;</a></h3>
+<p><strong>Required</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td><code>string</code></td>
+<td>One of: <code>batch_insert</code>, <code>batch_update</code>, <code>batch_delete</code>, <code>count</code>.</td>
+</tr>
+<tr>
+<td><code>table</code></td>
+<td><code>string</code></td>
+<td>Target table name.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Required per mode</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data</code></td>
+<td><code>list</code></td>
+<td>Rows to insert. Required for <code>batch_insert</code>.</td>
+</tr>
+<tr>
+<td><code>updates</code></td>
+<td><code>dict</code></td>
+<td>Column values to set. Required for <code>batch_update</code>.</td>
+</tr>
+<tr>
+<td><code>where_clause</code></td>
+<td><code>string</code></td>
+<td>Predicate selecting the rows. Required for <code>batch_update</code> and <code>batch_delete</code>, optional for <code>count</code>.</td>
+</tr>
+<tr>
+<td><code>where_params</code></td>
+<td><code>list</code></td>
+<td>Values bound to placeholders in <code>where_clause</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example_5">Example<a class="headerlink" href="#example_5" title="Permanent link">&para;</a></h3>
+<p><strong>Request</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;batch_insert&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Person&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;First_Name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ada&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;Last_Name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lovelace&quot;</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">202</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;First_Name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alan&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;Last_Name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Turing&quot;</span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
 <h2 id="blob_operation">blob_operation<a class="headerlink" href="#blob_operation" title="Permanent link">&para;</a></h2>
 <p>Lists and downloads file or blob data from tables that store binary content.</p>
-<h3 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Read-only mode only</p>
+<p>This tool is not registered when <code>query_mode</code> is <code>read-write</code>.</p>
+</div>
+<h3 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">&para;</a></h3>
 <p><strong>Required</strong></p>
 <table>
 <thead>
@@ -3399,7 +3696,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="output-schema_4">Output Schema<a class="headerlink" href="#output-schema_4" title="Permanent link">&para;</a></h3>
+<h3 id="output-schema_5">Output Schema<a class="headerlink" href="#output-schema_5" title="Permanent link">&para;</a></h3>
 <p><strong>For <code>list</code></strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;row_id&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;filename&gt;&quot;</span><span class="p">}],</span>
@@ -3413,7 +3710,7 @@
 <span class="w">  </span><span class="nt">&quot;size&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;file_size_bytes&gt;&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="example_4">Example<a class="headerlink" href="#example_4" title="Permanent link">&para;</a></h3>
+<h3 id="example_6">Example<a class="headerlink" href="#example_6" title="Permanent link">&para;</a></h3>
 <p><strong>Request</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list&quot;</span><span class="p">,</span>
@@ -3429,7 +3726,11 @@
 <hr />
 <h2 id="database_manage">database_manage<a class="headerlink" href="#database_manage" title="Permanent link">&para;</a></h2>
 <p>Provides server management operations: list available databases, list DSNs with details, query server capabilities, and release locks.</p>
-<h3 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Read-only mode only</p>
+<p>This tool is not registered when <code>query_mode</code> is <code>read-write</code>.</p>
+</div>
+<h3 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -3448,7 +3749,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="output-schema_5">Output Schema<a class="headerlink" href="#output-schema_5" title="Permanent link">&para;</a></h3>
+<h3 id="output-schema_6">Output Schema<a class="headerlink" href="#output-schema_6" title="Permanent link">&para;</a></h3>
 <p><strong>For <code>capabilities</code></strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Actian Zen&quot;</span><span class="p">,</span>
@@ -3464,7 +3765,7 @@
 <span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_dsns&gt;&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="example_5">Example<a class="headerlink" href="#example_5" title="Permanent link">&para;</a></h3>
+<h3 id="example_7">Example<a class="headerlink" href="#example_7" title="Permanent link">&para;</a></h3>
 <p><strong>Request</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;capabilities&quot;</span>
@@ -3488,6 +3789,10 @@
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2M6 9h12v2H6m8 3H6v-2h8m4-4H6V6h12"/></svg></span> <strong><a href="../prompts/index.html">Prompts</a></strong><br />
   Use the built-in prompt templates for common workflows.</p>
 </li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg></span> <strong><a href="../../intro/write-support.html">Write support</a></strong><br />
+  Turn on <code>query_mode</code>, and the scope and approval checks every write passes.</p>
+</li>
 </ul>
 </div>
 
@@ -3510,7 +3815,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 19, 2026 10:26:57 UTC">April 19, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 6, 2026 17:30:32 UTC">August 6, 2026</span>
   </span>
 
     

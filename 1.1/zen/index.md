@@ -1,11 +1,13 @@
 ---
 title: Actian Zen
-description: Connect MCP clients to Actian Zen for database exploration and read-only SQL queries.
+description: Connect MCP clients to Actian Zen for database exploration, SQL queries, and optional write support.
 ---
 
 # Actian MCP Server for Zen
 
-Connect the MCP-compatible client to Actian Zen using the Actian MCP Server. The server handles automatic Zen dialect translation, allowing you to explore schema metadata, execute read-only SQL queries, and perform ORM operations through a standard interface.
+Connect the MCP-compatible client to Actian Zen using the Actian MCP Server. The server handles automatic Zen dialect translation, allowing you to explore schema metadata, execute SQL queries, and perform ORM operations through a standard interface.
+
+Writes are off by default. Setting `query_mode` to `read-write` enables them and changes which tools the server registers — see [Write support](../intro/write-support.md) and [Tools](tools/index.md).
 
 ## Capabilities
 
@@ -13,11 +15,12 @@ The Actian MCP Server for Zen supports the following operations:
 
 | Action | Description |
 |--------|-------------|
-| **Run SQL queries** | Execute read-only SQL with automatic translation to Zen dialect. |
+| **Run SQL queries** | Execute `SELECT` with automatic translation to Zen dialect. |
 | **List tables and views** | Discover available objects and inspect their structures.|
 | **ORM operations** | Query data using `JOIN`, `WHERE`, `ORDER BY`, and `LIMIT` clauses. |
-| **Blob and file data** | List and download blob or file data stored in the database. |
-| **Server management** | Query server capabilities, list DSNs, and release locks.|
+| **Write data** | `INSERT`, `UPDATE`, `DELETE`, and bulk operations, when `query_mode` is `read-write`. |
+| **Blob and file data** | List and download blob or file data stored in the database. Read-only mode. |
+| **Server management** | Query server capabilities, list DSNs, and release locks. Read-only mode.|
 | **Schema metadata** | View the database schema as a structured resource. |
 
 
@@ -81,6 +84,8 @@ Use this format when the database requires authentication. This bypasses the con
 | `database` | `string` | — | Logical database name used for display purposes. |
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Default is `1000`. |
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
+| `query_mode` | `string` | `read-only` | `read-only` or `read-write`. Determines which six tools are registered. See [Write support](../intro/write-support.md). |
+| `write_confirmation` | `boolean` | `true` | Set to `false` to run the built-in write tools without the human approval prompt. The `mcp:write` scope check still applies. |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments, see [Authentication](../authentication/index.md) for more information. |
 | `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md) |
 
@@ -124,6 +129,9 @@ After connecting, the MCP client automatically discovers the server's capabiliti
 
 - :material-tools: **[Tools](tools/index.md)**
   Learn more about the SQL, ORM, and blob tools exposed by the Zen server.
+
+- :material-pencil: **[Write support](../intro/write-support.md)**
+  Enable `query_mode`, and the scope and approval checks every write passes.
 
 - :material-folder-open: **[Resources](resources/index.md)**
   Explore the resource types available through the server.
