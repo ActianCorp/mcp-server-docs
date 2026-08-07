@@ -18,7 +18,7 @@ The Actian MCP Server for Zen supports the following operations:
 | **Run SQL queries** | Execute `SELECT` with automatic translation to Zen dialect. |
 | **List tables and views** | Discover available objects and inspect their structures.|
 | **ORM operations** | Query data using `JOIN`, `WHERE`, `ORDER BY`, and `LIMIT` clauses. |
-| **Write data** | `INSERT`, `UPDATE`, `DELETE`, and bulk operations, when `query_mode` is `read-write`. |
+| **Write data** | `INSERT`, `UPDATE`, and `DELETE`, when `query_mode` is `read-write`. A conditional write states how many rows currently match before you approve it. |
 | **Blob and file data** | List and download blob or file data stored in the database. Read-only mode. |
 | **Server management** | Query server capabilities, list DSNs, and release locks. Read-only mode.|
 | **Schema metadata** | View the database schema as a structured resource. |
