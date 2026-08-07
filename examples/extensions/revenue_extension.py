@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Actian Corp.
+# Copyright (C) 2026 Actian Corp.
 # All Rights Reserved.
 
 """Reference extension for the Actian MCP Server — portable across all engines
