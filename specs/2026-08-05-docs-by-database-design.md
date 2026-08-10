@@ -227,7 +227,7 @@ where they do not belong.
 | `tools/list-tables.md` | 3 SQL tools pages | as above |
 | `tools/describe-table.md` | 3 SQL tools pages | as above, with an engine-neutral example — see §7.5 |
 | `tools/list-functions.md` | 3 SQL tools pages (Zen has none, confirmed §11.2) | as above |
-| `tools/write-example-sql.md` | 3 SQL tools pages | **Closes the Informix gap.** Zen's response shape differs, so its example cannot be derived — see §11.8 |
+| `tools/write-example-sql.md` | 3 SQL tools pages | **Closes the Informix gap.** Zen is excluded because it writes through different tools entirely — see §11.8 |
 | `write/authorization-flow.md` | deferred to phase 4 | Would have one consumer today; extracting a fragment for a single caller is premature |
 | `stub-notice.md` | all stub pages | So "in progress" looks identical everywhere |
 
@@ -541,11 +541,15 @@ rearranging existing ones. These cannot be answered from this repository:
    Engine, and `conf/max-rows-default.md` for Informix and Zen. Two consumers each — the
    same evidence-matched pattern as `conf/tls-fields.md`. A future author sees two include
    names and has to choose, which is the point.
-8. **Zen's `execute_query` response for a write.** Write support is confirmed identical
-   on Zen (§11.1), and its capability and configuration are documented, but its tools page
-   has no worked write example: Zen's response shape differs from the other three, so the
-   example cannot be derived and would have to be invented. Blocks nothing else;
-   `docs/intro/write-support.md` carries a note until it is supplied.
+8. ~~**Zen's `execute_query` response for a write.**~~ **Resolved by `main`, merged
+   2026-08-10.** The premise was wrong in a way worth recording: Zen's `execute_query`
+   never performs a write. Writes go to `execute_write_query` and `batch_operation`, and
+   `read-write` also *removes* `blob_operation` and `database_manage` — Zen registers a
+   different set of six tools per mode. So there was no shared example to derive, not
+   because the response shape differs but because the tool differs. §11.1's "write support
+   is identical on Zen" holds for the authorization path only, not for the tool surface.
+   `docs/zen/tools/index.md` now documents both write tools with worked examples, and the
+   caveat note on `docs/write-support/index.md` is gone.
 7. **NoSQL write semantics and NoSQL extension API** — needed to fill the two
    stub pages. Out of scope for this design; the stubs exist to hold the slot.
 
