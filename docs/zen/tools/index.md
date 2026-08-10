@@ -5,21 +5,31 @@ description: Built-in tools available when using the Actian MCP Server with Acti
 
 # Tools
 
-The Actian MCP Server for Actian Zen includes six built-in tools for database access, ORM operations, blob handling, and server management.
-
+The Actian MCP Server for Actian Zen registers six built-in tools at a time. Which six depends on
+`query_mode`, so the tool list a client discovers differs between a read-only and a read-write
+deployment. See [Write support](../../write-support/index.md).
 
 ## Available Tools
 
-Use the following tools to interact with the database:
+| Tool | `read-only` | `read-write` | Description |
+|------|:-----------:|:------------:|-------------|
+| [`execute_query`](#execute_query) | ✓ | ✓ | Runs `SELECT` with automatic Zen dialect translation. Never writes, in either mode. |
+| [`list_tables`](#list_tables) | ✓ | ✓ | Lists all user tables from the Zen catalog. |
+| [`describe_table`](#describe_table) | ✓ | ✓ | Returns column metadata, primary keys, and foreign keys for a table. |
+| [`orm_operation`](#orm_operation) | ✓ select | ✓ select, insert, update, delete | Structured queries via SQLAlchemy with JOINs, WHERE, ORDER BY, GROUP BY, and LIMIT. |
+| [`execute_write_query`](#execute_write_query) | — | ✓ | Runs a single `INSERT`, `UPDATE`, `DELETE`, or `MERGE`. |
+| [`batch_operation`](#batch_operation) | — | ✓ | Bulk insert, update, delete, and row counting. |
+| [`blob_operation`](#blob_operation) | ✓ | — | Lists and downloads file and blob data. |
+| [`database_manage`](#database_manage) | ✓ | — | Queries server capabilities, lists DSNs, and releases locks. |
 
-| Tool | Description |
-|------|-------------|
-| [`execute_query`](#execute_query) | Runs read-only SQL with automatic Zen dialect translation. |
-| [`list_tables`](#list_tables) | Lists all user tables from the Zen catalog. |
-| [`describe_table`](#describe_table) | Returns column metadata, primary keys, and foreign keys for a table. |
-| [`orm_operation`](#orm_operation) | Executes structured queries via SQLAlchemy with JOINs, WHERE, ORDER BY, GROUP BY, and LIMIT. |
-| [`blob_operation`](#blob_operation) | Lists and downloads file and blob data. |
-| [`database_manage`](#database_manage) | Queries server capabilities, lists DSNs, and releases locks. |
+!!! note "Enabling write mode removes two tools"
+    `blob_operation` and `database_manage` are registered in `read-only` mode only. A `read-write`
+    server does not expose them, and they will not appear in the client's tool list. This is
+    deliberate, not a packaging fault.
+
+Writes are authorized by the `mcp:write` scope and a human approval prompt, both described in
+[Write support](../../write-support/index.md). Data Definition Language and explicit transactions
+are not available in any shipped mode.
 
 ---
 
@@ -27,14 +37,34 @@ Use the following tools to interact with the database:
 
 Executes a read-only SQL query against Actian Zen with automatic dialect translation. It supports complex queries like JOINs, subqueries, aggregations, and UNION.
 
+!!! warning "This tool never writes, even in read-write mode"
+    Unlike the Ingres and Analytics Engine servers, where the same tool performs writes once
+    `query_mode` is `read-write`, Zen accepts `SELECT` here in every mode. DML sent to
+    `execute_query` is rejected with a pointer to the tool that does the work:
+
+    ```json
+    {
+      "error": "DML not allowed in execute_query. Use execute_write_query for INSERT/UPDATE/DELETE.",
+      "alternative": "execute_write_query",
+      "sql_classification": "DML"
+    }
+    ```
+
+    Data Definition Language is rejected the same way, and is not enabled by any mode:
+
+    ```json
+    {
+      "error": "DDL not allowed in this mode. Schema changes are blocked in 1.1 (deferred to full mode).",
+      "sql_classification": "DDL"
+    }
+    ```
+
 !!! note "Auto-translations"
     The following translations are applied automatically before execution:
 
     - `LEN()` → `CHAR_LENGTH()` (Zen does not support `LEN()`)
     - `INFORMATION_SCHEMA` queries → `dbo.fSQL*()` catalog functions
     - Constraint names are truncated to 20 characters (Zen limit)
-
-    Only `SELECT` queries are permitted.
 
 ### Parameters
 
@@ -206,9 +236,12 @@ Returns column metadata for a table, including names, types, precision, scale, n
 
 ## orm_operation
 
-Performs structured read queries via SQLAlchemy with dynamic model creation. Handles the Zen SQL dialect automatically.
+Performs structured queries via SQLAlchemy with dynamic model creation. Handles the Zen SQL dialect automatically.
 
 Supports JOINs (up to 3 tables), WHERE conditions, ORDER BY, GROUP BY, HAVING, LIMIT, OFFSET, and aggregate functions (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`).
+
+In `read-write` mode this tool also performs single-row writes. Those go through the same
+`mcp:write` scope check and approval prompt as [`execute_write_query`](#execute_write_query).
 
 ### Parameters
 
@@ -216,7 +249,7 @@ Supports JOINs (up to 3 tables), WHERE conditions, ORDER BY, GROUP BY, HAVING, L
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `operation` | `string` | Must be `select`. |
+| `operation` | `string` | `select` in any mode. `insert`, `update`, and `delete` require `query_mode` set to `read-write`. |
 | `table` | `string` | Target table name. |
 
 **Optional**
@@ -231,6 +264,8 @@ Supports JOINs (up to 3 tables), WHERE conditions, ORDER BY, GROUP BY, HAVING, L
 | `joins` | `list` | — | Join specs: `[{"table": "dept", "on": "p.dept_id = dept.id", "type": "LEFT"}]`. |
 | `group_by` | `list` | — | Columns to group by. |
 | `having` | `dict` | — | HAVING conditions for grouped queries. |
+| `data` | `dict` | — | Column values for `insert` and `update`. Requires `read-write`. |
+| `entity_id` | `integer` | — | Primary-key value the `update` or `delete` targets. Requires `read-write`. |
 
 ### Output Schema
 
@@ -259,9 +294,123 @@ Supports JOINs (up to 3 tables), WHERE conditions, ORDER BY, GROUP BY, HAVING, L
 
 ---
 
+## execute_write_query
+
+Runs a single Data Manipulation Language statement — `INSERT`, `UPDATE`, `DELETE`, or `MERGE`.
+Registered only when `query_mode` is `read-write`.
+
+Every call is checked for the `mcp:write` scope and then put to a human for approval before it
+reaches the database. See [Write support](../../write-support/index.md).
+
+!!! note "Statements rejected before anyone is asked to approve them"
+    - `UPDATE` and `DELETE` without a `WHERE` clause
+    - Writes to the Zen system catalog (`X$` tables)
+    - Multiple statements in one call
+    - Data Definition Language — deferred, not permitted in this release
+
+    These are refused on inspection, so no approval prompt appears. A prompt that never appears
+    therefore does not on its own mean the write was declined.
+
+### Parameters
+
+| Field | Type | Required | Description |
+|-------|------|:--------:|-------------|
+| `sql` | `string` | ✓ | The DML statement to execute. |
+
+### Output Schema
+
+**On Success**
+
+```json
+{
+  "sql": "<statement>",
+  "rows_affected": 1,
+  "success": true,
+  "method": "execute_write_query"
+}
+```
+
+**When the caller lacks the write scope**
+
+```json
+{
+  "error": "write operations require the 'mcp:write' scope, which the access token does not carry"
+}
+```
+
+### Example
+
+**Request**
+
+```json
+{
+  "sql": "UPDATE Person SET Last_Name = 'Sanderson' WHERE ID = 102"
+}
+```
+
+**Response**
+
+```json
+{
+  "sql": "UPDATE Person SET Last_Name = 'Sanderson' WHERE ID = 102",
+  "rows_affected": 1,
+  "success": true,
+  "method": "execute_write_query"
+}
+```
+
+---
+
+## batch_operation
+
+Bulk data operations and row counting. Registered only when `query_mode` is `read-write`.
+
+The three writing modes take the `mcp:write` scope check and the approval prompt. The prompt states
+how many rows the statement will touch: for `batch_insert` that is the length of `data`, and for
+`batch_update` and `batch_delete` the server runs a `COUNT(*)` with the same predicate first. The
+`count` mode reads only and needs neither.
+
+### Parameters
+
+**Required**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `mode` | `string` | One of: `batch_insert`, `batch_update`, `batch_delete`, `count`. |
+| `table` | `string` | Target table name. |
+
+**Required per mode**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `data` | `list` | Rows to insert. Required for `batch_insert`. |
+| `updates` | `dict` | Column values to set. Required for `batch_update`. |
+| `where_clause` | `string` | Predicate selecting the rows. Required for `batch_update` and `batch_delete`, optional for `count`. |
+| `where_params` | `list` | Values bound to placeholders in `where_clause`. |
+
+### Example
+
+**Request**
+
+```json
+{
+  "mode": "batch_insert",
+  "table": "Person",
+  "data": [
+    {"ID": 201, "First_Name": "Ada", "Last_Name": "Lovelace"},
+    {"ID": 202, "First_Name": "Alan", "Last_Name": "Turing"}
+  ]
+}
+```
+
+---
+
 ## blob_operation
 
 Lists and downloads file or blob data from tables that store binary content.
+
+!!! note "Read-only mode only"
+    This tool is not registered when `query_mode` is `read-write`.
 
 ### Parameters
 
@@ -328,6 +477,9 @@ Lists and downloads file or blob data from tables that store binary content.
 
 Provides server management operations: list available databases, list DSNs with details, query server capabilities, and release locks.
 
+!!! note "Read-only mode only"
+    This tool is not registered when `query_mode` is `read-write`.
+
 ### Parameters
 
 | Field | Type | Required | Description |
@@ -387,5 +539,8 @@ Provides server management operations: list available databases, list DSNs with 
 
 - :material-message-text: **[Prompts](../prompts/index.md)**  
   Use the built-in prompt templates for common workflows.
+
+- :material-pencil: **[Write support](../../write-support/index.md)**  
+  Turn on `query_mode`, and the scope and approval checks every write passes.
 
 </div>

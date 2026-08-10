@@ -13,6 +13,12 @@ Extensions can write too, through the same authorization checks described below.
 
 Which tools accept a write, and how, depends on the database. See the Tools page for your database: [Ingres](../ingres/tools/index.md), [HCL Informix®](../hcl-informix/tools/index.md), [Zen](../zen/tools/index.md), or [Analytics Engine](../analytics-engine/tools/index.md). The `query_mode` setting and the authorization checks described below apply the same way regardless of which tool performs the write.
 
+!!! note "Zen routes writes to a separate tool, and changes its tool list"
+    On Ingres, HCL Informix® and Analytics Engine, `execute_query` performs the write once `query_mode` is
+    `read-write`. On [Zen](../zen/tools/index.md) it never does: writes go to `execute_write_query`
+    and `batch_operation`, and enabling write mode also removes `blob_operation` and
+    `database_manage` from the registered tools.
+
 ## Enabling write mode
 
 Set `query_mode` in the `conf.json` file:
@@ -27,9 +33,6 @@ Set `query_mode` in the `conf.json` file:
   "query_mode": "read-write"
 }
 ```
-
-!!! note "Zen write examples"
-    Write support works the same way on Actian Zen, but the Zen tools page does not yet show a worked write example. The `query_mode`, scope and approval behaviour described here applies unchanged.
 
 !!! note "Data Definition Language is always blocked"
     Enabling write mode does not permit Data Definition Language (DDL) or administrative statements. `CREATE`, `ALTER`, `DROP`, and `GRANT` are rejected, and so are `SET`, `ENABLE`, `DISABLE`, and `SELECT ... INTO`. This is not configurable. Use your database's own tools for schema changes.
@@ -103,6 +106,9 @@ The server records what it skipped. At startup it logs a warning banner stating 
 
 - :material-database-cog: **[Configure your database](../get-started/index.md#which-database-do-you-have)**  
   The `query_mode` and `write_confirmation` fields, on the setup page for your engine.
+
+- :material-database: **[Zen configuration](../zen/index.md#configuration-reference)**  
+  The same fields for Actian Zen, which registers a different tool set per mode.
 
 - :material-shield-check: **[Authentication](../authentication/index.md)**  
   Set up the `mcp:write` scope in Auth0 or Keycloak.

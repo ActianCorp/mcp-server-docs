@@ -1,11 +1,13 @@
 ---
 title: Actian Zen
-description: Connect MCP clients to Actian Zen for database exploration and read-only SQL queries.
+description: Connect MCP clients to Actian Zen for database exploration, SQL queries, and optional write support.
 ---
 
 # Actian MCP Server for Zen
 
-Connect the MCP-compatible client to Actian Zen using the Actian MCP Server. The server handles automatic Zen dialect translation, allowing you to explore schema metadata, execute read-only SQL queries, and perform ORM operations through a standard interface.
+Connect the MCP-compatible client to Actian Zen using the Actian MCP Server. The server handles automatic Zen dialect translation, allowing you to explore schema metadata, execute SQL queries, and perform ORM operations through a standard interface.
+
+Writes are off by default. Setting `query_mode` to `read-write` enables them — see [Write support](../write-support/index.md) and [Tools](tools/index.md).
 
 ## Capabilities
 
@@ -13,16 +15,16 @@ The Actian MCP Server for Zen supports the following operations:
 
 | Action | Description |
 |--------|-------------|
-| **Run SQL queries** | Execute read-only SQL with automatic translation to Zen dialect. |
+| **Run SQL queries** | Execute `SELECT` with automatic translation to Zen dialect. |
 | **List tables and views** | Discover available objects and inspect their structures.|
 | **ORM operations** | Query data using `JOIN`, `WHERE`, `ORDER BY`, and `LIMIT` clauses. |
-| **Blob and file data** | List and download blob or file data stored in the database. |
-| **Server management** | Query server capabilities, list DSNs, and release locks.|
+| **Write data** | `INSERT`, `UPDATE`, `DELETE`, and bulk operations, when `query_mode` is `read-write`. |
+| **Blob and file data** | List and download blob or file data stored in the database. Read-only mode. |
+| **Server management** | Query server capabilities, list DSNs, and release locks. Read-only mode.|
 | **Schema metadata** | View the database schema as a structured resource. |
-| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
 
-!!! note "Write support is opt-in"
-    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../write-support/index.md).
+!!! note "Write support is opt-in, and changes the tool set"
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. Unlike the other engines, Zen registers a different set of six tools per mode: `read-write` adds `execute_write_query` and `batch_operation` and removes `blob_operation` and `database_manage`. For more information, see [Write support](../write-support/index.md) and [Tools](tools/index.md).
 
 
 
@@ -125,6 +127,9 @@ docker run -d \
 
 - :material-tools: **[Tools](tools/index.md)**  
   Learn more about the SQL, ORM, and blob tools exposed by the Zen server.
+
+- :material-database-edit: **[Write support](../write-support/index.md)**  
+  Enable `query_mode`, and the scope and approval checks every write passes.
 
 - :material-folder-open: **[Resources](resources/index.md)**  
   Explore the resource types available through the server.
