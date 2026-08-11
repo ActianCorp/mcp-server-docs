@@ -27,8 +27,8 @@ By default the tool accepts only `SELECT`. When the server runs with `query_mode
 !!! note "Result truncation:"
     If the number of rows exceeds the `max_rows` configuration, the response includes the `truncated` and `warning` fields.
 
-!!! warning "Data Definition Language is never permitted"
-    This tool does not run Data Definition Language (DDL) or administrative statements in any mode. `CREATE`, `ALTER`, `DROP`, `GRANT`, `SET`, `ENABLE`, `DISABLE`, and `SELECT ... INTO` are rejected. Use Ingres tooling for schema changes.
+!!! warning "Data Definition Language is not permitted"
+    This tool does not run Data Definition Language (DDL) or administrative statements in any mode. `CREATE`, `ALTER`, `DROP`, `GRANT`, `SET`, `ENABLE`, `DISABLE`, and `SELECT ... INTO` are rejected. 
 
 ### Parameters
 
