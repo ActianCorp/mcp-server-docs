@@ -98,7 +98,7 @@ To grant the `mcp:write` scope in your identity provider, see [Auth0](authentica
     Nothing on the server requests `mcp:write` — it only reads whatever the presented token carries, so the request has to come from the MCP client. A client that lets you set its scopes can be told to ask for it directly. One that works them out from the server's resource metadata asks for whatever is advertised there, which is a server setting: see [Advertising scopes to MCP clients](authentication/index.md#advertising-scopes-to-mcp-clients).
 
 !!! warning "The scope is the only per-caller write control"
-    Actian NoSQL Database authenticates through the connection URL, so every statement the server runs — read or write — runs as that one configured database user. There is no per-user impersonation, and therefore no database-privilege backstop that could stop an authorized caller from changing a particular class.
+    The server authenticates to Actian NoSQL Database with the credentials carried in its connection URL, so every statement it runs — read or write — runs as that one configured database user. There is no per-user impersonation, and so no database-privilege layer underneath that could narrow what an authorized caller may change. `mcp:write` is all or nothing: a caller who holds it can create, update, or delete objects of any class in the database.
 
     Grant `mcp:write` only to the callers that should be able to modify data, and treat the database user in `nsql.connectionURL` as the true limit of what any caller can reach.
 
