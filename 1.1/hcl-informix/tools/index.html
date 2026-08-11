@@ -2705,6 +2705,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#example-writing-a-row" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Writing a Row
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2799,6 +2821,17 @@
     <span class="md-ellipsis">
       
         Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-naming-the-owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Naming the Owner
       
     </span>
   </a>
@@ -2966,6 +2999,7 @@
 <h1 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h1>
 <p>The Actian MCP Server for HCL Informix® provides built-in tools for database discovery and read-only query execution.</p>
 <h2 id="available-tools">Available Tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
+<p>Use the following tools to interact with the database:</p>
 <table>
 <thead>
 <tr>
@@ -2976,7 +3010,7 @@
 <tbody>
 <tr>
 <td><a href="#execute_query"><code>execute_query</code></a></td>
-<td>Runs a read-only SQL query against the connected database.</td>
+<td>Runs a SQL query against the connected database.  Reads always, writes when the server permits them.</td>
 </tr>
 <tr>
 <td><a href="#list_tables"><code>list_tables</code></a></td>
@@ -2993,10 +3027,15 @@
 </tbody>
 </table>
 <h2 id="execute_query">execute_query<a class="headerlink" href="#execute_query" title="Permanent link">&para;</a></h2>
-<p>Use this tool to run read-only SQL queries. The results are returned as structured JSON.</p>
+<p>Use this tool to run SQL queries. The results are returned as structured JSON.</p>
+<p>By default the tool accepts only <code>SELECT</code>. When the server runs with <code>query_mode</code> set to <code>read-write</code>, it also accepts the Data Manipulation Language (DML) statements <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>. See <a href="../../intro/write-support.html">Write support</a>.</p>
 <div class="admonition note">
-<p class="admonition-title">Result truncation</p>
-<p>The <code>truncated</code> and <code>warning</code> fields appear only when the number of result rows exceeds the <code>max_rows</code> configuration.</p>
+<p class="admonition-title">Result truncation:</p>
+<p>If the number of rows exceeds the <code>max_rows</code> configuration, the response includes the <code>truncated</code> and <code>warning</code> fields.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Data Definition Language is not permitted</p>
+<p>This tool does not run Data Definition Language (DDL) or administrative statements in any mode. <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>GRANT</code>, <code>SET</code>, <code>ENABLE</code>, <code>DISABLE</code>, and <code>SELECT ... INTO</code> are rejected. </p>
 </div>
 <h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
 <table>
@@ -3013,7 +3052,7 @@
 <td><code>query</code></td>
 <td><code>string</code></td>
 <td style="text-align: center;">✓</td>
-<td>The read-only SQL statement you want to execute.</td>
+<td>The SQL query you want to execute. <code>SELECT</code> is always accepted. <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> require <code>query_mode</code> set to <code>read-write</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -3054,10 +3093,50 @@
 <span class="w">    </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="example-writing-a-row">Example: Writing a Row<a class="headerlink" href="#example-writing-a-row" title="Permanent link">&para;</a></h3>
+<p>This example needs <code>query_mode</code> set to <code>read-write</code>.</p>
+<p><strong>User Request</strong></p>
+<div class="language-text highlight"><pre><span></span><code>Add a customer named Contoso Supply
+</code></pre></div>
+<p><strong>Input</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INSERT INTO customers (customer_id, customer_name) VALUES (103, &#39;Contoso Supply&#39;)&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Before running the statement, the server asks you to approve it in your client. The response depends on your answer.</p>
+<p><strong>Response, when you approve</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Response, when you decline, do not answer, or the client cannot show the prompt</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Write operation was not approved by the user.&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="write-errors">Write Errors<a class="headerlink" href="#write-errors" title="Permanent link">&para;</a></h3>
+<p>These apply when <code>query_mode</code> is <code>read-write</code>.</p>
+<p><strong>The token lacks the <code>mcp:write</code> scope</strong></p>
+<p>The server checks the scope before it asks anyone to approve the statement, so no prompt appears.</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;write operations require the &#39;mcp:write&#39; scope, which the access token does not carry&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>The statement is DDL or administrative</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DDL and administrative statements (CREATE/ALTER/DROP/GRANT/SET/ENABLE/...) are not permitted.&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="list_tables">list_tables<a class="headerlink" href="#list_tables" title="Permanent link">&para;</a></h2>
 <p>Returns all user tables and views available in the connected database as structured JSON.</p>
 <h3 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h3>
-<p>This resource does not require any input parameters.</p>
+<p>This tool does not require any input parameters.</p>
 <h3 id="output-schema_1">Output Schema<a class="headerlink" href="#output-schema_1" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -3105,10 +3184,14 @@
 <td><code>table_name</code></td>
 <td><code>string</code></td>
 <td style="text-align: center;">✓</td>
-<td>Name of the table to describe.</td>
+<td>Name of the table to describe.  Accepts a plain name, such as <code>orders</code>, or an owner-qualified name, such as <code>actian.customers</code>.</td>
 </tr>
 </tbody>
 </table>
+<div class="admonition tip">
+<p class="admonition-title">Qualify the name when several owners have the same table</p>
+<p>Given a plain name, the server describes your own table if you own one with that name. Otherwise it picks one of the other owners. Pass <code>owner.table</code> to describe a specific one.</p>
+</div>
 <h3 id="output-schema_2">Output Schema<a class="headerlink" href="#output-schema_2" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -3162,10 +3245,20 @@
 <span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;No permission to access table &#39;table name&#39;&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="example-naming-the-owner">Example: Naming the Owner<a class="headerlink" href="#example-naming-the-owner" title="Permanent link">&para;</a></h3>
+<p><strong>User Request</strong></p>
+<div class="language-text highlight"><pre><span></span><code>Describe the customers table owned by actian
+</code></pre></div>
+<p><strong>Input</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actian.customers&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The response has the same shape as the previous example. If no table matches both the name and the owner, <code>rows</code> is empty and <code>row_count</code> is <code>0</code>.</p>
 <h2 id="list_functions">list_functions<a class="headerlink" href="#list_functions" title="Permanent link">&para;</a></h2>
 <p>Returns user-defined functions and procedures, including their stored definitions, as structured JSON.</p>
 <h3 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h3>
-<p>This resource does not require any input parameters.</p>
+<p>This tool does not require any input parameters.</p>
 <h3 id="output-schema_3">Output Schema<a class="headerlink" href="#output-schema_3" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -3229,7 +3322,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 19, 2026 10:26:57 UTC">April 19, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 11, 2026 13:53:25 UTC">August 11, 2026</span>
   </span>
 
     
