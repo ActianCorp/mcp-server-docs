@@ -103,7 +103,9 @@ The distinction matters, because not every member means something at startup: `c
 
 ### Getting the SDK
 
-Everything needed to write an extension ships in the **Extension SDK**, a self-contained zip that asks only for Java 21 and Maven. It carries the API JAR, a project you can build straight away, the full API documentation, and `SchemaExplorerExtension` — a working example that exercises every contribution kind described on this page, and the easiest starting point for a real extension.
+Everything needed to write an extension ships in the **Extension SDK**, a self-contained zip that asks only for Java 21 and Maven. It carries the API JAR, a project you can build straight away, and `SchemaExplorerExtension` — a working example that exercises every contribution kind described on this page, and the easiest starting point for a real extension.
+
+It also carries the API Javadoc, which goes further than this page does: every annotation's full attribute list, each member of `ExtensionContext`, and the rules the server applies while loading your JAR.
 
 <!-- TODO: confirm the exact ESD product and release path before publishing. ESD currently lists
      Actian NoSQL Database and Actian NoSQL JPA; the SDK is filed under neither today. -->
