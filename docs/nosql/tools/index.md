@@ -60,7 +60,7 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
 
 ```json
 {
-  "items": [          // array of result rows for this page
+  "items": [          // array of result objects for this page
     {
       "loid": "string",    // the LOID of the object
       "class": "string",   // class name of the object
@@ -77,7 +77,7 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
 }
 ```
 
-A query that selects whole entities (`select e from Employee e`) returns each row in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values as they are, not wrapped in `fields`.
+A query that selects whole entities (`select e from Employee e`) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values as they are, not wrapped in `fields`.
 
 To change an object you read here, hand its `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
@@ -145,7 +145,7 @@ The output is identical to `execute_query`:
 
 ```json
 {
-  "items": [          // array of result rows for this page
+  "items": [          // array of result objects for this page
     {
       "loid": "string",    // the LOID of the object
       "class": "string",   // class name of the object
