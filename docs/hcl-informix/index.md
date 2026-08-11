@@ -3,14 +3,14 @@ title: HCL Informix®
 description: Use the Actian MCP Server to connect MCP clients to HCL Informix® Database.
 ---
 
-# MCP Server for HCL Informix® 
+# Actian MCP Server for HCL Informix® 
 
-Connect the MCP-compatible client to an HCL Informix® database using the Actian MCP Server. Once configured, you can use the server to explore schema metadata and execute read-only SQL queries through a standardized interface. The MCP Server for HCL Informix® enables communication between any MCP client and the HCL Informix® database. The server automatically manages connection pooling, response formatting, and schema discovery, allowing you to focus on writing queries.
+Connect the MCP-compatible client to an HCL Informix® database using the Actian MCP Server. Once configured, you can use the server to explore schema metadata and execute SQL queries through a standardized interface. The MCP Server for HCL Informix® enables communication between any MCP client and the HCL Informix® database. The server automatically manages connection pooling, response formatting, and schema discovery, allowing you to focus on your business data analysis.
 
 
 ## Capabilities
 
-The MCP Server for HCL Informix® supports the following operations:
+The Actian MCP Server for HCL Informix® supports the following operations:
 
 | Action | Description |
 |--------|-------------|
@@ -19,17 +19,23 @@ The MCP Server for HCL Informix® supports the following operations:
 | **Inspect table structure** | Retrieve column definitions, data types, and key information. |
 | **Read schema metadata** | Explore comprehensive database-level metadata. |
 | **List functions and procedures** | View available user-defined routines. |
+| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
 
+!!! note "Write support is opt-in"
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
+
+---
 
 ## Prerequisites
 
 Before starting the server, ensure the following requirements are met:
 
-- **Container Engine:** Docker or Podman installed and running on the host machine.
-- **Database credentials:** Access details for the HCL Informix database.
-- **Secure deployment files (Optional):** TLS certificate and key files.
-- **OIDC provider (Optional):** Required if you are using OAuth authentication.
+* **Container Engine:** Docker installed and running on the host machine.
+* **Database credentials:** Access details for the HCL Informix database.
+* **Secure deployment files (Optional):** TLS certificate and key files.
+* **Authentication (Optional):** An OIDC provider, if you require OAuth
 
+---
 
 ## Configuration
 
@@ -37,7 +43,7 @@ The server runs as a Docker container. To configure the server, mount the (`conf
 
 ### Create Configuration File
 
-Create a file named `conf.json` in the working directory and include the specific database details:
+Create a file named `conf.json` in the working directory and add the database specific configuration details:
 
 ```json
 {
@@ -80,10 +86,10 @@ Create a file named `conf.json` in the working directory and include the specifi
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool|
 | `host` | `string` | Host address that the MCP Server listens on inside the container|
 | `port` | `string` | Port that the MCP Server listens on inside the container |
-| `database_user` | `string` | Database username. You can also provide in the command line |
-| `database_password` | `string` | Database password. You can also provide in the command line |
+| `database_user` | `string` | Database username. |
+| `database_password` | `string` | Database password. |
 
-**Optional fields**
+**Optional Fields**
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -92,27 +98,22 @@ Create a file named `conf.json` in the working directory and include the specifi
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` inside the container. |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` inside the container. |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) for more information. |
-| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md) |
+| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md) |
+| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt) |
+| `extensions` | `array` | — | Extension modules to load, each object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md) |
 
 ---
 
 ## Start the Server
 
-In the `conf.json` set host address to `0.0.0.0`. Once the `conf.json` file is ready, start the container and mount the configuration file as `/app/conf.json`:
-
-
-1. Load the image:
+With the `conf.json` file ready, run the following Docker command to start the container. This command mounts the configuration file as a read-only volume.
 
     ```bash
-    docker load -i ifx_mcp_image.tar
-    ```
-
-2. Run the container:
-
-    ```bash
-    docker run -p 8000:8000 -d --name ifx-mcp \
+    docker run  -d \
       -v $(pwd)/conf_temp.json:/app/conf.json:ro,Z \
-      actian/informix-mcp-server-linux:1.0.0
+      -p 8000:8000 \
+      --name=ifx-mcp \
+      actian/informix-mcp-server-linux:1.1.0
     ```
 
 !!! note 
