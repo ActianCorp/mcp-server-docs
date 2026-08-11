@@ -94,6 +94,9 @@ sequenceDiagram
 
 To grant the `mcp:write` scope in your identity provider, see [Auth0](authentication/auth0/index.md) or [Keycloak](authentication/keycloak/index.md).
 
+!!! note "The server checks the scope; it never asks for it"
+    Nothing on the server requests `mcp:write` — it only reads whatever the presented token carries, so the request has to come from the MCP client. A client that lets you set its scopes can be told to ask for it directly. One that works them out from the server's resource metadata asks for whatever is advertised there, which is a server setting: see [Advertising scopes to MCP clients](authentication/index.md#advertising-scopes-to-mcp-clients).
+
 !!! warning "The scope is the only per-caller write control"
     Actian NoSQL Database authenticates through the connection URL, so every statement the server runs — read or write — runs as that one configured database user. There is no per-user impersonation, and therefore no database-privilege backstop that could stop an authorized caller from changing a particular class.
 
