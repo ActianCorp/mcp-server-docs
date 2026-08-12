@@ -1,13 +1,11 @@
 ---
 title: Actian NoSQL Database
-description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Databases for schema discovery, read-only JPQL queries, and optional write support.
+description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Databases for schema discovery, read-only JPQL queries, optional write support, and your own Java extensions.
 ---
 
 # Actian MCP Server for NoSQL
 
-Connect your MCP-compatible client to Actian NoSQL Database using the Actian MCP Server. Once configured, clients can explore schema metadata, execute read-only JPQL queries, and inspect the full details of retrieved persistent objects.
-
-Object writes are opt-in: turning on `nsql.writes.enabled` registers `create_objects`, `update_objects`, and `delete_objects`, subject to the checks described in [Write support](write-support.md).
+Connect your MCP-compatible client to Actian NoSQL Database using the Actian MCP Server. Once configured, clients can explore schema metadata, execute read-only JPQL queries, and inspect the full details of retrieved persistent objects. Object writes and your own Java extensions are available as well, both off until an operator turns them on.
 
 ## Capabilities
 
@@ -20,6 +18,18 @@ The Actian NoSQL MCP Server supports the following operations:
 | **Retrieve objects by ID** | Fetch one or many objects directly by LOID for the fastest retrieval path. |
 | **Write data** | Create, update, and delete objects, when `nsql.writes.enabled` is `true`. |
 | **Extend the server** | Add your own tools, resources, and prompts with a Java extension JAR. |
+
+### Write Support
+
+The server is read-only until writes are turned on for it. Once they are, tools for creating, updating, and deleting objects join the read-only ones, each running as a single all-or-nothing transaction. Every call then passes [three independent checks](write-support.md#what-each-call-must-clear): writes must be on, the caller's token must carry the `mcp:write` scope when authentication is enabled, and a person must approve the operation in the connected client.
+
+[Write support](write-support.md) covers all three, plus [why the write tools may be missing from a client's tool list](write-support.md#why-the-write-tools-may-not-appear) and how object versions stop one client overwriting another's change.
+
+### Extensions
+
+An extension is a Java JAR that adds your own tools, resources, resource templates, and prompts to a running server — no fork, and no rebuild of the product. The server loads only the JARs an operator has declared in an allowlist, with each one's SHA-256 digest pinned by default. An extension's write tools pass the same checks the built-in ones do.
+
+[Extensions](extensions/index.md) covers authoring, the Extension SDK, deployment, and the trust model.
 
 ## Prerequisites
 

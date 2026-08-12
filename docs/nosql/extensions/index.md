@@ -9,9 +9,6 @@ An extension is a Java JAR that adds tools, resources, resource templates, and p
 
 The subsystem is off until an operator turns it on with `nsql.extensions.enabled`, and even then the server loads only the JARs the operator has explicitly declared. A server that never sets the property behaves exactly as it does today.
 
-!!! note "This extension system is Java"
-    Extensions here are Java classes compiled against an Actian-provided API and deployed as JARs. This is a different mechanism from the Python extension system used by the Actian MCP Server for other databases — the concepts rhyme, but nothing transfers: not the language, not the packaging, and not the configuration.
-
 ## What an extension can contribute
 
 Four kinds of thing, each declared by annotating a plain Java method. The annotations come from the framework-neutral `org.mcpjava` library rather than from a server-specific package, so an extension never compiles against the server's own MCP internals.
