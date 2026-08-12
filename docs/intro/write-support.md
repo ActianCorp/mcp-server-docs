@@ -16,8 +16,9 @@ Which tools accept a write, and how, depends on the database. See the Tools page
 !!! note "Zen routes writes to a separate tool, and changes its tool list"
     On Ingres and Analytics Engine, `execute_query` performs the write once `query_mode` is
     `read-write`. On [Zen](../zen/tools/index.md) it never does: writes go to `execute_write_query`
-    and `batch_operation`, and enabling write mode also removes `blob_operation` and
-    `database_manage` from the registered tools.
+    and to `orm_operation`, and enabling write mode also removes `blob_operation` and
+    `database_manage` from the registered tools. Zen additionally counts the rows a conditional
+    `UPDATE`/`DELETE` matches and shows that number in the approval prompt.
 
 ## Enabling write mode
 
