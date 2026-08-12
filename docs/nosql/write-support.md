@@ -158,6 +158,42 @@ Visibility is decided per connection, from the capabilities the client advertise
 
 This rule is not tied to specific tool names. It applies to any tool that does not declare itself read-only, including tools contributed by an [extension](extensions/index.md).
 
+## Answering the prompt from a Python client
+
+A [FastMCP](https://pypi.org/project/fastmcp/) client advertises the elicitation capability only when it is given an elicitation handler. Without one it is a client that cannot confirm, so the write tools are never registered for it — the symptom described above, reached through your own code rather than through a third-party client.
+
+The handler receives the server's message and returns the answer. The prompt declares one required boolean property, `confirm`, which the server validates: an accepted prompt that does not carry `confirm` set to `true` counts as unconfirmed, and the write is refused.
+
+```python
+from fastmcp import Client
+from fastmcp.client.elicitation import ElicitResult
+
+
+async def confirm_write(message, response_type, params, context):
+    print(f"\nThe server requests approval:\n{message}")
+    # input() runs on a worker thread so the connection stays responsive while it waits
+    answer = await asyncio.to_thread(input, "Approve this write? [y/N] ")
+    if answer.strip().lower() == "y":
+        return ElicitResult(action="accept", content={"confirm": True})
+    return ElicitResult(action="decline")
+
+
+async with Client(transport, elicitation_handler=confirm_write) as client:
+    ...
+```
+
+The only clock is the server's. FastMCP sets no request timeout unless you pass one, so leave it unset on a client that waits for a person — a client timeout shorter than [the confirmation window](#how-long-the-server-waits) expires first and reports itself instead of the server's refusal.
+
+A complete, runnable version is available as [`nosql_hitl_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples-nosql/nosql_hitl_client.py), a console client that calls any tool and asks you to approve the write at the terminal:
+
+```bash
+pip install fastmcp
+python nosql_hitl_client.py http://localhost:8080/mcp create_objects \
+    '{"className": "Employee", "objects": [{"name": "Ada Lovelace"}]}'
+```
+
+The client takes any tool with any arguments and knows nothing about your schema; `Employee` and the field names above are placeholders, so substitute your own. The [examples README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples-nosql/README.md) has the full usage.
+
 ## Skipping the confirmation prompt
 
 Some clients cannot display prompts. For those deployments, set `nsql.writes.confirmation-required` to `false`:

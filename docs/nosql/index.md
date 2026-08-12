@@ -124,6 +124,8 @@ Once the container is running, connect the MCP client to the exposed server endp
 
 The following example demonstrates how to connect to a running Actian MCP Server for Actian NoSQL using the [FastMCP](https://pypi.org/project/fastmcp/) Python client.
 
+Both examples below read. To write, the client must also be able to answer the server's confirmation prompt, which it can do only if you give it an elicitation handler — see [Answering the prompt from a Python client](write-support.md#answering-the-prompt-from-a-python-client).
+
 ### Client Prerequisites
 
 Install the required packages:
