@@ -1,3 +1,6 @@
+-- Copyright (C) 2026 Actian Corp.
+-- All Rights Reserved.
+
 -- Schema for all example extensions, on one database. INFORMIX (";"-terminated).
 --
 -- Run with:
