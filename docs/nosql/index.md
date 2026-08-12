@@ -16,7 +16,7 @@ The Actian NoSQL MCP Server supports the following operations:
 | **Discover the Schema** | List all classes and explore their fields and inheritance hierarchy. |
 | **Run JPQL queries** | Execute read-only queries against your database. |
 | **Retrieve objects by ID** | Fetch one or many objects directly by LOID for the fastest retrieval path. |
-| **Write data** | Create, update, and delete objects, when `nsql.writes.enabled` is `true`. |
+| **Write data** | Create, update, and delete objects, when write support is enabled. |
 | **Extend the server** | Add your own tools, resources, and prompts with a Java extension JAR. |
 
 ### Write Support
@@ -44,19 +44,13 @@ Before starting the server, ensure the following requirements are met:
 
 All configuration is provided through an `application.properties` file mounted into the container at `/home/jboss/config/application.properties`. Environment variables are supported as an alternative — any property can be passed with a `-e` flag using `SCREAMING_SNAKE_CASE` notation, and they take precedence over the file.
 
-### NoSQL Connection
+### Actian NoSQL Properties
 
-| Property             | Required | Description                                                                                                              |
-|----------------------|----------|--------------------------------------------------------------------------------------------------------------------------|
+| Property | Required | Description |
+|----------|----------|-------------|
 | `nsql.connectionURL` | Yes | Database connection URL in the format `database@server:port#user:password`. `port`, `user`, and `password` are optional. |
-
-### Write Mode
-
-Data writes stay off until `nsql.writes.enabled` is set to `true`. That property, the batch ceiling, and the two that govern the confirmation prompt are listed in [Write support](write-support.md#configuration-reference).
-
-### Extensions
-
-`nsql.extensions.enabled` turns on loading of Java extension JARs. A JAR sitting in the extensions directory is loaded only if an operator has declared it in an allowlist, which by default also pins its SHA-256 digest. For the full property set, see [Extensions](extensions/index.md#enabling-and-declaring-extensions).
+| `nsql.writes.enabled` | No | Turns on the write tools, which are otherwise unavailable. See [Write support](write-support.md#configuration-reference) for the batch ceiling and the two confirmation settings. |
+| `nsql.extensions.enabled` | No | Turns on loading of declared Java extension JARs. See [Extensions](extensions/index.md#enabling-and-declaring-extensions) for the allowlist, digest pinning, and load order. |
 
 ### Quarkus Properties
 
@@ -130,7 +124,7 @@ Once the container is running, connect the MCP client to the exposed server endp
 
 The following example demonstrates how to connect to a running Actian MCP Server for Actian NoSQL using the [FastMCP](https://pypi.org/project/fastmcp/) Python client.
 
-### Prerequisites
+### Client Prerequisites
 
 Install the required packages:
 
