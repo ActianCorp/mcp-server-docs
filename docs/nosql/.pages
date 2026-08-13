@@ -1,7 +1,9 @@
 title: NoSQL
 nav:
   - index.md
+  - write-support.md
   - authentication
   - tools
   - resources
   - prompts
+  - extensions

@@ -5,9 +5,12 @@ description: Enable data-modifying SQL on the Actian MCP Server with query_mode,
 
 # Write support
 
-By default, the Actian MCP Server permits only read queries. Set `query_mode` to `read-write` in `conf.json` to also allow Data Manipulation Language (DML) statements, that is `INSERT`, `UPDATE`, and `DELETE`.
+By default, the Actian MCP Server permits only read queries. On the SQL databases, set `query_mode` to `read-write` in `conf.json` to also allow Data Manipulation Language (DML) statements, that is `INSERT`, `UPDATE`, and `DELETE`.
 
 Write support is off unless you turn it on. Existing read-only deployments are unaffected.
+
+!!! note "Actian NoSQL works differently"
+    It has no DML statements: writes go through dedicated object tools, governed by their own setting. See [Write support for Actian NoSQL](../nosql/write-support.md).
 
 Extensions can write too, through the same authorization checks described below. See [Extensions](../extensions/index.md).
 

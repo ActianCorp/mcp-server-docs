@@ -9,7 +9,7 @@ You can extend the Actian MCP Server with **extensions**: your own Python module
 
 An extension *adds* capabilities. It does not manage the database connection. The server is already connected to your database and already exposes the built-in tools. Your module provides a `register()` function and reads or writes through the extension API.
 
-Extensions are supported on Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Actian NoSQL supports extensions through a different interface that is not covered here.
+Extensions are supported on Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Actian NoSQL supports extensions through a different interface — Java rather than Python — documented in [Extensions for Actian NoSQL](../nosql/extensions/index.md).
 
 ## Write the module
 
