@@ -5,9 +5,12 @@ description: Enable data-modifying SQL on the Actian MCP Server with query_mode,
 
 # Write support
 
-By default, the Actian MCP Server permits only read queries. Set `query_mode` to `read-write` in `conf.json` to also allow Data Manipulation Language (DML) statements, that is `INSERT`, `UPDATE`, and `DELETE`.
+By default, the Actian MCP Server permits only read queries. On the SQL databases, set `query_mode` to `read-write` in `conf.json` to also allow Data Manipulation Language (DML) statements, that is `INSERT`, `UPDATE`, and `DELETE`.
 
 Write support is off unless you turn it on. Existing read-only deployments are unaffected.
+
+!!! note "Actian NoSQL works differently"
+    It has no DML statements: writes go through dedicated object tools, governed by their own setting. See [Write support for Actian NoSQL](../nosql/write-support.md).
 
 Extensions can write too, through the same authorization checks described below. See [Extensions](../extensions/index.md).
 
@@ -16,8 +19,9 @@ Which tools accept a write, and how, depends on the database. See the Tools page
 !!! note "Zen routes writes to a separate tool, and changes its tool list"
     On Ingres and Analytics Engine, `execute_query` performs the write once `query_mode` is
     `read-write`. On [Zen](../zen/tools/index.md) it never does: writes go to `execute_write_query`
-    and `batch_operation`, and enabling write mode also removes `blob_operation` and
-    `database_manage` from the registered tools.
+    and to `orm_operation`, and enabling write mode also removes `blob_operation` and
+    `database_manage` from the registered tools. Zen additionally counts the rows a conditional
+    `UPDATE`/`DELETE` matches and shows that number in the approval prompt.
 
 ## Enabling write mode
 

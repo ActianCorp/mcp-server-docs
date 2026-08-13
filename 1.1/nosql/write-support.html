@@ -6,35 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Built-in tools available when using the Actian MCP Server with Actian Analytics Engine.">
+        <meta name="description" content="How to let the Actian MCP Server for NoSQL create, update, and delete objects, and the three checks — the setting, the mcp:write scope, and human confirmation — that authorize every write.">
       
       
       
-        <link rel="canonical" href="https://docs.actian.com/mcp-server/1.1/analytics-engine/tools/index.html">
+        <link rel="canonical" href="https://docs.actian.com/mcp-server/1.1/nosql/write-support.html">
       
       
-        <link rel="prev" href="../data-platform.html">
+        <link rel="prev" href="index.html">
       
       
-        <link rel="next" href="../resources/index.html">
+        <link rel="next" href="authentication/index.html">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.png">
+      <link rel="icon" href="../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Tools - Actian MCP Server</title>
+        <title>Write Support - Actian MCP Server</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,11 +53,11 @@
       
     
     
-      <link rel="stylesheet" href="../../stylesheets/site-theme.css">
+      <link rel="stylesheet" href="../stylesheets/site-theme.css">
     
-      <link rel="stylesheet" href="../../stylesheets/minichat.css">
+      <link rel="stylesheet" href="../stylesheets/minichat.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tools" class="md-skip">
+        <a href="#write-support" class="md-skip">
           Skip to content
         </a>
       
@@ -135,9 +135,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../index.html" title="Actian MCP Server" class="md-header__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
+    <a href="../index.html" title="Actian MCP Server" class="md-header__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
       
-  <img src="../../assets/images/actian-logo.svg" alt="logo">
+  <img src="../assets/images/actian-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -154,7 +154,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tools
+              Write Support
             
           </span>
         </div>
@@ -277,9 +277,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../index.html" title="Actian MCP Server" class="md-nav__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
+    <a href="../index.html" title="Actian MCP Server" class="md-nav__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
       
-  <img src="../../assets/images/actian-logo.svg" alt="logo">
+  <img src="../assets/images/actian-logo.svg" alt="logo">
 
     </a>
     Actian MCP Server
@@ -306,7 +306,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../index.html" class="md-nav__link">
+      <a href="../index.html" class="md-nav__link">
         
   
   
@@ -360,7 +360,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../intro/index.html" class="md-nav__link ">
+            <a href="../intro/index.html" class="md-nav__link ">
               
   
   
@@ -404,7 +404,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../intro/write-support.html" class="md-nav__link">
+      <a href="../intro/write-support.html" class="md-nav__link">
         
   
   
@@ -464,7 +464,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../get-started/index.html" class="md-nav__link ">
+            <a href="../get-started/index.html" class="md-nav__link ">
               
   
   
@@ -535,7 +535,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../mcp-clients/index.html" class="md-nav__link ">
+            <a href="../mcp-clients/index.html" class="md-nav__link ">
               
   
   
@@ -610,7 +610,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../authentication/index.html" class="md-nav__link ">
+            <a href="../authentication/index.html" class="md-nav__link ">
               
   
   
@@ -676,7 +676,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../authentication/auth0/index.html" class="md-nav__link ">
+            <a href="../authentication/auth0/index.html" class="md-nav__link ">
               
   
   
@@ -745,7 +745,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../authentication/keycloak/index.html" class="md-nav__link ">
+            <a href="../authentication/keycloak/index.html" class="md-nav__link ">
               
   
   
@@ -828,7 +828,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../extensions/index.html" class="md-nav__link ">
+            <a href="../extensions/index.html" class="md-nav__link ">
               
   
   
@@ -872,7 +872,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../extensions/examples.html" class="md-nav__link">
+      <a href="../extensions/examples.html" class="md-nav__link">
         
   
   
@@ -900,7 +900,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../extensions/api-reference.html" class="md-nav__link">
+      <a href="../extensions/api-reference.html" class="md-nav__link">
         
   
   
@@ -966,7 +966,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../ingres/index.html" class="md-nav__link ">
+            <a href="../ingres/index.html" class="md-nav__link ">
               
   
   
@@ -1032,7 +1032,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../ingres/tools/index.html" class="md-nav__link ">
+            <a href="../ingres/tools/index.html" class="md-nav__link ">
               
   
   
@@ -1101,7 +1101,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../ingres/resources/index.html" class="md-nav__link ">
+            <a href="../ingres/resources/index.html" class="md-nav__link ">
               
   
   
@@ -1170,7 +1170,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../ingres/prompts/index.html" class="md-nav__link ">
+            <a href="../ingres/prompts/index.html" class="md-nav__link ">
               
   
   
@@ -1255,7 +1255,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/index.html" class="md-nav__link ">
               
   
   
@@ -1321,7 +1321,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/tools/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/tools/index.html" class="md-nav__link ">
               
   
   
@@ -1390,7 +1390,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/resources/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/resources/index.html" class="md-nav__link ">
               
   
   
@@ -1459,7 +1459,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/prompts/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/prompts/index.html" class="md-nav__link ">
               
   
   
@@ -1544,7 +1544,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/index.html" class="md-nav__link ">
+            <a href="../zen/index.html" class="md-nav__link ">
               
   
   
@@ -1610,7 +1610,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/tools/index.html" class="md-nav__link ">
+            <a href="../zen/tools/index.html" class="md-nav__link ">
               
   
   
@@ -1679,7 +1679,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/resources/index.html" class="md-nav__link ">
+            <a href="../zen/resources/index.html" class="md-nav__link ">
               
   
   
@@ -1748,7 +1748,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/prompts/index.html" class="md-nav__link ">
+            <a href="../zen/prompts/index.html" class="md-nav__link ">
               
   
   
@@ -1799,6 +1799,8 @@
       
   
   
+    
+  
   
   
     
@@ -1829,17 +1831,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/index.html" class="md-nav__link ">
+            <a href="index.html" class="md-nav__link ">
               
   
   
@@ -1863,7 +1863,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1880,10 +1880,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../nosql/write-support.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write Support
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="write-support.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1899,6 +1926,172 @@
   
 
       </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-write-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enabling write mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-a-write-is-authorized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a write is authorized
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How a write is authorized">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#which-tools-a-client-is-given-at-connect-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which tools a client is given, at connect time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-each-call-must-clear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What each call must clear
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#confirmation-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confirmation prompts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Confirmation prompts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-long-the-server-waits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How long the server waits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-the-write-tools-may-not-appear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the write tools may not appear
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#answering-the-prompt-from-a-python-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Answering the prompt from a Python client
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skipping-the-confirmation-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skipping the confirmation prompt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimistic-concurrency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimistic concurrency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1937,7 +2130,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/authentication/index.html" class="md-nav__link ">
+            <a href="authentication/index.html" class="md-nav__link ">
               
   
   
@@ -2003,7 +2196,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/authentication/auth0/index.html" class="md-nav__link ">
+            <a href="authentication/auth0/index.html" class="md-nav__link ">
               
   
   
@@ -2072,7 +2265,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/authentication/keycloak/index.html" class="md-nav__link ">
+            <a href="authentication/keycloak/index.html" class="md-nav__link ">
               
   
   
@@ -2149,7 +2342,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/tools/index.html" class="md-nav__link ">
+            <a href="tools/index.html" class="md-nav__link ">
               
   
   
@@ -2218,7 +2411,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/resources/index.html" class="md-nav__link ">
+            <a href="resources/index.html" class="md-nav__link ">
               
   
   
@@ -2287,7 +2480,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/prompts/index.html" class="md-nav__link ">
+            <a href="prompts/index.html" class="md-nav__link ">
               
   
   
@@ -2356,7 +2549,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/extensions/index.html" class="md-nav__link ">
+            <a href="extensions/index.html" class="md-nav__link ">
               
   
   
@@ -2407,8 +2600,6 @@
       
   
   
-    
-  
   
   
     
@@ -2435,15 +2626,17 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../index.html" class="md-nav__link ">
+            <a href="../analytics-engine/index.html" class="md-nav__link ">
               
   
   
@@ -2467,7 +2660,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2487,7 +2680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../data-platform.html" class="md-nav__link">
+      <a href="../analytics-engine/data-platform.html" class="md-nav__link">
         
   
   
@@ -2512,8 +2705,6 @@
                 
   
   
-    
-  
   
   
     
@@ -2529,15 +2720,17 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_3" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11_3" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="index.html" class="md-nav__link md-nav__link--active">
+            <a href="../analytics-engine/tools/index.html" class="md-nav__link ">
               
   
   
@@ -2556,7 +2749,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2606,7 +2799,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../resources/index.html" class="md-nav__link ">
+            <a href="../analytics-engine/resources/index.html" class="md-nav__link ">
               
   
   
@@ -2675,7 +2868,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../prompts/index.html" class="md-nav__link ">
+            <a href="../analytics-engine/prompts/index.html" class="md-nav__link ">
               
   
   
@@ -2751,10 +2944,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#available-tools" class="md-nav__link">
+  <a href="#enabling-write-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Tools
+        Enabling write mode
       
     </span>
   </a>
@@ -2762,22 +2955,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#execute_query" class="md-nav__link">
+  <a href="#how-a-write-is-authorized" class="md-nav__link">
     <span class="md-ellipsis">
       
-        execute_query
+        How a write is authorized
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="execute_query">
+    <nav class="md-nav" aria-label="How a write is authorized">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
+  <a href="#which-tools-a-client-is-given-at-connect-time" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parameters
+        Which tools a client is given, at connect time
       
     </span>
   </a>
@@ -2785,43 +2978,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#output-schema" class="md-nav__link">
+  <a href="#what-each-call-must-clear" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-writing-a-row" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example: Writing a Row
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#write-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Write Errors
+        What each call must clear
       
     </span>
   </a>
@@ -2834,44 +2994,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#list_tables" class="md-nav__link">
+  <a href="#confirmation-prompts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        list_tables
+        Confirmation prompts
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="list_tables">
+    <nav class="md-nav" aria-label="Confirmation prompts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#parameters_1" class="md-nav__link">
+  <a href="#how-long-the-server-waits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
+        How long the server waits
       
     </span>
   </a>
@@ -2884,113 +3022,57 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#describe_table" class="md-nav__link">
+  <a href="#why-the-write-tools-may-not-appear" class="md-nav__link">
     <span class="md-ellipsis">
       
-        describe_table
+        Why the write tools may not appear
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="describe_table">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-naming-the-owner" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example: Naming the Owner
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#list_functions" class="md-nav__link">
+  <a href="#answering-the-prompt-from-a-python-client" class="md-nav__link">
     <span class="md-ellipsis">
       
-        list_functions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="list_functions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        Answering the prompt from a Python client
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_3" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#skipping-the-confirmation-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Schema
+        Skipping the confirmation prompt
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#example_3" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#optimistic-concurrency" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example
+        Optimistic concurrency
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration reference
+      
+    </span>
+  </a>
   
 </li>
       
@@ -3030,7 +3112,7 @@
   
   
     <li class="md-path__item">
-      <a href="../../index.html" class="md-path__link">
+      <a href="../index.html" class="md-path__link">
         
   <span class="md-ellipsis">
     Home
@@ -3048,28 +3130,10 @@
     
     
       <li class="md-path__item">
-        <a href="../index.html" class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Analytics Engine
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-    
-    
-      <li class="md-path__item">
         <a href="index.html" class="md-path__link">
           
   <span class="md-ellipsis">
-    Tools
+    NoSQL
   </span>
 
         </a>
@@ -3085,7 +3149,7 @@
               <article class="md-content__inner md-typeset">
                 
   
-  <a href="index.md" class="md-raw-link" target="_blank" rel="noopener" title="View this page as plain text Markdown">
+  <a href="write-support.md" class="md-raw-link" target="_blank" rel="noopener" title="View this page as plain text Markdown">
       <span class="md-raw-link__icon">M&#x2193;</span>
       <span class="md-raw-link__body">
         <span class="md-raw-link__title">View as Markdown &#x2197;</span>
@@ -3097,305 +3161,306 @@
 
 
 
-<h1 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h1>
-<p>The Actian MCP Server for the Actian Analytics Engine provides four built-in tools for database discovery and query execution.</p>
-<h2 id="available-tools">Available Tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
-<p>Use the following tools to interact with the database:</p>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="#execute_query"><code>execute_query</code></a></td>
-<td>Runs a SQL query against the connected database. Reads always, writes when the server permits them.</td>
-</tr>
-<tr>
-<td><a href="#list_tables"><code>list_tables</code></a></td>
-<td>Lists all available user tables and views.</td>
-</tr>
-<tr>
-<td><a href="#describe_table"><code>describe_table</code></a></td>
-<td>Returns column definitions and comments for a specific table.</td>
-</tr>
-<tr>
-<td><a href="#list_functions"><code>list_functions</code></a></td>
-<td>Lists available user-defined functions and procedures.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="execute_query">execute_query<a class="headerlink" href="#execute_query" title="Permanent link">&para;</a></h2>
-<p>Use this tool to run SQL queries. The server returns the result set as a structured JSON object.</p>
-<p>By default the tool accepts only <code>SELECT</code>. When the server runs with <code>query_mode</code> set to <code>read-write</code>, it also accepts the Data Manipulation Language (DML) statements <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>. See <a href="../../intro/write-support.html">Write support</a>.</p>
-<div class="admonition warning">
-<p class="admonition-title">Data Definition Language is never permitted</p>
-<p>This tool does not run Data Definition Language (DDL) or administrative statements in any mode. <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>GRANT</code>, <code>SET</code>, <code>ENABLE</code>, <code>DISABLE</code>, and <code>SELECT ... INTO</code> are rejected. Use Analytics Engine tooling for schema changes.</p>
-</div>
-<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th style="text-align: center;">Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>query</code></td>
-<td><code>string</code></td>
-<td style="text-align: center;">✓</td>
-<td>SQL query to execute. <code>SELECT</code> is always accepted. <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> require <code>query_mode</code> set to <code>read-write</code>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="output-schema">Output Schema<a class="headerlink" href="#output-schema" title="Permanent link">&para;</a></h3>
-<p><strong>On Success</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;result_columns&gt;&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;&lt;result_rows&gt;&quot;</span><span class="p">]],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_rows&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;truncated&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Results were truncated to &lt;max_rows&gt; rows.&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
+<h1 id="write-support">Write support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
+<p>The Actian MCP Server for Actian NoSQL is read-only by default. Setting <code>nsql.writes.enabled</code> to <code>true</code> adds three tools that change data: <code>create_objects</code>, <code>update_objects</code>, and <code>delete_objects</code>. A deployment that never sets it is untouched by everything on this page.</p>
+<p>Turning writes on does not hand the connected AI agent free rein over your database. Every write clears three independent checks — the server setting, the caller's <code>mcp:write</code> scope, and a person confirming the operation — and each of them can stop it. This page covers all three, the properties that tune them, and what to do when the write tools do not appear in the client at all.</p>
+<p>For each tool's parameters, batch limits, and result shape, see <a href="tools/index.html">Tools</a>. Tools contributed by an <a href="extensions/index.html">extension</a> pass the same three checks.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The <code>truncated</code> and <code>warning</code> fields appear only when the number of result rows exceeds the <code>max_rows</code> value set in the server configuration.</p>
+<p class="admonition-title">Writes are never expressed as JPQL</p>
+<p>Enabling write mode does not change <code>execute_query</code>. It still accepts <code>SELECT</code> only, and still rejects anything that could modify state. Every mutation goes through one of the three write tools instead.</p>
 </div>
-<p><strong>On Error</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;error_message&gt;&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-text highlight"><pre><span></span><code>Show me all the rows in the customers table
-</code></pre></div>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SELECT * FROM customers&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Response</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;customer_name&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">[</span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Acme Retail&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="p">[</span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Northwind Stores&quot;</span><span class="p">]</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example-writing-a-row">Example: Writing a Row<a class="headerlink" href="#example-writing-a-row" title="Permanent link">&para;</a></h3>
-<p>This example needs <code>query_mode</code> set to <code>read-write</code>.</p>
-<p><strong>Request</strong></p>
-<div class="language-text highlight"><pre><span></span><code>Add a customer named Contoso Supply
-</code></pre></div>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INSERT INTO customers (customer_id, customer_name) VALUES (103, &#39;Contoso Supply&#39;)&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Before running the statement, the server asks you to approve it in your client. The response depends on your answer.</p>
-<p><strong>Response, when you approve</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Response, when you decline, do not answer, or the client cannot show the prompt</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Write operation was not approved by the user.&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="write-errors">Write Errors<a class="headerlink" href="#write-errors" title="Permanent link">&para;</a></h3>
-<p>These apply when <code>query_mode</code> is <code>read-write</code>.</p>
-<p><strong>The token lacks the <code>mcp:write</code> scope</strong></p>
-<p>The server checks the scope before it asks anyone to approve the statement, so no prompt appears.</p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;write operations require the &#39;mcp:write&#39; scope, which the access token does not carry&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>The statement is DDL or administrative</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DDL and administrative statements (CREATE/ALTER/DROP/GRANT/SET/ENABLE/...) are not permitted.&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<h2 id="list_tables">list_tables<a class="headerlink" href="#list_tables" title="Permanent link">&para;</a></h2>
-<p>Returns all user tables and views available in the connected database as structured JSON.</p>
-<h3 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h3>
-<p>This tool takes no input parameters.</p>
-<h3 id="output-schema_1">Output Schema<a class="headerlink" href="#output-schema_1" title="Permanent link">&para;</a></h3>
-<p><strong>On Success</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;table_name&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;&lt;table_name&gt;&quot;</span><span class="p">]],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_rows&gt;&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>On Error</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;error_message&gt;&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-text highlight"><pre><span></span><code>Show me all the tables in my database
-</code></pre></div>
-<p><strong>Response</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;table_name&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;customers&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;orders&quot;</span><span class="p">]</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
-<span class="p">}</span>
-</code></pre></div>
-<h2 id="describe_table">describe_table<a class="headerlink" href="#describe_table" title="Permanent link">&para;</a></h2>
-<p>Returns schema details for a specific table, including column names, data types, lengths, scales, and comments.</p>
-<h3 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Write mode does not change the schema</p>
+<p>The write tools create, change, and remove <em>objects</em>; they cannot add a class, alter a class, or change an index. Use the tools that come with Actian NoSQL Database for schema changes.</p>
+</div>
+<h2 id="enabling-write-mode">Enabling write mode<a class="headerlink" href="#enabling-write-mode" title="Permanent link">&para;</a></h2>
+<p>Set <code>nsql.writes.enabled</code> in <code>application.properties</code>:</p>
 <table>
 <thead>
 <tr>
-<th>Field</th>
-<th>Type</th>
-<th style="text-align: center;">Required</th>
+<th>Value</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>false</code></td>
+<td>Default. The write tools are hidden from clients, and any call to one is rejected.</td>
+</tr>
+<tr>
+<td><code>true</code></td>
+<td>The write tools are registered, subject to the checks below.</td>
+</tr>
+</tbody>
+</table>
+<div class="language-properties highlight"><pre><span></span><code><span class="na">nsql.writes.enabled</span><span class="o">=</span><span class="s">true</span>
+</code></pre></div>
+<p>As with every property on this server, the environment-variable form works too — <code>NSQL_WRITES_ENABLED=true</code> — and takes precedence over the file. The server has no hot reload for this setting: restart it after changing the value.</p>
+<h2 id="how-a-write-is-authorized">How a write is authorized<a class="headerlink" href="#how-a-write-is-authorized" title="Permanent link">&para;</a></h2>
+<p>Authorization happens at two separate moments: the server decides which write tools a client may have when that client connects, and then vets each call as it arrives.</p>
+<h3 id="which-tools-a-client-is-given-at-connect-time">Which tools a client is given, at connect time<a class="headerlink" href="#which-tools-a-client-is-given-at-connect-time" title="Permanent link">&para;</a></h3>
+<p>A write tool is registered for a connection only when <strong>both</strong> of these hold:</p>
+<ol>
+<li><code>nsql.writes.enabled</code> is <code>true</code>; and</li>
+<li>the client advertised the MCP elicitation capability, so the server has a way to ask a person for confirmation.</li>
+</ol>
+<p>The second condition is waived when <code>nsql.writes.confirmation-required</code> is <code>false</code> — with no prompt to show, there is no reason to withhold the tools from a client that could not show one.</p>
+<p>A tool the server withholds is unlisted <strong>and</strong> uncallable: calling it anyway fails at the protocol layer with an unknown-tool error, before any server-side logic runs. If the write tools are missing when you expected them, <a href="#why-the-write-tools-may-not-appear">Why the write tools may not appear</a> is the troubleshooting guide.</p>
+<h3 id="what-each-call-must-clear">What each call must clear<a class="headerlink" href="#what-each-call-must-clear" title="Permanent link">&para;</a></h3>
+<p>Every call that does reach the server passes three independent checks, in the order below — so a caller on a read-only server, or one whose token lacks the scope, is turned away before anybody is asked to confirm anything.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>What it requires</th>
+<th>When it applies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nsql.writes.enabled</code></td>
+<td>The setting must be <code>true</code>.</td>
+<td>Always. Re-checked here as a backstop, having already governed registration.</td>
+</tr>
+<tr>
+<td><code>mcp:write</code> scope</td>
+<td>The access token must carry the <code>mcp:write</code> scope.</td>
+<td>Only when authentication is enabled (<code>mcp.auth.enabled=true</code>). An unauthenticated server does not check scopes.</td>
+</tr>
+<tr>
+<td>Human confirmation</td>
+<td>A person must confirm the operation in the connected client.</td>
+<td>Always, unless you disable it with <code>nsql.writes.confirmation-required</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The sequence below picks up at this second stage, with the tool already registered:</p>
+<pre class="mermaid"><code>%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
+sequenceDiagram
+    participant User as User
+    participant Client as MCP Client
+    participant Server as MCP Server
+    participant DB as Actian NoSQL Database
+
+    Client-&gt;&gt;Server: Write request (create / update / delete objects)
+    Server-&gt;&gt;Server: Check nsql.writes.enabled
+    alt Writes disabled
+        Server--&gt;&gt;Client: Rejected (write operations are disabled)
+    else Writes enabled
+        Server-&gt;&gt;Server: Check mcp:write scope
+        alt Scope missing
+            Server--&gt;&gt;Client: Rejected (missing scope)
+        else Scope present or authentication disabled
+            Server-&gt;&gt;Client: Request confirmation
+            Client-&gt;&gt;User: Show the operation and the object count
+            alt User confirms
+                User--&gt;&gt;Client: Confirm
+                Client--&gt;&gt;Server: Confirmed
+                Server-&gt;&gt;DB: Run one atomic transaction
+                DB--&gt;&gt;Server: Committed
+                Server--&gt;&gt;Client: Result with the affected LOIDs
+            else Declined, cancelled, no response, or client cannot prompt
+                Client--&gt;&gt;Server: Not confirmed
+                Server--&gt;&gt;Client: Rejected (write not performed)
+            end
+        end
+    end</code></pre>
+<p>To grant the <code>mcp:write</code> scope in your identity provider, see <a href="authentication/auth0/index.html">Auth0</a> or <a href="authentication/keycloak/index.html">Keycloak</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">The server checks the scope; it never asks for it</p>
+<p>Nothing on the server requests <code>mcp:write</code> — it only reads whatever the presented token carries, so the request has to come from the MCP client. A client that lets you set its scopes can be told to ask for it directly. One that works them out from the server's resource metadata asks for whatever is advertised there, which is a server setting: see <a href="authentication/index.html#advertising-scopes-to-mcp-clients">Advertising scopes to MCP clients</a>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">The scope is the only per-caller write control</p>
+<p>The server authenticates to Actian NoSQL Database with the credentials carried in its connection URL, so every statement it runs — read or write — runs as that one configured database user. There is no per-user impersonation, and so no database-privilege layer underneath that could narrow what an authorized caller may change. <code>mcp:write</code> is all or nothing: a caller who holds it can create, update, or delete objects of any class in the database.</p>
+<p>Grant <code>mcp:write</code> only to the callers that should be able to modify data, and treat the database user in <code>nsql.connectionURL</code> as the true limit of what any caller can reach.</p>
+</div>
+<h2 id="confirmation-prompts">Confirmation prompts<a class="headerlink" href="#confirmation-prompts" title="Permanent link">&para;</a></h2>
+<p>The server requests confirmation through the Model Context Protocol (MCP) elicitation capability, and enforces the answer server-side. The write tool does not run until an explicit acceptance comes back — the client is never trusted to gate the operation on the server's behalf.</p>
+<p>The prompt is a summary, not a transcript. It says what the operation will do and how many objects it affects, and stops there — field values and individual LOIDs are deliberately left out, so a hundred-object batch stays as readable as a one-object batch. Each tool's exact wording is shown with that tool in <a href="tools/index.html">Tools</a>.</p>
+<p>Only an explicit confirmation lets the write proceed. Every other outcome rejects it:</p>
+<table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The user confirms</td>
+<td>The write runs.</td>
+</tr>
+<tr>
+<td>The user declines</td>
+<td>Rejected.</td>
+</tr>
+<tr>
+<td>The user cancels</td>
+<td>Rejected.</td>
+</tr>
+<tr>
+<td>The prompt is submitted without confirming</td>
+<td>Rejected.</td>
+</tr>
+<tr>
+<td>No response within <code>nsql.writes.confirmation-timeout-seconds</code> (default <code>60</code>)</td>
+<td>Rejected.</td>
+</tr>
+<tr>
+<td>The client cannot display prompts at all</td>
+<td>Rejected.</td>
+</tr>
+</tbody>
+</table>
+<p>Nothing is written in any of those cases. The rejection message names the reason, so a declined write is distinguishable from one that timed out.</p>
+<h3 id="how-long-the-server-waits">How long the server waits<a class="headerlink" href="#how-long-the-server-waits" title="Permanent link">&para;</a></h3>
+<p>The clock starts when the prompt is sent and runs for <code>nsql.writes.confirmation-timeout-seconds</code>, 60 by default. Silence is not consent: when the window closes the write is rejected outright, and the tool call returns naming the reason.</p>
+<div class="language-text highlight"><pre><span></span><code>Create not performed: no confirmation was received within the timeout.
+</code></pre></div>
+<p>The server records the same event:</p>
+<div class="language-text highlight"><pre><span></span><code>WARN  Confirmation not received within 60s; rejecting operation.
+</code></pre></div>
+<p>Sixty seconds suits someone watching the conversation as it happens. Raise it when approvals go to a person who may be away from the screen — but note that the tool call stays open for the whole wait, so the agent making the request is blocked until somebody answers or the timeout closes it. Lower it if you would rather a batch fail fast than sit pending.</p>
+<p>The timeout plays no part when <code>nsql.writes.confirmation-required</code> is <code>false</code>, because no prompt is sent.</p>
+<p>Not every MCP client implements elicitation. For which clients can display the prompt, see <a href="../mcp-clients/index.html#elicitation-support-for-write-approval">Connecting MCP Clients</a>.</p>
+<h2 id="why-the-write-tools-may-not-appear">Why the write tools may not appear<a class="headerlink" href="#why-the-write-tools-may-not-appear" title="Permanent link">&para;</a></h2>
+<p>Write tools go missing because one of the two <a href="#which-tools-a-client-is-given-at-connect-time">registration conditions</a> was not met. Withholding them is deliberate: a tool the server could never get confirmed would fail on every call, so a client that cannot confirm simply never sees one. The startup log tells you which condition to look at.</p>
+<table>
+<thead>
+<tr>
+<th>What you see</th>
+<th>Cause</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No write tools, and the startup log says <code>Mode: READ-ONLY</code></td>
+<td><code>nsql.writes.enabled</code> is <code>false</code>.</td>
+<td>Set it to <code>true</code> and restart the server.</td>
+</tr>
+<tr>
+<td>No write tools, but the startup log says <code>Mode: READ-WRITE</code></td>
+<td>The connected client did not advertise elicitation.</td>
+<td>Connect a client that supports it, or set <code>nsql.writes.confirmation-required=false</code>.</td>
+</tr>
+<tr>
+<td>A write tool call fails with a protocol error naming the tool, such as <code>-32602 Invalid tool name</code></td>
+<td>The tool is not registered for this connection, for one of the two reasons above. The MCP runtime rejects the call as unknown; it never reaches the server's write logic.</td>
+<td>Fix the cause of the hiding, then reconnect the client so it re-reads the tool list.</td>
+</tr>
+<tr>
+<td>A write tool call is rejected for a missing scope</td>
+<td>The access token does not carry <code>mcp:write</code>.</td>
+<td>Grant the scope in your identity provider.</td>
+</tr>
+</tbody>
+</table>
+<p>A hidden tool is unlisted <strong>and</strong> uncallable, so the usual sign of trouble is a protocol-level error about an unknown tool rather than a message from the server explaining itself. The server's own refusal, <code>Write operations are disabled on this server.</code>, is a backstop for a call that somehow bypasses the tool list; in normal use nobody sees it.</p>
+<p>Visibility is decided per connection, from the capabilities the client advertised when it connected. After changing either setting, restart the server and reconnect the client.</p>
+<p>This rule is not tied to specific tool names. It applies to any tool that does not declare itself read-only, including tools contributed by an <a href="extensions/index.html">extension</a>.</p>
+<h2 id="answering-the-prompt-from-a-python-client">Answering the prompt from a Python client<a class="headerlink" href="#answering-the-prompt-from-a-python-client" title="Permanent link">&para;</a></h2>
+<p>A <a href="https://pypi.org/project/fastmcp/">FastMCP</a> client advertises the elicitation capability only when it is given an elicitation handler. Without one it is a client that cannot confirm, so the write tools are never registered for it — the symptom described above, reached through your own code rather than through a third-party client.</p>
+<p>The handler receives the server's message and returns the answer. The prompt declares one required boolean property, <code>confirm</code>, which the server validates: an accepted prompt that does not carry <code>confirm</code> set to <code>true</code> counts as unconfirmed, and the write is refused.</p>
+<div class="language-python highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastmcp.client.elicitation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElicitResult</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">confirm_write</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">response_type</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The server requests approval:</span><span class="se">\n</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># input() runs on a worker thread so the connection stays responsive while it waits</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s2">&quot;Approve this write? [y/N] &quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">answer</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ElicitResult</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;accept&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;confirm&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">ElicitResult</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;decline&quot;</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">with</span> <span class="n">Client</span><span class="p">(</span><span class="n">transport</span><span class="p">,</span> <span class="n">elicitation_handler</span><span class="o">=</span><span class="n">confirm_write</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>The only clock is the server's. FastMCP sets no request timeout unless you pass one, so leave it unset on a client that waits for a person — a client timeout shorter than <a href="#how-long-the-server-waits">the confirmation window</a> expires first and reports itself instead of the server's refusal.</p>
+<p>A complete, runnable version is available as <a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples-nosql/nosql_hitl_client.py"><code>nosql_hitl_client.py</code></a>, a console client that calls any tool and asks you to approve the write at the terminal:</p>
+<div class="language-bash highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fastmcp
+python<span class="w"> </span>nosql_hitl_client.py<span class="w"> </span>http://localhost:8080/mcp<span class="w"> </span>create_objects<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="s1">&#39;{&quot;className&quot;: &quot;Employee&quot;, &quot;objects&quot;: [{&quot;name&quot;: &quot;Ada Lovelace&quot;}]}&#39;</span>
+</code></pre></div>
+<p>The client takes any tool with any arguments and knows nothing about your schema; <code>Employee</code> and the field names above are placeholders, so substitute your own. The <a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples-nosql/README.md">examples README</a> has the full usage.</p>
+<h2 id="skipping-the-confirmation-prompt">Skipping the confirmation prompt<a class="headerlink" href="#skipping-the-confirmation-prompt" title="Permanent link">&para;</a></h2>
+<p>Some clients cannot display prompts. For those deployments, set <code>nsql.writes.confirmation-required</code> to <code>false</code>:</p>
+<div class="language-properties highlight"><pre><span></span><code><span class="na">nsql.writes.enabled</span><span class="o">=</span><span class="s">true</span>
+<span class="na">nsql.writes.confirmation-required</span><span class="o">=</span><span class="s">false</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">This removes human oversight of every write</p>
+<p>With <code>nsql.writes.confirmation-required</code> set to <code>false</code>, the server creates, updates, and deletes objects as soon as it is asked. Nobody is asked first. Use it only when the client cannot prompt and you accept that the AI agent writes unattended.</p>
+<p>The other two checks still apply. Disabling confirmation does not enable writes, and it does not grant write access to callers that lack the <code>mcp:write</code> scope.</p>
+<p>This setting is deployment-wide: it applies to the built-in write tools <strong>and</strong> to any extension tool that asks for confirmation. Both share the same confirmation mechanism, so turning it off silences both.</p>
+</div>
+<p>The setting is visible in the log. At startup the server records the mode it is running in, and it raises that line to a warning when writes are unconfirmed:</p>
+<div class="language-text highlight"><pre><span></span><code>WARN  nsql-mcp-server Mode: READ-WRITE. Write tools are exposed; writes execute without confirmation.
+</code></pre></div>
+<h2 id="optimistic-concurrency">Optimistic concurrency<a class="headerlink" href="#optimistic-concurrency" title="Permanent link">&para;</a></h2>
+<p>Every object a read returns carries a <code>version</code> field: an opaque token that changes whenever the object is modified. It is returned as a string so that large values survive JSON without losing precision. Do not parse it or compare it for ordering — the only thing to do with it is hand it back.</p>
+<p><code>update_objects</code> requires it. Each update item carries the target <code>loid</code>, the <code>expectedVersion</code> you read earlier, and the <code>fields</code> to change:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2146&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;expectedVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8273401&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;department&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Research&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The update is applied only if the object has not changed since you read it. If it has, the call fails — and because a write is one all-or-nothing transaction, a single stale version fails the whole batch, leaving every object in it untouched. Re-read the affected objects to obtain their current <code>version</code>, then retry.</p>
+<p>See <a href="tools/index.html">Tools</a> for where <code>version</code> appears in each read tool's response.</p>
+<h2 id="configuration-reference">Configuration reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>table_name</code></td>
-<td><code>string</code></td>
-<td style="text-align: center;">✓</td>
-<td>Name of the table to describe. Accepts a plain name, such as <code>orders</code>, or an owner-qualified name, such as <code>actian.customers</code>.</td>
+<td><code>nsql.writes.enabled</code></td>
+<td><code>false</code></td>
+<td>Master switch for the write tools. While <code>false</code> they are hidden from clients and every call to one is rejected.</td>
+</tr>
+<tr>
+<td><code>nsql.writes.max-batch</code></td>
+<td><code>100</code></td>
+<td>Maximum number of objects a single write call may touch in one transaction. A larger batch is rejected; split it.</td>
+</tr>
+<tr>
+<td><code>nsql.writes.confirmation-required</code></td>
+<td><code>true</code></td>
+<td>Whether a write must be confirmed by a person. Deployment-wide: applies to built-in and extension write tools alike.</td>
+</tr>
+<tr>
+<td><code>nsql.writes.confirmation-timeout-seconds</code></td>
+<td><code>60</code></td>
+<td>How long the server waits for a confirmation before rejecting the write.</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition tip">
-<p class="admonition-title">Qualify the name when several owners have the same table</p>
-<p>Given a plain name, the server describes your own table if you own one with that name. Otherwise it picks one of the other owners. Pass <code>owner.table</code> to describe a specific one.</p>
-</div>
-<h3 id="output-schema_2">Output Schema<a class="headerlink" href="#output-schema_2" title="Permanent link">&para;</a></h3>
-<p><strong>On Success</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;column_name&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_datatype&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_length&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_scale&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_comment&quot;</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;&lt;column_name&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;column_datatype&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;column_length&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;column_scale&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;column_comment&gt;&quot;</span><span class="p">]</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_rows&gt;&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>On Error</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;error_message&gt;&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-text highlight"><pre><span></span><code>Show me schema information about the customers table
-</code></pre></div>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;customers&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Response</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;column_name&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_datatype&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_length&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_scale&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_comment&quot;</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Primary key&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;customer_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;varchar&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;100&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Customer display name&quot;</span><span class="p">]</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
-<span class="p">}</span>
-</code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If the authenticated database user lacks access to a table, the error response includes a permission message. For example: <code>"error": "No permission to access table 'ii_tables'"</code>.</p>
-</div>
-<h3 id="example-naming-the-owner">Example: Naming the Owner<a class="headerlink" href="#example-naming-the-owner" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-text highlight"><pre><span></span><code>Describe the customers table owned by actian
-</code></pre></div>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actian.customers&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>The response has the same shape as the previous example. If no table matches both the name and the owner, <code>rows</code> is empty and <code>row_count</code> is <code>0</code>.</p>
-<h2 id="list_functions">list_functions<a class="headerlink" href="#list_functions" title="Permanent link">&para;</a></h2>
-<p>Returns user-defined functions and procedures, including their stored DDL definitions, as structured JSON.</p>
-<h3 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h3>
-<p>This tool takes no input parameters.</p>
-<h3 id="output-schema_3">Output Schema<a class="headerlink" href="#output-schema_3" title="Permanent link">&para;</a></h3>
-<p><strong>On Success</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;function_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;function_ddl&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;&lt;function_name&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;function_ddl&gt;&quot;</span><span class="p">]],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_rows&gt;&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>On Error</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;error_message&gt;&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-text highlight"><pre><span></span><code>Show me all the functions in my database
-</code></pre></div>
-<p><strong>Response</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;function_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;function_ddl&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;calculate_discount&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;CREATE FUNCTION calculate_discount(...) ...&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;refresh_sales_summary&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;CREATE PROCEDURE refresh_sales_summary() ...&quot;</span><span class="p">]</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
-<span class="p">}</span>
-</code></pre></div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 20H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h7a2 2 0 0 1 2 2H4v10l2.14-8h17.07l-2.28 8.5c-.23.87-1.01 1.5-1.93 1.5"/></svg></span> <strong><a href="../resources/index.html">Resources</a></strong><br />
-  Explore the resource types available through the server.</p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.71 20.29-1.42 1.42a1 1 0 0 1-1.41 0L7 9.85A3.8 3.8 0 0 1 6 10a4 4 0 0 1-3.78-5.3l2.54 2.54.53-.53 1.42-1.42.53-.53L4.7 2.22A4 4 0 0 1 10 6a3.8 3.8 0 0 1-.15 1l11.86 11.88a1 1 0 0 1 0 1.41M2.29 18.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0l5.47-5.46-2.83-2.83M20 2l-4 2v2l-2.17 2.17 2 2L18 8h2l2-4Z"/></svg></span> <strong><a href="tools/index.html">Tools</a></strong><br />
+  The three write tools, their parameters, batch limits, and result shapes.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2M6 9h12v2H6m8 3H6v-2h8m4-4H6V6h12"/></svg></span> <strong><a href="../prompts/index.html">Prompts</a></strong><br />
-  Use the built-in prompt templates for common workflows.</p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.5 11H19V7a2 2 0 0 0-2-2h-4V3.5A2.5 2.5 0 0 0 10.5 1 2.5 2.5 0 0 0 8 3.5V5H4a2 2 0 0 0-2 2v3.8h1.5c1.5 0 2.7 1.2 2.7 2.7S5 16.2 3.5 16.2H2V20a2 2 0 0 0 2 2h3.8v-1.5c0-1.5 1.2-2.7 2.7-2.7s2.7 1.2 2.7 2.7V22H17a2 2 0 0 0 2-2v-4h1.5a2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5"/></svg></span> <strong><a href="extensions/index.html">Extensions</a></strong><br />
+  Add your own tools, including write tools, subject to these same checks.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"/></svg></span> <strong><a href="authentication/index.html">Authentication</a></strong><br />
+  Enable OAuth 2.0 and grant the <code>mcp:write</code> scope.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.4 7.5c.8.8.8 2.1 0 2.8l-2.8 2.8-7.8-7.8 2.8-2.8c.8-.8 2.1-.8 2.8 0l1.8 1.8 3-3 1.4 1.4-3 3zm-5.8 5.8-1.4-1.4-2.8 2.8-2.1-2.1 2.8-2.8-1.4-1.4-2.8 2.8-1.5-1.4-2.8 2.8c-.8.8-.8 2.1 0 2.8l1.8 1.8-4 4 1.4 1.4 4-4 1.8 1.8c.8.8 2.1.8 2.8 0l2.8-2.8-1.4-1.4z"/></svg></span> <strong><a href="../mcp-clients/index.html#elicitation-support-for-write-approval">MCP clients</a></strong><br />
+  Which clients can display the confirmation prompt.</p>
 </li>
 </ul>
 </div>
@@ -3419,7 +3484,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 30, 2026 23:21:10 UTC">July 30, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 12, 2026 19:16:37 UTC">August 12, 2026</span>
   </span>
 
     
@@ -3508,7 +3573,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../data-platform.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Actian Data Platform">
+          <a href="index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Actian NoSQL Database">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -3518,20 +3583,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Actian Data Platform
+                Actian NoSQL Database
               </div>
             </div>
           </a>
         
         
           
-          <a href="../resources/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Resources">
+          <a href="authentication/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Authentication">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Resources
+                Authentication
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -3572,20 +3637,20 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.path", "navigation.footer", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["announce.dismiss", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.path", "navigation.footer", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
       
         <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
       
-        <script src="../../javascripts/mermaid-init.js"></script>
+        <script src="../javascripts/mermaid-init.js"></script>
       
-        <script src="../../javascripts/extra.js"></script>
+        <script src="../javascripts/extra.js"></script>
       
-        <script src="../../javascripts/MiniChatJavaScript.js" defer></script>
+        <script src="../javascripts/MiniChatJavaScript.js" defer></script>
       
     
   </body>
