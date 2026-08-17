@@ -127,7 +127,7 @@ Create one client for each required flow:
 
 Skip this step when `nsql.writes.enabled` is `false`. A read-only server never inspects the scope.
 
-In write mode, every write call is checked for the `mcp:write` scope, and a token without it is turned away. In Keycloak you create that scope once as a client scope, then attach it to the client your writers authenticate through. For what the server does with the scope, see [Write support](../../write-support.md#what-each-call-must-clear).
+In write mode, the server checks every write call for the `mcp:write` scope and rejects a token that lacks it. In Keycloak, you create that scope once as a client scope, then attach it to the client that your writers authenticate through. For what the server does with the scope, see [Write support](../../write-support.md#what-each-call-must-clear).
 
 ### Create the Client Scope
 
@@ -151,18 +151,18 @@ In write mode, every write call is checked for the `mcp:write` scope, and a toke
 3. Select `mcp:write`, then select **Add > Optional**.
 
 !!! warning "Optional, not Default"
-    An optional scope is issued only to a caller that asks for it, which keeps a read-only client's tokens free of write access. Added as **Default** instead, every token this client issues carries `mcp:write` whether the caller wanted it or not, and the scope stops telling read-only callers apart from write-capable ones.
+    Keycloak issues an optional scope only to a caller that requests it, which keeps a read-only client's tokens free of write access. If you add it as **Default** instead, every token this client issues carries `mcp:write` whether the caller requested it or not, and the scope can no longer distinguish read-only callers from write-capable ones.
 
-### Which Callers Can Obtain the Scope
+### Caller Eligibility
 
 A Keycloak client scope attaches to a **client**, not to a user, so any user who authenticates through that client and requests `scope=openid mcp:write` receives it. Roles make no difference here, because the server authorizes on the token's `scope` claim rather than on roles.
 
 !!! important "To withhold writes from some people, use a second client"
-    Keycloak cannot issue an optional client scope to some users of a client and not others, and Actian NoSQL Database offers no second line of defense: every statement the server runs uses the single database user from `nsql.connectionURL`, so there are no per-user table privileges to fall back on. See [How a write is authorized](../../write-support.md#how-a-write-is-authorized).
+    Keycloak cannot issue an optional client scope to some users of a client and not others, and Actian NoSQL Database offers no second line of defense: every statement the server runs uses the single database user from `nsql.connectionURL`, so there are no per-user table privileges to fall back on. See [How a write is authorized](../../write-support.md#authorizing-a-write).
 
     Register two clients instead — one with `mcp:write` attached for writers, one without it for everyone else — and point read-only callers at the second. This is where Keycloak differs from Auth0, which grants the permission per user through a role and can therefore withhold it inside a single client.
 
-Attaching the scope in Keycloak only makes it available. The client still has to ask for it, and it takes its cue from the server, so `quarkus.oidc.resource-metadata.scopes` becomes `mcp:write` in write mode — see [Step 5](#step-5-configure-and-start-the-server).
+Attaching the scope in Keycloak only makes it available. The client must still request it, and the client follows the server's advertised list, so `quarkus.oidc.resource-metadata.scopes` becomes `mcp:write` in write mode. See [Step 5](#step-5-configure-and-start-the-server).
 
 ## Step 4: Create Keycloak Users
 
@@ -187,7 +187,7 @@ Create users in Keycloak who will sign in through your MCP client.
 6. Enter a password, set **Temporary** to **Off**, and select **Save**.
 
 !!! note "If login fails with "Offline tokens not allowed""
-    Some MCP clients add `offline_access` to their scope request to obtain a refresh token. Keycloak grants that scope only to a user who holds the `offline_access` **realm role** — having the client scope available is not enough, which makes the failure look like a client misconfiguration when it is a user one. Assign it under **Users >** the user **> Role mapping > Assign role > Realm roles**.
+    Some MCP clients add `offline_access` to their scope request to obtain a refresh token. Keycloak grants that scope only to a user who holds the `offline_access` **realm role**; making the client scope available is not enough. The failure looks like a client misconfiguration when it is really a user configuration problem. Assign the role under **Users >** the user **> Role mapping > Assign role > Realm roles**.
 
 
 ## Step 5: Configure and Start the Server
@@ -202,11 +202,11 @@ The Actian MCP Server requires the Keycloak realm issuer URL to validate tokens.
 | `quarkus.oidc.resource-metadata.scopes` | — | `openid,profile,email` on a read-only server, `mcp:write` in write mode |
 
 !!! caution "Set the scopes list, even on a read-only server"
-    Keycloak refuses an authorization request that asks for any scope the client cannot obtain. A client with no advertised list to work from falls back to requesting every scope the realm advertises, and unless the client is entitled to all of them, login fails outright rather than degrading. Setting this property pins the request to a list you control, which is why it matters here more than it does on Auth0.
+    Keycloak refuses an authorization request that asks for any scope the client cannot obtain. A client with no advertised list requests every scope the realm advertises, and unless the client is entitled to all of them, login fails outright rather than degrading. Setting this property restricts the request to a list you control, which is why it matters more here than on Auth0.
 
     Use `openid,profile,email` on a read-only server and `mcp:write` in write mode, as set up in [Step 3](#step-3-add-the-write-scope-write-mode-only). Whatever you list must exist as a client scope on the client the caller uses.
 
-    Keeping the list short costs you nothing: Keycloak applies a client's **Default** client scopes whether or not they were requested, so their claims stay in the token either way. Only **Optional** scopes, `mcp:write` among them, depend on the client actually asking. For the mechanism, see [Advertising scopes to MCP clients](../index.md#advertising-scopes-to-mcp-clients).
+    Keeping the list short has no cost: Keycloak applies a client's **Default** client scopes whether or not they were requested, so their claims stay in the token either way. Only **Optional** scopes, `mcp:write` among them, depend on the client requesting them. For the mechanism, see [Advertising scopes to MCP clients](../index.md#advertising-scopes-to-mcp-clients).
 
 ### Example `application.properties`
 
@@ -242,7 +242,7 @@ For automated clients using Service Accounts:
 3. The client includes the Bearer token in all requests to the MCP server.
 4. The server validates the token signature against Keycloak's JWKS endpoint and grants access.
 
-## Staging versus Production
+## Staging Versus Production
 
 | Environment | Recommendation |
 |---|---|

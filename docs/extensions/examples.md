@@ -17,7 +17,7 @@ Five runnable extensions are published in the documentation repository, ready to
 
 All five share one database. The [examples README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/README.md) has the full walkthrough.
 
-## Configuration and schema files
+## Configuration and Schema Files
 
 Each supported database has a configuration template and a schema file. The example Python files need no edits between databases.
 
@@ -30,9 +30,10 @@ Each supported database has a configuration template and a schema file. The exam
 
 The schema files create the same seven tables and seed data everywhere. They differ in statement terminator, and in how the rule that stock cannot go negative is enforced: a `CHECK` constraint on Ingres and Informix, a trigger on Zen, and nothing at the database level on Analytics Engine, where X100 tables support neither. Each schema file's header lists the grant statements to run afterwards for the account the server connects as.
 
-## Running them
+## Running the Examples
 
-The two transaction examples and the approval example need `"query_mode": "read-write"`. See [Write support](../intro/write-support.md).
+!!! note "Read-write mode required"
+    The two transaction examples and the approval example need `"query_mode": "read-write"`. See [Write support](../intro/write-support.md).
 
 Mount each file under `/app/extensions/`, mount your configuration at `/app/conf.json`, and list the modules by name:
 
@@ -56,7 +57,7 @@ docker run -d --rm -p 8000:8000 \
 
 The startup log shows a `Loaded extension` line for each module and one line per registered tool. Those tools then appear in your MCP client's tool list next to the built-in ones.
 
-## Answering the approval prompt
+## Answering the Approval Prompt
 
 Claude Desktop and GitHub Copilot cannot display the write-approval prompt, so writes through them fail closed. To test an approval-gated tool such as `adjust_stock`, use [`hitl_demo_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py), which prints the request and asks you at the console:
 

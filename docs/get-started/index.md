@@ -135,11 +135,11 @@ For the complete list of available tools for each database, see database-specifi
 
 If you are deploying the server outside a secure, trusted local environment, it is recommended to use OAuth 2.0 authentication. You can secure the server using an external identity provider like Keycloak or Auth0. See the following authentication documentation for detailed setup instructions:
 
-If you also set `query_mode` to `read-write`, define the `mcp:write` scope in your identity provider. The server requests it automatically, and a token without it cannot write.
-
 - [Authentication overview](../authentication/index.md)
 - [Keycloak setup](../authentication/keycloak/index.md)
 - [Auth0 setup](../authentication/auth0/index.md)
+
+If you also set `query_mode` to `read-write`, define the `mcp:write` scope in the identity provider. The server requests it automatically, and a token without it cannot write.
 
 ## Next Steps
 

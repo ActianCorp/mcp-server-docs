@@ -3,7 +3,7 @@ title: Keycloak Setup Guide
 description: Step-by-step guide to configure Keycloak as the OAuth identity provider for the Actian MCP Server.
 ---
 
-# Configuring Keycloak 
+# Configuring Keycloak
 
 This guide describes the creation and configuration of a Keycloak Realm, Client, and Audience Mapper. It enables the Actian MCP Server to authenticate users through OAuth 2.0 and OpenID Connect (OIDC). 
 
@@ -15,7 +15,7 @@ By the completion of this guide, you will have obtained the values that are requ
 
 ## Quick Start
 
-The checklist below is the whole procedure in brief. Use it if you already know your way around the Keycloak Admin Console. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.
+The checklist below is the whole procedure in brief. Use it if you are already familiar with the Keycloak Admin Console. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.
 
 1. **Create a realm** (or use an existing one).
 2. **Create a client** with _Client authentication_ enabled and record the **Client ID** and **Client Secret**.
@@ -248,7 +248,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 !!! warning "Add it as Optional, not Default"
     An optional scope is issued only when the caller asks for it, which is what the MCP server does when `query_mode` is `read-write`. If you add `mcp:write` as a default scope instead, every token issued to this client carries write access whether it was requested or not, and the scope no longer distinguishes read-only callers from write-capable ones.
 
-### Which users can obtain the scope
+### User Eligibility
 
 In Keycloak a client scope is attached to a **client**, not to a user. Any user who authenticates through this client and requests `scope=openid mcp:write` receives it. Keycloak roles do not change that, because the server authorizes writes from the token's `scope` claim rather than from roles.
 
@@ -269,7 +269,7 @@ curl -s https://<keycloak-host>:8443/realms/actian-mcp/.well-known/openid-config
 The output contains `mcp:write`. Then, on the client's **Client scopes** tab, confirm `mcp:write` is listed with the **Optional** assigned type.
 
 !!! warning "The database still decides what a user can change"
-    The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Creating Matching Database User](#creating-matching-database-user).
+    The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Creating the Matching Database User](#creating-the-matching-database-user).
 
 
 ## Step 6: Create Keycloak Users (If Using User Impersonation)
@@ -291,7 +291,7 @@ If `user_impersonation` is `true`, each Keycloak user contains a matching databa
 4. Select **Create**.
 5. Navigate to the **Credentials** tab > **Set password** > enter a password > toggle **Temporary** to `Off` > **Save**.
 
-### Creating Matching Database User
+### Creating the Matching Database User
 
 ```sql
 -- Create the user account (no DB password needed — Keycloak handles authentication)
@@ -438,7 +438,7 @@ Keycloak tokens have a configurable lifetime:
 3. Adjust as needed and select **Save**.
 
 
-## Keycloak versus Auth0 - Key Differences
+## Keycloak Versus Auth0: Key Differences
 
 | Aspect | Auth0 | Keycloak |
 |--------|-------|----------|
@@ -452,7 +452,7 @@ Keycloak tokens have a configurable lifetime:
 | **`mcp:write` model** | An API permission granted through a role, so it can be withheld from individual users | An optional client scope attached to the client, so any user of that client can request it. Control writes with database privileges instead |
 
 
-## Staging versus Production
+## Staging Versus Production
 
 | Environment | Recommendation |
 |---|---|

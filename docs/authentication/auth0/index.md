@@ -16,7 +16,7 @@ For details on shared security concepts like TLS and user impersonation, see [Au
 
 ## Quick Start
 
-The checklist below is the whole procedure in brief. Use it if you already know your way around the Auth0 Dashboard. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.
+The checklist below is the whole procedure in brief. Use it if you are already familiar with the Auth0 Dashboard. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.
 
 1. **Create an API:** Navigate to **Applications** > **APIs** > **Create API**. The **Identifier** serves as the `FASTMCP_SERVER_AUTH_AUDIENCE`.
 2. **Create an Application:** Navigate to **Applications** > **Applications** > **Create Application**. Select **Machine to Machine**. Authorize it for the API when prompted. Copy the **Client ID** and **Client Secret**.
@@ -191,7 +191,7 @@ After saving, the application displays two **AUTHORIZED** badges — User Access
     Authorizing the application lets it request tokens for the API. It does not give any user the `mcp:write` scope. That is a separate, per-user role assignment in [Step 4.3](#step-43-grant-the-write-scope-read-write-deployments-only).
 
 
-## Step 4: Create Auth0 Users (if Using User Impersonation)
+## Step 4: Create Auth0 Users (If Using User Impersonation)
 
 If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database through `SET SESSION AUTHORIZATION`. Each Auth0 user must have a matching database account. For more information, see [User Impersonation](../index.md#user-impersonation).
 
@@ -266,7 +266,7 @@ Defining `mcp:write` on the API in [Step 1.1](#step-11-add-the-write-scope-read-
 4. Select your API, for example `Actian MCP Server`, select the `mcp:write` permission, and add it.
 5. On the role's **Users** tab, select **Add Users** and assign the users who are allowed to write.
 
-Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see [which users can obtain the scope](../keycloak/index.md#which-users-can-obtain-the-scope) there.
+Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see [which users can obtain the scope](../keycloak/index.md#user-eligibility) there.
 
 !!! warning "The database still decides what a user can change"
     The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Step 4.2](#step-42-create-the-matching-database-user).
@@ -319,7 +319,7 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
 !!! note
     Replace `<db-host>` with the database server address. In a Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
 
-For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see [HTTPS / TLS for Remote Deployments](../index.md#https-tls-for-remote-deployments).
+For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see [HTTPS / TLS for Remote Deployments](../index.md#secure-remote-deployments-with-https-and-tls).
 
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](../index.md#security-best-practices).
 
@@ -417,7 +417,7 @@ Auth0 tokens have a configurable lifetime:
     Token refresh is handled automatically by the OAuth flow when using browser-based authentication.
 
 
-## Staging versus Production
+## Staging Versus Production
 
 | Environment | Recommendation |
 |---|---|
