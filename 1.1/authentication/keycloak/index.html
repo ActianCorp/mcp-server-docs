@@ -2930,10 +2930,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#which-users-can-obtain-the-scope" class="md-nav__link">
+  <a href="#user-eligibility" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Which users can obtain the scope
+        User Eligibility
       
     </span>
   </a>
@@ -2969,10 +2969,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#creating-matching-database-user" class="md-nav__link">
+  <a href="#creating-the-matching-database-user" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Creating Matching Database User
+        Creating the Matching Database User
       
     </span>
   </a>
@@ -3099,7 +3099,7 @@
   <a href="#keycloak-versus-auth0-key-differences" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Keycloak versus Auth0 - Key Differences
+        Keycloak Versus Auth0: Key Differences
       
     </span>
   </a>
@@ -3110,7 +3110,7 @@
   <a href="#staging-versus-production" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Staging versus Production
+        Staging Versus Production
       
     </span>
   </a>
@@ -3217,7 +3217,7 @@
 <p>FastMCP uses a generic OIDC provider. While there is no dedicated Keycloak class, the server uses the <code>OIDCProxy</code> provider, which is compatible with any OIDC-compliant identity provider.</p>
 </div>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<p>The checklist below is the whole procedure in brief. Use it if you already know your way around the Keycloak Admin Console. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.</p>
+<p>The checklist below is the whole procedure in brief. Use it if you are already familiar with the Keycloak Admin Console. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.</p>
 <ol>
 <li><strong>Create a realm</strong> (or use an existing one).</li>
 <li><strong>Create a client</strong> with <em>Client authentication</em> enabled and record the <strong>Client ID</strong> and <strong>Client Secret</strong>.</li>
@@ -3506,16 +3506,16 @@
 <p>After adding the mapper, request a new token and decode it. The <code>aud</code> claim includes the audience string:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Request a token</span>
 <span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://&lt;keycloak-host&gt;:8080/realms/actian-mcp/protocol/openid-connect/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_id=actian-mcp&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_secret=&lt;your-secret&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;access_token&#39;])&quot;</span><span class="k">)</span>
+<span class="w">  </span><span class="s2">"http://&lt;keycloak-host&gt;:8080/realms/actian-mcp/protocol/openid-connect/token"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=client_credentials"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"client_id=actian-mcp"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"client_secret=&lt;your-secret&gt;"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; print(json.load(sys.stdin)['access_token'])"</span><span class="k">)</span>
 
 <span class="c1"># Decode and inspect the aud claim</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d.<span class="w"> </span>-f2<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>aud
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d.<span class="w"> </span>-f2<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>aud
 </code></pre></div>
 <p>Expected output:
-<div class="language-json highlight"><pre><span></span><code><span class="nt">&quot;aud&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;actian-mcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;account&quot;</span><span class="p">]</span>
+<div class="language-json highlight"><pre><span></span><code><span class="nt">"aud"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"actian-mcp"</span><span class="p">,</span><span class="w"> </span><span class="s2">"account"</span><span class="p">]</span>
 </code></pre></div></p>
 <div class="admonition note">
 <p class="admonition-title">Token caching</p>
@@ -3578,11 +3578,11 @@
 <h3 id="verification_1">Verification<a class="headerlink" href="#verification_1" title="Permanent link">&para;</a></h3>
 <p>After adding the mapper, the token contains the following:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jdoe&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;iss&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://&lt;keycloak-host&gt;:8080/realms/actian-mcp&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;aud&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;realm-management&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;account&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;actian-mcp&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;preferred_username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jdoe&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openid email profile&quot;</span>
+<span class="w">  </span><span class="nt">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jdoe"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://&lt;keycloak-host&gt;:8080/realms/actian-mcp"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"aud"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"realm-management"</span><span class="p">,</span><span class="w"> </span><span class="s2">"account"</span><span class="p">,</span><span class="w"> </span><span class="s2">"actian-mcp"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"preferred_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jdoe"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openid email profile"</span>
 <span class="p">}</span>
 </code></pre></div>
 <div class="admonition warning">
@@ -3652,7 +3652,7 @@
 <p class="admonition-title">Add it as Optional, not Default</p>
 <p>An optional scope is issued only when the caller asks for it, which is what the MCP server does when <code>query_mode</code> is <code>read-write</code>. If you add <code>mcp:write</code> as a default scope instead, every token issued to this client carries write access whether it was requested or not, and the scope no longer distinguishes read-only callers from write-capable ones.</p>
 </div>
-<h3 id="which-users-can-obtain-the-scope">Which users can obtain the scope<a class="headerlink" href="#which-users-can-obtain-the-scope" title="Permanent link">&para;</a></h3>
+<h3 id="user-eligibility">User Eligibility<a class="headerlink" href="#user-eligibility" title="Permanent link">&para;</a></h3>
 <p>In Keycloak a client scope is attached to a <strong>client</strong>, not to a user. Any user who authenticates through this client and requests <code>scope=openid mcp:write</code> receives it. Keycloak roles do not change that, because the server authorizes writes from the token's <code>scope</code> claim rather than from roles.</p>
 <div class="admonition important">
 <p class="admonition-title">Restrict writes per user in the database, not in Keycloak</p>
@@ -3662,12 +3662,12 @@
 <h3 id="verification_2">Verification<a class="headerlink" href="#verification_2" title="Permanent link">&para;</a></h3>
 <p>Confirm the realm advertises the scope:</p>
 <div class="language-bash highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>https://&lt;keycloak-host&gt;:8443/realms/actian-mcp/.well-known/openid-configuration<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;&quot;scopes_supported&quot;:\[[^]]*\]&#39;</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">'"scopes_supported":\[[^]]*\]'</span>
 </code></pre></div>
 <p>The output contains <code>mcp:write</code>. Then, on the client's <strong>Client scopes</strong> tab, confirm <code>mcp:write</code> is listed with the <strong>Optional</strong> assigned type.</p>
 <div class="admonition warning">
 <p class="admonition-title">The database still decides what a user can change</p>
-<p>The <code>mcp:write</code> scope permits write statements in general. It does not grant table privileges. With <code>user_impersonation</code> enabled, each write also runs as that user's own database account, so grant the matching <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> privileges in the database as well. See <a href="#creating-matching-database-user">Creating Matching Database User</a>.</p>
+<p>The <code>mcp:write</code> scope permits write statements in general. It does not grant table privileges. With <code>user_impersonation</code> enabled, each write also runs as that user's own database account, so grant the matching <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> privileges in the database as well. See <a href="#creating-the-matching-database-user">Creating the Matching Database User</a>.</p>
 </div>
 <h2 id="step-6-create-keycloak-users-if-using-user-impersonation">Step 6: Create Keycloak Users (If Using User Impersonation)<a class="headerlink" href="#step-6-create-keycloak-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
 <p>If <code>user_impersonation</code> is <code>true</code>, each Keycloak user contains a matching database account. For more information, see <a href="../index.html#user-impersonation">User Impersonation</a>.</p>
@@ -3718,7 +3718,7 @@
 </li>
 <li>Navigate to the <strong>Credentials</strong> tab &gt; <strong>Set password</strong> &gt; enter a password &gt; toggle <strong>Temporary</strong> to <code>Off</code> &gt; <strong>Save</strong>.</li>
 </ol>
-<h3 id="creating-matching-database-user">Creating Matching Database User<a class="headerlink" href="#creating-matching-database-user" title="Permanent link">&para;</a></h3>
+<h3 id="creating-the-matching-database-user">Creating the Matching Database User<a class="headerlink" href="#creating-the-matching-database-user" title="Permanent link">&para;</a></h3>
 <div class="language-sql highlight"><pre><span></span><code><span class="c1">-- Create the user account (no DB password needed — Keycloak handles authentication)</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
 
@@ -3790,23 +3790,23 @@
 </div>
 <h3 id="example-confjson">Example <code>conf.json</code><a class="headerlink" href="#example-confjson" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{Ingres}&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@&lt;db-host&gt;,tcp_ip,&lt;port&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mydb&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database_user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_user&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database_password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_password&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;max_connections&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;ssl_certfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/app/server.crt&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;ssl_keyfile&quot;</span><span class="p">:</span><span class="w">  </span><span class="s2">&quot;/app/server.key&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;oauth&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CONFIG_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://&lt;keycloak-host&gt;:8080/realms/actian-mcp/.well-known/openid-configuration&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actian-mcp&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_SECRET&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;your-client-secret&gt;&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_BASE_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://&lt;mcp-server-host&gt;:8000&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_AUDIENCE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actian-mcp&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;user_impersonation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="nt">"driver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{Ingres}"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@&lt;db-host&gt;,tcp_ip,&lt;port&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mydb"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database_user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_user&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database_password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_password&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"max_connections"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"ssl_certfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.crt"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"ssl_keyfile"</span><span class="p">:</span><span class="w">  </span><span class="s2">"/app/server.key"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_CONFIG_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://&lt;keycloak-host&gt;:8080/realms/actian-mcp/.well-known/openid-configuration"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_CLIENT_ID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"actian-mcp"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_CLIENT_SECRET"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;your-client-secret&gt;"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_BASE_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;mcp-server-host&gt;:8000"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_AUDIENCE"</span><span class="p">:</span><span class="w"> </span><span class="s2">"actian-mcp"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"user_impersonation"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3833,12 +3833,12 @@
 <h3 id="verify-token-contents-development-only">Verify Token Contents (Development Only)<a class="headerlink" href="#verify-token-contents-development-only" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>http://&lt;keycloak-host&gt;:8080/realms/actian-mcp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=password&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_id=actian-mcp&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_secret=your-secret&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;username=jdoe&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;password=secret&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;scope=openid email profile&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"client_id=actian-mcp"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"client_secret=your-secret"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"username=jdoe"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"password=secret"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"scope=openid email profile"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <p>Decode the <code>access_token</code> at <a href="https://jwt.io">jwt.io</a> and verify the following:</p>
@@ -3961,7 +3961,7 @@
 <p>Adjust as needed and select <strong>Save</strong>.</p>
 </li>
 </ol>
-<h2 id="keycloak-versus-auth0-key-differences">Keycloak versus Auth0 - Key Differences<a class="headerlink" href="#keycloak-versus-auth0-key-differences" title="Permanent link">&para;</a></h2>
+<h2 id="keycloak-versus-auth0-key-differences">Keycloak Versus Auth0: Key Differences<a class="headerlink" href="#keycloak-versus-auth0-key-differences" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -4013,7 +4013,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="staging-versus-production">Staging versus Production<a class="headerlink" href="#staging-versus-production" title="Permanent link">&para;</a></h2>
+<h2 id="staging-versus-production">Staging Versus Production<a class="headerlink" href="#staging-versus-production" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -4052,7 +4052,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 31, 2026 00:13:30 UTC">July 31, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
   </span>
 
     

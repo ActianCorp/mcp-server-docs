@@ -469,7 +469,7 @@
   <a href="#enabling-write-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling write mode
+        Enabling Write Mode
       
     </span>
   </a>
@@ -477,10 +477,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-a-write-is-authorized" class="md-nav__link">
+  <a href="#authorizing-a-write" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How a write is authorized
+        Authorizing a Write
       
     </span>
   </a>
@@ -491,7 +491,7 @@
   <a href="#skipping-the-approval-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Skipping the approval prompt
+        Skipping the Approval Prompt
       
     </span>
   </a>
@@ -2847,7 +2847,7 @@
   <a href="#enabling-write-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling write mode
+        Enabling Write Mode
       
     </span>
   </a>
@@ -2855,10 +2855,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-a-write-is-authorized" class="md-nav__link">
+  <a href="#authorizing-a-write" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How a write is authorized
+        Authorizing a Write
       
     </span>
   </a>
@@ -2869,7 +2869,7 @@
   <a href="#skipping-the-approval-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Skipping the approval prompt
+        Skipping the Approval Prompt
       
     </span>
   </a>
@@ -2961,15 +2961,15 @@
 
 
 
-<h1 id="write-support">Write support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
+<h1 id="write-support">Write Support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
 <p>By default, the Actian MCP Server permits only read queries. On the SQL databases, set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also allow Data Manipulation Language (DML) statements, that is <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>.</p>
-<p>Write support is off unless you turn it on. Existing read-only deployments are unaffected.</p>
+<p>Write support remains off until it is enabled. Existing read-only deployments are not affected.</p>
 <div class="admonition note">
 <p class="admonition-title">Actian NoSQL works differently</p>
 <p>It has no DML statements: writes go through dedicated object tools, governed by their own setting. See <a href="../nosql/write-support.html">Write support for Actian NoSQL</a>.</p>
 </div>
 <p>Extensions can write too, through the same authorization checks described below. See <a href="../extensions/index.html">Extensions</a>.</p>
-<p>Which tools accept a write, and how, depends on the database. See the Tools page for your database, for example <a href="../ingres/tools/index.html">Ingres tools</a> or <a href="../analytics-engine/tools/index.html">Analytics Engine tools</a>. The <code>query_mode</code> setting and the authorization checks described below apply the same way regardless of which tool performs the write.</p>
+<p>Which tools accept a write, and how, depends on the database. See the Tools page for the relevant database, for example <a href="../ingres/tools/index.html">Ingres tools</a> or <a href="../analytics-engine/tools/index.html">Analytics Engine tools</a>. The <code>query_mode</code> setting and the authorization checks described below apply the same way regardless of which tool performs the write.</p>
 <div class="admonition note">
 <p class="admonition-title">Zen routes writes to a separate tool, and changes its tool list</p>
 <p>On Ingres and Analytics Engine, <code>execute_query</code> performs the write once <code>query_mode</code> is
@@ -2978,7 +2978,7 @@ and to <code>orm_operation</code>, and enabling write mode also removes <code>bl
 <code>database_manage</code> from the registered tools. Zen additionally counts the rows a conditional
 <code>UPDATE</code>/<code>DELETE</code> matches and shows that number in the approval prompt.</p>
 </div>
-<h2 id="enabling-write-mode">Enabling write mode<a class="headerlink" href="#enabling-write-mode" title="Permanent link">&para;</a></h2>
+<h2 id="enabling-write-mode">Enabling Write Mode<a class="headerlink" href="#enabling-write-mode" title="Permanent link">&para;</a></h2>
 <p>Set <code>query_mode</code> in the <code>conf.json</code> file:</p>
 <table>
 <thead>
@@ -2999,14 +2999,14 @@ and to <code>orm_operation</code>, and enabling write mode also removes <code>bl
 </tbody>
 </table>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;query_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;read-write&quot;</span>
+<span class="w">  </span><span class="nt">"query_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"read-write"</span>
 <span class="p">}</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Data Definition Language is always blocked</p>
-<p>Enabling write mode does not permit Data Definition Language (DDL) or administrative statements. <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, and <code>GRANT</code> are rejected, and so are <code>SET</code>, <code>ENABLE</code>, <code>DISABLE</code>, and <code>SELECT ... INTO</code>. This is not configurable. Use your database's own tools for schema changes.</p>
+<p>Enabling write mode does not permit Data Definition Language (DDL) or administrative statements. <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, and <code>GRANT</code> are rejected, and so are <code>SET</code>, <code>ENABLE</code>, <code>DISABLE</code>, and <code>SELECT ... INTO</code>. This is not configurable. Use the database's native tools for schema changes.</p>
 </div>
-<h2 id="how-a-write-is-authorized">How a write is authorized<a class="headerlink" href="#how-a-write-is-authorized" title="Permanent link">&para;</a></h2>
+<h2 id="authorizing-a-write">Authorizing a Write<a class="headerlink" href="#authorizing-a-write" title="Permanent link">&para;</a></h2>
 <p>In <code>read-write</code> mode, every DML statement must pass two independent checks before it reaches the database. Either one can reject it.</p>
 <table>
 <thead>
@@ -3025,7 +3025,7 @@ and to <code>orm_operation</code>, and enabling write mode also removes <code>bl
 <tr>
 <td>Human approval</td>
 <td>A person must approve the statement in the connected client.</td>
-<td>Always, unless you disable it with <code>write_confirmation</code>.</td>
+<td>Always, unless disabled with <code>write_confirmation</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -3056,19 +3056,19 @@ sequenceDiagram
         end
     end</code></pre>
 <p>The approval prompt uses the Model Context Protocol (MCP) elicitation capability, which not every client implements. If the connected client cannot display the prompt, the write is rejected, exactly as if a person had declined it. See <a href="../mcp-clients/index.html#elicitation-support-for-write-approval">Connecting MCP Clients</a> for which clients support it.</p>
-<p>To configure the <code>mcp:write</code> scope in your identity provider, see <a href="../authentication/auth0/index.html">Auth0</a> or <a href="../authentication/keycloak/index.html">Keycloak</a>.</p>
-<h2 id="skipping-the-approval-prompt">Skipping the approval prompt<a class="headerlink" href="#skipping-the-approval-prompt" title="Permanent link">&para;</a></h2>
+<p>To configure the <code>mcp:write</code> scope in the identity provider, see <a href="../authentication/auth0/index.html">Auth0</a> or <a href="../authentication/keycloak/index.html">Keycloak</a>.</p>
+<h2 id="skipping-the-approval-prompt">Skipping the Approval Prompt<a class="headerlink" href="#skipping-the-approval-prompt" title="Permanent link">&para;</a></h2>
 <p>Some clients cannot display the approval prompt. For those deployments, set <code>write_confirmation</code> to <code>false</code> in <code>conf.json</code> to run the server's built-in write tools without asking for approval:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;query_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;read-write&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;write_confirmation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="nt">"query_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"read-write"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"write_confirmation"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="p">}</span>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">This removes human oversight of every write</p>
-<p>With <code>write_confirmation</code> set to <code>false</code>, the server runs <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and you accept that the AI agent writes unattended.</p>
+<p>With <code>write_confirmation</code> set to <code>false</code>, the server runs <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and unattended writes by the AI agent are acceptable.</p>
 <p>The <code>mcp:write</code> scope check still applies. Disabling the prompt does not grant write access to callers that lack the scope.</p>
-<p>This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See <a href="../extensions/index.html#security-controls-that-apply-to-your-extension">Extensions</a>.</p>
+<p>This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See <a href="../extensions/index.html#extension-security-controls">Extensions</a>.</p>
 </div>
 <p>The server records what it skipped. At startup it logs a warning banner stating that write confirmation is disabled, and it logs a warning for each write that ran without approval. Those entries name the tool only. They never include the statement text or the row values.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
@@ -3116,7 +3116,7 @@ sequenceDiagram
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 12, 2026 16:52:49 UTC">August 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
   </span>
 
     

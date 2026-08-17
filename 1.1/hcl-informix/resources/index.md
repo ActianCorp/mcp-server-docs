@@ -24,7 +24,7 @@ This resource returns the database schema as a structured JSON object. The respo
 
 This resource does not require any input parameters.
 
-### Output Schema   
+### Output Schema
 
 **On Success**
 

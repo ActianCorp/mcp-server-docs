@@ -3111,7 +3111,7 @@
 <tbody>
 <tr>
 <td><a href="#execute_query"><code>execute_query</code></a></td>
-<td>Runs a SQL query against the connected database. Reads always, writes when the server permits them.</td>
+<td>Runs a SQL query against the connected database. Reads run at any time; writes run only when the server permits them.</td>
 </tr>
 <tr>
 <td><a href="#list_tables"><code>list_tables</code></a></td>
@@ -3156,12 +3156,12 @@
 <h3 id="output-schema">Output Schema<a class="headerlink" href="#output-schema" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;result_columns&gt;&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;&lt;result_rows&gt;&quot;</span><span class="p">]],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_rows&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;truncated&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;warning&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Results were truncated to &lt;max_rows&gt; rows.&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;result_columns&gt;"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">"&lt;result_rows&gt;"</span><span class="p">]],</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;num_rows&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"truncated"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"warning"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Results were truncated to &lt;max_rows&gt; rows."</span>
 <span class="p">}</span>
 </code></pre></div>
 <div class="admonition note">
@@ -3170,8 +3170,8 @@
 </div>
 <p><strong>On Error</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;error_message&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;error_message&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
@@ -3179,42 +3179,42 @@
 <div class="language-text highlight"><pre><span></span><code>Show me all the rows in the customers table
 </code></pre></div>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SELECT * FROM customers&quot;</span>
+<span class="w">  </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT * FROM customers"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;customer_name&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">[</span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Acme Retail&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="p">[</span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Northwind Stores&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"customer_id"</span><span class="p">,</span><span class="w"> </span><span class="s2">"customer_name"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="s2">"Acme Retail"</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="s2">"Northwind Stores"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example-writing-a-row">Example: Writing a Row<a class="headerlink" href="#example-writing-a-row" title="Permanent link">&para;</a></h3>
-<p>This example needs <code>query_mode</code> set to <code>read-write</code>.</p>
+<p>This example requires <code>query_mode</code> set to <code>read-write</code>.</p>
 <p><strong>Request</strong></p>
 <div class="language-text highlight"><pre><span></span><code>Add a customer named Contoso Supply
 </code></pre></div>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INSERT INTO customers (customer_id, customer_name) VALUES (103, &#39;Contoso Supply&#39;)&quot;</span>
+<span class="w">  </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INSERT INTO customers (customer_id, customer_name) VALUES (103, 'Contoso Supply')"</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Before running the statement, the server asks you to approve it in your client. The response depends on your answer.</p>
+<p>Before running the statement, the server asks you to approve it in the client. The response depends on your answer.</p>
 <p><strong>Response, when you approve</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">  </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response, when you decline, do not answer, or the client cannot show the prompt</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Write operation was not approved by the user.&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Write operation was not approved by the user."</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="write-errors">Write Errors<a class="headerlink" href="#write-errors" title="Permanent link">&para;</a></h3>
@@ -3222,14 +3222,14 @@
 <p><strong>The token lacks the <code>mcp:write</code> scope</strong></p>
 <p>The server checks the scope before it asks anyone to approve the statement, so no prompt appears.</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;write operations require the &#39;mcp:write&#39; scope, which the access token does not carry&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"write operations require the 'mcp:write' scope, which the access token does not carry"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>The statement is DDL or administrative</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DDL and administrative statements (CREATE/ALTER/DROP/GRANT/SET/ENABLE/...) are not permitted.&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DDL and administrative statements (CREATE/ALTER/DROP/GRANT/SET/ENABLE/...) are not permitted."</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="list_tables">list_tables<a class="headerlink" href="#list_tables" title="Permanent link">&para;</a></h2>
@@ -3239,16 +3239,16 @@
 <h3 id="output-schema_1">Output Schema<a class="headerlink" href="#output-schema_1" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;table_name&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;&lt;table_name&gt;&quot;</span><span class="p">]],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_rows&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"table_name"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">"&lt;table_name&gt;"</span><span class="p">]],</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;num_rows&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>On Error</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;error_message&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;error_message&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
@@ -3257,13 +3257,13 @@
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;table_name&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;customers&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;orders&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"table_name"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">"customers"</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">"orders"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="describe_table">describe_table<a class="headerlink" href="#describe_table" title="Permanent link">&para;</a></h2>
@@ -3289,29 +3289,29 @@
 </table>
 <div class="admonition tip">
 <p class="admonition-title">Qualify the name when several owners have the same table</p>
-<p>Given a plain name, the server describes your own table if you own one with that name. Otherwise it picks one of the other owners. Pass <code>owner.table</code> to describe a specific one.</p>
+<p>Given a plain name, the server describes the table you own if one exists with that name. Otherwise it selects one belonging to another owner. Pass <code>owner.table</code> to describe a specific one.</p>
 </div>
 <h3 id="output-schema_2">Output Schema<a class="headerlink" href="#output-schema_2" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;column_name&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_datatype&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_length&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_scale&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_comment&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"column_name"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"column_datatype"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"column_length"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"column_scale"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"column_comment"</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;&lt;column_name&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;column_datatype&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;column_length&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;column_scale&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;column_comment&gt;&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">"&lt;column_name&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;column_datatype&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;column_length&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;column_scale&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;column_comment&gt;"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_rows&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;num_rows&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>On Error</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;error_message&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;error_message&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h3>
@@ -3319,24 +3319,24 @@
 <div class="language-text highlight"><pre><span></span><code>Show me schema information about the customers table
 </code></pre></div>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;customers&quot;</span>
+<span class="w">  </span><span class="nt">"table_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customers"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;column_name&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_datatype&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_length&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_scale&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;column_comment&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"column_name"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"column_datatype"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"column_length"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"column_scale"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"column_comment"</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;customer_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Primary key&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;customer_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;varchar&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;100&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Customer display name&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">"customer_id"</span><span class="p">,</span><span class="w"> </span><span class="s2">"integer"</span><span class="p">,</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Primary key"</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">"customer_name"</span><span class="p">,</span><span class="w"> </span><span class="s2">"varchar"</span><span class="p">,</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Customer display name"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
 <span class="p">}</span>
 </code></pre></div>
 <div class="admonition warning">
@@ -3348,7 +3348,7 @@
 <div class="language-text highlight"><pre><span></span><code>Describe the customers table owned by actian
 </code></pre></div>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actian.customers&quot;</span>
+<span class="w">  </span><span class="nt">"table_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"actian.customers"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>The response has the same shape as the previous example. If no table matches both the name and the owner, <code>rows</code> is empty and <code>row_count</code> is <code>0</code>.</p>
@@ -3359,16 +3359,16 @@
 <h3 id="output-schema_3">Output Schema<a class="headerlink" href="#output-schema_3" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;function_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;function_ddl&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;&lt;function_name&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;function_ddl&gt;&quot;</span><span class="p">]],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_rows&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"function_name"</span><span class="p">,</span><span class="w"> </span><span class="s2">"function_ddl"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">"&lt;function_name&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;function_ddl&gt;"</span><span class="p">]],</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;num_rows&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>On Error</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;error_message&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;error_message&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h3>
@@ -3377,13 +3377,13 @@
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;function_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;function_ddl&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;calculate_discount&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;CREATE FUNCTION calculate_discount(...) ...&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;refresh_sales_summary&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;CREATE PROCEDURE refresh_sales_summary() ...&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"function_name"</span><span class="p">,</span><span class="w"> </span><span class="s2">"function_ddl"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">"calculate_discount"</span><span class="p">,</span><span class="w"> </span><span class="s2">"CREATE FUNCTION calculate_discount(...) ..."</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">"refresh_sales_summary"</span><span class="p">,</span><span class="w"> </span><span class="s2">"CREATE PROCEDURE refresh_sales_summary() ..."</span><span class="p">]</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
@@ -3419,7 +3419,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 30, 2026 23:21:10 UTC">July 30, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
   </span>
 
     

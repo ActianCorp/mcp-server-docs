@@ -29,10 +29,10 @@ The Actian MCP Server for Actian NoSQL registers eight tools for exploring the s
 | [`delete_objects`](#delete_objects) | Write | Delete objects by LOID. |
 
 !!! note "The write tools are not always registered"
-    Whether a client is given the three write tools, and what each call has to clear before it
-    reaches the database, is covered in [Write support](../write-support.md).
+    [Write support](../write-support.md) explains whether a client receives the three write tools,
+    and what each call must clear before it reaches the database.
 
-    The read tools are unaffected by write mode. `execute_query` accepts `SELECT` only, in every
+    The read tools are not affected by write mode. `execute_query` accepts `SELECT` only, in every
     configuration.
 
 ---
@@ -79,7 +79,7 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
 
 A query that selects whole entities (`select e from Employee e`) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values as they are, not wrapped in `fields`.
 
-To change an object you read here, hand its `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
+To change an object you read here, pass its `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
 ### Example
 
@@ -225,7 +225,7 @@ Retrieves a single object from the database by its LOID (Logical Object ID). Fet
 }
 ```
 
-To change the object you just read, hand its `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
+To change the object you just read, pass its `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
 ### Example
 
@@ -287,7 +287,7 @@ Retrieves multiple objects from the database by their LOIDs (Logical Object IDs)
 }
 ```
 
-LOIDs that match no object are left out of `objects`, so `count` may be lower than the number of LOIDs you asked for. To change any of the objects you read, hand each one's `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
+LOIDs that match no object are left out of `objects`, so `count` may be lower than the number of LOIDs you asked for. To change any of the objects you read, pass each one's `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
 ### Example
 
@@ -582,9 +582,9 @@ Available only in write mode, and subject to the checks described in [Write supp
 
 A batch over the limit is rejected before anything runs, with a message naming both the size you sent and the maximum this server allows.
 
-### Writable field kinds
+### Writable Field Kinds
 
-Field values go in the per-object maps of `create_objects` (`objects[]`) and in `updates[].fields` on `update_objects`. Both accept the same kinds of value, and in every case it is the form reads return, so a value you fetched can be written straight back.
+Field values go in the per-object maps of `create_objects` (`objects[]`) and in `updates[].fields` on `update_objects`. Both accept the same kinds of value, always in the form reads return, so a value read from the database can be written back unchanged.
 
 | Field kind | How to write it |
 |------------|-----------------|
@@ -603,7 +603,7 @@ Field values go in the per-object maps of `create_objects` (`objects[]`) and in 
 !!! note "Every referenced object must already exist"
     A reference is resolved when it is written, so objects created in the same call cannot reference each other. Create the referenced objects first, then use the LOIDs the first call returned. The same rule applies to both sides of a reference map.
 
-### Confirmation prompt
+### Confirmation Prompt
 
 Before the objects are created, the connected client asks the user to approve a summary naming the class and the count:
 
@@ -689,7 +689,7 @@ Each item in `updates` is:
 
 The whole call fails, leaving every object untouched, if any item names a LOID that matches no object, or carries an `expectedVersion` that no longer matches. Re-read the affected objects and retry with the versions you get back.
 
-### Confirmation prompt
+### Confirmation Prompt
 
 Before the objects are changed, the connected client asks the user to approve a summary. Because one call may span several classes, it gives a count and no class names:
 
@@ -768,9 +768,9 @@ Available only in write mode, and subject to the checks described in [Write supp
 | `loids` | `string[]` | ✓ | The LOIDs to delete, in dotted format — for example, `135.0.2148`. Must contain at least one LOID, and no more than [`nsql.writes.max-batch`](../write-support.md#configuration-reference). |
 
 !!! warning "Deletion does not cascade"
-    Only the objects you name are removed. Objects that referenced them keep the reference, which now points at nothing. Nothing is rewritten to compensate, and there is no undo — find and fix referencing objects yourself, before or after the delete.
+    Only the objects you name are removed. Objects that referenced them keep the reference, which now points at nothing. Nothing is rewritten to compensate, and there is no undo — find and fix referencing objects before or after the delete.
 
-### Confirmation prompt
+### Confirmation Prompt
 
 Before anything is removed, the connected client asks the user to approve a summary. The server looks the LOIDs up first, so the prompt can break the count down by class — ordered by count, then class name — and say how many LOIDs matched nothing:
 
@@ -821,7 +821,7 @@ Delete the two employee records I imported by mistake
 <div class="grid cards" markdown>
 
 - :material-pencil: **[Write support](../write-support.md)**  
-  Turn on write mode, and the three checks every write passes.
+  Turn on write mode, and learn the three checks every write passes.
 
 - :material-folder-open: **[Resources](../resources/index.md)**  
   Learn more about schema metadata resources.

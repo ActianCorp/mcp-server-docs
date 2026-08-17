@@ -3188,7 +3188,7 @@
   <a href="#writable-field-kinds" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writable field kinds
+        Writable Field Kinds
       
     </span>
   </a>
@@ -3199,7 +3199,7 @@
   <a href="#confirmation-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirmation prompt
+        Confirmation Prompt
       
     </span>
   </a>
@@ -3260,7 +3260,7 @@
   <a href="#confirmation-prompt_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirmation prompt
+        Confirmation Prompt
       
     </span>
   </a>
@@ -3321,7 +3321,7 @@
   <a href="#confirmation-prompt_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirmation prompt
+        Confirmation Prompt
       
     </span>
   </a>
@@ -3534,9 +3534,9 @@
 </table>
 <div class="admonition note">
 <p class="admonition-title">The write tools are not always registered</p>
-<p>Whether a client is given the three write tools, and what each call has to clear before it
-reaches the database, is covered in <a href="../write-support.html">Write support</a>.</p>
-<p>The read tools are unaffected by write mode. <code>execute_query</code> accepts <code>SELECT</code> only, in every
+<p><a href="../write-support.html">Write support</a> explains whether a client receives the three write tools,
+and what each call must clear before it reaches the database.</p>
+<p>The read tools are not affected by write mode. <code>execute_query</code> accepts <code>SELECT</code> only, in every
 configuration.</p>
 </div>
 <hr />
@@ -3579,56 +3579,56 @@ configuration.</p>
 </table>
 <h3 id="output-schema">Output Schema<a class="headerlink" href="#output-schema" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">          </span><span class="c1">// array of result objects for this page</span>
+<span class="w">  </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">          </span><span class="c1">// array of result objects for this page</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1">// the LOID of the object</span>
-<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// class name of the object</span>
-<span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
-<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values</span>
+<span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">    </span><span class="c1">// the LOID of the object</span>
+<span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// class name of the object</span>
+<span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">        </span><span class="c1">// number of items in this page</span>
-<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// the original JPQL query string</span>
-<span class="w">  </span><span class="nt">&quot;pagination&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;hasMore&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">       </span><span class="c1">// true if more pages are available</span>
-<span class="w">    </span><span class="nt">&quot;cursorId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w">    </span><span class="c1">// cursor handle for query_next; null when hasMore is false</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">        </span><span class="c1">// number of items in this page</span>
+<span class="w">  </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="c1">// the original JPQL query string</span>
+<span class="w">  </span><span class="nt">"pagination"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"hasMore"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">       </span><span class="c1">// true if more pages are available</span>
+<span class="w">    </span><span class="nt">"cursorId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">    </span><span class="c1">// cursor handle for query_next; null when hasMore is false</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>A query that selects whole entities (<code>select e from Employee e</code>) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values as they are, not wrapped in <code>fields</code>.</p>
-<p>To change an object you read here, hand its <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
+<p>To change an object you read here, pass its <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <p><strong>User Request</strong></p>
 <div class="language-text highlight"><pre><span></span><code>Show me all employees
 </code></pre></div>
 <p><strong>Input</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;jpql&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;select e from Employee e&quot;</span>
+<span class="w">  </span><span class="nt">"jpql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"select e from Employee e"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2144&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8273398&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Diana&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;department&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Executive&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;annualSalary&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">250000</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2142&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;accessLevels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">99</span><span class="p">],</span>
-<span class="w">        </span><span class="nt">&quot;subordinates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;135.0.2145&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2144"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8273398"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diana"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"department"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Executive"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"annualSalary"</span><span class="p">:</span><span class="w"> </span><span class="mi">250000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2142"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"accessLevels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">99</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"subordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2145"</span><span class="p">]</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="s2">&quot;...&quot;</span>
+<span class="w">    </span><span class="s2">"..."</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;select e from Employee e&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;pagination&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;hasMore&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"select e from Employee e"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"pagination"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"hasMore"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3663,49 +3663,49 @@ configuration.</p>
 <h3 id="output-schema_1">Output Schema<a class="headerlink" href="#output-schema_1" title="Permanent link">&para;</a></h3>
 <p>The output is identical to <code>execute_query</code>:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">          </span><span class="c1">// array of result objects for this page</span>
+<span class="w">  </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">          </span><span class="c1">// array of result objects for this page</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1">// the LOID of the object</span>
-<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// class name of the object</span>
-<span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
-<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values</span>
+<span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">    </span><span class="c1">// the LOID of the object</span>
+<span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// class name of the object</span>
+<span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">        </span><span class="c1">// number of items in this page</span>
-<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// the original JPQL query string</span>
-<span class="w">  </span><span class="nt">&quot;pagination&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;hasMore&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">       </span><span class="c1">// true if more pages are available</span>
-<span class="w">    </span><span class="nt">&quot;cursorId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w">    </span><span class="c1">// cursor handle for the next call; null when hasMore is false</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">        </span><span class="c1">// number of items in this page</span>
+<span class="w">  </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="c1">// the original JPQL query string</span>
+<span class="w">  </span><span class="nt">"pagination"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"hasMore"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">       </span><span class="c1">// true if more pages are available</span>
+<span class="w">    </span><span class="nt">"cursorId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">    </span><span class="c1">// cursor handle for the next call; null when hasMore is false</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
 <p><strong>Input</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;cursorId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;f10a7b2b-9532-4280-acdb-fbd41ca7eb35&quot;</span>
+<span class="w">  </span><span class="nt">"cursorId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f10a7b2b-9532-4280-acdb-fbd41ca7eb35"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2145&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8273399&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;department&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Engineering&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;annualSalary&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">120000</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2142&quot;</span>
+<span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2145"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8273399"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Alice"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"department"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Engineering"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"annualSalary"</span><span class="p">:</span><span class="w"> </span><span class="mi">120000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2142"</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="s2">&quot;...&quot;</span>
+<span class="w">    </span><span class="s2">"..."</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;select e from Employee e&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;pagination&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;hasMore&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"select e from Employee e"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"pagination"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"hasMore"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3733,37 +3733,37 @@ configuration.</p>
 </table>
 <h3 id="output-schema_2">Output Schema<a class="headerlink" href="#output-schema_2" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;found&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">         </span><span class="c1">// true if the object was found, false otherwise</span>
-<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">              </span><span class="c1">// omitted entirely when found is false</span>
-<span class="w">    </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1">// the LOID of the object</span>
-<span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// class name of the object</span>
-<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
-<span class="w">    </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values</span>
+<span class="w">  </span><span class="nt">"found"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">         </span><span class="c1">// true if the object was found, false otherwise</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">              </span><span class="c1">// omitted entirely when found is false</span>
+<span class="w">    </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">    </span><span class="c1">// the LOID of the object</span>
+<span class="w">    </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// class name of the object</span>
+<span class="w">    </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
+<span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>To change the object you just read, hand its <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
+<p>To change the object you just read, pass its <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
 <h3 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h3>
 <p><strong>Input</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2146&quot;</span>
+<span class="w">  </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2146"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;found&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2146&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8273401&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bob&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;department&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Engineering&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;annualSalary&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">90000</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2143&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;skills&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;135.0.2138&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;135.0.2136&quot;</span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;technicalTags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Backend&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;API&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"found"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2146"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8273401"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bob"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"department"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Engineering"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"annualSalary"</span><span class="p">:</span><span class="w"> </span><span class="mi">90000</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2143"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"skills"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2138"</span><span class="p">,</span><span class="w"> </span><span class="s2">"135.0.2136"</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"technicalTags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Backend"</span><span class="p">,</span><span class="w"> </span><span class="s2">"API"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -3792,55 +3792,55 @@ configuration.</p>
 </table>
 <h3 id="output-schema_3">Output Schema<a class="headerlink" href="#output-schema_3" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;objects&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"objects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">      </span><span class="c1">// the LOID of the object</span>
-<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">     </span><span class="c1">// class name of the object</span>
-<span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
-<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">           </span><span class="c1">// map of field names to their values</span>
+<span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">      </span><span class="c1">// the LOID of the object</span>
+<span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">     </span><span class="c1">// class name of the object</span>
+<span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">           </span><span class="c1">// map of field names to their values</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">                 </span><span class="c1">// number of objects returned</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">                 </span><span class="c1">// number of objects returned</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>LOIDs that match no object are left out of <code>objects</code>, so <code>count</code> may be lower than the number of LOIDs you asked for. To change any of the objects you read, hand each one's <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
+<p>LOIDs that match no object are left out of <code>objects</code>, so <code>count</code> may be lower than the number of LOIDs you asked for. To change any of the objects you read, pass each one's <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
 <h3 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h3>
 <p><strong>Input</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;loids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;135.0.2145&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;135.0.2146&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"loids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2145"</span><span class="p">,</span><span class="w"> </span><span class="s2">"135.0.2146"</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;objects&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"objects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2145&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8273399&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;department&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Engineering&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;annualSalary&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">120000</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2142&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;subordinates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;135.0.2146&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;135.0.2147&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2145"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8273399"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Alice"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"department"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Engineering"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"annualSalary"</span><span class="p">:</span><span class="w"> </span><span class="mi">120000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2142"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"subordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2146"</span><span class="p">,</span><span class="w"> </span><span class="s2">"135.0.2147"</span><span class="p">]</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2146&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8273401&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bob&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;department&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Engineering&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;annualSalary&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">90000</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2143&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;technicalTags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Backend&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;API&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2146"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8273401"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bob"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"department"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Engineering"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"annualSalary"</span><span class="p">:</span><span class="w"> </span><span class="mi">90000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2143"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"technicalTags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Backend"</span><span class="p">,</span><span class="w"> </span><span class="s2">"API"</span><span class="p">]</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -3850,13 +3850,13 @@ configuration.</p>
 <p>This tool takes no input parameters.</p>
 <h3 id="output-schema_4">Output Schema<a class="headerlink" href="#output-schema_4" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c1">// total number of classes</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c1">// total number of classes</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_4">Example<a class="headerlink" href="#example_4" title="Permanent link">&para;</a></h3>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -3866,28 +3866,28 @@ configuration.</p>
 <p>This tool takes no input parameters.</p>
 <h3 id="output-schema_5">Output Schema<a class="headerlink" href="#output-schema_5" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;classes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"classes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">           </span><span class="c1">// class name</span>
-<span class="w">      </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]</span><span class="w">  </span><span class="c1">// list of direct parent class names; empty if none</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">           </span><span class="c1">// class name</span>
+<span class="w">      </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">]</span><span class="w">  </span><span class="c1">// list of direct parent class names; empty if none</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">                      </span><span class="c1">// total number of classes</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">                      </span><span class="c1">// total number of classes</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_5">Example<a class="headerlink" href="#example_5" title="Permanent link">&para;</a></h3>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;classes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Project&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Skill&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Worker&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Contractor&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Worker&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Address&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Worker&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Certificate&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">"classes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Project"</span><span class="p">,</span><span class="w"> </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Skill"</span><span class="p">,</span><span class="w"> </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span><span class="w"> </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Worker"</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Contractor"</span><span class="p">,</span><span class="w"> </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Worker"</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Address"</span><span class="p">,</span><span class="w"> </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Worker"</span><span class="p">,</span><span class="w"> </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Certificate"</span><span class="p">,</span><span class="w"> </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -3914,23 +3914,23 @@ configuration.</p>
 </table>
 <h3 id="output-schema_6">Output Schema<a class="headerlink" href="#output-schema_6" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">               </span><span class="c1">// class name</span>
-<span class="w">  </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">               </span><span class="c1">// class name</span>
+<span class="w">  </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">           </span><span class="c1">// direct parent class name</span>
-<span class="w">      </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]</span><span class="w">  </span><span class="c1">// parent&#39;s own direct parents; empty if none</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">           </span><span class="c1">// direct parent class name</span>
+<span class="w">      </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">]</span><span class="w">  </span><span class="c1">// parent's own direct parents; empty if none</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;declaredFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"declaredFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">           </span><span class="c1">// field name</span>
-<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w">            </span><span class="c1">// field type</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">           </span><span class="c1">// field name</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">            </span><span class="c1">// field type</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;allFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"allFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">           </span><span class="c1">// field name (declared or inherited)</span>
-<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w">            </span><span class="c1">// field type</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">           </span><span class="c1">// field name (declared or inherited)</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">            </span><span class="c1">// field type</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
@@ -3938,28 +3938,28 @@ configuration.</p>
 <h3 id="example_6">Example<a class="headerlink" href="#example_6" title="Permanent link">&para;</a></h3>
 <p><strong>Input</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;className&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span>
+<span class="w">  </span><span class="nt">"className"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Worker&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Worker"</span><span class="p">,</span><span class="w"> </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;declaredFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;annualSalary&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;int&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;department&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.lang.String&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;subordinates&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.util.List&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="s2">&quot;...&quot;</span>
+<span class="w">  </span><span class="nt">"declaredFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"annualSalary"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"department"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subordinates"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.util.List"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="s2">"..."</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;allFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;address&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Address {city: java.lang.String; street: java.lang.String; }&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.lang.String&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;annualSalary&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;int&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;department&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.lang.String&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="s2">&quot;...&quot;</span>
+<span class="w">  </span><span class="nt">"allFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"address"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Address {city: java.lang.String; street: java.lang.String; }"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"annualSalary"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"department"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="s2">"..."</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3970,71 +3970,71 @@ configuration.</p>
 <p>This tool takes no input parameters.</p>
 <h3 id="output-schema_7">Output Schema<a class="headerlink" href="#output-schema_7" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;classes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"classes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">               </span><span class="c1">// class name</span>
-<span class="w">      </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">               </span><span class="c1">// class name</span>
+<span class="w">      </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">           </span><span class="c1">// direct parent class name</span>
-<span class="w">          </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]</span><span class="w">  </span><span class="c1">// parent&#39;s own direct parents; empty if none</span>
+<span class="w">          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">           </span><span class="c1">// direct parent class name</span>
+<span class="w">          </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">]</span><span class="w">  </span><span class="c1">// parent's own direct parents; empty if none</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;declaredFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"declaredFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;allFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"allFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">                          </span><span class="c1">// total number of classes</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">                          </span><span class="c1">// total number of classes</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_7">Example<a class="headerlink" href="#example_7" title="Permanent link">&para;</a></h3>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;classes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"classes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Project&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">      </span><span class="nt">&quot;declaredFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;budget&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;int&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;projectName&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.lang.String&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Project"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">      </span><span class="nt">"declaredFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"budget"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"projectName"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;allFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;budget&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;int&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;projectName&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.lang.String&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"allFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"budget"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"projectName"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">]</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Worker&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}],</span>
-<span class="w">      </span><span class="nt">&quot;declaredFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;annualSalary&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;int&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;department&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.lang.String&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Worker"</span><span class="p">,</span><span class="w"> </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}],</span>
+<span class="w">      </span><span class="nt">"declaredFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"annualSalary"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"department"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;allFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.lang.String&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;annualSalary&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;int&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;department&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.lang.String&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"allFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"annualSalary"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"department"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">]</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Worker&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;superclasses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">      </span><span class="nt">&quot;declaredFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.lang.String&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Worker"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"superclasses"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">      </span><span class="nt">"declaredFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;allFields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java.lang.String&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"allFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">]</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="s2">&quot;...&quot;</span>
+<span class="w">    </span><span class="s2">"..."</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -4067,8 +4067,8 @@ configuration.</p>
 </tbody>
 </table>
 <p>A batch over the limit is rejected before anything runs, with a message naming both the size you sent and the maximum this server allows.</p>
-<h3 id="writable-field-kinds">Writable field kinds<a class="headerlink" href="#writable-field-kinds" title="Permanent link">&para;</a></h3>
-<p>Field values go in the per-object maps of <code>create_objects</code> (<code>objects[]</code>) and in <code>updates[].fields</code> on <code>update_objects</code>. Both accept the same kinds of value, and in every case it is the form reads return, so a value you fetched can be written straight back.</p>
+<h3 id="writable-field-kinds">Writable Field Kinds<a class="headerlink" href="#writable-field-kinds" title="Permanent link">&para;</a></h3>
+<p>Field values go in the per-object maps of <code>create_objects</code> (<code>objects[]</code>) and in <code>updates[].fields</code> on <code>update_objects</code>. Both accept the same kinds of value, always in the form reads return, so a value read from the database can be written back unchanged.</p>
 <table>
 <thead>
 <tr>
@@ -4119,7 +4119,7 @@ configuration.</p>
 <p class="admonition-title">Every referenced object must already exist</p>
 <p>A reference is resolved when it is written, so objects created in the same call cannot reference each other. Create the referenced objects first, then use the LOIDs the first call returned. The same rule applies to both sides of a reference map.</p>
 </div>
-<h3 id="confirmation-prompt">Confirmation prompt<a class="headerlink" href="#confirmation-prompt" title="Permanent link">&para;</a></h3>
+<h3 id="confirmation-prompt">Confirmation Prompt<a class="headerlink" href="#confirmation-prompt" title="Permanent link">&para;</a></h3>
 <p>Before the objects are created, the connected client asks the user to approve a summary naming the class and the count:</p>
 <div class="language-text highlight"><pre><span></span><code>You are about to create 2 Employee objects.
 
@@ -4128,9 +4128,9 @@ This action cannot be undone. Confirm?
 </code></pre></div>
 <h3 id="output-schema_8">Output Schema<a class="headerlink" href="#output-schema_8" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;className&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// the class of the created objects</span>
-<span class="w">  </span><span class="nt">&quot;createdCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">       </span><span class="c1">// how many objects were created</span>
-<span class="w">  </span><span class="nt">&quot;createdLoids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]</span><span class="w"> </span><span class="c1">// LOIDs of the new objects, in input order</span>
+<span class="w">  </span><span class="nt">"className"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// the class of the created objects</span>
+<span class="w">  </span><span class="nt">"createdCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">       </span><span class="c1">// how many objects were created</span>
+<span class="w">  </span><span class="nt">"createdLoids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">]</span><span class="w"> </span><span class="c1">// LOIDs of the new objects, in input order</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_8">Example<a class="headerlink" href="#example_8" title="Permanent link">&para;</a></h3>
@@ -4139,29 +4139,29 @@ This action cannot be undone. Confirm?
 </code></pre></div>
 <p><strong>Input</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;className&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;objects&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"className"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"objects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ada&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;department&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Engineering&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;annualSalary&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">130000</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2142&quot;</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ada"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"department"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Engineering"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"annualSalary"</span><span class="p">:</span><span class="w"> </span><span class="mi">130000</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2142"</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Grace&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;department&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Engineering&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;annualSalary&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Grace"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"department"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Engineering"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"annualSalary"</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;className&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Employee&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;createdCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;createdLoids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;135.0.2148&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;135.0.2149&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"className"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdLoids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2148"</span><span class="p">,</span><span class="w"> </span><span class="s2">"135.0.2149"</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -4219,7 +4219,7 @@ This action cannot be undone. Confirm?
 </tbody>
 </table>
 <p>The whole call fails, leaving every object untouched, if any item names a LOID that matches no object, or carries an <code>expectedVersion</code> that no longer matches. Re-read the affected objects and retry with the versions you get back.</p>
-<h3 id="confirmation-prompt_1">Confirmation prompt<a class="headerlink" href="#confirmation-prompt_1" title="Permanent link">&para;</a></h3>
+<h3 id="confirmation-prompt_1">Confirmation Prompt<a class="headerlink" href="#confirmation-prompt_1" title="Permanent link">&para;</a></h3>
 <p>Before the objects are changed, the connected client asks the user to approve a summary. Because one call may span several classes, it gives a count and no class names:</p>
 <div class="language-text highlight"><pre><span></span><code>You are about to update 2 existing objects.
 
@@ -4228,8 +4228,8 @@ Confirm?
 </code></pre></div>
 <h3 id="output-schema_9">Output Schema<a class="headerlink" href="#output-schema_9" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;updatedCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="c1">// how many objects were updated</span>
-<span class="w">  </span><span class="nt">&quot;updatedLoids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]</span><span class="w">  </span><span class="c1">// LOIDs of the updated objects, in input order</span>
+<span class="w">  </span><span class="nt">"updatedCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="c1">// how many objects were updated</span>
+<span class="w">  </span><span class="nt">"updatedLoids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">]</span><span class="w">  </span><span class="c1">// LOIDs of the updated objects, in input order</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_9">Example<a class="headerlink" href="#example_9" title="Permanent link">&para;</a></h3>
@@ -4238,12 +4238,12 @@ Confirm?
 </code></pre></div>
 <p><strong>Input</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;updates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"updates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;loid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;135.0.2146&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;expectedVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;8273401&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;department&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Research&quot;</span>
+<span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2146"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"expectedVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8273401"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"department"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Research"</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
@@ -4251,8 +4251,8 @@ Confirm?
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;updatedCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;updatedLoids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;135.0.2146&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"updatedCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"updatedLoids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2146"</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response when the object changed in the meantime</strong></p>
@@ -4286,17 +4286,17 @@ current 8273402). Re-read the object and retry.
 </table>
 <div class="admonition warning">
 <p class="admonition-title">Deletion does not cascade</p>
-<p>Only the objects you name are removed. Objects that referenced them keep the reference, which now points at nothing. Nothing is rewritten to compensate, and there is no undo — find and fix referencing objects yourself, before or after the delete.</p>
+<p>Only the objects you name are removed. Objects that referenced them keep the reference, which now points at nothing. Nothing is rewritten to compensate, and there is no undo — find and fix referencing objects before or after the delete.</p>
 </div>
-<h3 id="confirmation-prompt_2">Confirmation prompt<a class="headerlink" href="#confirmation-prompt_2" title="Permanent link">&para;</a></h3>
+<h3 id="confirmation-prompt_2">Confirmation Prompt<a class="headerlink" href="#confirmation-prompt_2" title="Permanent link">&para;</a></h3>
 <p>Before anything is removed, the connected client asks the user to approve a summary. The server looks the LOIDs up first, so the prompt can break the count down by class — ordered by count, then class name — and say how many LOIDs matched nothing:</p>
 <div class="language-text highlight"><pre><span></span><code>You are about to permanently delete 2 objects: 1 Address, 1 Employee. 1 requested LOID was not found and will be skipped. This action cannot be undone and does not cascade. Confirm?
 </code></pre></div>
 <p>The not-found sentence appears only when some LOID matched nothing. When <em>none</em> of them matches, there is nothing to confirm and no prompt is shown.</p>
 <h3 id="output-schema_10">Output Schema<a class="headerlink" href="#output-schema_10" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;deletedLoids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">],</span><span class="w">  </span><span class="c1">// LOIDs that were removed</span>
-<span class="w">  </span><span class="nt">&quot;notFoundLoids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">]</span><span class="w">  </span><span class="c1">// requested LOIDs that matched no object; skipped, not an error</span>
+<span class="w">  </span><span class="nt">"deletedLoids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">],</span><span class="w">  </span><span class="c1">// LOIDs that were removed</span>
+<span class="w">  </span><span class="nt">"notFoundLoids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">]</span><span class="w">  </span><span class="c1">// requested LOIDs that matched no object; skipped, not an error</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>A LOID that matches no object is a normal outcome, not a failure: it is reported in <code>notFoundLoids</code> and the rest of the batch still runs.</p>
@@ -4306,13 +4306,13 @@ current 8273402). Re-read the object and retry.
 </code></pre></div>
 <p><strong>Input</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;loids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;135.0.2148&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;135.0.9999&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"loids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2148"</span><span class="p">,</span><span class="w"> </span><span class="s2">"135.0.9999"</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;deletedLoids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;135.0.2148&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;notFoundLoids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;135.0.9999&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"deletedLoids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2148"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"notFoundLoids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.9999"</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
@@ -4320,7 +4320,7 @@ current 8273402). Re-read the object and retry.
 <ul>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg></span> <strong><a href="../write-support.html">Write support</a></strong><br />
-  Turn on write mode, and the three checks every write passes.</p>
+  Turn on write mode, and learn the three checks every write passes.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 20H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h7a2 2 0 0 1 2 2H4v10l2.14-8h17.07l-2.28 8.5c-.23.87-1.01 1.5-1.93 1.5"/></svg></span> <strong><a href="../resources/index.html">Resources</a></strong><br />
@@ -4352,7 +4352,7 @@ current 8273402). Re-read the object and retry.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 11, 2026 22:51:55 UTC">August 11, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
   </span>
 
     

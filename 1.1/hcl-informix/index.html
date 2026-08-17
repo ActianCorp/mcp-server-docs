@@ -2908,7 +2908,7 @@
 
 
 <h1 id="actian-mcp-server-for-hcl-informix">Actian MCP Server for HCL Informix®<a class="headerlink" href="#actian-mcp-server-for-hcl-informix" title="Permanent link">&para;</a></h1>
-<p>Connect the MCP-compatible client to an HCL Informix® database using the Actian MCP Server. Once configured, you can use the server to explore schema metadata and execute SQL queries through a standardized interface. The MCP Server for HCL Informix® enables communication between any MCP client and the HCL Informix® database. The server automatically manages connection pooling, response formatting, and schema discovery, allowing you to focus on your business data analysis.</p>
+<p>Connect the MCP-compatible client to an HCL Informix® database using the Actian MCP Server. Once configured, you can use the server to explore schema metadata and execute SQL queries through a standardized interface. The MCP Server for HCL Informix® enables communication between any MCP client and the HCL Informix® database. The server automatically manages connection pooling, response formatting, and schema discovery, allowing you to focus on business data analysis.</p>
 <h2 id="capabilities">Capabilities<a class="headerlink" href="#capabilities" title="Permanent link">&para;</a></h2>
 <p>The Actian MCP Server for HCL Informix® supports the following operations:</p>
 <table>
@@ -2941,7 +2941,7 @@
 </tr>
 <tr>
 <td><strong>Execute write queries</strong></td>
-<td>Run <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> statements. Off by default. Requires <code>query_mode</code> set to <code>read-write</code></td>
+<td>Run <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> statements. Off by default. Requires <code>query_mode</code> set to <code>read-write</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -2956,35 +2956,35 @@
 <li><strong>Container Engine:</strong> Docker installed and running on the host machine.</li>
 <li><strong>Database credentials:</strong> Access details for the HCL Informix database.</li>
 <li><strong>Secure deployment files (Optional):</strong> TLS certificate and key files.</li>
-<li><strong>Authentication (Optional):</strong> An OIDC provider, if you require OAuth</li>
+<li><strong>Authentication (Optional):</strong> An OIDC provider, required for OAuth authentication.</li>
 </ul>
 <hr />
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>The server runs as a Docker container. To configure the server, mount the (<code>conf.json</code>) file to the container at <code>/app/conf.json</code>.</p>
 <h3 id="create-configuration-file">Create Configuration File<a class="headerlink" href="#create-configuration-file" title="Permanent link">&para;</a></h3>
-<p>Create a file named <code>conf.json</code> in the working directory and add the database specific configuration details:</p>
+<p>Create a file named <code>conf.json</code> in the working directory and add the database-specific configuration details:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;servername&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;server_name&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;service_port&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;dsn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;dsn_name&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_host&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_name&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database_user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_user&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database_password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_password&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;max_connections&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;max_concurrent_connections&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;max_rows&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;max_rows_per_query_response&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;mcp_server_host&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;mcp_server_port&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;log_level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;ssl_certfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/app/server.crt&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;ssl_keyfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/app/server.key&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;oauth&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CONFIG_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;oidc_discovery_url&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;client_id&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_SECRET&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;client_secret&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_BASE_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;server_base_url&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_AUDIENCE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;audience&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;user_impersonation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"servername"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;server_name&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;service_port&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"dsn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;dsn_name&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_host&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_name&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database_user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_user&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database_password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_password&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"max_connections"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;max_concurrent_connections&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"max_rows"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;max_rows_per_query_response&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;mcp_server_host&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;mcp_server_port&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"log_level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INFO"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"ssl_certfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.crt"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"ssl_keyfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.key"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_CONFIG_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;oidc_discovery_url&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_CLIENT_ID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;client_id&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_CLIENT_SECRET"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;client_secret&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_BASE_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;server_base_url&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_AUDIENCE"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;audience&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"user_impersonation"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">}</span><span class="w">  </span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3090,7 +3090,7 @@
 <td><code>oauth</code></td>
 <td><code>object</code></td>
 <td>—</td>
-<td>OAuth configuration block for protected deployments, see <a href="../authentication/index.html#the-oauth-configuration-block">OAuth configuration</a> for more information.</td>
+<td>OAuth configuration block for protected deployments, see <a href="../authentication/index.html#configuring-oauth-block">OAuth configuration</a> for more information.</td>
 </tr>
 <tr>
 <td><code>query_mode</code></td>
@@ -3115,13 +3115,11 @@
 <hr />
 <h2 id="start-the-server">Start the Server<a class="headerlink" href="#start-the-server" title="Permanent link">&para;</a></h2>
 <p>With the <code>conf.json</code> file ready, run the following Docker command to start the container. This command mounts the configuration file as a read-only volume.</p>
-<div class="language-text highlight"><pre><span></span><code>```bash
-docker run  -d \
-  -v $(pwd)/conf_temp.json:/app/conf.json:ro,Z \
-  -p 8000:8000 \
-  --name=ifx-mcp \
-  actian/informix-mcp-server-linux:1.1.0
-```
+<div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w">  </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf_temp.json:/app/conf.json:ro,Z<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="o">=</span>ifx-mcp<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>actian/informix-mcp-server-linux:1.1.0
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -3170,7 +3168,7 @@ docker run  -d \
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 10, 2026 04:18:24 UTC">August 10, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
   </span>
 
     

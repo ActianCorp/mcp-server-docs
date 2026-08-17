@@ -2876,12 +2876,12 @@
   <a href="#step-4-create-auth0-users-if-using-user-impersonation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Create Auth0 Users (if Using User Impersonation)
+        Step 4: Create Auth0 Users (If Using User Impersonation)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 4: Create Auth0 Users (if Using User Impersonation)">
+    <nav class="md-nav" aria-label="Step 4: Create Auth0 Users (If Using User Impersonation)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3037,7 +3037,7 @@
   <a href="#staging-versus-production" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Staging versus Production
+        Staging Versus Production
       
     </span>
   </a>
@@ -3144,7 +3144,7 @@
 <p><a href="https://gofastmcp.com/integrations/auth0">FastMCP Auth0 Integration</a></p>
 </div>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<p>The checklist below is the whole procedure in brief. Use it if you already know your way around the Auth0 Dashboard. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.</p>
+<p>The checklist below is the whole procedure in brief. Use it if you are already familiar with the Auth0 Dashboard. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.</p>
 <ol>
 <li><strong>Create an API:</strong> Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>Create API</strong>. The <strong>Identifier</strong> serves as the <code>FASTMCP_SERVER_AUTH_AUDIENCE</code>.</li>
 <li><strong>Create an Application:</strong> Navigate to <strong>Applications</strong> &gt; <strong>Applications</strong> &gt; <strong>Create Application</strong>. Select <strong>Machine to Machine</strong>. Authorize it for the API when prompted. Copy the <strong>Client ID</strong> and <strong>Client Secret</strong>.</li>
@@ -3435,7 +3435,7 @@
 <p class="admonition-title">This is not the write scope grant</p>
 <p>Authorizing the application lets it request tokens for the API. It does not give any user the <code>mcp:write</code> scope. That is a separate, per-user role assignment in <a href="#step-43-grant-the-write-scope-read-write-deployments-only">Step 4.3</a>.</p>
 </div>
-<h2 id="step-4-create-auth0-users-if-using-user-impersonation">Step 4: Create Auth0 Users (if Using User Impersonation)<a class="headerlink" href="#step-4-create-auth0-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
+<h2 id="step-4-create-auth0-users-if-using-user-impersonation">Step 4: Create Auth0 Users (If Using User Impersonation)<a class="headerlink" href="#step-4-create-auth0-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
 <p>If <code>user_impersonation</code> is <code>true</code>, the authenticated user's identity is forwarded to the database through <code>SET SESSION AUTHORIZATION</code>. Each Auth0 user must have a matching database account. For more information, see <a href="../index.html#user-impersonation">User Impersonation</a>.</p>
 <h3 id="step-41-create-the-user-in-auth0">Step 4.1: Create the User in Auth0<a class="headerlink" href="#step-41-create-the-user-in-auth0" title="Permanent link">&para;</a></h3>
 <ol>
@@ -3498,7 +3498,7 @@
 </code></pre></div>
 === Informix
 <div class="language-sql highlight"><pre><span></span><code><span class="c1">-- Create the user account (DB password not used — Auth0 handles authentication)</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">mcpuser</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="s1">&#39;mcpuser&#39;</span><span class="w"> </span><span class="n">properties</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="s1">&#39;daemon&#39;</span><span class="p">;;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">mcpuser</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="s1">'mcpuser'</span><span class="w"> </span><span class="n">properties</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="s1">'daemon'</span><span class="p">;;</span>
 
 <span class="c1">-- Grant access to the database</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">CONNECT</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">mcpuser</span><span class="p">;</span>
@@ -3508,7 +3508,7 @@
 <span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">mcpuser</span><span class="p">;</span>
 
 <span class="c1">-- Set session authorization to the privleged database_user passed to mcp server in conf.json</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="n">SETSESSIONAUTH</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="s1">&#39;mcpuser&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;database_user&#39;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">SETSESSIONAUTH</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="s1">'mcpuser'</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'database_user'</span><span class="p">;</span>
 </code></pre></div></p>
 <div class="admonition note">
 <p class="admonition-title">Federated identity caveat</p>
@@ -3524,7 +3524,7 @@
 <li>Select your API, for example <code>Actian MCP Server</code>, select the <code>mcp:write</code> permission, and add it.</li>
 <li>On the role's <strong>Users</strong> tab, select <strong>Add Users</strong> and assign the users who are allowed to write.</li>
 </ol>
-<p>Users without this role can still read. Their tokens do not carry <code>mcp:write</code>, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see <a href="../keycloak/index.html#which-users-can-obtain-the-scope">which users can obtain the scope</a> there.</p>
+<p>Users without this role can still read. Their tokens do not carry <code>mcp:write</code>, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see <a href="../keycloak/index.html#user-eligibility">which users can obtain the scope</a> there.</p>
 <div class="admonition warning">
 <p class="admonition-title">The database still decides what a user can change</p>
 <p>The <code>mcp:write</code> scope permits write statements in general. It does not grant table privileges. With <code>user_impersonation</code> enabled, each write also runs as that user's own database account, so grant the matching <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> privileges in the database as well. See <a href="#step-42-create-the-matching-database-user">Step 4.2</a>.</p>
@@ -3582,23 +3582,23 @@
 </div>
 <h3 id="example-confjson">Example <code>conf.json</code><a class="headerlink" href="#example-confjson" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{Ingres}&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@&lt;db-host&gt;,tcp_ip,&lt;port&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mydb&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database_user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_user&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database_password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_password&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;max_connections&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;ssl_certfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/app/server.crt&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;ssl_keyfile&quot;</span><span class="p">:</span><span class="w">  </span><span class="s2">&quot;/app/server.key&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;oauth&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CONFIG_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://&lt;your-auth0-domain&gt;/.well-known/openid-configuration&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;your-client-id&gt;&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_SECRET&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;your-client-secret&gt;&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_BASE_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://&lt;your-server-host&gt;:8000&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_AUDIENCE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;your-api-identifier&gt;&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;user_impersonation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="nt">"driver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{Ingres}"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@&lt;db-host&gt;,tcp_ip,&lt;port&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mydb"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database_user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_user&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database_password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_password&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"max_connections"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"ssl_certfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.crt"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"ssl_keyfile"</span><span class="p">:</span><span class="w">  </span><span class="s2">"/app/server.key"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_CONFIG_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;your-auth0-domain&gt;/.well-known/openid-configuration"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_CLIENT_ID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;your-client-id&gt;"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_CLIENT_SECRET"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;your-client-secret&gt;"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_BASE_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;your-server-host&gt;:8000"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_AUDIENCE"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;your-api-identifier&gt;"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"user_impersonation"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3606,7 +3606,7 @@
 <p class="admonition-title">Note</p>
 <p>Replace <code>&lt;db-host&gt;</code> with the database server address. In a Docker container, use the host's IP address or <code>host.docker.internal</code>(not <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself).</p>
 </div>
-<p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see <a href="../index.html#https-tls-for-remote-deployments">HTTPS / TLS for Remote Deployments</a>.</p>
+<p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see <a href="../index.html#secure-remote-deployments-with-https-and-tls">HTTPS / TLS for Remote Deployments</a>.</p>
 <p>For security best practices (file permissions, <code>.gitignore</code>, secrets management), see <a href="../index.html#security-best-practices">Security Best Practices</a>.</p>
 <h2 id="verify-end-to-end">Verify End-to-End<a class="headerlink" href="#verify-end-to-end" title="Permanent link">&para;</a></h2>
 <p>After starting the MCP server container with OAuth configured:</p>
@@ -3728,18 +3728,18 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">macOS</label><label for="__tabbed_1_2">Linux</label><label for="__tabbed_1_3">Windows</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code>sqlite3<span class="w"> </span>~/Library/<span class="s2">&quot;Application Support&quot;</span>/Code/User/globalStorage/state.vscdb<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;DELETE FROM ItemTable WHERE key LIKE &#39;%dynamicAuth%&lt;your-server-host&gt;%&#39;;&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>sqlite3<span class="w"> </span>~/Library/<span class="s2">"Application Support"</span>/Code/User/globalStorage/state.vscdb<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"DELETE FROM ItemTable WHERE key LIKE '%dynamicAuth%&lt;your-server-host&gt;%';"</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="language-bash highlight"><pre><span></span><code>sqlite3<span class="w"> </span>~/.config/Code/User/globalStorage/state.vscdb<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;DELETE FROM ItemTable WHERE key LIKE &#39;%dynamicAuth%&lt;your-server-host&gt;%&#39;;&quot;</span>
+<span class="w">  </span><span class="s2">"DELETE FROM ItemTable WHERE key LIKE '%dynamicAuth%&lt;your-server-host&gt;%';"</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-powershell highlight"><pre><span></span><code><span class="n">sqlite3</span> <span class="s2">&quot;$env:APPDATA\Code\User\globalStorage\state.vscdb&quot;</span> <span class="p">`</span>
-  <span class="s2">&quot;DELETE FROM ItemTable WHERE key LIKE &#39;%dynamicAuth%&lt;your-server-host&gt;%&#39;;&quot;</span>
+<div class="language-powershell highlight"><pre><span></span><code><span class="n">sqlite3</span> <span class="s2">"$env:APPDATA\Code\User\globalStorage\state.vscdb"</span> <span class="p">`</span>
+  <span class="s2">"DELETE FROM ItemTable WHERE key LIKE '%dynamicAuth%&lt;your-server-host&gt;%';"</span>
 </code></pre></div>
 </div>
 </div>
@@ -3767,7 +3767,7 @@
 <p class="admonition-title">Note</p>
 <p>Token refresh is handled automatically by the OAuth flow when using browser-based authentication.</p>
 </div>
-<h2 id="staging-versus-production">Staging versus Production<a class="headerlink" href="#staging-versus-production" title="Permanent link">&para;</a></h2>
+<h2 id="staging-versus-production">Staging Versus Production<a class="headerlink" href="#staging-versus-production" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -3806,7 +3806,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 31, 2026 00:13:30 UTC">July 31, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
   </span>
 
     

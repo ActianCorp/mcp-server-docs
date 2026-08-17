@@ -3,11 +3,11 @@ title: Write Support
 description: How to let the Actian MCP Server for NoSQL create, update, and delete objects, and the three checks — the setting, the mcp:write scope, and human confirmation — that authorize every write.
 ---
 
-# Write support
+# Write Support
 
-The Actian MCP Server for Actian NoSQL is read-only by default. Setting `nsql.writes.enabled` to `true` adds three tools that change data: `create_objects`, `update_objects`, and `delete_objects`. A deployment that never sets it is untouched by everything on this page.
+The Actian MCP Server for Actian NoSQL is read-only by default. Setting `nsql.writes.enabled` to `true` adds three tools that change data: `create_objects`, `update_objects`, and `delete_objects`. A deployment that never sets it is not affected by anything on this page.
 
-Turning writes on does not hand the connected AI agent free rein over your database. Every write clears three independent checks — the server setting, the caller's `mcp:write` scope, and a person confirming the operation — and each of them can stop it. This page covers all three, the properties that tune them, and what to do when the write tools do not appear in the client at all.
+Turning writes on does not give the connected AI agent unrestricted access to the database. Every write clears three independent checks — the server setting, the caller's `mcp:write` scope, and a person confirming the operation — and each of them can stop it. This page covers all three, the properties that tune them, and what to do when the write tools do not appear in the client at all.
 
 For each tool's parameters, batch limits, and result shape, see [Tools](tools/index.md). Tools contributed by an [extension](extensions/index.md) pass the same three checks.
 
@@ -17,7 +17,7 @@ For each tool's parameters, batch limits, and result shape, see [Tools](tools/in
 !!! note "Write mode does not change the schema"
     The write tools create, change, and remove *objects*; they cannot add a class, alter a class, or change an index. Use the tools that come with Actian NoSQL Database for schema changes.
 
-## Enabling write mode
+## Enabling Write Mode
 
 Set `nsql.writes.enabled` in `application.properties`:
 
@@ -30,13 +30,13 @@ Set `nsql.writes.enabled` in `application.properties`:
 nsql.writes.enabled=true
 ```
 
-As with every property on this server, the environment-variable form works too — `NSQL_WRITES_ENABLED=true` — and takes precedence over the file. The server has no hot reload for this setting: restart it after changing the value.
+As with every property on this server, the environment-variable form is also supported — `NSQL_WRITES_ENABLED=true` — and takes precedence over the file. The server has no hot reload for this setting: restart it after changing the value.
 
-## How a write is authorized
+## Authorizing a Write
 
 Authorization happens at two separate moments: the server decides which write tools a client may have when that client connects, and then vets each call as it arrives.
 
-### Which tools a client is given, at connect time
+### Tools Provided at Connect Time
 
 A write tool is registered for a connection only when **both** of these hold:
 
@@ -45,9 +45,9 @@ A write tool is registered for a connection only when **both** of these hold:
 
 The second condition is waived when `nsql.writes.confirmation-required` is `false` — with no prompt to show, there is no reason to withhold the tools from a client that could not show one.
 
-A tool the server withholds is unlisted **and** uncallable: calling it anyway fails at the protocol layer with an unknown-tool error, before any server-side logic runs. If the write tools are missing when you expected them, [Why the write tools may not appear](#why-the-write-tools-may-not-appear) is the troubleshooting guide.
+A tool the server withholds is unlisted **and** uncallable: calling it anyway fails at the protocol layer with an unknown-tool error, before any server-side logic runs. If the write tools are missing when you expected them, [Missing Write Tools](#missing-write-tools) is the troubleshooting guide.
 
-### What each call must clear
+### What Each Call Must Clear
 
 Every call that does reach the server passes three independent checks, in the order below — so a caller on a read-only server, or one whose token lacks the scope, is turned away before anybody is asked to confirm anything.
 
@@ -102,7 +102,7 @@ To grant the `mcp:write` scope in your identity provider, see [Auth0](authentica
 
     Grant `mcp:write` only to the callers that should be able to modify data, and treat the database user in `nsql.connectionURL` as the true limit of what any caller can reach.
 
-## Confirmation prompts
+## Confirmation Prompts
 
 The server requests confirmation through the Model Context Protocol (MCP) elicitation capability, and enforces the answer server-side. The write tool does not run until an explicit acceptance comes back — the client is never trusted to gate the operation on the server's behalf.
 
@@ -121,9 +121,9 @@ Only an explicit confirmation lets the write proceed. Every other outcome reject
 
 Nothing is written in any of those cases. The rejection message names the reason, so a declined write is distinguishable from one that timed out.
 
-### How long the server waits
+### Prompt Timeout
 
-The clock starts when the prompt is sent and runs for `nsql.writes.confirmation-timeout-seconds`, 60 by default. Silence is not consent: when the window closes the write is rejected outright, and the tool call returns naming the reason.
+The server waits a fixed window for an answer. The clock starts when the prompt is sent and runs for `nsql.writes.confirmation-timeout-seconds`, 60 by default. Silence is not consent: when the window closes the write is rejected outright, and the tool call returns naming the reason.
 
 ```text
 Create not performed: no confirmation was received within the timeout.
@@ -135,15 +135,15 @@ The server records the same event:
 WARN  Confirmation not received within 60s; rejecting operation.
 ```
 
-Sixty seconds suits someone watching the conversation as it happens. Raise it when approvals go to a person who may be away from the screen — but note that the tool call stays open for the whole wait, so the agent making the request is blocked until somebody answers or the timeout closes it. Lower it if you would rather a batch fail fast than sit pending.
+Sixty seconds suits someone watching the conversation as it happens. Raise it when approvals go to a person who may be away from the screen. The tool call stays open for the whole wait, so the agent making the request is blocked until somebody answers or the timeout closes it. Lower it if you would rather a batch fail fast than sit pending.
 
 The timeout plays no part when `nsql.writes.confirmation-required` is `false`, because no prompt is sent.
 
 Not every MCP client implements elicitation. For which clients can display the prompt, see [Connecting MCP Clients](../mcp-clients/index.md#elicitation-support-for-write-approval).
 
-## Why the write tools may not appear
+## Missing Write Tools
 
-Write tools go missing because one of the two [registration conditions](#which-tools-a-client-is-given-at-connect-time) was not met. Withholding them is deliberate: a tool the server could never get confirmed would fail on every call, so a client that cannot confirm simply never sees one. The startup log tells you which condition to look at.
+Write tools go missing because one of the two [registration conditions](#tools-provided-at-connect-time) was not met. Withholding them is deliberate: a tool the server could never get confirmed would fail on every call, so a client that cannot confirm simply never sees one. The startup log tells you which condition to look at.
 
 | What you see | Cause | What to do |
 |--------------|-------|------------|
@@ -158,7 +158,7 @@ Visibility is decided per connection, from the capabilities the client advertise
 
 This rule is not tied to specific tool names. It applies to any tool that does not declare itself read-only, including tools contributed by an [extension](extensions/index.md).
 
-## Answering the prompt from a Python client
+## Answering the Prompt from a Python Client
 
 A [FastMCP](https://pypi.org/project/fastmcp/) client advertises the elicitation capability only when it is given an elicitation handler. Without one it is a client that cannot confirm, so the write tools are never registered for it — the symptom described above, reached through your own code rather than through a third-party client.
 
@@ -182,7 +182,7 @@ async with Client(transport, elicitation_handler=confirm_write) as client:
     ...
 ```
 
-The only clock is the server's. FastMCP sets no request timeout unless you pass one, so leave it unset on a client that waits for a person — a client timeout shorter than [the confirmation window](#how-long-the-server-waits) expires first and reports itself instead of the server's refusal.
+The only clock is the server's. FastMCP sets no request timeout unless you pass one, so leave it unset on a client that waits for a person — a client timeout shorter than [the confirmation window](#prompt-timeout) expires first and reports itself instead of the server's refusal.
 
 A complete, runnable version is available as [`nosql_hitl_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples-nosql/nosql_hitl_client.py), a console client that calls any tool and asks you to approve the write at the terminal:
 
@@ -194,7 +194,7 @@ python nosql_hitl_client.py http://localhost:8080/mcp create_objects \
 
 The client takes any tool with any arguments and knows nothing about your schema; `Employee` and the field names above are placeholders, so substitute your own. The [examples README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples-nosql/README.md) has the full usage.
 
-## Skipping the confirmation prompt
+## Skipping the Confirmation Prompt
 
 Some clients cannot display prompts. For those deployments, set `nsql.writes.confirmation-required` to `false`:
 
@@ -216,7 +216,7 @@ The setting is visible in the log. At startup the server records the mode it is 
 WARN  nsql-mcp-server Mode: READ-WRITE. Write tools are exposed; writes execute without confirmation.
 ```
 
-## Optimistic concurrency
+## Optimistic Concurrency
 
 Every object a read returns carries a `version` field: an opaque token that changes whenever the object is modified. It is returned as a string so that large values survive JSON without losing precision. Do not parse it or compare it for ordering — the only thing to do with it is hand it back.
 
@@ -234,7 +234,7 @@ The update is applied only if the object has not changed since you read it. If i
 
 See [Tools](tools/index.md) for where `version` appears in each read tool's response.
 
-## Configuration reference
+## Configuration Reference
 
 | Property | Default | Description |
 |----------|---------|-------------|

@@ -3073,7 +3073,7 @@ For example, if you mapped port 8000 in the previous step, the endpoint is <code
 <p>Follow these steps to confirm that the server is running and successfully communicating with the database and AI client:</p>
 <p><strong>1. Verify the container status</strong></p>
 <p>Run the following command to ensure that the container is actively running:</p>
-<div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>ps<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;name=actian-mcp&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>ps<span class="w"> </span>--filter<span class="w"> </span><span class="s2">"name=actian-mcp"</span>
 </code></pre></div>
 <p>Confirm that the container status is <code>Up</code>.</p>
 <p><strong>2. Verify the endpoint</strong></p>
@@ -3098,12 +3098,12 @@ Prompt the AI with a standard database request, such as:</p>
 </ul>
 <h2 id="step-6-optional-add-authentication">Step 6 (Optional): Add Authentication<a class="headerlink" href="#step-6-optional-add-authentication" title="Permanent link">&para;</a></h2>
 <p>If you are deploying the server outside a secure, trusted local environment, it is recommended to use OAuth 2.0 authentication. You can secure the server using an external identity provider like Keycloak or Auth0. See the following authentication documentation for detailed setup instructions:</p>
-<p>If you also set <code>query_mode</code> to <code>read-write</code>, define the <code>mcp:write</code> scope in your identity provider. The server requests it automatically, and a token without it cannot write.</p>
 <ul>
 <li><a href="../authentication/index.html">Authentication overview</a></li>
 <li><a href="../authentication/keycloak/index.html">Keycloak setup</a></li>
 <li><a href="../authentication/auth0/index.html">Auth0 setup</a></li>
 </ul>
+<p>If you also set <code>query_mode</code> to <code>read-write</code>, define the <code>mcp:write</code> scope in the identity provider. The server requests it automatically, and a token without it cannot write.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -3137,7 +3137,7 @@ Prompt the AI with a standard database request, such as:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 30, 2026 23:27:07 UTC">July 30, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
   </span>
 
     

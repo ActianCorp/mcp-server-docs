@@ -5,9 +5,9 @@ description: Connect MCP clients to an Analytics Engine warehouse in Actian Data
 
 # Actian MCP Server on Actian Data Platform
 
-When your Analytics Engine runs as a warehouse in Actian Data Platform, the MCP Server is configured for you. There is nothing to install, no container to run, and no `conf.json` to write. You only need the warehouse endpoint and an MCP client.
+When the Analytics Engine runs as a warehouse in Actian Data Platform, the MCP Server is configured automatically. There is nothing to install, no container to run, and no `conf.json` to write. You need only the warehouse endpoint and an MCP client.
 
-To run the server yourself against your own Analytics Engine instance, see [Actian Analytics Engine](index.md) instead.
+To run the server against a separate Analytics Engine instance, see [Actian Analytics Engine](index.md).
 
 
 ## Connect Your MCP Client
@@ -48,16 +48,16 @@ After you sign in, queries run under your own database identity. The privileges 
 
 Write queries are enabled on Data Platform warehouses. Two conditions must be met before a write runs:
 
-1. **Your database privileges allow it.** The warehouse enforces your existing grants on each table, so the MCP Server cannot write anything you could not write yourself.
+1. **Your database privileges allow it.** The warehouse enforces your existing grants on each table, so the MCP Server cannot perform any write that your grants do not permit.
 2. **You approve the write.** The server describes the statement and waits for your confirmation before running it.
 
 !!! warning "A client that cannot prompt cannot write"
-    The approval request uses the Model Context Protocol (MCP) elicitation capability, which not every client implements. If your client does not support it, the server rejects the write exactly as if you had declined it. There is no silent approval, and the approval step cannot be turned off on Data Platform. Reads are unaffected.
+    The approval request uses the Model Context Protocol (MCP) elicitation capability, which not every client implements. If the client does not support it, the server rejects the write exactly as if you had declined it. There is no silent approval, and the approval step cannot be turned off on Data Platform. Read queries are not affected.
 
     Claude Desktop and GitHub Copilot cannot display the prompt today. For the current list, see [Elicitation support for write approval](../mcp-clients/index.md#elicitation-support-for-write-approval).
 
 
-## What Actian Manages
+## Actian Responsibilities
 
 The following are configured and maintained by Actian, and cannot be changed for a warehouse:
 
@@ -66,7 +66,7 @@ The following are configured and maintained by Actian, and cannot be changed for
 - Query mode, row limits, and log verbosity
 - The OAuth provider used for sign-in
 
-Custom extensions are not supported on Actian Data Platform. To load your own Python extensions, run the server yourself using the [Analytics Engine](index.md) configuration.
+Custom extensions are not supported on Actian Data Platform. To load custom Python extensions, run the server using the [Analytics Engine](index.md) configuration.
 
 
 ## Next Steps

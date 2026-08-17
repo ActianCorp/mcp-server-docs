@@ -965,7 +965,7 @@
   <a href="#module-entry-points" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module entry points
+        Module Entry Points
       
     </span>
   </a>
@@ -1009,7 +1009,7 @@
   <a href="#result-dictionary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Result dictionary
+        Result Dictionary
       
     </span>
   </a>
@@ -2858,7 +2858,7 @@
   <a href="#module-entry-points" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module entry points
+        Module Entry Points
       
     </span>
   </a>
@@ -2902,7 +2902,7 @@
   <a href="#result-dictionary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Result dictionary
+        Result Dictionary
       
     </span>
   </a>
@@ -2983,10 +2983,10 @@
 
 
 
-<h1 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
 <p>Everything an extension needs is importable from <code>actian_mcp_server.extension_api</code>. The public functions are <code>get_current_user</code>, <code>get_current_scopes</code>, <code>has_scope</code>, <code>get_database</code>, and <code>request_write_confirmation</code>. The database and transaction objects come from <code>get_database()</code> rather than being imported.</p>
-<h2 id="module-entry-points">Module entry points<a class="headerlink" href="#module-entry-points" title="Permanent link">&para;</a></h2>
-<p>You define these in your module. See <a href="index.html#write-the-module">Write the module</a>.</p>
+<h2 id="module-entry-points">Module Entry Points<a class="headerlink" href="#module-entry-points" title="Permanent link">&para;</a></h2>
+<p>You define these in your module. See <a href="index.html#writing-the-module">Writing the Module</a>.</p>
 <table>
 <thead>
 <tr>
@@ -3037,7 +3037,7 @@
 <tr>
 <td><code>has_scope</code></td>
 <td><code>has_scope(scope: str) -&gt; bool</code></td>
-<td><code>True</code> if the current token carries <code>scope</code>, matched exactly. Same availability as <code>get_current_scopes()</code>. For your own checks. The <code>mcp:write</code> gate is enforced for you.</td>
+<td><code>True</code> if the current token carries <code>scope</code>, matched exactly. Same availability as <code>get_current_scopes()</code>. For your own checks. The <code>mcp:write</code> gate is enforced automatically.</td>
 </tr>
 <tr>
 <td><code>get_database</code></td>
@@ -3094,7 +3094,7 @@
 <tr>
 <td><code>begin</code></td>
 <td><code>await tx.begin() -&gt; Transaction</code></td>
-<td>Starts the transaction explicitly. The context manager calls this for you. Raises if the server is not in read-write mode, if the caller's token lacks <code>mcp:write</code>, or if the authenticated user cannot be resolved when impersonation is required.</td>
+<td>Starts the transaction explicitly. The context manager calls this automatically. Raises if the server is not in read-write mode, if the caller's token lacks <code>mcp:write</code>, or if the authenticated user cannot be resolved when impersonation is required.</td>
 </tr>
 <tr>
 <td><code>query</code></td>
@@ -3122,20 +3122,20 @@
 <p class="admonition-title">Failures behave differently inside a transaction</p>
 <p><code>db.query()</code> returns <code>{"success": false, ...}</code> on failure, while a transaction's <code>query()</code> and <code>write()</code> raise. That is what makes a failed statement abort the whole transaction.</p>
 </div>
-<h2 id="result-dictionary">Result dictionary<a class="headerlink" href="#result-dictionary" title="Permanent link">&para;</a></h2>
+<h2 id="result-dictionary">Result Dictionary<a class="headerlink" href="#result-dictionary" title="Permanent link">&para;</a></h2>
 <p><code>db.query()</code> and a successful <code>tx.query()</code> or <code>tx.write()</code> return:</p>
 <div class="language-python highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;col&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
-    <span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="o">...</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span>
-    <span class="s2">&quot;row_count&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">"success"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"columns"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"col"</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="s2">"rows"</span><span class="p">:</span> <span class="p">[[</span><span class="o">...</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span>
+    <span class="s2">"row_count"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>Reads may also include <code>"truncated": True</code> and a <code>"warning"</code> when the result exceeded <code>max_rows</code>. For <code>tx.write()</code>, <code>columns</code> and <code>rows</code> are empty and <code>row_count</code> is the number of rows affected.</p>
 <p>On failure, <code>db.query()</code> returns the following. A transaction's statements raise instead.</p>
 <div class="language-python highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;message&gt;&quot;</span><span class="p">,</span>
+    <span class="s2">"success"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">"error"</span><span class="p">:</span> <span class="s2">"&lt;message&gt;"</span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -3158,7 +3158,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 30, 2026 23:27:07 UTC">July 30, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
   </span>
 
     

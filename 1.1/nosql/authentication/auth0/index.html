@@ -3004,7 +3004,7 @@
   <a href="#staging-versus-production" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Staging versus Production
+        Staging Versus Production
       
     </span>
   </a>
@@ -3236,7 +3236,7 @@
 </ol>
 <h3 id="step-31-add-the-write-scope-write-mode-only">Step 3.1: Add the Write Scope (Write Mode Only)<a class="headerlink" href="#step-31-add-the-write-scope-write-mode-only" title="Permanent link">&para;</a></h3>
 <p>Skip this step when <code>nsql.writes.enabled</code> is <code>false</code>. A read-only server never inspects the scope.</p>
-<p>In write mode, every write call is checked for the <code>mcp:write</code> scope, and a token without it is turned away. Auth0 models that scope as a <strong>permission</strong> on the API, so this step defines it and turns on the setting that lets Auth0 issue it. Who actually receives it is settled later, per application, in <a href="#grant-api-access">Grant API Access</a>. For what the server does with the scope, see <a href="../../write-support.html#what-each-call-must-clear">Write support</a>.</p>
+<p>In write mode, the server checks every write call for the <code>mcp:write</code> scope and rejects a token that lacks it. Auth0 models that scope as a <strong>permission</strong> on the API, so this step defines the permission and turns on the setting that lets Auth0 issue it. You choose which applications receive it later, in <a href="#grant-api-access">Grant API Access</a>. For what the server does with the scope, see <a href="../../write-support.html#what-each-call-must-clear">Write support</a>.</p>
 <h4 id="define-the-permission">Define the Permission<a class="headerlink" href="#define-the-permission" title="Permanent link">&para;</a></h4>
 <ol>
 <li>Open the API you just created, for example <code>Actian MCP Server</code>, and select the <strong>Permissions</strong> tab.</li>
@@ -3263,24 +3263,24 @@
 </li>
 </ol>
 <h4 id="enable-rbac">Enable RBAC<a class="headerlink" href="#enable-rbac" title="Permanent link">&para;</a></h4>
-<p>On the API's <strong>Settings</strong> tab, scroll to <strong>RBAC Settings</strong>, turn on <strong>Enable RBAC</strong>, and select <strong>Save</strong>. With RBAC on, Auth0 checks what the caller actually holds before it fills the token's <code>scope</code> claim, which is the claim the server reads. Leave it off and the grant is ignored, so <code>mcp:write</code> never arrives.</p>
+<p>On the API's <strong>Settings</strong> tab, scroll to <strong>RBAC Settings</strong>, turn on <strong>Enable RBAC</strong>, and select <strong>Save</strong>. With RBAC on, Auth0 checks what the caller holds before it fills the token's <code>scope</code> claim, which is the claim the server reads. If you leave RBAC off, Auth0 ignores the grant, and <code>mcp:write</code> never reaches the token.</p>
 <div class="admonition note">
 <p class="admonition-title"><strong>Add Permissions in the Access Token</strong> is not needed</p>
-<p>That neighbouring toggle adds the same grants to a separate <code>permissions</code> claim. This server never reads it — the only claim it inspects is <code>scope</code>. Turning it on does no harm if something else in your estate wants it.</p>
+<p>That neighboring toggle adds the same grants to a separate <code>permissions</code> claim. This server never reads that claim; the only claim it inspects is <code>scope</code>. Turning the toggle on causes no harm if another system in your environment needs it.</p>
 </div>
 <h4 id="grant-it-through-a-role">Grant It Through a Role<a class="headerlink" href="#grant-it-through-a-role" title="Permanent link">&para;</a></h4>
-<p>A role is how an interactive user comes to hold the permission. Skip this if you only use the Client Credentials flow, which has no user.</p>
+<p>A role is how an interactive user receives the permission. Skip this section if you use only the Client Credentials flow, which has no user.</p>
 <ol>
 <li>Navigate to <strong>User Management &gt; Roles</strong> and select <strong>+ Create Role</strong>. Name it, for example <code>NoSQL MCP Writer</code>, and select <strong>Create</strong>.</li>
 <li>On the role's <strong>Permissions</strong> tab, select <strong>Add Permissions</strong>, choose your API, select <code>mcp:write</code>, and add it.</li>
 <li>On the role's <strong>Users</strong> tab, select <strong>Add Users</strong> and assign everyone who is allowed to write.</li>
 </ol>
-<p>Users outside that role keep working exactly as before — they read normally, and a write attempt is rejected naming the missing scope. Because the grant is per user, nobody obtains write access simply by asking for it.</p>
+<p>Users outside that role continue to work as before: they read normally, and the server rejects a write attempt, naming the missing scope. Because the grant is per user, nobody obtains write access by asking for it.</p>
 <div class="admonition note">
 <p class="admonition-title">Creating the permission gives it to nobody</p>
-<p>Defining <code>mcp:write</code> on the API only makes it available to grant. Two separate things put it in a token: the application has to be allowed to request it, which you set per application in <a href="#grant-api-access">Grant API Access</a>, and an interactive user has to hold it through the role above.</p>
+<p>Defining <code>mcp:write</code> on the API only makes it available to grant. Two separate things put it in a token: the application must be allowed to request it, which you set per application in <a href="#grant-api-access">Grant API Access</a>, and an interactive user must hold it through the role above.</p>
 </div>
-<p>Auth0 is now willing to issue the scope, but no client will ask for it until the server advertises it. That is a server setting, covered in <a href="#step-6-configure-and-start-the-server">Step 6</a>.</p>
+<p>Auth0 can now issue the scope, but no client requests it until the server advertises it. That is a server setting, covered in <a href="#step-6-configure-and-start-the-server">Step 6</a>.</p>
 <h2 id="step-4-create-an-auth0-application">Step 4: Create an Auth0 Application<a class="headerlink" href="#step-4-create-an-auth0-application" title="Permanent link">&para;</a></h2>
 <p>The application represents the OAuth client, the MCP client (such as Claude Desktop or Cursor) that requests tokens on behalf of the user.</p>
 <div class="admonition note">
@@ -3346,7 +3346,7 @@
 </table>
 <p>Select <strong>Save</strong>.</p>
 <h3 id="grant-api-access">Grant API Access<a class="headerlink" href="#grant-api-access" title="Permanent link">&para;</a></h3>
-<p>This is where you allow the application to request tokens for the API, and choose which permissions it may ask for.</p>
+<p>This step allows the application to request tokens for the API and to choose which permissions it may request.</p>
 <ol>
 <li>Go to the <strong>API Access</strong> tab of the application.</li>
 <li>
@@ -3377,7 +3377,7 @@
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Both flows need this, and the interactive one needs a role as well</p>
-<p>The permission list controls what the application is <em>allowed to request</em>. For Client Credentials that is the entire grant, because there is no user whose role could carry it. For the Authorization Code flow it is only half: the signed-in user must also hold <code>mcp:write</code> through the role created in <a href="#step-31-add-the-write-scope-write-mode-only">Step 3.1</a>, or the token comes back without the scope.</p>
+<p>The permission list controls what the application is <em>allowed to request</em>. For Client Credentials that is the entire grant, because there is no user whose role could carry it. For the Authorization Code flow it is only half: the signed-in user must also hold <code>mcp:write</code> through the role created in <a href="#step-31-add-the-write-scope-write-mode-only">Step 3.1</a>, or the token is issued without the scope.</p>
 </div>
 <h3 id="output-of-step-4">Output of Step 4<a class="headerlink" href="#output-of-step-4" title="Permanent link">&para;</a></h3>
 <p>Retain the following values for your MCP client configuration:</p>
@@ -3437,8 +3437,8 @@
 </div>
 <div class="admonition caution">
 <p class="admonition-title">Set the scopes list in write mode</p>
-<p>Auth0 does not list custom API permissions in its OIDC discovery document, so a client working its scopes out by discovery never learns <code>mcp:write</code> exists from Auth0 itself. Advertising it here is what makes the client ask, and without it the whole Auth0 configuration from <a href="#step-31-add-the-write-scope-write-mode-only">Step 3.1</a> stays invisible — the client authenticates cleanly and still cannot write.</p>
-<p>A read-only server can leave the property unset. Auth0 issues a token without the scopes it will not grant rather than refusing the request, so a client that asks for more than it can have still authenticates. That makes this a write-mode concern on Auth0, unlike Keycloak, where it is worth setting either way. For the mechanism, see <a href="../index.html#advertising-scopes-to-mcp-clients">Advertising scopes to MCP clients</a>.</p>
+<p>Auth0 does not list custom API permissions in its OIDC discovery document, so a client that discovers its scopes never learns from Auth0 that <code>mcp:write</code> exists. Advertising the scope here is what makes the client request it. Without it, the whole Auth0 configuration from <a href="#step-31-add-the-write-scope-write-mode-only">Step 3.1</a> stays invisible: the client authenticates cleanly and still cannot write.</p>
+<p>A read-only server can leave the property unset. Auth0 issues a token without the scopes it will not grant, rather than refusing the request, so a client that requests more than it can obtain still authenticates. This is therefore a write-mode concern on Auth0, unlike Keycloak, where you should set it either way. For the mechanism, see <a href="../index.html#advertising-scopes-to-mcp-clients">Advertising scopes to MCP clients</a>.</p>
 </div>
 <h3 id="example-applicationproperties">Example <code>application.properties</code><a class="headerlink" href="#example-applicationproperties" title="Permanent link">&para;</a></h3>
 <p>Add the following to the <code>application.properties</code> and start the server as described in <a href="../../index.html#start-the-server">Start the Server</a>:</p>
@@ -3466,7 +3466,7 @@
 <li>The client includes the Bearer token in all requests to the MCP server.</li>
 <li>The server validates the token signature against Auth0's JWKS endpoint and grants access.</li>
 </ol>
-<h2 id="staging-versus-production">Staging versus Production<a class="headerlink" href="#staging-versus-production" title="Permanent link">&para;</a></h2>
+<h2 id="staging-versus-production">Staging Versus Production<a class="headerlink" href="#staging-versus-production" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -3505,7 +3505,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 11, 2026 09:26:22 UTC">August 11, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
   </span>
 
     

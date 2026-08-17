@@ -165,7 +165,7 @@ docker run -e INFORMIXSERVER=myserver \
     </div>
     <div class="feature-item">
       <h4 class="feature-title">Read-only by Default</h4>
-      <p class="feature-description">Agents cannot modify or delete data unless you enable write mode. Once enabled, every write still requires an authorized scope and human approval.</p>
+      <p class="feature-description">Agents cannot modify or delete data unless write mode is enabled. Once enabled, every write still requires an authorized scope and human approval.</p>
       <a href="./intro/write-support.html" class="primary-link">Learn about Write Support →</a>
     </div>
     <div class="feature-item">

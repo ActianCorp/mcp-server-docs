@@ -2751,10 +2751,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#write-the-module" class="md-nav__link">
+  <a href="#writing-the-module" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Write the module
+        Writing the Module
       
     </span>
   </a>
@@ -2762,10 +2762,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#mount-it-and-register-it" class="md-nav__link">
+  <a href="#mounting-and-registering-the-module" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Mount it and register it
+        Mounting and Registering the Module
       
     </span>
   </a>
@@ -2773,10 +2773,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-the-server-handles-for-you" class="md-nav__link">
+  <a href="#server-responsibilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What the server handles for you
+        Server Responsibilities
       
     </span>
   </a>
@@ -2787,7 +2787,7 @@
   <a href="#reading-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reading data
+        Reading Data
       
     </span>
   </a>
@@ -2798,19 +2798,19 @@
   <a href="#writing-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing data
+        Writing Data
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Writing data">
+    <nav class="md-nav" aria-label="Writing Data">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#choosing-between-query-and-a-transaction" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Choosing between query and a transaction
+        Choosing Between Query and a Transaction
       
     </span>
   </a>
@@ -2821,7 +2821,7 @@
   <a href="#asking-a-human-to-approve-a-write" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Asking a human to approve a write
+        Asking a Human to Approve a Write
       
     </span>
   </a>
@@ -2834,22 +2834,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-controls-that-apply-to-your-extension" class="md-nav__link">
+  <a href="#extension-security-controls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security controls that apply to your extension
+        Extension Security Controls
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Security controls that apply to your extension">
+    <nav class="md-nav" aria-label="Extension Security Controls">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#the-write-scope-is-enforced-for-you" class="md-nav__link">
+  <a href="#write-scope-enforcement" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The write scope is enforced for you
+        Write Scope Enforcement
       
     </span>
   </a>
@@ -2857,10 +2857,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#statements-run-as-the-end-user" class="md-nav__link">
+  <a href="#end-user-execution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Statements run as the end user
+        End-User Execution
       
     </span>
   </a>
@@ -2868,10 +2868,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#the-write_confirmation-setting-does-not-silence-your-prompt" class="md-nav__link">
+  <a href="#confirmation-prompt-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The write_confirmation setting does not silence your prompt
+        Confirmation Prompt Behavior
       
     </span>
   </a>
@@ -2884,10 +2884,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rules-and-gotchas" class="md-nav__link">
+  <a href="#rules-and-caveats" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rules and gotchas
+        Rules and Caveats
       
     </span>
   </a>
@@ -2981,9 +2981,9 @@
 
 <h1 id="extensions">Extensions<a class="headerlink" href="#extensions" title="Permanent link">&para;</a></h1>
 <p>You can extend the Actian MCP Server with <strong>extensions</strong>: your own Python modules that register extra tools, resources, and prompts on the running server, next to the built-in database tools. Use this for business logic you want an AI agent to call through the same endpoint, such as revenue forecasting, compliance checks, or data enrichment.</p>
-<p>An extension <em>adds</em> capabilities. It does not manage the database connection. The server is already connected to your database and already exposes the built-in tools. Your module provides a <code>register()</code> function and reads or writes through the extension API.</p>
+<p>An extension <em>adds</em> capabilities. It does not manage the database connection. The server is already connected to your database and already exposes the built-in tools. The module provides a <code>register()</code> function and reads or writes through the extension API.</p>
 <p>Extensions are supported on Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Actian NoSQL supports extensions through a different interface — Java rather than Python — documented in <a href="../nosql/extensions/index.html">Extensions for Actian NoSQL</a>.</p>
-<h2 id="write-the-module">Write the module<a class="headerlink" href="#write-the-module" title="Permanent link">&para;</a></h2>
+<h2 id="writing-the-module">Writing the Module<a class="headerlink" href="#writing-the-module" title="Permanent link">&para;</a></h2>
 <p>An extension is a normal Python module exposing one required function and two optional hooks:</p>
 <div class="language-python highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">actian_mcp_server.extension_api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_current_user</span><span class="p">,</span>            <span class="c1"># authenticated identity, or None</span>
@@ -2992,10 +2992,10 @@
 <span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>          <span class="c1"># REQUIRED, synchronous</span>
-    <span class="nd">@server</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_tool&quot;</span><span class="p">)</span>
+    <span class="nd">@server</span><span class="o">.</span><span class="n">tool</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"my_tool"</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_tool</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">get_current_user</span><span class="p">()</span>
-        <span class="k">return</span> <span class="s2">&quot;result&quot;</span>
+        <span class="k">return</span> <span class="s2">"result"</span>
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">):</span> <span class="o">...</span>           <span class="c1"># OPTIONAL, open resources at startup</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">teardown</span><span class="p">():</span> <span class="o">...</span>              <span class="c1"># OPTIONAL, release them at shutdown</span>
@@ -3003,11 +3003,11 @@
 <p><code>register(server, config)</code> is called once at startup. Register your tools, resources, and prompts there exactly as you would on any FastMCP server.</p>
 <p>Implement <code>setup(config)</code> and <code>teardown()</code> only if your extension owns something that needs an explicit open and close, such as an HTTP client, a cache, or a connection pool of your own. Either may be <code>async</code> or plain.</p>
 <div class="admonition note">
-<p class="admonition-title">Your config never contains secrets</p>
+<p class="admonition-title">Configuration never contains secrets</p>
 <p>The <code>config</code> argument holds the <code>config</code> block you set in <code>conf.json</code> plus a short list of non-secret values (<code>dbms</code>, <code>max_rows</code>, <code>transport</code>). It never contains the database password, the connection string, or OAuth secrets.</p>
 </div>
 <p>Give your tools schema-friendly signatures: typed parameters, and no <code>*args</code> or <code>**kwargs</code>.</p>
-<h2 id="mount-it-and-register-it">Mount it and register it<a class="headerlink" href="#mount-it-and-register-it" title="Permanent link">&para;</a></h2>
+<h2 id="mounting-and-registering-the-module">Mounting and Registering the Module<a class="headerlink" href="#mounting-and-registering-the-module" title="Permanent link">&para;</a></h2>
 <p>Mount your module into the server's extensions directory, <code>/app/extensions</code>, as a volume. The server makes that directory importable:</p>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-v<span class="w"> </span>./revenue_forecast.py:/app/extensions/revenue_forecast.py:ro<span class="w"> </span><span class="se">\</span>
@@ -3017,11 +3017,11 @@
 </code></pre></div>
 <p>Then list it by module name in <code>conf.json</code>. Paths are not used, because the location is fixed:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;simple_extension&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"extensions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"module"</span><span class="p">:</span><span class="w"> </span><span class="s2">"simple_extension"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;revenue_forecast&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;api_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://forecast.example.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"module"</span><span class="p">:</span><span class="w"> </span><span class="s2">"revenue_forecast"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"api_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://forecast.example.com"</span><span class="p">,</span><span class="w"> </span><span class="nt">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
@@ -3048,7 +3048,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="what-the-server-handles-for-you">What the server handles for you<a class="headerlink" href="#what-the-server-handles-for-you" title="Permanent link">&para;</a></h2>
+<h2 id="server-responsibilities">Server Responsibilities<a class="headerlink" href="#server-responsibilities" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -3075,19 +3075,19 @@
 </tr>
 </tbody>
 </table>
-<h2 id="reading-data">Reading data<a class="headerlink" href="#reading-data" title="Permanent link">&para;</a></h2>
+<h2 id="reading-data">Reading Data<a class="headerlink" href="#reading-data" title="Permanent link">&para;</a></h2>
 <p>Reach the database only through <code>get_database()</code>. You never receive a connection, pool, cursor, or credentials.</p>
 <div class="language-python highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">actian_mcp_server.extension_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_database</span>
 
 <span class="n">db</span> <span class="o">=</span> <span class="n">get_database</span><span class="p">()</span>
-<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM orders WHERE id = ?&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">order_id</span><span class="p">])</span>
-<span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]:</span>
-    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">]:</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"SELECT * FROM orders WHERE id = ?"</span><span class="p">,</span> <span class="p">[</span><span class="n">order_id</span><span class="p">])</span>
+<span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">"success"</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">"rows"</span><span class="p">]:</span>
         <span class="o">...</span>
 </code></pre></div>
 <p>Always bind user input to <code>?</code> placeholders rather than building SQL strings.</p>
-<p><code>query()</code> runs one read, works in read-only mode, and behaves the same on every supported database. It is asynchronous, so <code>await</code> it. For table and column metadata, select from your engine's system catalogs.</p>
-<h2 id="writing-data">Writing data<a class="headerlink" href="#writing-data" title="Permanent link">&para;</a></h2>
+<p><code>query()</code> runs one read, works in read-only mode, and behaves the same on every supported database. It is asynchronous, so <code>await</code> it. For table and column metadata, select from the engine's system catalogs.</p>
+<h2 id="writing-data">Writing Data<a class="headerlink" href="#writing-data" title="Permanent link">&para;</a></h2>
 <p>There is no one-shot write. Every write goes through a transaction opened with <code>get_database().transaction()</code>. A single write is a one-statement transaction, and several statements run all or nothing. A transaction pins one connection for its lifetime.</p>
 <p>Set <code>"query_mode": "read-write"</code> in <code>conf.json</code> to allow writes. The default is <code>read-only</code>, and in that mode starting a transaction raises and nothing is written. See <a href="../intro/write-support.html">Write support</a>.</p>
 <p>The recommended form is the asynchronous context manager. It commits on a clean exit, rolls back if anything raises, and always releases the connection:</p>
@@ -3095,15 +3095,15 @@
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_sale</span><span class="p">(</span><span class="n">customer_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">get_database</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">()</span> <span class="k">as</span> <span class="n">tx</span><span class="p">:</span>
-        <span class="k">await</span> <span class="n">tx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;INSERT INTO orders (customer_id, amount) VALUES (?, ?)&quot;</span><span class="p">,</span>
+        <span class="k">await</span> <span class="n">tx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"INSERT INTO orders (customer_id, amount) VALUES (?, ?)"</span><span class="p">,</span>
                        <span class="p">[</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">])</span>
-        <span class="k">await</span> <span class="n">tx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;UPDATE customer_revenue SET total_revenue = total_revenue + ? &quot;</span>
-                       <span class="s2">&quot;WHERE customer_id = ?&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">amount</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">])</span>
+        <span class="k">await</span> <span class="n">tx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"UPDATE customer_revenue SET total_revenue = total_revenue + ? "</span>
+                       <span class="s2">"WHERE customer_id = ?"</span><span class="p">,</span> <span class="p">[</span><span class="n">amount</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">])</span>
         <span class="n">rows</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tx</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
-            <span class="s2">&quot;SELECT total_revenue FROM customer_revenue WHERE customer_id = ?&quot;</span><span class="p">,</span>
+            <span class="s2">"SELECT total_revenue FROM customer_revenue WHERE customer_id = ?"</span><span class="p">,</span>
             <span class="p">[</span><span class="n">customer_id</span><span class="p">])</span>          <span class="c1"># reads see the uncommitted changes</span>
     <span class="c1"># reached only if both writes succeeded and the transaction committed</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;new_total&quot;</span><span class="p">:</span> <span class="n">rows</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"success"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"new_total"</span><span class="p">:</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"rows"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]}</span>
 </code></pre></div>
 <p>You can also drive it explicitly when you need step-by-step control:</p>
 <div class="language-python highlight"><pre><span></span><code><span class="n">tx</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_database</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">()</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
@@ -3114,7 +3114,7 @@
     <span class="k">await</span> <span class="n">tx</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
     <span class="k">raise</span>
 </code></pre></div>
-<h3 id="choosing-between-query-and-a-transaction">Choosing between query and a transaction<a class="headerlink" href="#choosing-between-query-and-a-transaction" title="Permanent link">&para;</a></h3>
+<h3 id="choosing-between-query-and-a-transaction">Choosing Between Query and a Transaction<a class="headerlink" href="#choosing-between-query-and-a-transaction" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -3143,41 +3143,41 @@
 <p><code>db.query()</code> returns <code>{"success": false, ...}</code> on failure, but a transaction's <code>query()</code> and <code>write()</code> <strong>raise</strong>. That is deliberate: a failed statement aborts the whole transaction. Under <code>async with</code> it rolls back for you.</p>
 </div>
 <p><code>tx.write()</code> runs <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>. Data Definition Language (DDL) and administrative statements such as <code>SET</code> are refused, as they are for reads. A transaction left neither committed nor rolled back is rolled back by a watchdog, five minutes by default, so the connection cannot leak. Prefer <code>async with</code>, which releases promptly.</p>
-<h3 id="asking-a-human-to-approve-a-write">Asking a human to approve a write<a class="headerlink" href="#asking-a-human-to-approve-a-write" title="Permanent link">&para;</a></h3>
-<p>Writes are not confirmed automatically. You decide where approval belongs: call <code>request_write_confirmation()</code> and write only if it returns <code>True</code>. That lets you confirm once for a batch, attach your own context, or skip confirmation in a trusted automated flow.</p>
+<h3 id="asking-a-human-to-approve-a-write">Asking a Human to Approve a Write<a class="headerlink" href="#asking-a-human-to-approve-a-write" title="Permanent link">&para;</a></h3>
+<p>Writes are not confirmed automatically. You decide where approval belongs: call <code>request_write_confirmation()</code> and write only if it returns <code>True</code>. That lets you confirm once for a batch, attach additional context, or skip confirmation in a trusted automated flow.</p>
 <div class="language-python highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">actian_mcp_server.extension_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_database</span><span class="p">,</span> <span class="n">request_write_confirmation</span>
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">tag_vip</span><span class="p">(</span><span class="n">customer_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">approved</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request_write_confirmation</span><span class="p">(</span>
-        <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Tag customer </span><span class="si">{</span><span class="n">customer_id</span><span class="si">}</span><span class="s2"> as VIP&quot;</span><span class="p">,</span>
-        <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;table&quot;</span><span class="p">:</span> <span class="s2">&quot;customers&quot;</span><span class="p">,</span> <span class="s2">&quot;customer_id&quot;</span><span class="p">:</span> <span class="n">customer_id</span><span class="p">},</span>
+        <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Tag customer </span><span class="si">{</span><span class="n">customer_id</span><span class="si">}</span><span class="s2"> as VIP"</span><span class="p">,</span>
+        <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">"table"</span><span class="p">:</span> <span class="s2">"customers"</span><span class="p">,</span> <span class="s2">"customer_id"</span><span class="p">:</span> <span class="n">customer_id</span><span class="p">},</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">approved</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Write rejected by user&quot;</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"success"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"error"</span><span class="p">:</span> <span class="s2">"Write rejected by user"</span><span class="p">}</span>
 
     <span class="k">async</span> <span class="k">with</span> <span class="n">get_database</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">()</span> <span class="k">as</span> <span class="n">tx</span><span class="p">:</span>
-        <span class="k">await</span> <span class="n">tx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;UPDATE customers SET vip = 1 WHERE customer_id = ?&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">customer_id</span><span class="p">])</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+        <span class="k">await</span> <span class="n">tx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"UPDATE customers SET vip = 1 WHERE customer_id = ?"</span><span class="p">,</span> <span class="p">[</span><span class="n">customer_id</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"success"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
 </code></pre></div>
 <p>It returns <code>True</code> only on explicit approval. A decline, a timeout, or a client that cannot show the prompt all return <code>False</code>, so "proceed only if <code>True</code>" is safe. You can also use it to gate a non-SQL action, such as an external API call that changes something.</p>
-<h2 id="security-controls-that-apply-to-your-extension">Security controls that apply to your extension<a class="headerlink" href="#security-controls-that-apply-to-your-extension" title="Permanent link">&para;</a></h2>
+<h2 id="extension-security-controls">Extension Security Controls<a class="headerlink" href="#extension-security-controls" title="Permanent link">&para;</a></h2>
 <p>An extension does not run with the server's own privileges. Three controls apply whether or not you write any code for them.</p>
-<h3 id="the-write-scope-is-enforced-for-you">The write scope is enforced for you<a class="headerlink" href="#the-write-scope-is-enforced-for-you" title="Permanent link">&para;</a></h3>
-<p>When OAuth is enabled, starting a transaction requires the caller's access token to carry the <code>mcp:write</code> scope. Without it the transaction raises and nothing is written. Reads need no extra scope. You do not call anything to get this behavior. Grant <code>mcp:write</code> to the users allowed to write, as described for <a href="../authentication/auth0/index.html">Auth0</a> and <a href="../authentication/keycloak/index.html">Keycloak</a>.</p>
-<p>For your own finer-grained checks, read the token's scopes with <code>has_scope()</code> or <code>get_current_scopes()</code>. Both return values only in read-write mode.</p>
-<h3 id="statements-run-as-the-end-user">Statements run as the end user<a class="headerlink" href="#statements-run-as-the-end-user" title="Permanent link">&para;</a></h3>
-<p>On Ingres, Analytics Engine, and Informix, your statements run as the authenticated user, not as the server's service account. Zen authenticates through the connection, so statements there run as the configured account.</p>
+<h3 id="write-scope-enforcement">Write Scope Enforcement<a class="headerlink" href="#write-scope-enforcement" title="Permanent link">&para;</a></h3>
+<p>The write scope is enforced automatically. When OAuth is enabled, starting a transaction requires the caller's access token to carry the <code>mcp:write</code> scope. Without it the transaction raises and nothing is written. Reads need no extra scope. No action is required to enable this behavior. Grant <code>mcp:write</code> to the users allowed to write, as described for <a href="../authentication/auth0/index.html">Auth0</a> and <a href="../authentication/keycloak/index.html">Keycloak</a>.</p>
+<p>For finer-grained checks, read the token's scopes with <code>has_scope()</code> or <code>get_current_scopes()</code>. Both return values only in read-write mode.</p>
+<h3 id="end-user-execution">End-User Execution<a class="headerlink" href="#end-user-execution" title="Permanent link">&para;</a></h3>
+<p>Statements run as the end user. On Ingres, Analytics Engine, and Informix, your statements run as the authenticated user, not as the server's service account. Zen authenticates through the connection, so statements there run as the configured account.</p>
 <div class="admonition warning">
 <p class="admonition-title">Your extension is bounded by the user's own privileges</p>
 <p>Because statements run as the end user, that user needs the table privileges your extension relies on, and your extension cannot read or write anything the user could not reach directly. When impersonation is required but the user cannot be resolved, the transaction is <strong>rejected</strong> rather than falling back to the service account.</p>
 </div>
-<h3 id="the-write_confirmation-setting-does-not-silence-your-prompt">The write_confirmation setting does not silence your prompt<a class="headerlink" href="#the-write_confirmation-setting-does-not-silence-your-prompt" title="Permanent link">&para;</a></h3>
-<p>If your extension calls <code>request_write_confirmation()</code>, the prompt always appears. The <code>write_confirmation</code> setting in <code>conf.json</code> applies only to the server's built-in write tools. This works both ways:</p>
+<h3 id="confirmation-prompt-behavior">Confirmation Prompt Behavior<a class="headerlink" href="#confirmation-prompt-behavior" title="Permanent link">&para;</a></h3>
+<p>The <code>write_confirmation</code> setting does not silence the extension's prompt. If your extension calls <code>request_write_confirmation()</code>, the prompt always appears. The <code>write_confirmation</code> setting in <code>conf.json</code> applies only to the server's built-in write tools. This works both ways:</p>
 <ul>
 <li>You cannot use that setting to skip an approval step your extension asked for.</li>
 <li>Turning it on for a client that cannot display prompts does not silently approve your extension's writes. Those writes still fail closed.</li>
 </ul>
-<h2 id="rules-and-gotchas">Rules and gotchas<a class="headerlink" href="#rules-and-gotchas" title="Permanent link">&para;</a></h2>
+<h2 id="rules-and-caveats">Rules and Caveats<a class="headerlink" href="#rules-and-caveats" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">A bad extension stops the server from starting</p>
 <p>This is deliberate. A misconfigured extension never leaves the server running in a quietly degraded state with fewer tools than you configured. Startup aborts if a module cannot be imported, does not define <code>register()</code>, raises during <code>register()</code>, or registers a tool whose name matches a built-in tool or an earlier extension. Any tools that extension already registered are rolled back first.</p>
@@ -3198,12 +3198,12 @@
 <td>No hot reload</td>
 <td>Extensions load at startup. Restart the server to pick up changes.</td>
 </tr>
-<tr>
-<td>Trust model</td>
-<td>Extensions run in the same process with full Python access. Load only extensions you trust, the same way you would treat installing a Python package. Hiding the connection details is encapsulation, not a sandbox.</td>
-</tr>
 </tbody>
 </table>
+<div class="admonition important">
+<p class="admonition-title">Trust model</p>
+<p>Extensions run in the same process with full Python access. Load only extensions you trust, the same way you would treat installing a Python package. Hiding the connection details is encapsulation, not a sandbox.</p>
+</div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -3241,7 +3241,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 12, 2026 16:52:49 UTC">August 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
   </span>
 
     
