@@ -528,6 +528,66 @@ html .md-footer-meta.md-typeset a:focus {
   padding-bottom: 0;
 }
 
+/* ---- Numbered steps (e.g. the MCP Server Deployment section) ---- */
+.steps-container {
+  counter-reset: step;
+  margin: 1.5rem 0;
+  padding: 0;
+}
+.step-item {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 1.5rem 3.25rem;
+}
+/* Numbered badge for each step */
+.step-item::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--actian-blue);
+  border-radius: 50%;
+  z-index: 1;
+}
+/* Vertical connector line linking consecutive badges */
+.step-item::after {
+  content: "";
+  position: absolute;
+  left: calc(1.1rem - 1px);
+  top: 2.2rem;
+  bottom: 0;
+  width: 2px;
+  background: var(--md-default-fg-color--lightest);
+}
+.step-item:last-child {
+  padding-bottom: 0;
+}
+.step-item:last-child::after {
+  display: none;
+}
+.step-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0.2rem 0 0.35rem 0;
+  padding-bottom: 0;
+  color: var(--md-default-fg-color);
+}
+.step-description {
+  font-size: 16px;
+  line-height: 26px;
+  margin: 0;
+  padding-bottom: 0;
+  color: var(--md-default-fg-color--light);
+}
+
 /* ---- Get Started section ---- */
 .get-started-section {
   width: 100%;
