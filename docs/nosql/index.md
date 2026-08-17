@@ -1,11 +1,11 @@
 ---
 title: Actian NoSQL Database
-description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Databases for schema discovery, read-only JPQL queries, optional write support, and your own Java extensions.
+description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Databases for schema discovery, read-only JPQL queries, optional write support, and custom Java extensions.
 ---
 
 # Actian MCP Server for NoSQL
 
-Connect your MCP-compatible client to Actian NoSQL Database using the Actian MCP Server. Once configured, clients can explore schema metadata, execute read-only JPQL queries, and inspect the full details of retrieved persistent objects. Object writes and your own Java extensions are available as well, both off until an operator turns them on.
+Connect your MCP-compatible client to Actian NoSQL Database using the Actian MCP Server. Once configured, clients can explore schema metadata, execute read-only JPQL queries, and inspect the full details of retrieved persistent objects. Object writes and custom Java extensions are also available, both turned off until an operator enables them.
 
 ## Capabilities
 
@@ -17,17 +17,17 @@ The Actian NoSQL MCP Server supports the following operations:
 | **Run JPQL queries** | Execute read-only queries against your database. |
 | **Retrieve objects by ID** | Fetch one or many objects directly by LOID for the fastest retrieval path. |
 | **Write data** | Create, update, and delete objects, when write support is enabled. |
-| **Extend the server** | Add your own tools, resources, and prompts with a Java extension JAR. |
+| **Extend the server** | Add custom tools, resources, and prompts with a Java extension JAR. |
 
 ### Write Support
 
-The server is read-only until writes are turned on for it. Once they are, tools for creating, updating, and deleting objects join the read-only ones, each running as a single all-or-nothing transaction. Every call then passes [three independent checks](write-support.md#what-each-call-must-clear): writes must be on, the caller's token must carry the `mcp:write` scope when authentication is enabled, and a person must approve the operation in the connected client.
+The server is read-only until writes are turned on. Once they are, tools for creating, updating, and deleting objects join the read-only ones, each running as a single all-or-nothing transaction. Every call then passes [three independent checks](write-support.md#what-each-call-must-clear): writes must be on, the caller's token must carry the `mcp:write` scope when authentication is enabled, and a person must approve the operation in the connected client.
 
-[Write support](write-support.md) covers all three, plus [why the write tools may be missing from a client's tool list](write-support.md#why-the-write-tools-may-not-appear) and how object versions stop one client overwriting another's change.
+[Write support](write-support.md) covers all three, plus [why the write tools may be missing from a client's tool list](write-support.md#missing-write-tools) and how object versions stop one client overwriting another's change.
 
 ### Extensions
 
-An extension is a Java JAR that adds your own tools, resources, resource templates, and prompts to a running server — no fork, and no rebuild of the product. The server loads only the JARs an operator has declared in an allowlist, with each one's SHA-256 digest pinned by default. An extension's write tools pass the same checks the built-in ones do.
+An extension is a Java JAR that adds custom tools, resources, resource templates, and prompts to a running server — no fork, and no rebuild of the product. The server loads only the JARs an operator has declared in an allowlist, with each one's SHA-256 digest pinned by default. An extension's write tools pass the same checks the built-in ones do.
 
 [Extensions](extensions/index.md) covers authoring, the Extension SDK, deployment, and the trust model.
 
@@ -124,7 +124,7 @@ Once the container is running, connect the MCP client to the exposed server endp
 
 The following example demonstrates how to connect to a running Actian MCP Server for Actian NoSQL using the [FastMCP](https://pypi.org/project/fastmcp/) Python client.
 
-Both examples below read. To write, the client must also be able to answer the server's confirmation prompt, which it can do only if you give it an elicitation handler — see [Answering the prompt from a Python client](write-support.md#answering-the-prompt-from-a-python-client).
+Both examples below perform reads only. To write, the client must also be able to answer the server's confirmation prompt, which it can do only if you give it an elicitation handler — see [Answering the prompt from a Python client](write-support.md#answering-the-prompt-from-a-python-client).
 
 ### Client Prerequisites
 
@@ -276,6 +276,6 @@ if __name__ == "__main__":
   Use pre-built prompt templates for common workflows.
 
 - :material-puzzle: **[Extensions](extensions/index.md)**  
-  Add your own tools, resources, and prompts with a Java extension JAR.
+  Add custom tools, resources, and prompts with a Java extension JAR.
 
 </div>

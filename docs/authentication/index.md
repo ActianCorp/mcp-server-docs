@@ -76,14 +76,14 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 !!! info "Scopes"
     For read access you do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
 
-    If you set `query_mode` to `read-write`, the server also requests the `mcp:write` scope, and a token without it cannot perform writes. You must define that scope in your identity provider first. See [Write support](../intro/write-support.md) for how writes are authorized, and [Auth0](auth0/index.md) or [Keycloak](keycloak/index.md) for the setup steps.
+    If you set `query_mode` to `read-write`, the server also requests the `mcp:write` scope, and a token without it cannot perform writes. You must define that scope in the identity provider first. See [Write support](../intro/write-support.md) for how writes are authorized, and [Auth0](auth0/index.md) or [Keycloak](keycloak/index.md) for the setup steps.
 
 
 ## User Impersonation
 
 By default, the `user_impersonation` field is set to `true`. The server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
 
-Impersonation covers extension-authored tools as well as the built-in ones, so an extension is also bounded by the end user's own database privileges. See [Extensions](../extensions/index.md#statements-run-as-the-end-user).
+Impersonation covers extension-authored tools as well as the built-in ones, so an extension is also bounded by the end user's database privileges. See [Extensions](../extensions/index.md#end-user-execution).
 
 |  user_impersonation | Server |
 | :------------------- | :------- |
@@ -151,7 +151,7 @@ chmod 600 server.key
 ### Step 2: Configure TLS in `conf.json`
 
 !!! note "TLS configuration for NoSQL"
-    The Actian MCP Server for NoSQL uses different configuration properties. See [NoSQL TLS guide](../nosql/authentication/index.md#tls) for more information.
+    The Actian MCP Server for NoSQL uses different configuration properties. See [NoSQL TLS guide](../nosql/authentication/index.md#secure-remote-deployments-with-https-and-tls) for more information.
 
 Add the `ssl_certfile` certificate and `ssl_keyfile` key paths to the top level of the `conf.json` file (outside the `oauth` block). Ensure the usage of `https://` in `BASE_URL`:
 

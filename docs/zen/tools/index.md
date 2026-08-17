@@ -13,7 +13,7 @@ two deployments. See [Write support](../../intro/write-support.md).
 
 | Tool | `read-only` | `read-write` | Description |
 |------|:-----------:|:------------:|-------------|
-| [`execute_query`](#execute_query) | ✓ | ✓ | Runs `SELECT` with automatic Zen dialect translation. Never writes, in either mode. |
+| [`execute_query`](#execute_query) | ✓ | ✓ | Runs `SELECT` with automatic Zen dialect translation. Never writes in either mode. |
 | [`list_tables`](#list_tables) | ✓ | ✓ | Lists all user tables from the Zen catalog. |
 | [`describe_table`](#describe_table) | ✓ | ✓ | Returns column metadata, primary keys, and foreign keys for a table. |
 | [`orm_operation`](#orm_operation) | ✓ select | ✓ select, insert, update, delete | Structured queries via SQLAlchemy with JOINs, WHERE, ORDER BY, GROUP BY, and LIMIT. |
@@ -24,11 +24,11 @@ two deployments. See [Write support](../../intro/write-support.md).
 !!! note "Enabling write mode removes two tools"
     `blob_operation` and `database_manage` are registered in `read-only` mode only. A `read-write`
     server does not expose them, and they will not appear in the client's tool list. This is
-    deliberate, not a packaging fault.
+    intentional.
 
 Writes are authorized by the `mcp:write` scope and a human approval prompt, both described in
-[Write support](../../intro/write-support.md). Data Definition Language, explicit transactions and
-bulk `batch_operation` are not available in any mode this release ships.
+[Write support](../../intro/write-support.md). Data Definition Language, explicit transactions, and
+bulk `batch_operation` are not available in any mode in this release.
 
 ---
 
@@ -39,7 +39,7 @@ Executes a read-only SQL query against Actian Zen with automatic dialect transla
 !!! warning "This tool never writes, even in read-write mode"
     Unlike the Ingres and Analytics Engine servers, where the same tool performs writes once
     `query_mode` is `read-write`, Zen accepts `SELECT` here in every mode. DML sent to
-    `execute_query` is rejected with a pointer to the tool that does the work:
+    `execute_query` is rejected with a pointer to the tool that performs the write:
 
     ```json
     {
@@ -49,7 +49,7 @@ Executes a read-only SQL query against Actian Zen with automatic dialect transla
     }
     ```
 
-    Data Definition Language is rejected the same way, and is not enabled by any mode:
+    Data Definition Language is rejected the same way, and is not enabled in any mode:
 
     ```json
     {
@@ -298,10 +298,10 @@ In `read-write` mode this tool also performs single-row writes. Those go through
 Runs a single Data Manipulation Language statement — `INSERT`, `UPDATE`, `DELETE`, or `MERGE`.
 Registered only when `query_mode` is `read-write`.
 
-Every call is checked for the `mcp:write` scope and then put to a human for approval before it
+Every call is checked for the `mcp:write` scope and then submitted for human approval before it
 reaches the database. See [Write support](../../intro/write-support.md).
 
-!!! tip "A conditional write is counted before you approve it"
+!!! tip "A conditional write is counted before approval"
     For an `UPDATE` or `DELETE` with a `WHERE` clause, the server runs `SELECT COUNT(*)` with the
     same predicate first and states the result in the approval prompt:
 
@@ -309,9 +309,9 @@ reaches the database. See [Write support](../../intro/write-support.md).
     DML (58 row(s) currently match): DELETE FROM Person WHERE Last_Name LIKE 'S%'
     ```
 
-    A `WHERE` clause reads the same whether it matches three rows or three million, so the count is
-    what makes the decision meaningful. It is an estimate taken just before execution, and it is
-    best effort — a statement the server cannot analyse still reaches the prompt, showing the
+    A `WHERE` clause looks the same regardless of how many rows it matches, so the count is what
+    makes the approval decision meaningful. It is an estimate taken just before execution, and it is
+    best effort — a statement the server cannot analyze still reaches the prompt, showing the
     statement text alone.
 
 !!! note "Statements rejected before anyone is asked to approve them"
@@ -320,8 +320,8 @@ reaches the database. See [Write support](../../intro/write-support.md).
     - Multiple statements in one call
     - Data Definition Language — deferred, not permitted in this release
 
-    These are refused on inspection, so no approval prompt appears. A prompt that never appears
-    therefore does not on its own mean the write was declined.
+    These are refused on inspection, so no approval prompt appears. A missing prompt therefore does
+    not by itself mean the write was declined.
 
 ### Parameters
 
@@ -370,9 +370,6 @@ reaches the database. See [Write support](../../intro/write-support.md).
   "method": "execute_write_query"
 }
 ```
-
----
-
 
 ---
 
@@ -512,6 +509,6 @@ Provides server management operations: list available databases, list DSNs with 
   Use the built-in prompt templates for common workflows.
 
 - :material-pencil: **[Write support](../../intro/write-support.md)**  
-  Turn on `query_mode`, and the scope and approval checks every write passes.
+  Turn on `query_mode`, and see the scope and approval checks every write passes.
 
 </div>

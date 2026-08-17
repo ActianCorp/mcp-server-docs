@@ -16,7 +16,7 @@ By the completion of this guide, you will have obtained the issuer URL needed fo
     [Auth0 OpenID Connect documentation](https://auth0.com/docs/authenticate/protocols/openid-connect-protocol)
 
 
-## Quick Start 
+## Quick Start
 
 1. **Create a Database Connection:** Navigate to **Authentication > Database > + Create DB Connection** if one does not exist.
 2. **Create users:** Navigate to **User Management > Users > + Create User** for individuals who will log in via the Authorization Code flow.
@@ -83,7 +83,7 @@ The API represents the Actian MCP Server as a protected resource in Auth0. Token
 
 Skip this step when `nsql.writes.enabled` is `false`. A read-only server never inspects the scope.
 
-In write mode, every write call is checked for the `mcp:write` scope, and a token without it is turned away. Auth0 models that scope as a **permission** on the API, so this step defines it and turns on the setting that lets Auth0 issue it. Who actually receives it is settled later, per application, in [Grant API Access](#grant-api-access). For what the server does with the scope, see [Write support](../../write-support.md#what-each-call-must-clear).
+In write mode, the server checks every write call for the `mcp:write` scope and rejects a token that lacks it. Auth0 models that scope as a **permission** on the API, so this step defines the permission and turns on the setting that lets Auth0 issue it. You choose which applications receive it later, in [Grant API Access](#grant-api-access). For what the server does with the scope, see [Write support](../../write-support.md#what-each-call-must-clear).
 
 #### Define the Permission
 
@@ -97,25 +97,25 @@ In write mode, every write call is checked for the `mcp:write` scope, and a toke
 
 #### Enable RBAC
 
-On the API's **Settings** tab, scroll to **RBAC Settings**, turn on **Enable RBAC**, and select **Save**. With RBAC on, Auth0 checks what the caller actually holds before it fills the token's `scope` claim, which is the claim the server reads. Leave it off and the grant is ignored, so `mcp:write` never arrives.
+On the API's **Settings** tab, scroll to **RBAC Settings**, turn on **Enable RBAC**, and select **Save**. With RBAC on, Auth0 checks what the caller holds before it fills the token's `scope` claim, which is the claim the server reads. If you leave RBAC off, Auth0 ignores the grant, and `mcp:write` never reaches the token.
 
 !!! note "**Add Permissions in the Access Token** is not needed"
-    That neighbouring toggle adds the same grants to a separate `permissions` claim. This server never reads it — the only claim it inspects is `scope`. Turning it on does no harm if something else in your estate wants it.
+    That neighboring toggle adds the same grants to a separate `permissions` claim. This server never reads that claim; the only claim it inspects is `scope`. Turning the toggle on causes no harm if another system in your environment needs it.
 
 #### Grant It Through a Role
 
-A role is how an interactive user comes to hold the permission. Skip this if you only use the Client Credentials flow, which has no user.
+A role is how an interactive user receives the permission. Skip this section if you use only the Client Credentials flow, which has no user.
 
 1. Navigate to **User Management > Roles** and select **+ Create Role**. Name it, for example `NoSQL MCP Writer`, and select **Create**.
 2. On the role's **Permissions** tab, select **Add Permissions**, choose your API, select `mcp:write`, and add it.
 3. On the role's **Users** tab, select **Add Users** and assign everyone who is allowed to write.
 
-Users outside that role keep working exactly as before — they read normally, and a write attempt is rejected naming the missing scope. Because the grant is per user, nobody obtains write access simply by asking for it.
+Users outside that role continue to work as before: they read normally, and the server rejects a write attempt, naming the missing scope. Because the grant is per user, nobody obtains write access by asking for it.
 
 !!! note "Creating the permission gives it to nobody"
-    Defining `mcp:write` on the API only makes it available to grant. Two separate things put it in a token: the application has to be allowed to request it, which you set per application in [Grant API Access](#grant-api-access), and an interactive user has to hold it through the role above.
+    Defining `mcp:write` on the API only makes it available to grant. Two separate things put it in a token: the application must be allowed to request it, which you set per application in [Grant API Access](#grant-api-access), and an interactive user must hold it through the role above.
 
-Auth0 is now willing to issue the scope, but no client will ask for it until the server advertises it. That is a server setting, covered in [Step 6](#step-6-configure-and-start-the-server).
+Auth0 can now issue the scope, but no client requests it until the server advertises it. That is a server setting, covered in [Step 6](#step-6-configure-and-start-the-server).
 
 ## Step 4: Create an Auth0 Application
 
@@ -151,7 +151,7 @@ Select **Save**.
 
 ### Grant API Access
 
-This is where you allow the application to request tokens for the API, and choose which permissions it may ask for.
+This step allows the application to request tokens for the API and to choose which permissions it may request.
 
 1. Go to the **API Access** tab of the application.
 2. Select the **Actian MCP Server** API created in [Step 3](#step-3-create-an-auth0-api). A panel opens with two tabs, each covering a different kind of access:
@@ -165,7 +165,7 @@ This is where you allow the application to request tokens for the API, and choos
 4. In write mode, select `mcp:write` from the permission list, then select **Save**.
 
 !!! note "Both flows need this, and the interactive one needs a role as well"
-    The permission list controls what the application is *allowed to request*. For Client Credentials that is the entire grant, because there is no user whose role could carry it. For the Authorization Code flow it is only half: the signed-in user must also hold `mcp:write` through the role created in [Step 3.1](#step-31-add-the-write-scope-write-mode-only), or the token comes back without the scope.
+    The permission list controls what the application is *allowed to request*. For Client Credentials that is the entire grant, because there is no user whose role could carry it. For the Authorization Code flow it is only half: the signed-in user must also hold `mcp:write` through the role created in [Step 3.1](#step-31-add-the-write-scope-write-mode-only), or the token is issued without the scope.
 
 ### Output of Step 4
 
@@ -201,9 +201,9 @@ The Actian MCP Server requires the Auth0 issuer URL to validate incoming tokens.
     The issuer URL format is `https://<your-domain>/`. You can find the `<your-domain>` domain at the top of the **Settings** tab for any application. For example, `dev-abc123.us.auth0.com`.
 
 !!! caution "Set the scopes list in write mode"
-    Auth0 does not list custom API permissions in its OIDC discovery document, so a client working its scopes out by discovery never learns `mcp:write` exists from Auth0 itself. Advertising it here is what makes the client ask, and without it the whole Auth0 configuration from [Step 3.1](#step-31-add-the-write-scope-write-mode-only) stays invisible — the client authenticates cleanly and still cannot write.
+    Auth0 does not list custom API permissions in its OIDC discovery document, so a client that discovers its scopes never learns from Auth0 that `mcp:write` exists. Advertising the scope here is what makes the client request it. Without it, the whole Auth0 configuration from [Step 3.1](#step-31-add-the-write-scope-write-mode-only) stays invisible: the client authenticates cleanly and still cannot write.
 
-    A read-only server can leave the property unset. Auth0 issues a token without the scopes it will not grant rather than refusing the request, so a client that asks for more than it can have still authenticates. That makes this a write-mode concern on Auth0, unlike Keycloak, where it is worth setting either way. For the mechanism, see [Advertising scopes to MCP clients](../index.md#advertising-scopes-to-mcp-clients).
+    A read-only server can leave the property unset. Auth0 issues a token without the scopes it will not grant, rather than refusing the request, so a client that requests more than it can obtain still authenticates. This is therefore a write-mode concern on Auth0, unlike Keycloak, where you should set it either way. For the mechanism, see [Advertising scopes to MCP clients](../index.md#advertising-scopes-to-mcp-clients).
 
 ### Example `application.properties`
 
@@ -240,7 +240,7 @@ For automated clients using the Machine to Machine application:
 3. The client includes the Bearer token in all requests to the MCP server.
 4. The server validates the token signature against Auth0's JWKS endpoint and grants access.
 
-## Staging versus Production
+## Staging Versus Production
 
 | Environment | Recommendation |
 |---|---|

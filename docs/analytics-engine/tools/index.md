@@ -15,7 +15,7 @@ Use the following tools to interact with the database:
 
 | Tool | Description |
 |------|-------------|
-| [`execute_query`](#execute_query) | Runs a SQL query against the connected database. Reads always, writes when the server permits them. |
+| [`execute_query`](#execute_query) | Runs a SQL query against the connected database. Reads run at any time; writes run only when the server permits them. |
 | [`list_tables`](#list_tables) | Lists all available user tables and views. |
 | [`describe_table`](#describe_table) | Returns column definitions and comments for a specific table. |
 | [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
@@ -93,7 +93,7 @@ Show me all the rows in the customers table
 
 ### Example: Writing a Row
 
-This example needs `query_mode` set to `read-write`.
+This example requires `query_mode` set to `read-write`.
 
 **Request**
 
@@ -107,7 +107,7 @@ Add a customer named Contoso Supply
 }
 ```
 
-Before running the statement, the server asks you to approve it in your client. The response depends on your answer.
+Before running the statement, the server asks you to approve it in the client. The response depends on your answer.
 
 **Response, when you approve**
 
@@ -218,7 +218,7 @@ Returns schema details for a specific table, including column names, data types,
 | `table_name` | `string` | ✓ | Name of the table to describe. Accepts a plain name, such as `orders`, or an owner-qualified name, such as `actian.customers`. |
 
 !!! tip "Qualify the name when several owners have the same table"
-    Given a plain name, the server describes your own table if you own one with that name. Otherwise it picks one of the other owners. Pass `owner.table` to describe a specific one.
+    Given a plain name, the server describes the table you own if one exists with that name. Otherwise it selects one belonging to another owner. Pass `owner.table` to describe a specific one.
 
 ### Output Schema
 
