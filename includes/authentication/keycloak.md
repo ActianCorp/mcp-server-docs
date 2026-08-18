@@ -7,7 +7,7 @@ description: Step-by-step guide to configure Keycloak as the OAuth identity prov
 
 This guide describes the creation and configuration of a Keycloak Realm, Client, and Audience Mapper. It enables the Actian MCP Server to authenticate users through OAuth 2.0 and OpenID Connect (OIDC). 
 
-By the completion of this guide, you will have obtained the values that are required to populate the `oauth` block in the `conf.json` file. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see  [Authentication Overview](../index.md).
+By the completion of this guide, you will have obtained the values that are required to populate the `oauth` block in the `conf.json` file. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see  [Authentication Overview](index.md).
 
 !!! info "Generic OIDC provider"
     FastMCP uses a generic OIDC provider. While there is no dedicated Keycloak class, the server uses the `OIDCProxy` provider, which is compatible with any OIDC-compliant identity provider.
@@ -222,7 +222,7 @@ After adding the mapper, the token contains the following:
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
-When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../../intro/write-support.md).
+When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
 
 ### Step 5.1: Create the Client Scope
 
@@ -274,7 +274,7 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
 
 ## Step 6: Create Keycloak Users (If Using User Impersonation)
 
-If `user_impersonation` is `true`, each Keycloak user contains a matching database account. For more information, see [User Impersonation](../index.md#user-impersonation).
+If `user_impersonation` is `true`, each Keycloak user contains a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
 
 1. Navigate to **Users** in the left panel.
 2. Select **Add user**.
@@ -359,9 +359,9 @@ GRANT SELECT ON TABLE products TO jdoe;
 !!! note
     Replace `<db-host>` with the database server address. In the Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
 
-For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see [HTTPS / TLS for Remote Deployments](../index.md#secure-remote-deployments-with-https-and-tls).
+For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see [HTTPS / TLS for Remote Deployments](index.md#secure-remote-deployments-with-https-and-tls).
 
-For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](../index.md#security-best-practices).
+For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
 ## Verify End-to-End
@@ -417,7 +417,7 @@ Decode the `access_token` at [jwt.io](https://jwt.io) and verify the following:
 | `Client not enabled` / `Realm not found` | Realm or client is disabled. | Ensure both  Realm and client are enabled in the Admin console. |
 | `ValueError: Issuer URL must be HTTPS` | OAuth without TLS configured. | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL`. |
 | `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://`. | Update `BASE_URL` to `https://`. |
-| `ssl.SSLError: PEM lib` | Missing certificate/key environment variables before Docker starts. | Mount certificate/key as volumes when starting the container (see [Docker deployment](../index.md#step-3-deploy-the-docker)). |
+| `ssl.SSLError: PEM lib` | Missing certificate/key environment variables before Docker starts. | Mount certificate/key as volumes when starting the container (see [Docker deployment](index.md#step-3-deploy-the-docker)). |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN. | Regenerate with `-addext "subjectAltName=IP:<ip>"`. |
 | `TypeError: fetch failed` (VS Code) | Self-signed certificate not trusted by `Node.js`. | Trust certificate and set `NODE_EXTRA_CA_CERTS`. |
 | Token validation behaves unexpectedly | OIDC endpoint is unreachable at startup. | The server falls back to default verification without `TokenCapturingJWTVerifier` - `user_impersonation` does not work even though the server appears to be running. Restart after the endpoint is accessible. |

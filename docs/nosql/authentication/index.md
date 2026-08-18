@@ -131,7 +131,7 @@ To secure the connection, you must provide a certificate and a private key. In t
 ### Example
 
 !!! note "Generating and trusting a self-signed certificate"
-    For instructions on generating a self-signed certificate and trusting it in the MCP client, see [Secure Remote Deployments with HTTPS and TLS](../../authentication/index.md#secure-remote-deployments-with-https-and-tls) in the main Authentication guide.
+    For instructions on generating a self-signed certificate and trusting it in the MCP client, see [Secure Remote Deployments with HTTPS and TLS](../../ingres/authentication/index.md#secure-remote-deployments-with-https-and-tls) in the main Authentication guide.
 
 1. Add the following to your `application.properties`:
 

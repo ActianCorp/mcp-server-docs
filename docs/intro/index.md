@@ -164,13 +164,13 @@ sequenceDiagram
   Restricts AI agents to read-only operations, preventing unintended modifications to the data.
 
 - :material-database-edit: **Controlled Write Access**  
-  Allows `INSERT`, `UPDATE`, and `DELETE` when enabled, with each write gated by an OAuth scope and human approval. See [Write support](write-support.md).
+  Allows `INSERT`, `UPDATE`, and `DELETE` when enabled, with each write gated by an OAuth scope and human approval. See [Write support](../ingres/write-support.md).
 
 - :material-database-search: **Schema Discovery**  
   Enables AI agents to review database structures and metadata before executing queries.
 
 - :material-puzzle: **Custom Extensions**  
-  Add custom tools, resources, and prompts in Python, served through the same endpoint as the built-in tools and subject to the same authentication and write controls. See [Extensions](../extensions/index.md).
+  Add custom tools, resources, and prompts in Python, served through the same endpoint as the built-in tools and subject to the same authentication and write controls. See [Extensions](../ingres/extensions/index.md).
 
 </div>
 

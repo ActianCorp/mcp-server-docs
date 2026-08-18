@@ -9,7 +9,7 @@ The Actian MCP Server supports OAuth 2.0 and OpenID Connect (OIDC) authenticatio
 
 
 !!! note "Deployment Considerations"
-    - **Actian NoSQL users**:  NoSQL uses a direct OAuth 2.0 flow with different configuration properties. See [NoSQL Authentication Guide](../nosql/authentication/index.md) for more information.
+    - **Actian NoSQL users**:  NoSQL uses a direct OAuth 2.0 flow with different configuration properties. See [NoSQL Authentication Guide](../../nosql/authentication/index.md) for more information.
     - **Transport requirements**: OAuth only works with network transport such as `sse`, `http`, and `streamable-http`. You cannot use OAuth with the stdio transport, which is used for local IDE integrations like Claude Desktop or Cursor.
 
 
@@ -76,7 +76,7 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 !!! info "Scopes"
     For read access you do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
 
-    If you set `query_mode` to `read-write`, the server also requests the `mcp:write` scope, and a token without it cannot perform writes. You must define that scope in the identity provider first. See [Write support](../intro/write-support.md) for how writes are authorized, and [Auth0](auth0/index.md) or [Keycloak](keycloak/index.md) for the setup steps.
+    If you set `query_mode` to `read-write`, the server also requests the `mcp:write` scope, and a token without it cannot perform writes. You must define that scope in the identity provider first. See [Write support](../write-support.md) for how writes are authorized, and [Auth0](auth0.md) or [Keycloak](keycloak.md) for the setup steps.
 
 
 ## User Impersonation
@@ -95,7 +95,7 @@ Impersonation covers extension-authored tools as well as the built-in ones, so a
 
     - **Zen**: Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication works and only per-user database switching is skipped.
     
-    - **NoSQL**: Uses a direct OAuth 2.0 flow, a different authentication model. The `user_impersonation` field does not apply. For more information, see [NoSQL Authentication Guide](../nosql/authentication/index.md).
+    - **NoSQL**: Uses a direct OAuth 2.0 flow, a different authentication model. The `user_impersonation` field does not apply. For more information, see [NoSQL Authentication Guide](../../nosql/authentication/index.md).
 
 ### Extracting Username
 
@@ -151,7 +151,7 @@ chmod 600 server.key
 ### Step 2: Configure TLS in `conf.json`
 
 !!! note "TLS configuration for NoSQL"
-    The Actian MCP Server for NoSQL uses different configuration properties. See [NoSQL TLS guide](../nosql/authentication/index.md#secure-remote-deployments-with-https-and-tls) for more information.
+    The Actian MCP Server for NoSQL uses different configuration properties. See [NoSQL TLS guide](../../nosql/authentication/index.md#secure-remote-deployments-with-https-and-tls) for more information.
 
 Add the `ssl_certfile` certificate and `ssl_keyfile` key paths to the top level of the `conf.json` file (outside the `oauth` block). Ensure the usage of `https://` in `BASE_URL`:
 
@@ -271,10 +271,10 @@ Choose your identity provider for step-by-step setup instructions:
 
 <div class="grid cards" markdown>
 
-- :material-cloud: **[Auth0](auth0/index.md)**  
+- :material-cloud: **[Auth0](auth0.md)**  
   Cloud-hosted identity provider. Ideal for teams that want a managed service with no infrastructure to maintain.
 
-- :material-key: **[Keycloak](keycloak/index.md)**  
+- :material-key: **[Keycloak](keycloak.md)**  
   Open-source, self-hosted identity provider. Ideal for teams that need full control over their authentication infrastructure.
 
 </div>

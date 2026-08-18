@@ -7,7 +7,7 @@ description: Step-by-step guide to configure Auth0 as the OAuth identity provide
 
 Set up an Auth0 application and API to enable OAuth 2.0 and OpenID Connect (OIDC) authentication for your Actian MCP Server. After you complete these steps, you can see the credentials required for the `oauth` block in the `conf.json` configuration file.
 
-For details on shared security concepts like TLS and user impersonation, see [Authentication Overview](../index.md).
+For details on shared security concepts like TLS and user impersonation, see [Authentication Overview](index.md).
 
 
 !!! info "Reference"
@@ -66,7 +66,7 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
-When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../../intro/write-support.md).
+When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
 
 1. Open your API, for example `Actian MCP Server`, and select the **Permissions** tab.
 2. Under **Add a Permission**, enter the following and select **+ Add**:
@@ -193,7 +193,7 @@ After saving, the application displays two **AUTHORIZED** badges — User Access
 
 ## Step 4: Create Auth0 Users (If Using User Impersonation)
 
-If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database through `SET SESSION AUTHORIZATION`. Each Auth0 user must have a matching database account. For more information, see [User Impersonation](../index.md#user-impersonation).
+If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database through `SET SESSION AUTHORIZATION`. Each Auth0 user must have a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
 
 ### Step 4.1: Create the User in Auth0
 
@@ -266,7 +266,7 @@ Defining `mcp:write` on the API in [Step 1.1](#step-11-add-the-write-scope-read-
 4. Select your API, for example `Actian MCP Server`, select the `mcp:write` permission, and add it.
 5. On the role's **Users** tab, select **Add Users** and assign the users who are allowed to write.
 
-Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see [which users can obtain the scope](../keycloak/index.md#user-eligibility) there.
+Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see [which users can obtain the scope](keycloak.md#user-eligibility) there.
 
 !!! warning "The database still decides what a user can change"
     The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Step 4.2](#step-42-create-the-matching-database-user).
@@ -319,9 +319,9 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
 !!! note
     Replace `<db-host>` with the database server address. In a Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
 
-For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see [HTTPS / TLS for Remote Deployments](../index.md#secure-remote-deployments-with-https-and-tls).
+For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see [HTTPS / TLS for Remote Deployments](index.md#secure-remote-deployments-with-https-and-tls).
 
-For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](../index.md#security-best-practices).
+For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
 ## Verify End-to-End
@@ -360,7 +360,7 @@ You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`,
 | `redirect_uri_mismatch` | Callback URL does not match `<BASE_URL>/auth/callback`. | Fix **Allowed Callback URLs** in Auth0 - scheme, host, and port must match exactly. |
 | `ValueError: Issuer URL must be HTTPS` | OAuth without TLS configured. | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL`. |
 | `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://`. | Update `BASE_URL` to `https://`. |
-| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start. | Mount cert/key as volumes when starting the container (see [Docker Deployment](../index.md#step-3-deploy-the-docker)). |
+| `ssl.SSLError: PEM lib` | Missing cert/key env vars before Docker start. | Mount cert/key as volumes when starting the container (see [Docker Deployment](index.md#step-3-deploy-the-docker)). |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN. | Regenerate with `-addext "subjectAltName=IP:<ip>"`. |
 | `TypeError: fetch failed` (VS Code) | Self-signed cert not trusted by `Node.js`. | Launch Visual Studio Code with `NODE_EXTRA_CA_CERTS=/path/to/server.crt code .` |
 | `Client Not Registered` (VS Code) | Server's Docker container was recreated, wiping client registrations, but Visual Studio Code caches the old client ID. | Quit Visual Studio Code, then delete stale registrations from the state DB (see [Clearing Visual Studio Code OAuth cache](#clearing-visual-studio-code-oauth-cache) below) and reopen Visual Studio Code. To prevent recurrence, mount a Docker volume for `/root/.local/share/fastmcp`. |
