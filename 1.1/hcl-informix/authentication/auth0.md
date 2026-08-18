@@ -1,0 +1,1 @@
+--8<-- "authentication/auth0.md"

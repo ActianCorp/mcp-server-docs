@@ -22,7 +22,7 @@ Use the following tools to interact with the database:
 
 Use this tool to run a SQL query against Actian Ingres. The server returns the result set as structured `JSON`.
 
-By default the tool accepts only `SELECT`. When the server runs with `query_mode` set to `read-write`, it also accepts the Data Manipulation Language (DML) statements `INSERT`, `UPDATE`, and `DELETE`. See [Write support](../../intro/write-support.md).
+By default the tool accepts only `SELECT`. When the server runs with `query_mode` set to `read-write`, it also accepts the Data Manipulation Language (DML) statements `INSERT`, `UPDATE`, and `DELETE`. See [Write support](../write-support.md).
 
 !!! note "Result truncation:"
     If the number of rows exceeds the `max_rows` configuration, the response includes the `truncated` and `warning` fields.
