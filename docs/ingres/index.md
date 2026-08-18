@@ -21,7 +21,7 @@ The Actian MCP Server for Ingres supports the following operations:
 | **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
 
 !!! note "Write support is opt-in"
-    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](write-support.md).
 
 ---
 
@@ -91,10 +91,10 @@ Create a file named `conf.json` in the working directory and define the environm
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` in the container |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` in the container |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#configuring-oauth-block) |
-| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md) |
-| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt) |
-| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md) |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-oauth-block) |
+| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md) |
+| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt) |
+| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md) |
 
 ---
 
@@ -118,6 +118,12 @@ Once the container is running, you can connect the MCP client to the server usin
 
 <div class="grid cards" markdown>
 
+- :material-pencil: **[Write Support](write-support.md)**  
+  Enable data-modifying SQL, and what gates each write.
+
+- :material-lock: **[Authentication](authentication/index.md)**  
+  Secure the server with OAuth 2.0 and an external identity provider.
+
 - :material-tools: **[Tools](tools/index.md)**  
   Explore the available MCP tools for Ingres database operations
 
@@ -127,7 +133,7 @@ Once the container is running, you can connect the MCP client to the server usin
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
   Access pre-built templates for common database workflows
 
-- :material-puzzle: **[Extensions](../extensions/index.md)**  
+- :material-puzzle: **[Extensions](extensions/index.md)**  
   Add custom tools to the server with a Python extension.
 
 </div>

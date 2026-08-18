@@ -7,7 +7,7 @@ description: Connect MCP clients to Actian Zen for database exploration, SQL que
 
 Connect the MCP-compatible client to Actian Zen using the Actian MCP Server. The server handles automatic Zen dialect translation, allowing you to explore schema metadata, execute SQL queries, and perform ORM operations through a standard interface.
 
-Writes are disabled by default. Setting `query_mode` to `read-write` enables them and changes which tools the server registers — see [Write support](../intro/write-support.md) and [Tools](tools/index.md).
+Writes are disabled by default. Setting `query_mode` to `read-write` enables them and changes which tools the server registers — see [Write support](write-support.md) and [Tools](tools/index.md).
 
 ## Capabilities
 
@@ -84,10 +84,10 @@ Use this format when the database requires authentication. This bypasses the con
 | `database` | `string` | — | Logical database name used for display purposes. |
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Default is `1000`. |
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
-| `query_mode` | `string` | `read-only` | `read-only` or `read-write`. Determines which tools are registered. See [Write support](../intro/write-support.md). |
+| `query_mode` | `string` | `read-only` | `read-only` or `read-write`. Determines which tools are registered. See [Write support](write-support.md). |
 | `write_confirmation` | `boolean` | `true` | Set to `false` to run the built-in write tools without the human approval prompt. The `mcp:write` scope check still applies. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments, see [Authentication](../authentication/index.md) for more information. |
-| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md). |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments, see [Authentication](authentication/index.md) for more information. |
+| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md). |
 
 !!! note "OAuth and user impersonation"
     Actian Zen does not support `SET SESSION AUTHORIZATION`. If you use OAuth, set `user_impersonation: false` in the `oauth` block. The server logs the authenticated user but does not enforce it at the database level.
@@ -127,10 +127,16 @@ After connecting, the MCP client automatically discovers the server's capabiliti
 
 <div class="grid cards" markdown>
 
+- :material-pencil: **[Write Support](write-support.md)**  
+  Enable data-modifying SQL, and what gates each write.
+
+- :material-lock: **[Authentication](authentication/index.md)**  
+  Secure the server with OAuth 2.0 and an external identity provider.
+
 - :material-tools: **[Tools](tools/index.md)**
   Learn more about the SQL, ORM, and blob tools exposed by the Zen server.
 
-- :material-pencil: **[Write support](../intro/write-support.md)**
+- :material-pencil: **[Write support](write-support.md)**
   Enable `query_mode`, and see the scope and approval checks every write passes.
 
 - :material-folder-open: **[Resources](resources/index.md)**
@@ -139,7 +145,7 @@ After connecting, the MCP client automatically discovers the server's capabiliti
 - :material-message-text: **[Prompts](prompts/index.md)**
   Use the built-in prompt templates for common workflows.
 
-- :material-puzzle: **[Extensions](../extensions/index.md)**
+- :material-puzzle: **[Extensions](extensions/index.md)**
   Add custom tools to the server with a Python extension.
 
 </div>

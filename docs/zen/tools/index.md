@@ -7,7 +7,7 @@ description: Built-in tools available when using the Actian MCP Server with Acti
 
 The Actian MCP Server for Actian Zen registers a different set of built-in tools per `query_mode` —
 six in `read-only`, five in `read-write` — so the tool list a client discovers differs between the
-two deployments. See [Write support](../../intro/write-support.md).
+two deployments. See [Write support](../write-support.md).
 
 ## Available Tools
 
@@ -27,7 +27,7 @@ two deployments. See [Write support](../../intro/write-support.md).
     intentional.
 
 Writes are authorized by the `mcp:write` scope and a human approval prompt, both described in
-[Write support](../../intro/write-support.md). Data Definition Language, explicit transactions, and
+[Write support](../write-support.md). Data Definition Language, explicit transactions, and
 bulk `batch_operation` are not available in any mode in this release.
 
 ---
@@ -299,7 +299,7 @@ Runs a single Data Manipulation Language statement — `INSERT`, `UPDATE`, `DELE
 Registered only when `query_mode` is `read-write`.
 
 Every call is checked for the `mcp:write` scope and then submitted for human approval before it
-reaches the database. See [Write support](../../intro/write-support.md).
+reaches the database. See [Write support](../write-support.md).
 
 !!! tip "A conditional write is counted before approval"
     For an `UPDATE` or `DELETE` with a `WHERE` clause, the server runs `SELECT COUNT(*)` with the
@@ -508,7 +508,7 @@ Provides server management operations: list available databases, list DSNs with 
 - :material-message-text: **[Prompts](../prompts/index.md)**  
   Use the built-in prompt templates for common workflows.
 
-- :material-pencil: **[Write support](../../intro/write-support.md)**  
+- :material-pencil: **[Write support](../write-support.md)**  
   Turn on `query_mode`, and see the scope and approval checks every write passes.
 
 </div>

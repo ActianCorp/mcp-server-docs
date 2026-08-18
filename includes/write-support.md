@@ -12,7 +12,7 @@ Write support remains off until it is enabled. Existing read-only deployments ar
 !!! note "Actian NoSQL works differently"
     It has no DML statements: writes go through dedicated object tools, governed by their own setting. See [Write support for Actian NoSQL](../nosql/write-support.md).
 
-Extensions can write too, through the same authorization checks described below. See [Extensions](../extensions/index.md).
+Extensions can write too, through the same authorization checks described below. See [Extensions](extensions/index.md).
 
 Which tools accept a write, and how, depends on the database. See the Tools page for the relevant database, for example [Ingres tools](../ingres/tools/index.md) or [Analytics Engine tools](../analytics-engine/tools/index.md). The `query_mode` setting and the authorization checks described below apply the same way regardless of which tool performs the write.
 
@@ -82,7 +82,7 @@ sequenceDiagram
 
 The approval prompt uses the Model Context Protocol (MCP) elicitation capability, which not every client implements. If the connected client cannot display the prompt, the write is rejected, exactly as if a person had declined it. See [Connecting MCP Clients](../mcp-clients/index.md#elicitation-support-for-write-approval) for which clients support it.
 
-To configure the `mcp:write` scope in the identity provider, see [Auth0](../authentication/auth0/index.md) or [Keycloak](../authentication/keycloak/index.md).
+To configure the `mcp:write` scope in the identity provider, see [Auth0](authentication/auth0.md) or [Keycloak](authentication/keycloak.md).
 
 ## Skipping the Approval Prompt
 
@@ -100,7 +100,7 @@ Some clients cannot display the approval prompt. For those deployments, set `wri
 
     The `mcp:write` scope check still applies. Disabling the prompt does not grant write access to callers that lack the scope.
 
-    This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See [Extensions](../extensions/index.md#extension-security-controls).
+    This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See [Extensions](extensions/index.md#extension-security-controls).
 
 The server records what it skipped. At startup it logs a warning banner stating that write confirmation is disabled, and it logs a warning for each write that ran without approval. Those entries name the tool only. They never include the statement text or the row values.
 
@@ -117,7 +117,7 @@ The server records what it skipped. At startup it logs a warning banner stating 
 - :material-database: **[Zen configuration](../zen/index.md#configuration-reference)**  
   The same fields for Actian Zen, which registers a different tool set per mode.
 
-- :material-shield-check: **[Authentication](../authentication/index.md)**  
+- :material-shield-check: **[Authentication](authentication/index.md)**  
   Set up the `mcp:write` scope in Auth0 or Keycloak.
 
 - :material-connection: **[MCP clients](../mcp-clients/index.md#elicitation-support-for-write-approval)**  

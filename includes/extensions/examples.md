@@ -33,7 +33,7 @@ The schema files create the same seven tables and seed data everywhere. They dif
 ## Running the Examples
 
 !!! note "Read-write mode required"
-    The two transaction examples and the approval example need `"query_mode": "read-write"`. See [Write support](../intro/write-support.md).
+    The two transaction examples and the approval example need `"query_mode": "read-write"`. See [Write support](../write-support.md).
 
 Mount each file under `/app/extensions/`, mount your configuration at `/app/conf.json`, and list the modules by name:
 
@@ -66,4 +66,4 @@ pip install fastmcp
 python hitl_demo_client.py http://localhost:8000/mcp adjust_stock '{"product_id": 1, "delta": 5}'
 ```
 
-See the [client README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/README.md) for the environment variables it accepts, and [Connecting MCP Clients](../mcp-clients/index.md#elicitation-support-for-write-approval) for which clients support the prompt.
+See the [client README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/README.md) for the environment variables it accepts, and [Connecting MCP Clients](../../mcp-clients/index.md#elicitation-support-for-write-approval) for which clients support the prompt.

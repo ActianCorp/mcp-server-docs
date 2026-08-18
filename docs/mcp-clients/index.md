@@ -30,7 +30,7 @@ When write support is enabled, the server asks a person to approve each write be
 !!! warning "A client that cannot prompt cannot write"
     If the connected client does not support elicitation, no write goes through. There is no silent approval. Reads are not affected.
 
-    On the SQL databases, the server rejects the write, exactly as if a person had declined it. To let such a client write, set `write_confirmation` to `false` in `conf.json`. That runs writes without asking anyone first. See [Write support](../intro/write-support.md#skipping-the-approval-prompt).
+    On the SQL databases, the server rejects the write, exactly as if a person had declined it. To let such a client write, set `write_confirmation` to `false` in `conf.json`. That runs writes without asking anyone first. See [Write support](../ingres/write-support.md#skipping-the-approval-prompt).
 
     On Actian NoSQL, such a client is never offered the write tools in the first place: they are absent from its tool list, and calling one fails as an unknown tool. See [Why the write tools may not appear](../nosql/write-support.md#missing-write-tools).
 
@@ -278,4 +278,4 @@ Review the following guidelines to ensure a stable and secure connection:
 
 - **Port mapping:** Always connect using the specific port configured for the MCP Server container.
 - **Production security:** Enforce HTTPS and configure authentication whenever you expose the server outside a trusted local environment.
-- **Remote deployments:** If you enable OAuth on a non-localhost deployment, the server requires TLS and a public `https://` base URL. For detailed instructions on generating certificates, configuring Docker, and trusting self-signed certificates, see [HTTPS / TLS for remote deployments](../authentication/index.md#secure-remote-deployments-with-https-and-tls).
+- **Remote deployments:** If you enable OAuth on a non-localhost deployment, the server requires TLS and a public `https://` base URL. For detailed instructions on generating certificates, configuring Docker, and trusting self-signed certificates, see [HTTPS / TLS for remote deployments](../ingres/authentication/index.md#secure-remote-deployments-with-https-and-tls).

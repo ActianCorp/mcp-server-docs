@@ -9,7 +9,7 @@ You can extend the Actian MCP Server with **extensions**: your own Python module
 
 An extension *adds* capabilities. It does not manage the database connection. The server is already connected to your database and already exposes the built-in tools. The module provides a `register()` function and reads or writes through the extension API.
 
-Extensions are supported on Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Actian NoSQL supports extensions through a different interface — Java rather than Python — documented in [Extensions for Actian NoSQL](../nosql/extensions/index.md).
+Extensions are supported on Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Actian NoSQL supports extensions through a different interface — Java rather than Python — documented in [Extensions for Actian NoSQL](../../nosql/extensions/index.md).
 
 ## Writing the Module
 
@@ -104,7 +104,7 @@ Always bind user input to `?` placeholders rather than building SQL strings.
 
 There is no one-shot write. Every write goes through a transaction opened with `get_database().transaction()`. A single write is a one-statement transaction, and several statements run all or nothing. A transaction pins one connection for its lifetime.
 
-Set `"query_mode": "read-write"` in `conf.json` to allow writes. The default is `read-only`, and in that mode starting a transaction raises and nothing is written. See [Write support](../intro/write-support.md).
+Set `"query_mode": "read-write"` in `conf.json` to allow writes. The default is `read-only`, and in that mode starting a transaction raises and nothing is written. See [Write support](../write-support.md).
 
 The recommended form is the asynchronous context manager. It commits on a clean exit, rolls back if anything raises, and always releases the connection:
 
@@ -179,7 +179,7 @@ An extension does not run with the server's own privileges. Three controls apply
 
 ### Write Scope Enforcement
 
-The write scope is enforced automatically. When OAuth is enabled, starting a transaction requires the caller's access token to carry the `mcp:write` scope. Without it the transaction raises and nothing is written. Reads need no extra scope. No action is required to enable this behavior. Grant `mcp:write` to the users allowed to write, as described for [Auth0](../authentication/auth0/index.md) and [Keycloak](../authentication/keycloak/index.md).
+The write scope is enforced automatically. When OAuth is enabled, starting a transaction requires the caller's access token to carry the `mcp:write` scope. Without it the transaction raises and nothing is written. Reads need no extra scope. No action is required to enable this behavior. Grant `mcp:write` to the users allowed to write, as described for [Auth0](../authentication/auth0.md) and [Keycloak](../authentication/keycloak.md).
 
 For finer-grained checks, read the token's scopes with `has_scope()` or `get_current_scopes()`. Both return values only in read-write mode.
 
@@ -220,7 +220,7 @@ The `write_confirmation` setting does not silence the extension's prompt. If you
 - :material-book-open-variant: **[API reference](api-reference.md)**  
   Every function, signature, and return shape.
 
-- :material-database-edit: **[Write support](../intro/write-support.md)**  
+- :material-database-edit: **[Write support](../write-support.md)**  
   How `query_mode` and the write authorization gates work.
 
 </div>
