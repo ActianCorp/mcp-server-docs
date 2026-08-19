@@ -112,6 +112,16 @@ body {
 .md-footer__direction {
   color: var(--md-default-fg-color--light);
 }
+/* ---- Constrain the prev/next footer to the main content column. On wide
+   viewports the sidebars are visible, so pad the footer's inner grid by the
+   sidebar widths (12.1rem each) so prev/next line up with the article text
+   instead of stretching the full page width. ---- */
+@media screen and (min-width: 76.25em) {
+  .md-footer__inner {
+    padding-left: 12.1rem;
+    padding-right: 12.1rem;
+  }
+}
 .md-footer-meta {
   background-color: #ffffff;
   color: var(--md-default-fg-color);
@@ -263,6 +273,18 @@ html .md-footer-meta.md-typeset a:focus {
 .md-nav--primary .md-nav__item--section > .md-nav__link,
 .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
   color: var(--md-default-fg-color);
+}
+
+/* ---- Keep the top-level (database) nav items looking like section headings
+   even though navigation.sections was removed to make them collapsible. The
+   old section labels were bold; collapsible links default to normal weight, so
+   restore the bold weight here. The collapse toggle still works. ---- */
+.md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
+  font-weight: 700;
+}
+/* Breathing room between the top-level database sections (was congested) */
+.md-nav--primary > .md-nav__list > .md-nav__item {
+  margin-top: 0.7rem;
 }
 
 /* ---- Code blocks: comfortable padding ---- */
@@ -426,9 +448,12 @@ html .md-footer-meta.md-typeset a:focus {
   }
 }
 .landing-hero__content {
-  max-width: 61rem;
-  margin: 0.3rem 2rem 0.5rem;
-  padding: 0.5rem 1rem;
+  /* Align the banner's text box with the content column below it
+     (.databases-section: max-width 1600px, centered, 2rem side padding). */
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.75rem 2rem;
 }
 .landing-hero__heading {
   font-size: 1.5625em;
