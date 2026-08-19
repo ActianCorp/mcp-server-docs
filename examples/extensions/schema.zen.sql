@@ -1,3 +1,6 @@
+-- Copyright (C) 2026 Actian Corp.
+-- All Rights Reserved.
+
 -- Schema for all example extensions, on one database. ZEN (";"-terminated).
 --
 -- After loading, grant each table to the user the MCP server connects as, one

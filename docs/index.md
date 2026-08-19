@@ -161,17 +161,17 @@ docker run -e INFORMIXSERVER=myserver \
     <div class="feature-item">
       <h4 class="feature-title">Identity-Aware Access</h4>
       <p class="feature-description">The server's modern authentication protocols ensure agents access only explicitly authorized data.</p>
-      <a href="./authentication/index.html" class="primary-link">Set Up Authentication →</a>
+      <a href="./get-started/index.html" class="primary-link">Set Up Authentication →</a>
     </div>
     <div class="feature-item">
       <h4 class="feature-title">Read-only by Default</h4>
-      <p class="feature-description">Agents cannot modify or delete data unless you enable write mode. Once enabled, every write still requires an authorized scope and human approval.</p>
-      <a href="./intro/write-support.html" class="primary-link">Learn about Write Support →</a>
+      <p class="feature-description">Agents cannot modify or delete data unless write mode is enabled. Once enabled, every write still requires an authorized scope and human approval.</p>
+      <a href="./get-started/index.html" class="primary-link">Learn about Write Support →</a>
     </div>
     <div class="feature-item">
       <h4 class="feature-title"> Logged Write Decisions</h4>
       <p class="feature-description">Every write approval, rejection, and skipped confirmation is recorded in the server log. Statement text is deliberately left out so sensitive values are never written to logs.</p>
-      <a href="./intro/write-support.html" class="primary-link">Learn about Write Support →</a>
+      <a href="./get-started/index.html" class="primary-link">Learn about Write Support →</a>
     </div>
   </div>
 </div>

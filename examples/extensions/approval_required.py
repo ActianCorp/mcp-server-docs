@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Actian Corp.
+# Copyright (C) 2026 Actian Corp.
 # All Rights Reserved.
 
 """Demo extension: human-in-the-loop (HITL) approval before a write.

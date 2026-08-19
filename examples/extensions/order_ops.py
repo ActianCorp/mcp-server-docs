@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Actian Corp.
+# Copyright (C) 2026 Actian Corp.
 # All Rights Reserved.
 
 """Demo extension: order processing with multi-table transactions.
@@ -50,8 +50,6 @@ def register(server, config):
         prod = await db.query(
             f"SELECT name, unit_price, stock_qty FROM {products_t} WHERE product_id = ?",
             [product_id])
-        # query() reports failure in the result dict rather than raising, so check
-        # success before indexing: a failed read has no "rows" key.
         if not prod["success"]:
             return json.dumps(prod, default=str)
         if not prod["rows"]:

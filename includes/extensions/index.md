@@ -7,11 +7,11 @@ description: Add your own tools, resources, and prompts to the Actian MCP Server
 
 You can extend the Actian MCP Server with **extensions**: your own Python modules that register extra tools, resources, and prompts on the running server, next to the built-in database tools. Use this for business logic you want an AI agent to call through the same endpoint, such as revenue forecasting, compliance checks, or data enrichment.
 
-An extension *adds* capabilities. It does not manage the database connection. The server is already connected to your database and already exposes the built-in tools. Your module provides a `register()` function and reads or writes through the extension API.
+An extension *adds* capabilities. It does not manage the database connection. The server is already connected to your database and already exposes the built-in tools. The module provides a `register()` function and reads or writes through the extension API.
 
-Extensions are supported on Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Actian NoSQL supports extensions through a different interface that is not covered here.
+Extensions are supported on Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Actian NoSQL supports extensions through a different interface — Java rather than Python — documented in [Extensions for Actian NoSQL](../../nosql/extensions/index.md).
 
-## Write the module
+## Writing the Module
 
 An extension is a normal Python module exposing one required function and two optional hooks:
 
@@ -36,12 +36,12 @@ async def teardown(): ...              # OPTIONAL, release them at shutdown
 
 Implement `setup(config)` and `teardown()` only if your extension owns something that needs an explicit open and close, such as an HTTP client, a cache, or a connection pool of your own. Either may be `async` or plain.
 
-!!! note "Your config never contains secrets"
+!!! note "Configuration never contains secrets"
     The `config` argument holds the `config` block you set in `conf.json` plus a short list of non-secret values (`dbms`, `max_rows`, `transport`). It never contains the database password, the connection string, or OAuth secrets.
 
 Give your tools schema-friendly signatures: typed parameters, and no `*args` or `**kwargs`.
 
-## Mount it and register it
+## Mounting and Registering the Module
 
 Mount your module into the server's extensions directory, `/app/extensions`, as a volume. The server makes that directory importable:
 
@@ -73,7 +73,7 @@ Then list it by module name in `conf.json`. Paths are not used, because the loca
 | Module name | The name of the file or package you mounted, for example `revenue_forecast.py` or `revenue_forecast/`. A package works by its dotted import path, such as `my_package.my_module`. |
 | Order | Extensions load in the order listed. Each module may be listed only once. |
 
-## What the server handles for you
+## Server Responsibilities
 
 | Concern | How it is handled |
 |---------|-------------------|
@@ -82,7 +82,7 @@ Then list it by module name in `conf.json`. Paths are not used, because the loca
 | Transport and protocol | The server serves MCP over HTTP. You do not implement any of it. |
 | Logging | Extension loading, tool registration, and approval outcomes go to the server log, and so do your own `logging.getLogger(__name__)` messages. There is no automatic per-call audit log. If you need a record of who called what, log it in your tool. |
 
-## Reading data
+## Reading Data
 
 Reach the database only through `get_database()`. You never receive a connection, pool, cursor, or credentials.
 
@@ -98,13 +98,13 @@ if result["success"]:
 
 Always bind user input to `?` placeholders rather than building SQL strings.
 
-`query()` runs one read, works in read-only mode, and behaves the same on every supported database. It is asynchronous, so `await` it. For table and column metadata, select from your engine's system catalogs.
+`query()` runs one read, works in read-only mode, and behaves the same on every supported database. It is asynchronous, so `await` it. For table and column metadata, select from the engine's system catalogs.
 
-## Writing data
+## Writing Data
 
 There is no one-shot write. Every write goes through a transaction opened with `get_database().transaction()`. A single write is a one-statement transaction, and several statements run all or nothing. A transaction pins one connection for its lifetime.
 
-Set `"query_mode": "read-write"` in `conf.json` to allow writes. The default is `read-only`, and in that mode starting a transaction raises and nothing is written. See [Write support](../intro/write-support.md).
+Set `"query_mode": "read-write"` in `conf.json` to allow writes. The default is `read-only`, and in that mode starting a transaction raises and nothing is written. See [Write support](../write-support.md).
 
 The recommended form is the asynchronous context manager. It commits on a clean exit, rolls back if anything raises, and always releases the connection:
 
@@ -136,7 +136,7 @@ except Exception:
     raise
 ```
 
-### Choosing between query and a transaction
+### Choosing Between Query and a Transaction
 
 | Need | Use |
 |------|-----|
@@ -151,9 +151,9 @@ Do not open a transaction only to read.
 
 `tx.write()` runs `INSERT`, `UPDATE`, and `DELETE`. Data Definition Language (DDL) and administrative statements such as `SET` are refused, as they are for reads. A transaction left neither committed nor rolled back is rolled back by a watchdog, five minutes by default, so the connection cannot leak. Prefer `async with`, which releases promptly.
 
-### Asking a human to approve a write
+### Asking a Human to Approve a Write
 
-Writes are not confirmed automatically. You decide where approval belongs: call `request_write_confirmation()` and write only if it returns `True`. That lets you confirm once for a batch, attach your own context, or skip confirmation in a trusted automated flow.
+Writes are not confirmed automatically. You decide where approval belongs: call `request_write_confirmation()` and write only if it returns `True`. That lets you confirm once for a batch, attach additional context, or skip confirmation in a trusted automated flow.
 
 ```python
 from actian_mcp_server.extension_api import get_database, request_write_confirmation
@@ -173,31 +173,31 @@ async def tag_vip(customer_id: int) -> dict:
 
 It returns `True` only on explicit approval. A decline, a timeout, or a client that cannot show the prompt all return `False`, so "proceed only if `True`" is safe. You can also use it to gate a non-SQL action, such as an external API call that changes something.
 
-## Security controls that apply to your extension
+## Extension Security Controls
 
 An extension does not run with the server's own privileges. Three controls apply whether or not you write any code for them.
 
-### The write scope is enforced for you
+### Write Scope Enforcement
 
-When OAuth is enabled, starting a transaction requires the caller's access token to carry the `mcp:write` scope. Without it the transaction raises and nothing is written. Reads need no extra scope. You do not call anything to get this behavior. Grant `mcp:write` to the users allowed to write, as described for [Auth0](../authentication/auth0/index.md) and [Keycloak](../authentication/keycloak/index.md).
+The write scope is enforced automatically. When OAuth is enabled, starting a transaction requires the caller's access token to carry the `mcp:write` scope. Without it the transaction raises and nothing is written. Reads need no extra scope. No action is required to enable this behavior. Grant `mcp:write` to the users allowed to write, as described for [Auth0](../authentication/auth0.md) and [Keycloak](../authentication/keycloak.md).
 
-For your own finer-grained checks, read the token's scopes with `has_scope()` or `get_current_scopes()`. Both return values only in read-write mode.
+For finer-grained checks, read the token's scopes with `has_scope()` or `get_current_scopes()`. Both return values only in read-write mode.
 
-### Statements run as the end user
+### End-User Execution
 
-On Ingres, Analytics Engine, and Informix, your statements run as the authenticated user, not as the server's service account. Zen authenticates through the connection, so statements there run as the configured account.
+Statements run as the end user. On Ingres, Analytics Engine, and Informix, your statements run as the authenticated user, not as the server's service account. Zen authenticates through the connection, so statements there run as the configured account.
 
 !!! warning "Your extension is bounded by the user's own privileges"
     Because statements run as the end user, that user needs the table privileges your extension relies on, and your extension cannot read or write anything the user could not reach directly. When impersonation is required but the user cannot be resolved, the transaction is **rejected** rather than falling back to the service account.
 
-### The write_confirmation setting does not silence your prompt
+### Confirmation Prompt Behavior
 
-If your extension calls `request_write_confirmation()`, the prompt always appears. The `write_confirmation` setting in `conf.json` applies only to the server's built-in write tools. This works both ways:
+The `write_confirmation` setting does not silence the extension's prompt. If your extension calls `request_write_confirmation()`, the prompt always appears. The `write_confirmation` setting in `conf.json` applies only to the server's built-in write tools. This works both ways:
 
 - You cannot use that setting to skip an approval step your extension asked for.
 - Turning it on for a client that cannot display prompts does not silently approve your extension's writes. Those writes still fail closed.
 
-## Rules and gotchas
+## Rules and Caveats
 
 !!! warning "A bad extension stops the server from starting"
     This is deliberate. A misconfigured extension never leaves the server running in a quietly degraded state with fewer tools than you configured. Startup aborts if a module cannot be imported, does not define `register()`, raises during `register()`, or registers a tool whose name matches a built-in tool or an earlier extension. Any tools that extension already registered are rolled back first.
@@ -206,7 +206,9 @@ If your extension calls `request_write_confirmation()`, the prompt always appear
 |-------|--------|
 | Tool names | Pick distinct, descriptive names. A collision with a built-in name such as `execute_query` aborts startup. |
 | No hot reload | Extensions load at startup. Restart the server to pick up changes. |
-| Trust model | Extensions run in the same process with full Python access. Load only extensions you trust, the same way you would treat installing a Python package. Hiding the connection details is encapsulation, not a sandbox. |
+
+!!! important "Trust model"
+    Extensions run in the same process with full Python access. Load only extensions you trust, the same way you would treat installing a Python package. Hiding the connection details is encapsulation, not a sandbox.
 
 ## Next Steps
 
@@ -218,7 +220,7 @@ If your extension calls `request_write_confirmation()`, the prompt always appear
 - :material-book-open-variant: **[API reference](api-reference.md)**  
   Every function, signature, and return shape.
 
-- :material-database-edit: **[Write support](../intro/write-support.md)**  
+- :material-database-edit: **[Write support](../write-support.md)**  
   How `query_mode` and the write authorization gates work.
 
 </div>

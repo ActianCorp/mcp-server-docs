@@ -8,7 +8,7 @@ description: Connect MCP clients to Actian Analytics Engine for schema explorati
 Connect the MCP-compatible client to the Actian Analytics Engine using the Actian MCP Server. This setup allows you to explore schema metadata and run SQL queries through a standard interface. Queries are read-only unless you enable write mode. The MCP Server for Analytics Engine bridges the gap between the MCP client and the Actian database. The server manages connection pooling, response formatting, and schema discovery automatically, allowing you to focus on the data.
 
 !!! note "Using Actian Data Platform?"
-	This page covers running the server yourself in a container. If your Analytics Engine is a warehouse in Actian Data Platform, the MCP Server is already configured for you. See [Actian Data Platform](data-platform.md).
+    This page describes how to run the server in a container. If the Analytics Engine is a warehouse in Actian Data Platform, the MCP Server is already configured. See [Actian Data Platform](data-platform.md).
 
 
 ## Capabilities
@@ -25,7 +25,7 @@ The Actian Analytics Engine MCP Server supports the following operations:
 | **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
 
 !!! note "Write support is opt-in"
-    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](write-support.md).
 
 
 ## Prerequisites
@@ -94,10 +94,10 @@ Create a file named `conf.json` in your working directory using the following st
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` in the container. |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` in the container. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block).|
-| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md).|
-| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt).|
-| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md).|
+| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-oauth-block).|
+| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md).|
+| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt).|
+| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md).|
 
 
 ## Start the Server
@@ -109,7 +109,7 @@ docker run -d \
     -v $(pwd)/conf.json:/app/conf.json:ro \
     -p 8000:8000 \
     --name=actian-mcp \
-    actian/analytics-engine-mcp-server:1.0.0
+    actian/analytics-engine-mcp-server:1.1.0
 ```
 
 
@@ -133,6 +133,12 @@ Once connected, the MCP client automatically discovers the server capabilities. 
 
 <div class="grid cards" markdown>
 
+- :material-pencil: **[Write Support](write-support.md)**  
+  Enable data-modifying SQL, and what gates each write.
+
+- :material-lock: **[Authentication](authentication/index.md)**  
+  Secure the server with OAuth 2.0 and an external identity provider.
+
 - :material-tools: **[Tools](tools/index.md)**  
   Learn more about the Analytics Engine tools used by the MCP Server.
 
@@ -142,7 +148,7 @@ Once connected, the MCP client automatically discovers the server capabilities. 
 - :material-message-text: **[Prompts](prompts/index.md)**  
   Use the built-in prompt templates for common workflows.
 
-- :material-puzzle: **[Extensions](../extensions/index.md)**  
-  Add your own tools to the server with a Python extension.
+- :material-puzzle: **[Extensions](extensions/index.md)**  
+  Add custom tools to the server with a Python extension.
 
 </div>

@@ -1,11 +1,11 @@
 ---
 title: Actian NoSQL Database
-description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Databases.
+description: Use the Actian MCP Server to connect MCP clients to Actian NoSQL Databases for schema discovery, read-only JPQL queries, optional write support, and custom Java extensions.
 ---
 
 # Actian MCP Server for NoSQL
 
-Connect your MCP-compatible client to Actian NoSQL using the Actian MCP Server. Once configured, clients can explore schema metadata, execute read-only JPQL queries, and inspect the full details of retrieved persistent objects.
+Connect your MCP-compatible client to Actian NoSQL Database using the Actian MCP Server. Once configured, clients can explore schema metadata, execute read-only JPQL queries, and inspect the full details of retrieved persistent objects. Object writes and custom Java extensions are also available, both turned off until an operator enables them.
 
 ## Capabilities
 
@@ -16,16 +16,27 @@ The Actian NoSQL MCP Server supports the following operations:
 | **Discover the Schema** | List all classes and explore their fields and inheritance hierarchy. |
 | **Run JPQL queries** | Execute read-only queries against your database. |
 | **Retrieve objects by ID** | Fetch one or many objects directly by LOID for the fastest retrieval path. |
+| **Write data** | Create, update, and delete objects, when write support is enabled. |
+| **Extend the server** | Add custom tools, resources, and prompts with a Java extension JAR. |
 
-!!! note "Extensions for NoSQL"
-    NoSQL supports extensions, but through a different interface with its own API and examples. Documentation for it is not yet available. The [Extensions](../extensions/index.md) guide covers the other databases and does not apply here.
+### Write Support
+
+The server is read-only until writes are turned on. Once they are, tools for creating, updating, and deleting objects join the read-only ones, each running as a single all-or-nothing transaction. Every call then passes [three independent checks](write-support.md#what-each-call-must-clear): writes must be on, the caller's token must carry the `mcp:write` scope when authentication is enabled, and a person must approve the operation in the connected client.
+
+[Write support](write-support.md) covers all three, plus [why the write tools may be missing from a client's tool list](write-support.md#missing-write-tools) and how object versions stop one client overwriting another's change.
+
+### Extensions
+
+An extension is a Java JAR that adds custom tools, resources, resource templates, and prompts to a running server — no fork, and no rebuild of the product. The server loads only the JARs an operator has declared in an allowlist, with each one's SHA-256 digest pinned by default. An extension's write tools pass the same checks the built-in ones do.
+
+[Extensions](extensions/index.md) covers authoring, the Extension SDK, deployment, and the trust model.
 
 ## Prerequisites
 
 Before starting the server, ensure the following requirements are met:
 
 - **Container Engine:** Docker installed and running on the host machine.
-- **Database credentials:** Access details for the Actian NoSQL database.
+- **Database credentials:** Access details for the Actian NoSQL Database.
 - **Secure deployment files (Optional):** TLS certificate and key files for secure deployments.
 - **OIDC provider (Optional):** Required if you are using OAuth authentication.
 
@@ -33,11 +44,13 @@ Before starting the server, ensure the following requirements are met:
 
 All configuration is provided through an `application.properties` file mounted into the container at `/home/jboss/config/application.properties`. Environment variables are supported as an alternative — any property can be passed with a `-e` flag using `SCREAMING_SNAKE_CASE` notation, and they take precedence over the file.
 
-### NoSQL Connection
+### Actian NoSQL Properties
 
-| Property             | Required | Description                                                                                                              |
-|----------------------|----------|--------------------------------------------------------------------------------------------------------------------------|
+| Property | Required | Description |
+|----------|----------|-------------|
 | `nsql.connectionURL` | Yes | Database connection URL in the format `database@server:port#user:password`. `port`, `user`, and `password` are optional. |
+| `nsql.writes.enabled` | No | Turns on the write tools, which are otherwise unavailable. See [Write support](write-support.md#configuration-reference) for the batch ceiling and the two confirmation settings. |
+| `nsql.extensions.enabled` | No | Turns on loading of declared Java extension JARs. See [Extensions](extensions/index.md#enabling-and-declaring-extensions) for the allowlist, digest pinning, and load order. |
 
 ### Quarkus Properties
 
@@ -97,7 +110,7 @@ nsql.connectionURL=<connection-url>
 docker run \
   -v $(pwd)/application.properties:/home/jboss/config/application.properties:ro \
   -p 8080:8080 \
-  actian/nsql-mcp-server:1.0.1
+  actian/nsql-mcp-server:1.1.0
 ```
 
 Once the container is running, connect the MCP client to the exposed server endpoint using the host and port from the configuration.
@@ -111,7 +124,9 @@ Once the container is running, connect the MCP client to the exposed server endp
 
 The following example demonstrates how to connect to a running Actian MCP Server for Actian NoSQL using the [FastMCP](https://pypi.org/project/fastmcp/) Python client.
 
-### Prerequisites
+Both examples below perform reads only. To write, the client must also be able to answer the server's confirmation prompt, which it can do only if you give it an elicitation handler — see [Answering the prompt from a Python client](write-support.md#answering-the-prompt-from-a-python-client).
+
+### Client Prerequisites
 
 Install the required packages:
 
@@ -245,6 +260,9 @@ if __name__ == "__main__":
 
 <div class="grid cards" markdown>
 
+- :material-pencil: **[Write support](write-support.md)**  
+  Enable object writes, and what gates each one.
+
 - :material-lock: **[Authentication](authentication/index.md)**  
   Secure the server with OAuth 2.0 and an external identity provider.
 
@@ -256,5 +274,8 @@ if __name__ == "__main__":
 
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
   Use pre-built prompt templates for common workflows.
+
+- :material-puzzle: **[Extensions](extensions/index.md)**  
+  Add custom tools, resources, and prompts with a Java extension JAR.
 
 </div>

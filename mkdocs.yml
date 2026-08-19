@@ -7,6 +7,81 @@ use_directory_urls: false
 docs_dir: docs
 site_dir: site
 
+# Navigation (explicit; self-contained per connector, shared content single-sourced via includes/)
+nav:
+  - Home: index.md
+  - Introduction: intro/index.md
+  - Getting Started: get-started/index.md
+  - MCP Clients: mcp-clients/index.md
+  - Ingres:
+      - Overview: ingres/index.md
+      - Authentication:
+          - ingres/authentication/index.md
+          - Auth0: ingres/authentication/auth0.md
+          - Keycloak: ingres/authentication/keycloak.md
+      - Write Support: ingres/write-support.md
+      - Extensions:
+          - ingres/extensions/index.md
+          - Examples: ingres/extensions/examples.md
+          - API Reference: ingres/extensions/api-reference.md
+      - Tools: ingres/tools/index.md
+      - Resources: ingres/resources/index.md
+      - Prompts: ingres/prompts/index.md
+  - HCL Informix®:
+      - Overview: hcl-informix/index.md
+      - Authentication:
+          - hcl-informix/authentication/index.md
+          - Auth0: hcl-informix/authentication/auth0.md
+          - Keycloak: hcl-informix/authentication/keycloak.md
+      - Write Support: hcl-informix/write-support.md
+      - Extensions:
+          - hcl-informix/extensions/index.md
+          - Examples: hcl-informix/extensions/examples.md
+          - API Reference: hcl-informix/extensions/api-reference.md
+      - Tools: hcl-informix/tools/index.md
+      - Resources: hcl-informix/resources/index.md
+      - Prompts: hcl-informix/prompts/index.md
+  - Zen:
+      - Overview: zen/index.md
+      - Authentication:
+          - zen/authentication/index.md
+          - Auth0: zen/authentication/auth0.md
+          - Keycloak: zen/authentication/keycloak.md
+      - Write Support: zen/write-support.md
+      - Extensions:
+          - zen/extensions/index.md
+          - Examples: zen/extensions/examples.md
+          - API Reference: zen/extensions/api-reference.md
+      - Tools: zen/tools/index.md
+      - Resources: zen/resources/index.md
+      - Prompts: zen/prompts/index.md
+  - Analytics Engine:
+      - Overview: analytics-engine/index.md
+      - Actian Data Platform: analytics-engine/data-platform.md
+      - Authentication:
+          - analytics-engine/authentication/index.md
+          - Auth0: analytics-engine/authentication/auth0.md
+          - Keycloak: analytics-engine/authentication/keycloak.md
+      - Write Support: analytics-engine/write-support.md
+      - Extensions:
+          - analytics-engine/extensions/index.md
+          - Examples: analytics-engine/extensions/examples.md
+          - API Reference: analytics-engine/extensions/api-reference.md
+      - Tools: analytics-engine/tools/index.md
+      - Resources: analytics-engine/resources/index.md
+      - Prompts: analytics-engine/prompts/index.md
+  - NoSQL:
+      - Overview: nosql/index.md
+      - Authentication:
+          - nosql/authentication/index.md
+          - Auth0: nosql/authentication/auth0/index.md
+          - Keycloak: nosql/authentication/keycloak/index.md
+      - Write Support: nosql/write-support.md
+      - Extensions: nosql/extensions/index.md
+      - Tools: nosql/tools/index.md
+      - Resources: nosql/resources/index.md
+      - Prompts: nosql/prompts/index.md
+
 # Theme Configuration
 theme:
   name: material
@@ -18,8 +93,6 @@ theme:
     repo: material/lifebuoy
   features:
     - announce.dismiss
-    - navigation.sections
-    - navigation.expand
     - navigation.indexes
     - navigation.top
     - navigation.path
@@ -59,6 +132,9 @@ markdown_extensions:
   - pymdownx.details
   - attr_list
   - md_in_html
+  - pymdownx.snippets:
+      base_path: ["includes"]
+      check_paths: true
   - tables
   - pymdownx.tabbed:
       alternate_style: true
@@ -118,7 +194,6 @@ extra_javascript:
 plugins:
   - search:
       lang: en
-  - awesome-pages
   - tags
   - swagger-ui-tag
   - git-revision-date-localized:
@@ -126,6 +201,15 @@ plugins:
       enable_creation_date: false
       fallback_to_build_date: true
   - meta-descriptions
+  - redirects:
+      redirect_maps:
+        'authentication/index.md': 'ingres/authentication/index.md'
+        'authentication/auth0/index.md': 'ingres/authentication/auth0.md'
+        'authentication/keycloak/index.md': 'ingres/authentication/keycloak.md'
+        'intro/write-support.md': 'ingres/write-support.md'
+        'extensions/index.md': 'ingres/extensions/index.md'
+        'extensions/examples.md': 'ingres/extensions/examples.md'
+        'extensions/api-reference.md': 'ingres/extensions/api-reference.md'
 
 # Hooks
 hooks:

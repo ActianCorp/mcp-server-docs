@@ -3,11 +3,11 @@ title: Keycloak Setup Guide
 description: Step-by-step guide to configure Keycloak as the OAuth identity provider for the Actian MCP Server.
 ---
 
-# Configuring Keycloak 
+# Configuring Keycloak
 
 This guide describes the creation and configuration of a Keycloak Realm, Client, and Audience Mapper. It enables the Actian MCP Server to authenticate users through OAuth 2.0 and OpenID Connect (OIDC). 
 
-By the completion of this guide, you will have obtained the values that are required to populate the `oauth` block in the `conf.json` file. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see  [Authentication Overview](../index.md).
+By the completion of this guide, you will have obtained the values that are required to populate the `oauth` block in the `conf.json` file. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see  [Authentication Overview](index.md).
 
 !!! info "Generic OIDC provider"
     FastMCP uses a generic OIDC provider. While there is no dedicated Keycloak class, the server uses the `OIDCProxy` provider, which is compatible with any OIDC-compliant identity provider.
@@ -15,7 +15,7 @@ By the completion of this guide, you will have obtained the values that are requ
 
 ## Quick Start
 
-The checklist below is the whole procedure in brief. Use it if you already know your way around the Keycloak Admin Console. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.
+The checklist below is the whole procedure in brief. Use it if you are already familiar with the Keycloak Admin Console. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.
 
 1. **Create a realm** (or use an existing one).
 2. **Create a client** with _Client authentication_ enabled and record the **Client ID** and **Client Secret**.
@@ -222,7 +222,7 @@ After adding the mapper, the token contains the following:
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
-When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../../intro/write-support.md).
+When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
 
 ### Step 5.1: Create the Client Scope
 
@@ -248,7 +248,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 !!! warning "Add it as Optional, not Default"
     An optional scope is issued only when the caller asks for it, which is what the MCP server does when `query_mode` is `read-write`. If you add `mcp:write` as a default scope instead, every token issued to this client carries write access whether it was requested or not, and the scope no longer distinguishes read-only callers from write-capable ones.
 
-### Which users can obtain the scope
+### User Eligibility
 
 In Keycloak a client scope is attached to a **client**, not to a user. Any user who authenticates through this client and requests `scope=openid mcp:write` receives it. Keycloak roles do not change that, because the server authorizes writes from the token's `scope` claim rather than from roles.
 
@@ -269,12 +269,12 @@ curl -s https://<keycloak-host>:8443/realms/actian-mcp/.well-known/openid-config
 The output contains `mcp:write`. Then, on the client's **Client scopes** tab, confirm `mcp:write` is listed with the **Optional** assigned type.
 
 !!! warning "The database still decides what a user can change"
-    The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Creating Matching Database User](#creating-matching-database-user).
+    The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Creating the Matching Database User](#creating-the-matching-database-user).
 
 
 ## Step 6: Create Keycloak Users (If Using User Impersonation)
 
-If `user_impersonation` is `true`, each Keycloak user contains a matching database account. For more information, see [User Impersonation](../index.md#user-impersonation).
+If `user_impersonation` is `true`, each Keycloak user contains a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
 
 1. Navigate to **Users** in the left panel.
 2. Select **Add user**.
@@ -291,7 +291,7 @@ If `user_impersonation` is `true`, each Keycloak user contains a matching databa
 4. Select **Create**.
 5. Navigate to the **Credentials** tab > **Set password** > enter a password > toggle **Temporary** to `Off` > **Save**.
 
-### Creating Matching Database User
+### Creating the Matching Database User
 
 ```sql
 -- Create the user account (no DB password needed — Keycloak handles authentication)
@@ -359,9 +359,9 @@ GRANT SELECT ON TABLE products TO jdoe;
 !!! note
     Replace `<db-host>` with the database server address. In the Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
 
-For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see [HTTPS / TLS for Remote Deployments](../index.md#secure-remote-deployments-with-https-and-tls).
+For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see [HTTPS / TLS for Remote Deployments](index.md#secure-remote-deployments-with-https-and-tls).
 
-For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](../index.md#security-best-practices).
+For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
 ## Verify End-to-End
@@ -417,7 +417,7 @@ Decode the `access_token` at [jwt.io](https://jwt.io) and verify the following:
 | `Client not enabled` / `Realm not found` | Realm or client is disabled. | Ensure both  Realm and client are enabled in the Admin console. |
 | `ValueError: Issuer URL must be HTTPS` | OAuth without TLS configured. | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL`. |
 | `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://`. | Update `BASE_URL` to `https://`. |
-| `ssl.SSLError: PEM lib` | Missing certificate/key environment variables before Docker starts. | Mount certificate/key as volumes when starting the container (see [Docker deployment](../index.md#step-3-deploy-the-docker)). |
+| `ssl.SSLError: PEM lib` | Missing certificate/key environment variables before Docker starts. | Mount certificate/key as volumes when starting the container (see [Docker deployment](index.md#step-3-deploy-the-docker)). |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN. | Regenerate with `-addext "subjectAltName=IP:<ip>"`. |
 | `TypeError: fetch failed` (VS Code) | Self-signed certificate not trusted by `Node.js`. | Trust certificate and set `NODE_EXTRA_CA_CERTS`. |
 | Token validation behaves unexpectedly | OIDC endpoint is unreachable at startup. | The server falls back to default verification without `TokenCapturingJWTVerifier` - `user_impersonation` does not work even though the server appears to be running. Restart after the endpoint is accessible. |
@@ -438,7 +438,7 @@ Keycloak tokens have a configurable lifetime:
 3. Adjust as needed and select **Save**.
 
 
-## Keycloak versus Auth0 - Key Differences
+## Keycloak Versus Auth0: Key Differences
 
 | Aspect | Auth0 | Keycloak |
 |--------|-------|----------|
@@ -452,7 +452,7 @@ Keycloak tokens have a configurable lifetime:
 | **`mcp:write` model** | An API permission granted through a role, so it can be withheld from individual users | An optional client scope attached to the client, so any user of that client can request it. Control writes with database privileges instead |
 
 
-## Staging versus Production
+## Staging Versus Production
 
 | Environment | Recommendation |
 |---|---|
