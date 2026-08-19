@@ -94,7 +94,6 @@ theme:
     repo: material/lifebuoy
   features:
     - announce.dismiss
-    - navigation.sections
     - navigation.indexes
     - navigation.top
     - navigation.path
