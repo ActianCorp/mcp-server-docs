@@ -122,6 +122,11 @@ body {
     padding-right: 12.1rem;
   }
 }
+/* Hide the prev/next footer navigation on the landing page only (it is the
+   page that hides the primary nav). The copyright/meta footer is kept. */
+body:has(.md-sidebar--primary[hidden]) .md-footer__inner {
+  display: none;
+}
 .md-footer-meta {
   background-color: #ffffff;
   color: var(--md-default-fg-color);
