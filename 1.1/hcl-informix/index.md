@@ -108,13 +108,13 @@ Create a file named `conf.json` in the working directory and add the database-sp
 
 With the `conf.json` file ready, run the following Docker command to start the container. This command mounts the configuration file as a read-only volume.
 
-```bash
-docker run  -d \
-  -v $(pwd)/conf_temp.json:/app/conf.json:ro,Z \
-  -p 8000:8000 \
-  --name=ifx-mcp \
-  actian/informix-mcp-server-linux:1.1.0
-```
+    ```bash
+    docker run  -d \
+      -v $(pwd)/conf_temp.json:/app/conf.json:ro,Z \
+      -p 8000:8000 \
+      --name=ifx-mcp \
+      actian/informix-mcp-server:1.1.0
+    ```
 
 !!! note 
     The container must read its configuration from `/app/conf.json`. Do not change the mount target path.
