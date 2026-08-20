@@ -2930,6 +2930,10 @@
 <li><strong>Secure deployment files (Optional):</strong> TLS certificate and key files for secure deployments.</li>
 <li><strong>OIDC provider (Optional):</strong> Required if you are using OAuth authentication.</li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Database compatibility</p>
+<p>This version of the Actian NoSQL MCP Server requires Actian NoSQL Database 11. Earlier Actian NoSQL versions are not supported.</p>
+</div>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>All configuration is provided through an <code>application.properties</code> file mounted into the container at <code>/home/jboss/config/application.properties</code>. Environment variables are supported as an alternative — any property can be passed with a <code>-e</code> flag using <code>SCREAMING_SNAKE_CASE</code> notation, and they take precedence over the file.</p>
 <h3 id="actian-nosql-properties">Actian NoSQL Properties<a class="headerlink" href="#actian-nosql-properties" title="Permanent link">&para;</a></h3>
@@ -3245,7 +3249,7 @@ pip<span class="w"> </span>install<span class="w"> </span>httpx<span class="w"> 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2026 17:17:13 UTC">August 20, 2026</span>
   </span>
 
     
