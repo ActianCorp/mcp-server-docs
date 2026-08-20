@@ -26,6 +26,9 @@ Before starting the server, ensure the following requirements are met:
 - **Secure deployment files (Optional):** TLS certificate and key files for secure deployments.
 - **OIDC provider (Optional):** Required if you are using OAuth authentication.
 
+!!! note "Database compatibility"
+    This version of the Actian NoSQL MCP Server requires Actian NoSQL Database 11. Earlier Actian NoSQL versions are not supported.
+
 ## Configuration
 
 All configuration is provided through an `application.properties` file mounted into the container at `/home/jboss/config/application.properties`. Environment variables are supported as an alternative — any property can be passed with a `-e` flag using `SCREAMING_SNAKE_CASE` notation, and they take precedence over the file.
