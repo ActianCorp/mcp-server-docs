@@ -141,12 +141,12 @@ hide:
     <div class="code-side">
       <div class="code-block">
         <pre><code># Example: Launch the MCP Server for HCL Informix®
-docker pull actian/informix-mcp-server:latest
+docker pull actian/informix-mcp-server:1.1.0
 
 # Run with your secure environment variables
 docker run -e INFORMIXSERVER=myserver \
   -e DB_NAME=finance \
-  actian/informix-mcp-server</code></pre>
+  actian/informix-mcp-server:1.1.0</code></pre>
       </div>
     </div>
   </div>
