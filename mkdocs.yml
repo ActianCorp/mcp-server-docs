@@ -132,9 +132,6 @@ markdown_extensions:
   - pymdownx.details
   - attr_list
   - md_in_html
-  - pymdownx.snippets:
-      base_path: ["includes"]
-      check_paths: true
   - tables
   - pymdownx.tabbed:
       alternate_style: true
