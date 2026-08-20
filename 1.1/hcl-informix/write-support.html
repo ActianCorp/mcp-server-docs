@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="By default, the Actian MCP Server permits only read queries. On the SQL databases, set query_mode to read-write in conf.json to also allow Data Manipulation Language (DML) statements, that is INSERT, UPDATE, and DELETE.">
+        <meta name="description" content="Enable data-modifying SQL on the Actian MCP Server with query_mode, and understand the scope check and human approval that authorize every write.">
       
       
       
@@ -2842,22 +2842,10 @@
 
 
 <h1 id="write-support">Write Support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
-<p>By default, the Actian MCP Server permits only read queries. On the SQL databases, set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also allow Data Manipulation Language (DML) statements, that is <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>.</p>
+<p>By default, the Actian MCP Server permits only read queries. Set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also allow Data Manipulation Language (DML) statements, that is <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>.</p>
 <p>Write support remains off until it is enabled. Existing read-only deployments are not affected.</p>
-<div class="admonition note">
-<p class="admonition-title">Actian NoSQL works differently</p>
-<p>It has no DML statements: writes go through dedicated object tools, governed by their own setting. See <a href="../nosql/write-support.html">Write support for Actian NoSQL</a>.</p>
-</div>
 <p>Extensions can write too, through the same authorization checks described below. See <a href="extensions/index.html">Extensions</a>.</p>
-<p>Which tools accept a write, and how, depends on the database. See the Tools page for the relevant database, for example <a href="../ingres/tools/index.html">Ingres tools</a> or <a href="../analytics-engine/tools/index.html">Analytics Engine tools</a>. The <code>query_mode</code> setting and the authorization checks described below apply the same way regardless of which tool performs the write.</p>
-<div class="admonition note">
-<p class="admonition-title">Zen routes writes to a separate tool, and changes its tool list</p>
-<p>On Ingres and Analytics Engine, <code>execute_query</code> performs the write once <code>query_mode</code> is
-<code>read-write</code>. On <a href="../zen/tools/index.html">Zen</a> it never does: writes go to <code>execute_write_query</code>
-and to <code>orm_operation</code>, and enabling write mode also removes <code>blob_operation</code> and
-<code>database_manage</code> from the registered tools. Zen additionally counts the rows a conditional
-<code>UPDATE</code>/<code>DELETE</code> matches and shows that number in the approval prompt.</p>
-</div>
+<p>For which tools accept a write, and how, see <a href="tools/index.html">HCL Informix tools</a>. The <code>query_mode</code> setting and the authorization checks described below apply the same way regardless of which tool performs the write.</p>
 <h2 id="enabling-write-mode">Enabling Write Mode<a class="headerlink" href="#enabling-write-mode" title="Permanent link">&para;</a></h2>
 <p>Set <code>query_mode</code> in the <code>conf.json</code> file:</p>
 <table>
@@ -2955,16 +2943,8 @@ sequenceDiagram
 <div class="grid cards">
 <ul>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4-3.58 4-8 4-8-1.79-8-4m8.08 11H12c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4h.29a7.4 7.4 0 0 1-.29-2c0-.34.03-.67.08-1M20 12.08V9c0 2.21-3.58 4-8 4s-8-1.79-8-4v3c0 2.21 3.58 4 8 4h.69c1.13-2.37 3.53-4 6.31-4 .34 0 .67.03 1 .08m3.8 8.32c.1 0 .1.1 0 .2l-1 1.7c-.1.1-.2.1-.3.1l-1.2-.4c-.3.2-.5.3-.8.5l-.2 1.3c0 .1-.1.2-.2.2h-2c-.1 0-.2-.1-.3-.2l-.2-1.3c-.3-.1-.6-.3-.8-.5l-1.2.5c-.1 0-.2 0-.3-.1l-1-1.7c-.1-.1 0-.2.1-.3l1.1-.8v-1l-1.1-.8c-.1-.1-.1-.2-.1-.3l1-1.7c.1-.1.2-.1.3-.1l1.2.5c.3-.2.5-.3.8-.5l.2-1.3c0-.1.1-.2.3-.2h2c.1 0 .2.1.2.2l.2 1.3c.3.1.6.3.9.5l1.2-.5c.1 0 .3 0 .3.1l1 1.7c.1.1 0 .2-.1.3l-1.1.8v1zM20.5 19c0-.8-.7-1.5-1.5-1.5s-1.5.7-1.5 1.5.7 1.5 1.5 1.5 1.5-.7 1.5-1.5"/></svg></span> <strong><a href="../ingres/index.html#configuration-reference">Ingres configuration</a></strong><br />
-  The <code>query_mode</code> and <code>write_confirmation</code> fields for Actian Ingres.</p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M9 17H7v-7h2zm4 0h-2V7h2zm4 0h-2v-4h2z"/></svg></span> <strong><a href="../analytics-engine/index.html#configuration-reference">Analytics Engine configuration</a></strong><br />
-  The same fields for Actian Analytics Engine.</p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg></span> <strong><a href="../zen/index.html#configuration-reference">Zen configuration</a></strong><br />
-  The same fields for Actian Zen, which registers a different tool set per mode.</p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4-3.58 4-8 4-8-1.79-8-4m8.08 11H12c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4h.29a7.4 7.4 0 0 1-.29-2c0-.34.03-.67.08-1M20 12.08V9c0 2.21-3.58 4-8 4s-8-1.79-8-4v3c0 2.21 3.58 4 8 4h.69c1.13-2.37 3.53-4 6.31-4 .34 0 .67.03 1 .08m3.8 8.32c.1 0 .1.1 0 .2l-1 1.7c-.1.1-.2.1-.3.1l-1.2-.4c-.3.2-.5.3-.8.5l-.2 1.3c0 .1-.1.2-.2.2h-2c-.1 0-.2-.1-.3-.2l-.2-1.3c-.3-.1-.6-.3-.8-.5l-1.2.5c-.1 0-.2 0-.3-.1l-1-1.7c-.1-.1 0-.2.1-.3l1.1-.8v-1l-1.1-.8c-.1-.1-.1-.2-.1-.3l1-1.7c.1-.1.2-.1.3-.1l1.2.5c.3-.2.5-.3.8-.5l.2-1.3c0-.1.1-.2.3-.2h2c.1 0 .2.1.2.2l.2 1.3c.3.1.6.3.9.5l1.2-.5c.1 0 .3 0 .3.1l1 1.7c.1.1 0 .2-.1.3l-1.1.8v1zM20.5 19c0-.8-.7-1.5-1.5-1.5s-1.5.7-1.5 1.5.7 1.5 1.5 1.5 1.5-.7 1.5-1.5"/></svg></span> <strong><a href="index.html#configuration-reference">HCL Informix® configuration</a></strong><br />
+  The <code>query_mode</code> and <code>write_confirmation</code> fields for HCL Informix®.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong><a href="authentication/index.html">Authentication</a></strong><br />
@@ -2996,7 +2976,7 @@ sequenceDiagram
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 18, 2026 09:56:22 UTC">August 18, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2026 17:56:43 UTC">August 20, 2026</span>
   </span>
 
     

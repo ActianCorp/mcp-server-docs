@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Five runnable extensions are published in the documentation repository, ready to mount into a running server. They use only the public extension API.">
+        <meta name="description" content="Runnable example extensions for the Actian MCP Server, with the configuration and schema files for Actian Zen.">
       
       
       
@@ -2873,7 +2873,7 @@
 </table>
 <p>All five share one database. The <a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/README.md">examples README</a> has the full walkthrough.</p>
 <h2 id="configuration-and-schema-files">Configuration and Schema Files<a class="headerlink" href="#configuration-and-schema-files" title="Permanent link">&para;</a></h2>
-<p>Each supported database has a configuration template and a schema file. The example Python files need no edits between databases.</p>
+<p>Zen has a configuration template and a schema file.</p>
 <table>
 <thead>
 <tr>
@@ -2884,28 +2884,13 @@
 </thead>
 <tbody>
 <tr>
-<td>Ingres</td>
-<td><a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/conf.example.ingres.json"><code>conf.example.ingres.json</code></a></td>
-<td><a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/schema.ingres.sql"><code>schema.ingres.sql</code></a></td>
-</tr>
-<tr>
-<td>Analytics Engine</td>
-<td><a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/conf.example.analytics_engine.json"><code>conf.example.analytics_engine.json</code></a></td>
-<td><a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/schema.analytics_engine.sql"><code>schema.analytics_engine.sql</code></a></td>
-</tr>
-<tr>
-<td>HCL Informix</td>
-<td><a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/conf.example.informix.json"><code>conf.example.informix.json</code></a></td>
-<td><a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/schema.informix.sql"><code>schema.informix.sql</code></a></td>
-</tr>
-<tr>
 <td>Zen</td>
 <td><a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/conf.example.zen.json"><code>conf.example.zen.json</code></a></td>
 <td><a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/schema.zen.sql"><code>schema.zen.sql</code></a></td>
 </tr>
 </tbody>
 </table>
-<p>The schema files create the same seven tables and seed data everywhere. They differ in statement terminator, and in how the rule that stock cannot go negative is enforced: a <code>CHECK</code> constraint on Ingres and Informix, a trigger on Zen, and nothing at the database level on Analytics Engine, where X100 tables support neither. Each schema file's header lists the grant statements to run afterwards for the account the server connects as.</p>
+<p>The schema file creates seven tables with seed data, and enforces the rule that stock cannot go negative with a trigger. The schema file's header lists the grant statements to run afterwards for the account the server connects as.</p>
 <h2 id="running-the-examples">Running the Examples<a class="headerlink" href="#running-the-examples" title="Permanent link">&para;</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Read-write mode required</p>
@@ -2953,7 +2938,7 @@ python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>http://
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 18, 2026 09:56:22 UTC">August 18, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2026 17:56:43 UTC">August 20, 2026</span>
   </span>
 
     

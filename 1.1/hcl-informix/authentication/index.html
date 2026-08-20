@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="The Actian MCP Server supports OAuth 2.0 and OpenID Connect (OIDC) authentication. When you enable this feature, every client request must include a valid JSON Web Token (JWT) issued by a trusted identity provider (IdP).">
+        <meta name="description" content="Enable OAuth 2.0 / OIDC authentication for the Actian MCP Server — configuration reference, user impersonation, TLS setup, and security best practices.">
       
       
       
@@ -27,7 +27,7 @@
     
     
       
-        <title>Configuring OAuth 2.0 and OIDC Authentication - Actian MCP Server</title>
+        <title>Authentication - Actian MCP Server</title>
       
     
     
@@ -154,7 +154,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Configuring OAuth 2.0 and OIDC Authentication
+              Authentication
             
           </span>
         </div>
@@ -2879,7 +2879,6 @@
 <div class="admonition note">
 <p class="admonition-title">Deployment Considerations</p>
 <ul>
-<li><strong>Actian NoSQL users</strong>:  NoSQL uses a direct OAuth 2.0 flow with different configuration properties. See <a href="../../nosql/authentication/index.html">NoSQL Authentication Guide</a> for more information.</li>
 <li><strong>Transport requirements</strong>: OAuth only works with network transport such as <code>sse</code>, <code>http</code>, and <code>streamable-http</code>. You cannot use OAuth with the stdio transport, which is used for local IDE integrations like Claude Desktop or Cursor.</li>
 </ul>
 </div>
@@ -2991,18 +2990,6 @@ sequenceDiagram
 </tr>
 </tbody>
 </table>
-<div class="admonition note">
-<p class="admonition-title">Plugin Limitations</p>
-<p>Not all connectors support user impersonation:</p>
-<ul>
-<li>
-<p><strong>Zen</strong>: Does not support <code>SET SESSION AUTHORIZATION</code>. Set <code>user_impersonation</code> to <code>false</code> in the <code>oauth</code> block. JWT authentication works and only per-user database switching is skipped.</p>
-</li>
-<li>
-<p><strong>NoSQL</strong>: Uses a direct OAuth 2.0 flow, a different authentication model. The <code>user_impersonation</code> field does not apply. For more information, see <a href="../../nosql/authentication/index.html">NoSQL Authentication Guide</a>.</p>
-</li>
-</ul>
-</div>
 <h3 id="extracting-username">Extracting Username<a class="headerlink" href="#extracting-username" title="Permanent link">&para;</a></h3>
 <p>When user impersonation is active, the server extracts the database username from the token using the following priority order:</p>
 <pre class="mermaid"><code>%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
@@ -3049,10 +3036,6 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 <p>For production environments, use a certificate issued by a trusted Certificate Authority (CA), such as <code>Let's Encrypt or your corporate CA</code>.</p>
 </div>
 <h3 id="step-2-configure-tls-in-confjson">Step 2: Configure TLS in <code>conf.json</code><a class="headerlink" href="#step-2-configure-tls-in-confjson" title="Permanent link">&para;</a></h3>
-<div class="admonition note">
-<p class="admonition-title">TLS configuration for NoSQL</p>
-<p>The Actian MCP Server for NoSQL uses different configuration properties. See <a href="../../nosql/authentication/index.html#secure-remote-deployments-with-https-and-tls">NoSQL TLS guide</a> for more information.</p>
-</div>
 <p>Add the <code>ssl_certfile</code> certificate and <code>ssl_keyfile</code> key paths to the top level of the <code>conf.json</code> file (outside the <code>oauth</code> block). Ensure the usage of <code>https://</code> in <code>BASE_URL</code>:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"ssl_certfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.crt"</span><span class="p">,</span>
@@ -3066,14 +3049,14 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 <h3 id="step-3-deploy-the-docker">Step 3: Deploy the Docker<a class="headerlink" href="#step-3-deploy-the-docker" title="Permanent link">&para;</a></h3>
 <p>Mount the certificate and key into the container using volume flags:</p>
 <div class="admonition note">
-<p class="admonition-title">Analytics Engine example</p>
-<p>The following example demonstrates how to deploy the Analytics Engine docker.</p>
+<p class="admonition-title">Example</p>
+<p>The following example demonstrates how to deploy the HCL Informix docker.</p>
 </div>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span>/path/to/server.crt:/app/server.crt:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span>/path/to/server.key:/app/server.key:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span>/path/to/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>actian/analytics-engine-mcp-server:1.0.0
+<span class="w">  </span>actian/informix-mcp-server:1.1.0
 </code></pre></div>
 <p>Reference the container paths in <code>conf.json</code>:
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -3194,7 +3177,7 @@ sudo<span class="w"> </span>update-ca-certificates
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 18, 2026 09:56:22 UTC">August 18, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2026 17:56:43 UTC">August 20, 2026</span>
   </span>
 
     
