@@ -2916,45 +2916,45 @@
 <h3 id="output-schema">Output Schema<a class="headerlink" href="#output-schema" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;column&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="p">}],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;execute_query&quot;</span>
+<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_query"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>When results are truncated</strong></p>
 <p>Returned when the result set exceeds <code>max_rows</code> (default: <code>1000</code>).</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;column&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="p">}],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;truncated&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;truncation_note&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Results limited to 1000 rows. Use WHERE to narrow results.&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;execute_query&quot;</span>
+<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"truncated"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"truncation_note"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Results limited to 1000 rows. Use WHERE to narrow results."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_query"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>When dialect translation is applied</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;translated&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;translation_note&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Translated LEN() to CHAR_LENGTH() for Zen compatibility&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;original_sql&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SELECT LEN(name) FROM customers&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;execute_query&quot;</span>
+<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"translated"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"translation_note"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Translated LEN() to CHAR_LENGTH() for Zen compatibility"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"original_sql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT LEN(name) FROM customers"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_query"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <p><strong>Request</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;sql&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SELECT * FROM Person WHERE Last_Name LIKE &#39;S%&#39; ORDER BY First_Name&quot;</span>
+<span class="w">  </span><span class="nt">"sql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT * FROM Person WHERE Last_Name LIKE 'S%' ORDER BY First_Name"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;First_Name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;Last_Name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Smith&quot;</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;First_Name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;Last_Name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sanders&quot;</span><span class="p">}</span>
+<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">"ID"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="nt">"First_Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Alice"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Last_Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Smith"</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">"ID"</span><span class="p">:</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="nt">"First_Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bob"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Last_Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sanders"</span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;execute_query&quot;</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_query"</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -2965,15 +2965,15 @@
 <h3 id="output-schema_1">Output Schema<a class="headerlink" href="#output-schema_1" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;tables&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;table_name&gt;&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_tables&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;table_name&gt;"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;num_tables&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;tables&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Department&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Billing&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Student&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Class&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Tuition&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Faculty&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">  </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Person"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Department"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Billing"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Student"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Class"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Tuition"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Faculty"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -3001,44 +3001,44 @@
 <h3 id="output-schema_2">Output Schema<a class="headerlink" href="#output-schema_2" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;table_name&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"table_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;table_name&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;column_name&gt;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;column_type&gt;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;precision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;precision&gt;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;scale&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;scale&gt;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;nullable&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;true|false&gt;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;default_value&gt;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;primary_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;true|false&gt;&quot;</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;column_name&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;column_type&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"precision"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;precision&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;scale&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;true|false&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;default_value&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"primary_key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;true|false&gt;"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;primary_keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;primary_key_column&gt;&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;foreign_keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">  </span><span class="nt">"primary_keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;primary_key_column&gt;"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"foreign_keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h3>
 <p><strong>Request</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Person&quot;</span>
+<span class="w">  </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Person"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Person&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"table_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Person"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ID&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BIGIDENTITY&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;precision&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;scale&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;nullable&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;primary_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ID"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BIGIDENTITY"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"precision"</span><span class="p">:</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"primary_key"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;primary_keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;foreign_keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">  </span><span class="nt">"primary_keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ID"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"foreign_keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -3132,18 +3132,18 @@
 <h3 id="output-schema_3">Output Schema<a class="headerlink" href="#output-schema_3" title="Permanent link">&para;</a></h3>
 <p><strong>On Success</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;column&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="p">}],</span>
-<span class="w">  </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;orm_operation&quot;</span>
+<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"orm_operation"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h3>
 <p><strong>Request</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;select&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Person&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;COUNT(*) AS total&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;where&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Last_Name&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LIKE&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;S%&quot;</span><span class="p">}</span>
+<span class="w">  </span><span class="nt">"operation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"select"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Person"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"COUNT(*) AS total"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"where"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Last_Name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"operator"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LIKE"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"S%"</span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -3212,28 +3212,28 @@
 <h3 id="output-schema_4">Output Schema<a class="headerlink" href="#output-schema_4" title="Permanent link">&para;</a></h3>
 <p><strong>For <code>list</code></strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;row_id&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;filename&gt;&quot;</span><span class="p">}],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_files&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"files"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;row_id&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"filename"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;filename&gt;"</span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;num_files&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>For <code>download</code></strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;output_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;destination_path&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;size&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;file_size_bytes&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"output_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;destination_path&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;file_size_bytes&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_4">Example<a class="headerlink" href="#example_4" title="Permanent link">&para;</a></h3>
 <p><strong>Request</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;table_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;documents&quot;</span>
+<span class="w">  </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"list"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"table_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"documents"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;report.pdf&quot;</span><span class="p">}],</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="nt">"files"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"filename"</span><span class="p">:</span><span class="w"> </span><span class="s2">"report.pdf"</span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -3261,29 +3261,29 @@
 <h3 id="output-schema_5">Output Schema<a class="headerlink" href="#output-schema_5" title="Permanent link">&para;</a></h3>
 <p><strong>For <code>capabilities</code></strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Actian Zen&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;features&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sql&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;blobs&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Actian Zen"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"sql"</span><span class="p">,</span><span class="w"> </span><span class="s2">"blobs"</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>For <code>list_dsns</code></strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;current_dsn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;active_dsn&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;available_dsns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;&lt;dsn_name&gt;&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;driver_name&gt;&quot;</span><span class="p">}</span>
+<span class="w">  </span><span class="nt">"current_dsn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;active_dsn&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"available_dsns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"&lt;dsn_name&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"driver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;driver_name&gt;"</span><span class="p">}</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;num_dsns&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;num_dsns&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example_5">Example<a class="headerlink" href="#example_5" title="Permanent link">&para;</a></h3>
 <p><strong>Request</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;capabilities&quot;</span>
+<span class="w">  </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"capabilities"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Actian Zen&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;features&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sql&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;blobs&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Actian Zen"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"sql"</span><span class="p">,</span><span class="w"> </span><span class="s2">"blobs"</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />

@@ -2730,13 +2730,13 @@ sequenceDiagram
 </table>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;oauth&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CONFIG_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://dev-abc123.us.auth0.com/.well-known/openid-configuration&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wNXUdrp9aBcDeFgHiJkLmN&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_SECRET&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1B2c3D4e5F6g7H8i9J0kLmNoPqRsTuVwXyZ&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_BASE_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://&lt;mcp-server-host&gt;:8000&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_AUDIENCE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;your-audience&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;user_impersonation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_CONFIG_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://dev-abc123.us.auth0.com/.well-known/openid-configuration"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_CLIENT_ID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wNXUdrp9aBcDeFgHiJkLmN"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_CLIENT_SECRET"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a1B2c3D4e5F6g7H8i9J0kLmNoPqRsTuVwXyZ"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_BASE_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;mcp-server-host&gt;:8000"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_AUDIENCE"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;your-audience&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"user_impersonation"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -2813,8 +2813,8 @@ flowchart TD
 <p>For remote testing, generate a self-signed certificate with a Subject Alternative Name (SAN). </p>
 <div class="language-bash highlight"><pre><span></span><code>openssl<span class="w"> </span>req<span class="w"> </span>-x509<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-keyout<span class="w"> </span>server.key<span class="w"> </span>-out<span class="w"> </span>server.crt<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-days<span class="w"> </span><span class="m">365</span><span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=&lt;your-ip-or-hostname&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=IP:&lt;your-ip&gt;&quot;</span>
+<span class="w">  </span>-subj<span class="w"> </span><span class="s2">"/CN=&lt;your-ip-or-hostname&gt;"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-addext<span class="w"> </span><span class="s2">"subjectAltName=IP:&lt;your-ip&gt;"</span>
 chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>server.key
 </code></pre></div>
 <div class="admonition note">
@@ -2832,10 +2832,10 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 </div>
 <p>Add the <code>ssl_certfile</code> certificate and <code>ssl_keyfile</code> key paths to the top level of the <code>conf.json</code> file (outside the <code>oauth</code> block). Ensure the usage of <code>https://</code> in <code>BASE_URL</code>:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;ssl_certfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/app/server.crt&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;ssl_keyfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/app/server.key&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;oauth&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_BASE_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://&lt;your-ip-or-hostname&gt;:8000&quot;</span>
+<span class="w">  </span><span class="nt">"ssl_certfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.crt"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"ssl_keyfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.key"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"FASTMCP_SERVER_AUTH_BASE_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;your-ip-or-hostname&gt;:8000"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -2854,8 +2854,8 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 </code></pre></div>
 <p>Reference the container paths in <code>conf.json</code>:
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;ssl_certfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/app/server.crt&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;ssl_keyfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/app/server.key&quot;</span>
+<span class="w">  </span><span class="nt">"ssl_certfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.crt"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"ssl_keyfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.key"</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <div class="admonition note">
@@ -2884,8 +2884,8 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 sudo<span class="w"> </span>security<span class="w"> </span>add-trusted-cert<span class="w"> </span>-d<span class="w"> </span>-r<span class="w"> </span>trustRoot<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-k<span class="w"> </span>/Library/Keychains/System.keychain<span class="w"> </span>~/server.crt
 
-<span class="c1"># Ensure VS Code&#39;s Node.js runtime picks it up</span>
-launchctl<span class="w"> </span>setenv<span class="w"> </span>NODE_EXTRA_CA_CERTS<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/server.crt&quot;</span>
+<span class="c1"># Ensure VS Code's Node.js runtime picks it up</span>
+launchctl<span class="w"> </span>setenv<span class="w"> </span>NODE_EXTRA_CA_CERTS<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/server.crt"</span>
 
 <span class="c1"># Fully restart VS Code (Cmd+Q, then reopen)</span>
 </code></pre></div>
@@ -2903,20 +2903,20 @@ launchctl<span class="w"> </span>setenv<span class="w"> </span>NODE_EXTRA_CA_CER
 sudo<span class="w"> </span>update-ca-certificates
 
 <span class="c1"># For VS Code / Node.js:</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">NODE_EXTRA_CA_CERTS</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/server.crt&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">NODE_EXTRA_CA_CERTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/server.crt"</span>
 <span class="c1"># Add to ~/.bashrc or ~/.profile to persist across sessions</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="language-powershell highlight"><pre><span></span><code><span class="c"># Import into Trusted Root store (run PowerShell as Administrator)</span>
-<span class="nb">Import-Certificate</span> <span class="n">-FilePath</span> <span class="s2">&quot;$env:USERPROFILE\server.crt&quot;</span> <span class="p">`</span>
+<span class="nb">Import-Certificate</span> <span class="n">-FilePath</span> <span class="s2">"$env:USERPROFILE\server.crt"</span> <span class="p">`</span>
   <span class="n">-CertStoreLocation</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">Root</span>
 
 <span class="c"># For VS Code / Node.js:</span>
 <span class="no">[System.Environment]</span><span class="p">::</span><span class="n">SetEnvironmentVariable</span><span class="p">(</span>
-  <span class="s2">&quot;NODE_EXTRA_CA_CERTS&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;$env:USERPROFILE\server.crt&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;User&quot;</span>
+  <span class="s2">"NODE_EXTRA_CA_CERTS"</span><span class="p">,</span>
+  <span class="s2">"$env:USERPROFILE\server.crt"</span><span class="p">,</span>
+  <span class="s2">"User"</span>
 <span class="p">)</span>
 
 <span class="c"># Fully restart VS Code after setting the variable</span>

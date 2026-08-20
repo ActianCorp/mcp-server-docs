@@ -3123,16 +3123,16 @@
 <p>After adding the mapper, request a new token and decode it. The <code>aud</code> claim includes the audience string:</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Request a token</span>
 <span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://&lt;keycloak-host&gt;:8080/realms/actian-mcp/protocol/openid-connect/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_id=actian-mcp&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_secret=&lt;your-secret&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;access_token&#39;])&quot;</span><span class="k">)</span>
+<span class="w">  </span><span class="s2">"http://&lt;keycloak-host&gt;:8080/realms/actian-mcp/protocol/openid-connect/token"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=client_credentials"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"client_id=actian-mcp"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"client_secret=&lt;your-secret&gt;"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import sys,json; print(json.load(sys.stdin)['access_token'])"</span><span class="k">)</span>
 
 <span class="c1"># Decode and inspect the aud claim</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d.<span class="w"> </span>-f2<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>aud
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d.<span class="w"> </span>-f2<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>aud
 </code></pre></div>
 <p>Expected output:
-<div class="language-json highlight"><pre><span></span><code><span class="nt">&quot;aud&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;actian-mcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;account&quot;</span><span class="p">]</span>
+<div class="language-json highlight"><pre><span></span><code><span class="nt">"aud"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"actian-mcp"</span><span class="p">,</span><span class="w"> </span><span class="s2">"account"</span><span class="p">]</span>
 </code></pre></div></p>
 <div class="admonition note">
 <p class="admonition-title">Token caching</p>
@@ -3195,11 +3195,11 @@
 <h3 id="verification_1">Verification<a class="headerlink" href="#verification_1" title="Permanent link">&para;</a></h3>
 <p>After adding the mapper, the token contains the following:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jdoe&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;iss&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://&lt;keycloak-host&gt;:8080/realms/actian-mcp&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;aud&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;realm-management&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;account&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;actian-mcp&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;preferred_username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jdoe&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openid email profile&quot;</span>
+<span class="w">  </span><span class="nt">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jdoe"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://&lt;keycloak-host&gt;:8080/realms/actian-mcp"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"aud"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"realm-management"</span><span class="p">,</span><span class="w"> </span><span class="s2">"account"</span><span class="p">,</span><span class="w"> </span><span class="s2">"actian-mcp"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"preferred_username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jdoe"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openid email profile"</span>
 <span class="p">}</span>
 </code></pre></div>
 <div class="admonition warning">
@@ -3331,23 +3331,23 @@
 </div>
 <h3 id="example-confjson">Example <code>conf.json</code><a class="headerlink" href="#example-confjson" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;driver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{Ingres}&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@&lt;db-host&gt;,tcp_ip,&lt;port&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mydb&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database_user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_user&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database_password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;database_password&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;max_connections&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;ssl_certfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/app/server.crt&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;ssl_keyfile&quot;</span><span class="p">:</span><span class="w">  </span><span class="s2">&quot;/app/server.key&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;oauth&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CONFIG_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://&lt;keycloak-host&gt;:8080/realms/actian-mcp/.well-known/openid-configuration&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actian-mcp&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_CLIENT_SECRET&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;your-client-secret&gt;&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_BASE_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://&lt;mcp-server-host&gt;:8000&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;FASTMCP_SERVER_AUTH_AUDIENCE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actian-mcp&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;user_impersonation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="nt">"driver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{Ingres}"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@&lt;db-host&gt;,tcp_ip,&lt;port&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mydb"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database_user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_user&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database_password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_password&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"max_connections"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"ssl_certfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.crt"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"ssl_keyfile"</span><span class="p">:</span><span class="w">  </span><span class="s2">"/app/server.key"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_CONFIG_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://&lt;keycloak-host&gt;:8080/realms/actian-mcp/.well-known/openid-configuration"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_CLIENT_ID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"actian-mcp"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_CLIENT_SECRET"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;your-client-secret&gt;"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_BASE_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;mcp-server-host&gt;:8000"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"FASTMCP_SERVER_AUTH_AUDIENCE"</span><span class="p">:</span><span class="w"> </span><span class="s2">"actian-mcp"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"user_impersonation"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3374,12 +3374,12 @@
 <h3 id="verify-token-contents-development-only">Verify Token Contents (Development Only)<a class="headerlink" href="#verify-token-contents-development-only" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>http://&lt;keycloak-host&gt;:8080/realms/actian-mcp/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=password&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_id=actian-mcp&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_secret=your-secret&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;username=jdoe&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;password=secret&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;scope=openid email profile&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=password"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"client_id=actian-mcp"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"client_secret=your-secret"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"username=jdoe"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"password=secret"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"scope=openid email profile"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <p>Decode the <code>access_token</code> at <a href="https://jwt.io">jwt.io</a> and verify the following:</p>

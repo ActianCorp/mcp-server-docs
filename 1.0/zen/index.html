@@ -2649,19 +2649,19 @@
 <p><strong>DSN connection (no credentials)</strong></p>
 <p>Use this format when the built-in is <code>odbc.ini</code> and DSN is sufficient for requirements:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demodata&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;conn_string&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DSN=demodata&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demodata"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"conn_string"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DSN=demodata"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Full driver connection (with credentials)</strong></p>
 <p>Use this format when the database requires authentication. This bypasses the container's built-in <code>odbc.ini</code> and connects directly to the Zen engine.</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demodata&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;conn_string&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA;UID=myuser;PWD=mypassword&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demodata"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"conn_string"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA;UID=myuser;PWD=mypassword"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="configuration-reference">Configuration Reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h3>
