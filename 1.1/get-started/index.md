@@ -75,7 +75,7 @@ docker run -d \
     -v $(pwd)/conf.json:/app/conf.json:ro \
     -p 8000:8000 \
     --name=actian-mcp \
-    actian/analytics-engine-mcp-server
+    actian/analytics-engine-mcp-server:1.1.0
 ```
 
 ## Step 4: Connect to an MCP Client
