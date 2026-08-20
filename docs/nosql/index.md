@@ -41,7 +41,7 @@ Before starting the server, ensure the following requirements are met:
 - **OIDC provider (Optional):** Required if you are using OAuth authentication.
 
 !!! note "Database compatibility"
-    This version of the Actian NoSQL MCP Server requires Actian NoSQL Database 11. Earlier database releases are not supported.
+    This version of the Actian NoSQL MCP Server requires Actian NoSQL Database 11. Earlier Actian NoSQL versions are not supported.
 
 ## Configuration
 
