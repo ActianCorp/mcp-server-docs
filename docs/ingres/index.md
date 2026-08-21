@@ -18,7 +18,7 @@ The Actian MCP Server for Ingres supports the following operations:
 | **Describe table structure** | Retrieve column definitions, types, and comments|
 | **Read schema metadata** | Explore database-level metadata and constraints |
 | **List functions** | View available user-defined functions and procedures|
-| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
+| **Execute write queries** | Run `INSERT`, `UPDATE`, `DELETE`, and `MERGE` statements. Off by default. Requires `query_mode` set to `read-write` |
 
 !!! note "Write support is opt-in"
     The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](write-support.md).
@@ -79,7 +79,7 @@ Create a file named `conf.json` in the working directory and define the environm
 | `database` | `string` |The name of the target database |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool |
 | `host` | `string` | The host address the server listens to in the container. |
-| `port` | `string` | The port the server listens to in the container (typically `8000`)|
+| `port` | `integer` | The port the server listens to in the container (typically `8000`)|
 | `database_user` | `string` | The username for database authentication|
 | `database_password` | `string` | The password for database authentication |
 
@@ -87,7 +87,7 @@ Create a file named `conf.json` in the working directory and define the environm
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `max_rows` | `integer` | `1000` | The maximum number of rows returned in a single query response. Maximum value: `1000` |
+| `max_rows` | `integer` | `1000` | The maximum number of rows returned in a single query response. |
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` in the container |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` in the container |
@@ -112,7 +112,17 @@ docker run -d \
 
 Once the container is running, you can connect the MCP client to the server using the host and port specified in the configuration.
 
---- 
+---
+
+## Usage
+
+Once connected, the MCP client automatically discovers the server capabilities. You can perform the following tasks:
+
+- **Inspect before querying**: List tables and review structure before writing SQL.
+- **Run a query**: Execute a SQL statement and receive formatted results.
+- **Explore functions**: Look up available user-defined functions and stored procedures.
+
+---
 
 ## Next Steps
 

@@ -1,6 +1,6 @@
 # Example External Extensions
 
-Five runnable, customer-style extensions that are **mounted into a running
+Five runnable, custom-style extensions that are **mounted into a running
 container as a volume** — the way an end user adds their own tools without
 rebuilding the image. They use only the public `actian_mcp_server.extension_api`.
 
@@ -26,7 +26,7 @@ and the example **SQL is deliberately plain ANSI** — standard
 per-engine branching.
 
 The one operation whose syntax differs across engines — top-N row limiting
-(`FETCH FIRST n ROWS ONLY` on Ingres/AE vs `SELECT FIRST n` on Informix vs
+(`FETCH FIRST n ROWS ONLY` on Ingres/Analytics Engine (AE) vs `SELECT FIRST n` on Informix vs
 `TOP n`/`LIMIT` on Zen) — is handled by ordering in SQL and taking the first *n*
 rows **in Python** (`revenue_extension.py`), so no engine-specific clause is used.
 For large tables in production you may prefer your engine's native top-N to limit
