@@ -46,7 +46,7 @@ Create a file named `conf.json` in the working directory and define the environm
 ```json
 {
   "driver": "<odbc_driver>",
-  "server": "<database_host>",
+  "server": "@<db-host>,tcp_ip,<installation_id>",
   "database": "<database_name>",
   "max_connections": "<max_concurrent_connections>",
   "max_rows": "<max_rows_per_query_response>",

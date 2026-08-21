@@ -55,7 +55,7 @@ A Realm is an isolated container for managing users, credentials, and roles.
     | Field | Value | Notes |
     |-------|-------|-------|
     | **Realm name** | `actian-mcp` | Any descriptive name; it appears in all OIDC URLs |
-    | **Enabled** | `On` | NA |
+    | **Enabled** | `On` | A disabled realm rejects all logins and token requests for every client and user in it. Leave this `On`. |
 
 4. Select **Create**.
 
@@ -289,7 +289,7 @@ If `user_impersonation` is `true`, each Keycloak user contains a matching databa
     | **Email** | `jdoe@example.com` | Optional but recommended |
     | **First Name** | `John` | Optional |
     | **Last Name** | `Doe` | Optional |
-    | **Enabled** | `On` | NA |
+    | **Enabled** | `On` | A disabled user cannot log in or receive tokens, even with correct credentials. Leave this `On`. If your Keycloak version does not show this field on the Add User form, the account is enabled by default; you can still find and toggle it later from the user's Details tab. |
 
 4. Select **Create**.
 5. Navigate to the **Credentials** tab > **Set password** > enter a password > toggle **Temporary** to `Off` > **Save**.
