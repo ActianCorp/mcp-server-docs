@@ -15,7 +15,7 @@ Five runnable extensions are published in the documentation repository, ready to
 | [`catalog_resources.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/catalog_resources.py) | The rest of the surface: `setup()` and `teardown()` hooks, a static and a templated resource, and a prompt. Read-only. |
 | [`revenue_extension.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/revenue_extension.py) | All three patterns in one reference example: a read tool, an approval-gated write, and a two-table transaction. |
 
-All five share one database. The [examples README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/README.md) has the full walkthrough.
+All five custom extensions share one database. The [Example External Extensions README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/README.md) has the full walkthrough.
 
 ## Configuration and Schema Files
 

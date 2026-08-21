@@ -5,7 +5,7 @@ description: Enable data-modifying SQL on the Actian MCP Server with query_mode,
 
 # Write Support
 
-By default, the Actian MCP Server permits only read queries. Set `query_mode` to `read-write` in `conf.json` to also allow Data Manipulation Language (DML) statements, that is `INSERT`, `UPDATE`, and `DELETE`.
+By default, the Actian MCP Server permits only read queries. Set `query_mode` to `read-write` in `conf.json` to also allow Data Manipulation Language (DML) statements, that is `INSERT`, `UPDATE`, `DELETE`, and `MERGE`.
 
 Write support remains off until it is enabled. Existing read-only deployments are not affected.
 
@@ -20,7 +20,7 @@ Set `query_mode` in the `conf.json` file:
 | Value | Behavior |
 |-------|----------|
 | `read-only` | Default. Only read queries are permitted. |
-| `read-write` | Read queries plus `INSERT`, `UPDATE`, and `DELETE` are permitted. |
+| `read-write` | Read queries plus `INSERT`, `UPDATE`, `DELETE`, and `MERGE` are permitted. |
 
 ```json
 {
@@ -50,7 +50,7 @@ sequenceDiagram
     participant Server as MCP Server
     participant DB as Database
 
-    Client->>Server: Write request (INSERT / UPDATE / DELETE)
+    Client->>Server: Write request (INSERT / UPDATE / DELETE / MERGE)
     Server->>Server: Check mcp:write scope
     alt Scope missing
         Server-->>Client: Rejected (authorization error)
@@ -86,7 +86,7 @@ Some clients cannot display the approval prompt. For those deployments, set `wri
 ```
 
 !!! warning "This removes human oversight of every write"
-    With `write_confirmation` set to `false`, the server runs `INSERT`, `UPDATE`, and `DELETE` statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and unattended writes by the AI agent are acceptable.
+    With `write_confirmation` set to `false`, the server runs `INSERT`, `UPDATE`, `DELETE`, and `MERGE` statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and unattended writes by the AI agent are acceptable.
 
     The `mcp:write` scope check still applies. Disabling the prompt does not grant write access to callers that lack the scope.
 
