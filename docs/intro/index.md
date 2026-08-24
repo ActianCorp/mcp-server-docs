@@ -15,7 +15,7 @@ MCP is an open standard designed to connect AI models with external systems, too
 | **Resources** | Read-only data sources that the AI can access| Viewing database schema information |
 | **Prompts** |Prebuilt templates designed for recurring tasks| Reusing common database workflows |
 
-## MCP Server Capabilities 
+## MCP Server Capabilities
 
 You can use the Actian MCP Server to provide a single and unified interface for the Actian database management systems instead of building and maintaining separate connections for every AI client or workflow.
 
@@ -164,13 +164,13 @@ sequenceDiagram
   Restricts AI agents to read-only operations, preventing unintended modifications to the data.
 
 - :material-database-edit: **Controlled Write Access**  
-  Allows `INSERT`, `UPDATE`, and `DELETE` when you opt in, with each write gated by an OAuth scope and human approval. See [Write support](write-support.md).
+  Allows `INSERT`, `UPDATE`, and `DELETE` when enabled, with each write gated by an OAuth scope and human approval. See [Write support](../ingres/write-support.md).
 
 - :material-database-search: **Schema Discovery**  
   Enables AI agents to review database structures and metadata before executing queries.
 
 - :material-puzzle: **Custom Extensions**  
-  Add your own tools, resources, and prompts in Python, served through the same endpoint as the built-in tools and subject to the same authentication and write controls. See [Extensions](../extensions/index.md).
+  Add custom tools, resources, and prompts in Python, served through the same endpoint as the built-in tools and subject to the same authentication and write controls. See [Extensions](../ingres/extensions/index.md).
 
 </div>
 
@@ -200,7 +200,7 @@ You can deploy an MCP Server as follows:
 !!! info 
     Each Actian DBMS requires its own dedicated Actian MCP Server instance, which means there is a single server, database, and MCP endpoint.
 
-## MCP Server Advantages 
+## MCP Server Advantages
 
 By removing the need to build individual integrations for every AI use case, the Actian MCP Server provides a standardized way to use the trusted database capabilities. It ensures that deployment and access control remain securely managed at the server layer.
 

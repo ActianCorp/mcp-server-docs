@@ -1,6 +1,6 @@
 ---
 title: Examples
-description: Runnable example extensions for the Actian MCP Server, with configuration and schema files for each supported database.
+description: Runnable example extensions for the Actian MCP Server, with configuration and schema files for Actian Analytics Engine.
 ---
 
 # Examples
@@ -15,24 +15,22 @@ Five runnable extensions are published in the documentation repository, ready to
 | [`catalog_resources.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/catalog_resources.py) | The rest of the surface: `setup()` and `teardown()` hooks, a static and a templated resource, and a prompt. Read-only. |
 | [`revenue_extension.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/revenue_extension.py) | All three patterns in one reference example: a read tool, an approval-gated write, and a two-table transaction. |
 
-All five share one database. The [examples README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/README.md) has the full walkthrough.
+All five custom extensions share one database. The [Example External Extensions README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/README.md) has the full walkthrough.
 
-## Configuration and schema files
+## Configuration and Schema Files
 
-Each supported database has a configuration template and a schema file. The example Python files need no edits between databases.
+Analytics Engine has a configuration template and a schema file.
 
 | Database | Configuration template | Schema file |
 |----------|------------------------|-------------|
-| Ingres | [`conf.example.ingres.json`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/conf.example.ingres.json) | [`schema.ingres.sql`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/schema.ingres.sql) |
 | Analytics Engine | [`conf.example.analytics_engine.json`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/conf.example.analytics_engine.json) | [`schema.analytics_engine.sql`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/schema.analytics_engine.sql) |
-| HCL Informix | [`conf.example.informix.json`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/conf.example.informix.json) | [`schema.informix.sql`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/schema.informix.sql) |
-| Zen | [`conf.example.zen.json`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/conf.example.zen.json) | [`schema.zen.sql`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/schema.zen.sql) |
 
-The schema files create the same seven tables and seed data everywhere. They differ in statement terminator, and in how the rule that stock cannot go negative is enforced: a `CHECK` constraint on Ingres and Informix, a trigger on Zen, and nothing at the database level on Analytics Engine, where X100 tables support neither. Each schema file's header lists the grant statements to run afterwards for the account the server connects as.
+The schema file creates seven tables and seed data. The rule that stock cannot go negative is not enforced at the database level on Analytics Engine, where X100 tables support neither a `CHECK` constraint nor a trigger. The schema file's header lists the grant statements to run afterwards for the account the server connects as.
 
-## Running them
+## Running the Examples
 
-The two transaction examples and the approval example need `"query_mode": "read-write"`. See [Write support](../intro/write-support.md).
+!!! note "Read-write mode required"
+    The two transaction examples and the approval example need `"query_mode": "read-write"`. See [Write support](../write-support.md).
 
 Mount each file under `/app/extensions/`, mount your configuration at `/app/conf.json`, and list the modules by name:
 
@@ -56,7 +54,7 @@ docker run -d --rm -p 8000:8000 \
 
 The startup log shows a `Loaded extension` line for each module and one line per registered tool. Those tools then appear in your MCP client's tool list next to the built-in ones.
 
-## Answering the approval prompt
+## Answering the Approval Prompt
 
 Claude Desktop and GitHub Copilot cannot display the write-approval prompt, so writes through them fail closed. To test an approval-gated tool such as `adjust_stock`, use [`hitl_demo_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py), which prints the request and asks you at the console:
 
@@ -65,4 +63,4 @@ pip install fastmcp
 python hitl_demo_client.py http://localhost:8000/mcp adjust_stock '{"product_id": 1, "delta": 5}'
 ```
 
-See the [client README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/README.md) for the environment variables it accepts, and [Connecting MCP Clients](../mcp-clients/index.md#elicitation-support-for-write-approval) for which clients support the prompt.
+See the [client README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/README.md) for the environment variables it accepts, and [Connecting MCP Clients](../../mcp-clients/index.md#elicitation-support-for-write-approval) for which clients support the prompt.

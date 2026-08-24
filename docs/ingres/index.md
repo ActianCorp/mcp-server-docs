@@ -18,10 +18,10 @@ The Actian MCP Server for Ingres supports the following operations:
 | **Describe table structure** | Retrieve column definitions, types, and comments|
 | **Read schema metadata** | Explore database-level metadata and constraints |
 | **List functions** | View available user-defined functions and procedures|
-| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
+| **Execute write queries** | Run `INSERT`, `UPDATE`, `DELETE`, and `MERGE` statements. Off by default. Requires `query_mode` set to `read-write` |
 
 !!! note "Write support is opt-in"
-    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](write-support.md).
 
 ---
 
@@ -46,12 +46,14 @@ Create a file named `conf.json` in the working directory and define the environm
 ```json
 {
   "driver": "<odbc_driver>",
-  "server": "<database_host>",
+  "server": "@<db-host>,tcp_ip,<installation_id>",
   "database": "<database_name>",
-  "max_connections": "<max_concurrent_connections>",
-  "max_rows": "<max_rows_per_query_response>",
+  "max_connections": 10,
+  "max_rows": 1000,
   "host": "<mcp_server_host>",
-  "port": "<mcp_server_port>",
+  "port": 8000,
+  "query_mode": "read-only",
+  "write_confirmation": true,
   "database_user": "<database_user>",
   "database_password": "<database_password>",
   "log_level": "INFO",
@@ -79,7 +81,7 @@ Create a file named `conf.json` in the working directory and define the environm
 | `database` | `string` |The name of the target database |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool |
 | `host` | `string` | The host address the server listens to in the container. |
-| `port` | `string` | The port the server listens to in the container (typically `8000`)|
+| `port` | `integer` | The port the server listens to in the container (typically `8000`)|
 | `database_user` | `string` | The username for database authentication|
 | `database_password` | `string` | The password for database authentication |
 
@@ -87,14 +89,14 @@ Create a file named `conf.json` in the working directory and define the environm
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `max_rows` | `integer` | `1000` | The maximum number of rows returned in a single query response. Maximum value: `1000` |
+| `max_rows` | `integer` | `1000` | The maximum number of rows returned in a single query response. |
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` in the container |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` in the container |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) |
-| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md) |
-| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt) |
-| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md) |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-oauth-block) |
+| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md) |
+| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt) |
+| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md) |
 
 ---
 
@@ -107,16 +109,32 @@ docker run -d \
     -v $(pwd)/conf.json:/app/conf.json:ro \
     -p 8000:8000 \
     --name=actian-mcp \
-    actian/ingres-mcp-server:1.0.0
+    actian/ingres-mcp-server:1.1.0
 ```
 
 Once the container is running, you can connect the MCP client to the server using the host and port specified in the configuration.
 
---- 
+---
+
+## Usage
+
+Once connected, the MCP client automatically discovers the server capabilities. You can perform the following tasks:
+
+- **Inspect before querying**: List tables and review structure before writing SQL.
+- **Run a query**: Execute a SQL statement and receive formatted results.
+- **Explore functions**: Look up available user-defined functions and stored procedures.
+
+---
 
 ## Next Steps
 
 <div class="grid cards" markdown>
+
+- :material-pencil: **[Write Support](write-support.md)**  
+  Enable data-modifying SQL, and what gates each write.
+
+- :material-lock: **[Authentication](authentication/index.md)**  
+  Secure the server with OAuth 2.0 and an external identity provider.
 
 - :material-tools: **[Tools](tools/index.md)**  
   Explore the available MCP tools for Ingres database operations
@@ -127,7 +145,7 @@ Once the container is running, you can connect the MCP client to the server usin
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
   Access pre-built templates for common database workflows
 
-- :material-puzzle: **[Extensions](../extensions/index.md)**  
-  Add your own tools to the server with a Python extension.
+- :material-puzzle: **[Extensions](extensions/index.md)**  
+  Add custom tools to the server with a Python extension.
 
 </div>

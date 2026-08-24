@@ -5,31 +5,30 @@ description: Built-in tools available when using the Actian MCP Server with Acti
 
 # Tools
 
-The Actian MCP Server for Actian Zen registers six built-in tools at a time. Which six depends on
-`query_mode`, so the tool list a client discovers differs between a read-only and a read-write
-deployment. See [Write support](../../intro/write-support.md).
+The Actian MCP Server for Actian Zen registers a different set of built-in tools per `query_mode` —
+six in `read-only`, five in `read-write` — so the tool list a client discovers differs between the
+two deployments. See [Write support](../write-support.md).
 
 ## Available Tools
 
 | Tool | `read-only` | `read-write` | Description |
 |------|:-----------:|:------------:|-------------|
-| [`execute_query`](#execute_query) | ✓ | ✓ | Runs `SELECT` with automatic Zen dialect translation. Never writes, in either mode. |
+| [`execute_query`](#execute_query) | ✓ | ✓ | Runs `SELECT` with automatic Zen dialect translation. Never writes in either mode. |
 | [`list_tables`](#list_tables) | ✓ | ✓ | Lists all user tables from the Zen catalog. |
 | [`describe_table`](#describe_table) | ✓ | ✓ | Returns column metadata, primary keys, and foreign keys for a table. |
 | [`orm_operation`](#orm_operation) | ✓ select | ✓ select, insert, update, delete | Structured queries via SQLAlchemy with JOINs, WHERE, ORDER BY, GROUP BY, and LIMIT. |
 | [`execute_write_query`](#execute_write_query) | — | ✓ | Runs a single `INSERT`, `UPDATE`, `DELETE`, or `MERGE`. |
-| [`batch_operation`](#batch_operation) | — | ✓ | Bulk insert, update, delete, and row counting. |
 | [`blob_operation`](#blob_operation) | ✓ | — | Lists and downloads file and blob data. |
 | [`database_manage`](#database_manage) | ✓ | — | Queries server capabilities, lists DSNs, and releases locks. |
 
 !!! note "Enabling write mode removes two tools"
     `blob_operation` and `database_manage` are registered in `read-only` mode only. A `read-write`
     server does not expose them, and they will not appear in the client's tool list. This is
-    deliberate, not a packaging fault.
+    intentional.
 
 Writes are authorized by the `mcp:write` scope and a human approval prompt, both described in
-[Write support](../../intro/write-support.md). Data Definition Language and explicit transactions
-are not available in any shipped mode.
+[Write support](../write-support.md). Data Definition Language, explicit transactions, and
+bulk `batch_operation` are not available in any mode in this release.
 
 ---
 
@@ -40,7 +39,7 @@ Executes a read-only SQL query against Actian Zen with automatic dialect transla
 !!! warning "This tool never writes, even in read-write mode"
     Unlike the Ingres and Analytics Engine servers, where the same tool performs writes once
     `query_mode` is `read-write`, Zen accepts `SELECT` here in every mode. DML sent to
-    `execute_query` is rejected with a pointer to the tool that does the work:
+    `execute_query` is rejected with a pointer to the tool that performs the write:
 
     ```json
     {
@@ -50,7 +49,7 @@ Executes a read-only SQL query against Actian Zen with automatic dialect transla
     }
     ```
 
-    Data Definition Language is rejected the same way, and is not enabled by any mode:
+    Data Definition Language is rejected the same way, and is not enabled in any mode:
 
     ```json
     {
@@ -299,8 +298,21 @@ In `read-write` mode this tool also performs single-row writes. Those go through
 Runs a single Data Manipulation Language statement — `INSERT`, `UPDATE`, `DELETE`, or `MERGE`.
 Registered only when `query_mode` is `read-write`.
 
-Every call is checked for the `mcp:write` scope and then put to a human for approval before it
-reaches the database. See [Write support](../../intro/write-support.md).
+Every call is checked for the `mcp:write` scope and then submitted for human approval before it
+reaches the database. See [Write support](../write-support.md).
+
+!!! tip "A conditional write is counted before approval"
+    For an `UPDATE` or `DELETE` with a `WHERE` clause, the server runs `SELECT COUNT(*)` with the
+    same predicate first and states the result in the approval prompt:
+
+    ```
+    DML (58 row(s) currently match): DELETE FROM Person WHERE Last_Name LIKE 'S%'
+    ```
+
+    A `WHERE` clause looks the same regardless of how many rows it matches, so the count is what
+    makes the approval decision meaningful. It is an estimate taken just before execution, and it is
+    best effort — a statement the server cannot analyze still reaches the prompt, showing the
+    statement text alone.
 
 !!! note "Statements rejected before anyone is asked to approve them"
     - `UPDATE` and `DELETE` without a `WHERE` clause
@@ -308,8 +320,8 @@ reaches the database. See [Write support](../../intro/write-support.md).
     - Multiple statements in one call
     - Data Definition Language — deferred, not permitted in this release
 
-    These are refused on inspection, so no approval prompt appears. A prompt that never appears
-    therefore does not on its own mean the write was declined.
+    The server refuses these statements on inspection, so no approval prompt appears. A missing prompt therefore does
+    not by itself mean the write was declined.
 
 ### Parameters
 
@@ -356,50 +368,6 @@ reaches the database. See [Write support](../../intro/write-support.md).
   "rows_affected": 1,
   "success": true,
   "method": "execute_write_query"
-}
-```
-
----
-
-## batch_operation
-
-Bulk data operations and row counting. Registered only when `query_mode` is `read-write`.
-
-The three writing modes take the `mcp:write` scope check and the approval prompt. The prompt states
-how many rows the statement will touch: for `batch_insert` that is the length of `data`, and for
-`batch_update` and `batch_delete` the server runs a `COUNT(*)` with the same predicate first. The
-`count` mode reads only and needs neither.
-
-### Parameters
-
-**Required**
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `mode` | `string` | One of: `batch_insert`, `batch_update`, `batch_delete`, `count`. |
-| `table` | `string` | Target table name. |
-
-**Required per mode**
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `data` | `list` | Rows to insert. Required for `batch_insert`. |
-| `updates` | `dict` | Column values to set. Required for `batch_update`. |
-| `where_clause` | `string` | Predicate selecting the rows. Required for `batch_update` and `batch_delete`, optional for `count`. |
-| `where_params` | `list` | Values bound to placeholders in `where_clause`. |
-
-### Example
-
-**Request**
-
-```json
-{
-  "mode": "batch_insert",
-  "table": "Person",
-  "data": [
-    {"ID": 201, "First_Name": "Ada", "Last_Name": "Lovelace"},
-    {"ID": 202, "First_Name": "Alan", "Last_Name": "Turing"}
-  ]
 }
 ```
 
@@ -540,7 +508,7 @@ Provides server management operations: list available databases, list DSNs with 
 - :material-message-text: **[Prompts](../prompts/index.md)**  
   Use the built-in prompt templates for common workflows.
 
-- :material-pencil: **[Write support](../../intro/write-support.md)**  
-  Turn on `query_mode`, and the scope and approval checks every write passes.
+- :material-pencil: **[Write support](../write-support.md)**  
+  Turn on `query_mode`, and see the scope and approval checks every write passes.
 
 </div>

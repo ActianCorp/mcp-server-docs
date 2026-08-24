@@ -9,7 +9,7 @@ hide:
 <div class="landing-hero">
   <div class="landing-hero__content">
     <h1 class="landing-hero__heading">Connect Actian and HCL Informix® Databases to AI Applications</h1>
-    <p class="landing-hero__sub">Deploy specialized MCP servers from our central hub to turn your data into actionable intelligence</p>
+    <p class="landing-hero__sub">Deploy specialized MCP servers from the Actian MCP Hub to turn your data into actionable intelligence</p>
   </div>
 </div>
 
@@ -57,7 +57,7 @@ hide:
   <div class="databases-header" style="text-align: center;">
     <h3 class="jumbo-heading">The Actian MCP Hub: Specialized Connectors</h3>
     <p class="databases-subtitle" style="max-width: 700px; margin: 0 auto;">
-      While MCP is a universal protocol, performance must be native: we provide a centralized Docker Hub repository with optimized images for our entire database portfolio.
+      While MCP is a universal protocol, performance must be native: Actian provides a centralized Docker Hub repository with optimized images for the entire database portfolio.
     </p>
   </div>
 
@@ -132,7 +132,7 @@ hide:
     <div class="content-side">
       <h2 class="jumbo-heading">Get Started in Minutes</h2>
       <p class="section-description">
-        All MCP server images are available at <strong>hub.docker.com/u/actian</strong>. You can deploy a specific server quickly using standard container orchestration.
+        All MCP server images are available at <strong>hub.docker.com/u/actian</strong>. You can deploy a specific server using standard container orchestration.
       </p>
       <div class="section-cta">
         <a href="./get-started/index.html" class="primary-link">Read the Get Started Guide →</a>
@@ -141,12 +141,12 @@ hide:
     <div class="code-side">
       <div class="code-block">
         <pre><code># Example: Launch the MCP Server for HCL Informix®
-docker pull actian/informix-mcp-server:latest
+docker pull actian/informix-mcp-server:1.1.0
 
 # Run with your secure environment variables
 docker run -e INFORMIXSERVER=myserver \
   -e DB_NAME=finance \
-  actian/informix-mcp-server</code></pre>
+  actian/informix-mcp-server:1.1.0</code></pre>
       </div>
     </div>
   </div>
@@ -161,17 +161,17 @@ docker run -e INFORMIXSERVER=myserver \
     <div class="feature-item">
       <h4 class="feature-title">Identity-Aware Access</h4>
       <p class="feature-description">The server's modern authentication protocols ensure agents access only explicitly authorized data.</p>
-      <a href="./authentication/index.html" class="primary-link">Set Up Authentication →</a>
+      <a href="./get-started/index.html" class="primary-link">Set Up Authentication →</a>
     </div>
     <div class="feature-item">
       <h4 class="feature-title">Read-only by Default</h4>
-      <p class="feature-description">Agents cannot modify or delete data unless you enable write mode. Once enabled, every write still requires an authorized scope and human approval.</p>
-      <a href="./intro/write-support.html" class="primary-link">Learn about Write Support →</a>
+      <p class="feature-description">Agents cannot modify or delete data unless write mode is enabled. Once enabled, every write still requires an authorized scope and human approval.</p>
+      <a href="./get-started/index.html" class="primary-link">Learn about Write Support →</a>
     </div>
     <div class="feature-item">
       <h4 class="feature-title"> Logged Write Decisions</h4>
       <p class="feature-description">Every write approval, rejection, and skipped confirmation is recorded in the server log. Statement text is deliberately left out so sensitive values are never written to logs.</p>
-      <a href="./intro/write-support.html" class="primary-link">Learn about Write Support →</a>
+      <a href="./get-started/index.html" class="primary-link">Learn about Write Support →</a>
     </div>
   </div>
 </div>

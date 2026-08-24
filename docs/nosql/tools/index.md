@@ -5,23 +5,35 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 # Tools
 
-The Actian MCP Server for Actian NoSQL provides built-in tools for database discovery and read-only query execution.
+The Actian MCP Server for Actian NoSQL registers eight tools for exploring the schema and reading data, and three more for changing it once write mode is on.
 
 !!! note "Response format"
-    All tools return results as structured content (`structuredContent`). For compatibility with older MCP clients, each response also includes the same data serialized as a JSON string in a text content item within the `content` array.    
+    All tools return results as structured content (`structuredContent`). For compatibility with older MCP clients, each response also includes the same data serialized as a JSON string in a text content item within the `content` array.
+
+    Values that are `null` or absent are omitted from responses entirely, so check whether a key is present rather than whether its value is `null`.
 
 ## Available Tools
 
-| Tool | Purpose |
-|------|---------|
-| [`execute_query `](#execute_query) | Runs a read-only JPQL query. |
-| [`query_next `](#query_next) | Fetch the next page from a query cursor. |
-| [`get_object_by_loid `](#get_object_by_loid) | Fetch one object by LOID. |
-| [`get_objects_by_loids `](#get_objects_by_loids) | Fetch multiple objects by LOID. |
-| [`count_classes`](#count_classes) | Count database classes. |
-| [`list_classes `](#list_classes) | List class names and inheritance. |
-| [`describe_class `](#describe_class) | Describe one class in detail. |
-| [`get_complete_schema `](#get_complete_schema) | Return full schema for all classes. |
+| Tool | Type | Purpose |
+|------|------|---------|
+| [`execute_query `](#execute_query) | Read | Runs a read-only JPQL query. |
+| [`query_next `](#query_next) | Read | Fetch the next page from a query cursor. |
+| [`get_object_by_loid `](#get_object_by_loid) | Read | Fetch one object by LOID. |
+| [`get_objects_by_loids `](#get_objects_by_loids) | Read | Fetch multiple objects by LOID. |
+| [`count_classes`](#count_classes) | Read | Count database classes. |
+| [`list_classes `](#list_classes) | Read | List class names and inheritance. |
+| [`describe_class `](#describe_class) | Read | Describe one class in detail. |
+| [`get_complete_schema `](#get_complete_schema) | Read | Return full schema for all classes. |
+| [`create_objects`](#create_objects) | Write | Create one or more objects of one class. |
+| [`update_objects`](#update_objects) | Write | Apply partial field updates to existing objects. |
+| [`delete_objects`](#delete_objects) | Write | Delete objects by LOID. |
+
+!!! note "The write tools are not always registered"
+    [Write support](../write-support.md) explains whether a client receives the three write tools,
+    and what each call must clear before it reaches the database.
+
+    The read tools are not affected by write mode. `execute_query` accepts `SELECT` only, in every
+    configuration.
 
 ---
 
@@ -33,7 +45,7 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
     The following are **not** supported in this dialect:
 
     - `JOIN` — use dot notation instead (for example, `p.department.name = 'Engineering'`)
-    - Aggregate functions (`COUNT`, `SUM`, `AVG`, etc.)
+    - Aggregate functions, such as `COUNT`, `SUM`, and `AVG`
     - Collection traversal — only single-reference paths are allowed
     - The `in` operator on collections
 
@@ -48,7 +60,14 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
 
 ```json
 {
-  "items": [],       // array of result objects for this page
+  "items": [          // array of result objects for this page
+    {
+      "loid": "string",    // the LOID of the object
+      "class": "string",   // class name of the object
+      "version": "string", // optimistic-concurrency token; pass back as expectedVersion to update
+      "fields": {}         // map of field names to their values
+    }
+  ],
   "count": 0,        // number of items in this page
   "query": "string", // the original JPQL query string
   "pagination": {
@@ -57,6 +76,10 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
   }
 }
 ```
+
+A query that selects whole entities (`select e from Employee e`) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values as they are, not wrapped in `fields`.
+
+To change an object you read here, pass its `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
 ### Example
 
@@ -80,13 +103,18 @@ Show me all employees
 {
   "items": [
     {
-      "name": "Diana",
-      "department": "Executive",
-      "annualSalary": 250000,
-      "active": true,
-      "address": "135.0.2142",
-      "accessLevels": [1, 5, 10, 99],
-      "subordinates": ["135.0.2145"]
+      "loid": "135.0.2144",
+      "class": "Employee",
+      "version": "8273398",
+      "fields": {
+        "name": "Diana",
+        "department": "Executive",
+        "annualSalary": 250000,
+        "active": true,
+        "address": "135.0.2142",
+        "accessLevels": [1, 5, 10, 99],
+        "subordinates": ["135.0.2145"]
+      }
     },
     "..."
   ],
@@ -117,7 +145,14 @@ The output is identical to `execute_query`:
 
 ```json
 {
-  "items": [],       // array of result objects for this page
+  "items": [          // array of result objects for this page
+    {
+      "loid": "string",    // the LOID of the object
+      "class": "string",   // class name of the object
+      "version": "string", // optimistic-concurrency token; pass back as expectedVersion to update
+      "fields": {}         // map of field names to their values
+    }
+  ],
   "count": 0,        // number of items in this page
   "query": "string", // the original JPQL query string
   "pagination": {
@@ -143,11 +178,16 @@ The output is identical to `execute_query`:
 {
   "items": [
     {
-      "name": "Alice",
-      "department": "Engineering",
-      "annualSalary": 120000,
-      "active": true,
-      "address": "135.0.2142"
+      "loid": "135.0.2145",
+      "class": "Employee",
+      "version": "8273399",
+      "fields": {
+        "name": "Alice",
+        "department": "Engineering",
+        "annualSalary": 120000,
+        "active": true,
+        "address": "135.0.2142"
+      }
     },
     "..."
   ],
@@ -176,13 +216,16 @@ Retrieves a single object from the database by its LOID (Logical Object ID). Fet
 ```json
 {
   "found": true,         // true if the object was found, false otherwise
-  "data": {
+  "data": {              // omitted entirely when found is false
     "loid": "string",    // the LOID of the object
-    "className": "string", // class name of the object
+    "class": "string",   // class name of the object
+    "version": "string", // optimistic-concurrency token; pass back as expectedVersion to update
     "fields": {}         // map of field names to their values
   }
 }
 ```
+
+To change the object you just read, pass its `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
 ### Example
 
@@ -201,7 +244,8 @@ Retrieves a single object from the database by its LOID (Logical Object ID). Fet
   "found": true,
   "data": {
     "loid": "135.0.2146",
-    "className": "Employee",
+    "class": "Employee",
+    "version": "8273401",
     "fields": {
       "name": "Bob",
       "department": "Engineering",
@@ -234,13 +278,16 @@ Retrieves multiple objects from the database by their LOIDs (Logical Object IDs)
   "objects": [
     {
       "loid": "string",      // the LOID of the object
-      "className": "string", // class name of the object
+      "class": "string",     // class name of the object
+      "version": "string",   // optimistic-concurrency token; pass back as expectedVersion to update
       "fields": {}           // map of field names to their values
     }
   ],
   "count": 0                 // number of objects returned
 }
 ```
+
+LOIDs that match no object are left out of `objects`, so `count` may be lower than the number of LOIDs you asked for. To change any of the objects you read, pass each one's `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
 ### Example
 
@@ -259,7 +306,8 @@ Retrieves multiple objects from the database by their LOIDs (Logical Object IDs)
   "objects": [
     {
       "loid": "135.0.2145",
-      "className": "Employee",
+      "class": "Employee",
+      "version": "8273399",
       "fields": {
         "name": "Alice",
         "department": "Engineering",
@@ -271,7 +319,8 @@ Retrieves multiple objects from the database by their LOIDs (Logical Object IDs)
     },
     {
       "loid": "135.0.2146",
-      "className": "Employee",
+      "class": "Employee",
+      "version": "8273401",
       "fields": {
         "name": "Bob",
         "department": "Engineering",
@@ -516,9 +565,263 @@ This tool takes no input parameters.
 }
 ```
 
+---
+
+## create_objects
+
+Creates one or more objects of a single class in one atomic transaction. Either every object in the batch is created, or none is.
+
+Available only in write mode, and subject to the checks described in [Write support](../write-support.md).
+
+### Parameters
+
+| Field | Type | Required | Description |
+|-------|------|:--------:|-------------|
+| `className` | `string` | ✓ | The class to instantiate. Case-sensitive, and must exist in the schema — use [`list_classes`](#list_classes) to check. All objects in one call are of this class. |
+| `objects` | `object[]` | ✓ | One field-value map per object. Must contain at least one object, and no more than [`nsql.writes.max-batch`](../write-support.md#configuration-reference). |
+
+A batch over the limit is rejected before anything runs, with a message naming both the size you sent and the maximum this server allows.
+
+### Writable Field Kinds
+
+Field values go in the per-object maps of `create_objects` (`objects[]`) and in `updates[].fields` on `update_objects`. Both accept the same kinds of value, always in the form reads return, so a value read from the database can be written back unchanged.
+
+| Field kind | How to write it |
+|------------|-----------------|
+| Scalars | Numbers, strings, and booleans, written directly. |
+| Dates | Epoch milliseconds (`1700000000000`) or an ISO 8601 string (`"2026-08-10T09:00:00Z"`). |
+| Arrays of scalars | A JSON array — `"accessLevels": [1, 5, 10]`. |
+| Enums | The **stored** value, because the schema does not surface enums as enums. An ordinal-mapped enum is an integer field: write the ordinal (`1`). A string-mapped enum is a string field: write the constant name (`"NICHES"`). |
+| Single references | The target object's LOID string — `"address": "135.0.2142"`. |
+| Reference collections | An array of LOID strings — `"subordinates": ["135.0.2145", "135.0.2146"]`. An empty array clears the collection. |
+| Maps | An object with exactly the two keys `keys` and `values`, holding equal-length arrays — `"metadata": { "keys": ["role"], "values": ["dev"] }`. No other keys are accepted. Either side may hold LOID strings. |
+| Custom references | Not writable. |
+
+!!! warning "Enum values are not validated"
+    The server writes the value you supply into the underlying field without checking it against the enum's constants. Writing an out-of-range ordinal stores an out-of-range ordinal. Writing a constant name into an ordinal-mapped integer field fails, because there is no name-to-ordinal conversion.
+
+!!! note "Every referenced object must already exist"
+    A reference is resolved when it is written, so objects created in the same call cannot reference each other. Create the referenced objects first, then use the LOIDs the first call returned. The same rule applies to both sides of a reference map.
+
+### Confirmation Prompt
+
+Before the objects are created, the connected client asks the user to approve a summary naming the class and the count:
+
+```text
+You are about to create 2 Employee objects.
+
+The objects and their field values were provided in your request.
+This action cannot be undone. Confirm?
+```
+
+### Output Schema
+
+```json
+{
+  "className": "string",   // the class of the created objects
+  "createdCount": 0,       // how many objects were created
+  "createdLoids": ["string"] // LOIDs of the new objects, in input order
+}
+```
+
+### Example
+
+**User Request**
+
+```
+Add Ada and Grace to the Engineering department
+```
+
+**Input**
+
+```json
+{
+  "className": "Employee",
+  "objects": [
+    {
+      "name": "Ada",
+      "department": "Engineering",
+      "annualSalary": 130000,
+      "active": true,
+      "address": "135.0.2142"
+    },
+    {
+      "name": "Grace",
+      "department": "Engineering",
+      "annualSalary": 128000,
+      "active": true
+    }
+  ]
+}
+```
+
+**Response**
+
+```json
+{
+  "className": "Employee",
+  "createdCount": 2,
+  "createdLoids": ["135.0.2148", "135.0.2149"]
+}
+```
+
+---
+
+## update_objects
+
+Applies partial field updates to existing objects in one atomic transaction. Only the fields you supply are changed; every other field is left as it was. A single call may update objects of different classes.
+
+Available only in write mode, and subject to the checks described in [Write support](../write-support.md).
+
+### Parameters
+
+| Field | Type | Required | Description |
+|-------|------|:--------:|-------------|
+| `updates` | `object[]` | ✓ | One update per object. Must contain at least one item, and no more than [`nsql.writes.max-batch`](../write-support.md#configuration-reference). |
+
+Each item in `updates` is:
+
+| Field | Type | Required | Description |
+|-------|------|:--------:|-------------|
+| `loid` | `string` | ✓ | The LOID of the object to change, in dotted format. Each LOID may appear only once per call — combine all changes to one object into a single item. |
+| `expectedVersion` | `string` | ✓ | The `version` the object carried when you last read it. See [Optimistic concurrency](../write-support.md#optimistic-concurrency). |
+| `fields` | `object` | ✓ | Field name to new value. Must not be empty. Accepts the same values as [`create_objects`](#writable-field-kinds). |
+
+The whole call fails, leaving every object untouched, if any item names a LOID that matches no object, or carries an `expectedVersion` that no longer matches. Re-read the affected objects and retry with the versions you get back.
+
+### Confirmation Prompt
+
+Before the objects are changed, the connected client asks the user to approve a summary. Because one call may span several classes, it gives a count and no class names:
+
+```text
+You are about to update 2 existing objects.
+
+The target LOIDs and new field values were provided in your request.
+Confirm?
+```
+
+### Output Schema
+
+```json
+{
+  "updatedCount": 0,          // how many objects were updated
+  "updatedLoids": ["string"]  // LOIDs of the updated objects, in input order
+}
+```
+
+### Example
+
+**User Request**
+
+```
+Move Bob to the Research department
+```
+
+**Input**
+
+```json
+{
+  "updates": [
+    {
+      "loid": "135.0.2146",
+      "expectedVersion": "8273401",
+      "fields": {
+        "department": "Research"
+      }
+    }
+  ]
+}
+```
+
+**Response**
+
+```json
+{
+  "updatedCount": 1,
+  "updatedLoids": ["135.0.2146"]
+}
+```
+
+**Response when the object changed in the meantime**
+
+The call fails with an error naming the object, the version you sent, and the version it holds now. Nothing is written:
+
+```text
+Object [0]: 135.0.2146 was modified since it was read (expected version 8273401,
+current 8273402). Re-read the object and retry.
+```
+
+Fetch the object again with [`get_object_by_loid`](#get_object_by_loid), take the `version` from that response, and send the update again.
+
+---
+
+## delete_objects
+
+Permanently deletes objects by LOID in one atomic transaction.
+
+Available only in write mode, and subject to the checks described in [Write support](../write-support.md).
+
+### Parameters
+
+| Field | Type | Required | Description |
+|-------|------|:--------:|-------------|
+| `loids` | `string[]` | ✓ | The LOIDs to delete, in dotted format — for example, `135.0.2148`. Must contain at least one LOID, and no more than [`nsql.writes.max-batch`](../write-support.md#configuration-reference). |
+
+!!! warning "Deletion does not cascade"
+    Only the objects you name are removed. Objects that referenced them keep the reference, which now points at nothing. Nothing is rewritten to compensate, and there is no undo — find and fix referencing objects before or after the delete.
+
+### Confirmation Prompt
+
+Before anything is removed, the connected client asks the user to approve a summary. The server looks the LOIDs up first, so the prompt can break the count down by class — ordered by count, then class name — and say how many LOIDs matched nothing:
+
+```text
+You are about to permanently delete 2 objects: 1 Address, 1 Employee. 1 requested LOID was not found and will be skipped. This action cannot be undone and does not cascade. Confirm?
+```
+
+The not-found sentence appears only when some LOID matched nothing. When *none* of them matches, there is nothing to confirm and no prompt is shown.
+
+### Output Schema
+
+```json
+{
+  "deletedLoids": ["string"],  // LOIDs that were removed
+  "notFoundLoids": ["string"]  // requested LOIDs that matched no object; skipped, not an error
+}
+```
+
+A LOID that matches no object is a normal outcome, not a failure: it is reported in `notFoundLoids` and the rest of the batch still runs.
+
+### Example
+
+**User Request**
+
+```
+Delete the two employee records I imported by mistake
+```
+
+**Input**
+
+```json
+{
+  "loids": ["135.0.2148", "135.0.9999"]
+}
+```
+
+**Response**
+
+```json
+{
+  "deletedLoids": ["135.0.2148"],
+  "notFoundLoids": ["135.0.9999"]
+}
+```
+
 ## Next Steps
 
 <div class="grid cards" markdown>
+
+- :material-pencil: **[Write support](../write-support.md)**  
+  Turn on write mode, and learn the three checks every write passes.
 
 - :material-folder-open: **[Resources](../resources/index.md)**  
   Learn more about schema metadata resources.

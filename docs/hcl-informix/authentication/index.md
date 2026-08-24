@@ -9,7 +9,6 @@ The Actian MCP Server supports OAuth 2.0 and OpenID Connect (OIDC) authenticatio
 
 
 !!! note "Deployment Considerations"
-    - **Actian NoSQL users**:  NoSQL uses a direct OAuth 2.0 flow with different configuration properties. See [NoSQL Authentication Guide](../nosql/authentication/index.md) for more information.
     - **Transport requirements**: OAuth only works with network transport such as `sse`, `http`, and `streamable-http`. You cannot use OAuth with the stdio transport, which is used for local IDE integrations like Claude Desktop or Cursor.
 
 
@@ -73,29 +72,24 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 !!! note "Configuration Considerations"
     You must either provide all four required OAuth fields (`CONFIG_URL`, `CLIENT_ID`, `CLIENT_SECRET`, and `BASE_URL`) or none. If you include `CONFIG_URL` and `CLIENT_ID`, and omit `CLIENT_SECRET` or `BASE_URL`, the server fails to start and throws a `KeyError`. To disable OAuth, remove the entire `oauth` block.
 
+    These values come from your identity provider. Set up [Auth0](auth0.md) or [Keycloak](keycloak.md) first if you have not already, then come back to fill in these fields.
+
 !!! info "Scopes"
     For read access you do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
 
-    If you set `query_mode` to `read-write`, the server also requests the `mcp:write` scope, and a token without it cannot perform writes. You must define that scope in your identity provider first. See [Write support](../intro/write-support.md) for how writes are authorized, and [Auth0](auth0/index.md) or [Keycloak](keycloak/index.md) for the setup steps.
+    If you set `query_mode` to `read-write`, the server also requests the `mcp:write` scope, and a token without it cannot perform writes. You must define that scope in the identity provider first. See [Write support](../write-support.md) for how writes are authorized, and [Auth0](auth0.md) or [Keycloak](keycloak.md) for the setup steps.
 
 
 ## User Impersonation
 
 By default, the `user_impersonation` field is set to `true`. The server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
 
-Impersonation covers extension-authored tools as well as the built-in ones, so an extension is also bounded by the end user's own database privileges. See [Extensions](../extensions/index.md#statements-run-as-the-end-user).
+Impersonation covers extension-authored tools as well as the built-in ones, so an extension is also bounded by the end user's database privileges. See [Extensions](../extensions/index.md#end-user-execution).
 
 |  user_impersonation | Server |
 | :------------------- | :------- |
 | `true` (default) | Verify the `JWT` and run `SET SESSION AUTHORIZATION "<user>"` for each query. Every OAuth user needs a matching database account. |
 | `false` | Verify the `JWT` and reject unauthenticated requests. However, all approved queries will run under the shared service-account connection pool credentials.|
-
-!!! note "Plugin Limitations"
-    Not all connectors support user impersonation:
-
-    - **Zen**: Does not support `SET SESSION AUTHORIZATION`. Set `user_impersonation` to `false` in the `oauth` block. JWT authentication works and only per-user database switching is skipped.
-    
-    - **NoSQL**: Uses a direct OAuth 2.0 flow, a different authentication model. The `user_impersonation` field does not apply. For more information, see [NoSQL Authentication Guide](../nosql/authentication/index.md).
 
 ### Extracting Username
 
@@ -146,14 +140,11 @@ chmod 600 server.key
     The `-addext "subjectAltName=IP:..."` flag is required. Node.js-based MCP clients (like VS Code and Cursor) strictly enforce SAN validation and reject certificates that only use the Common Name (CN) field.
 
 !!! tip "Production certificates"
-    For production environments, use a certificate issued by a trusted Certificate Authority (CA), such as `Let's Encrypt or your corporate CA`.
+    For production environments, use a certificate issued by a trusted Certificate Authority (CA), such as Let's Encrypt or the corporate CA.
 
 ### Step 2: Configure TLS in `conf.json`
 
-!!! note "TLS configuration for NoSQL"
-    The Actian MCP Server for NoSQL uses different configuration properties. See [NoSQL TLS guide](../nosql/authentication/index.md#tls) for more information.
-
-Add the `ssl_certfile` certificate and `ssl_keyfile` key paths to the top level of the `conf.json` file (outside the `oauth` block). Ensure the usage of `https://` in `BASE_URL`:
+Add the `ssl_certfile` and `ssl_keyfile` fields to the top level of the `conf.json` file (outside the `oauth` block), and ensure `BASE_URL` uses `https://`:
 
 ```json
 {
@@ -165,21 +156,23 @@ Add the `ssl_certfile` certificate and `ssl_keyfile` key paths to the top level 
 }
 ```
 
-The server validates the existance of both paths at startup, and the usage of `https://` for `BASE_URL` when SSL is active.
+The `ssl_certfile` and `ssl_keyfile` values are always the fixed **in-container** paths shown above, not the paths to the certificate files on the host. The server reads `ssl_certfile`/`ssl_keyfile` only from `conf.json` — there is no default and no way to supply them via the `docker run` command instead. What varies per deployment is where the certificate and key live on the host; that is set in [Step 3](#step-3-deploy-the-docker), which mounts them to these exact container paths.
+
+The server validates that both paths exist at startup, and that `BASE_URL` uses `https://` when SSL is active.
 
 ### Step 3: Deploy the Docker
 
 Mount the certificate and key into the container using volume flags:
 
-!!! note "Analytics Engine example"
-    The following example demonstrates how to deploy the Analytics Engine docker.
+!!! note "Example"
+    The following example demonstrates how to deploy the HCL Informix docker.
 
 ```bash
 docker run -p 8000:8000 \
   -v /path/to/server.crt:/app/server.crt:ro \
   -v /path/to/server.key:/app/server.key:ro \
   -v /path/to/conf.json:/app/conf.json:ro \
-  actian/analytics-engine-mcp-server:1.0.0
+  actian/informix-mcp-server:1.1.0
 ```
 
 Reference the container paths in `conf.json`:
@@ -271,10 +264,10 @@ Choose your identity provider for step-by-step setup instructions:
 
 <div class="grid cards" markdown>
 
-- :material-cloud: **[Auth0](auth0/index.md)**  
+- :material-cloud: **[Auth0](auth0.md)**  
   Cloud-hosted identity provider. Ideal for teams that want a managed service with no infrastructure to maintain.
 
-- :material-key: **[Keycloak](keycloak/index.md)**  
+- :material-key: **[Keycloak](keycloak.md)**  
   Open-source, self-hosted identity provider. Ideal for teams that need full control over their authentication infrastructure.
 
 </div>

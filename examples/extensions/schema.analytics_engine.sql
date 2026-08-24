@@ -1,3 +1,6 @@
+-- Copyright (C) 2026 Actian Corp.
+-- All Rights Reserved.
+
 -- Schema for all example extensions, on one database. ANALYTICS ENGINE (X100).
 --
 -- Run with:
@@ -14,10 +17,6 @@
 --
 -- The transaction and approval examples need the server in read-write mode
 -- ("query_mode": "read-write").
---
--- X100 tables do not support CHECK constraints, so stock_qty has no
--- database-level guard against going negative. The stock check in
--- order_ops.place_order covers this.
 
 DROP TABLE IF EXISTS order_items;
 \g
@@ -39,7 +38,7 @@ CREATE TABLE products (
     product_id INTEGER NOT NULL PRIMARY KEY,
     name       VARCHAR(50)   NOT NULL,
     unit_price DECIMAL(12,2) NOT NULL,                  -- place_order looks this up
-    stock_qty  INTEGER       NOT NULL                   -- no CHECK on X100, see header
+    stock_qty  INTEGER       NOT NULL
 );
 \g
 CREATE TABLE orders (

@@ -15,7 +15,7 @@ Use the following tools to interact with the database:
 
 | Tool | Description |
 |------|-------------|
-| [`execute_query`](#execute_query) | Runs a SQL query against the connected database. Reads always, writes when the server permits them. |
+| [`execute_query`](#execute_query) | Runs a SQL query against the connected database. Reads run at any time; writes run only when the server permits them. |
 | [`list_tables`](#list_tables) | Lists all available user tables and views. |
 | [`describe_table`](#describe_table) | Returns column definitions and comments for a specific table. |
 | [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
@@ -25,7 +25,7 @@ Use the following tools to interact with the database:
 
 Use this tool to run SQL queries. The server returns the result set as a structured JSON object.
 
-By default the tool accepts only `SELECT`. When the server runs with `query_mode` set to `read-write`, it also accepts the Data Manipulation Language (DML) statements `INSERT`, `UPDATE`, and `DELETE`. See [Write support](../../intro/write-support.md).
+By default the tool accepts only `SELECT`. When the server runs with `query_mode` set to `read-write`, it also accepts the Data Manipulation Language (DML) statements `INSERT`, `UPDATE`, `DELETE`, and `MERGE`. See [Write support](../write-support.md).
 
 !!! warning "Data Definition Language is never permitted"
     This tool does not run Data Definition Language (DDL) or administrative statements in any mode. `CREATE`, `ALTER`, `DROP`, `GRANT`, `SET`, `ENABLE`, `DISABLE`, and `SELECT ... INTO` are rejected. Use Analytics Engine tooling for schema changes.
@@ -34,7 +34,7 @@ By default the tool accepts only `SELECT`. When the server runs with `query_mode
 
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
-| `query` | `string` | ✓ | SQL query to execute. `SELECT` is always accepted. `INSERT`, `UPDATE`, and `DELETE` require `query_mode` set to `read-write`. |
+| `query` | `string` | ✓ | SQL query to execute. `SELECT` is always accepted. `INSERT`, `UPDATE`, `DELETE`, and `MERGE` require `query_mode` set to `read-write`. |
 
 ### Output Schema
 
@@ -93,7 +93,7 @@ Show me all the rows in the customers table
 
 ### Example: Writing a Row
 
-This example needs `query_mode` set to `read-write`.
+This example requires `query_mode` set to `read-write`.
 
 **Request**
 
@@ -107,7 +107,7 @@ Add a customer named Contoso Supply
 }
 ```
 
-Before running the statement, the server asks you to approve it in your client. The response depends on your answer.
+Before running the statement, the server asks you to approve it in the client. The response depends on your answer.
 
 **Response, when you approve**
 
@@ -131,7 +131,7 @@ Before running the statement, the server asks you to approve it in your client. 
 
 ### Write Errors
 
-These apply when `query_mode` is `read-write`.
+The following errors apply when `query_mode` is `read-write`.
 
 **The token lacks the `mcp:write` scope**
 
@@ -149,7 +149,7 @@ The server checks the scope before it asks anyone to approve the statement, so n
 ```json
 {
   "success": false,
-  "error": "DDL and administrative statements (CREATE/ALTER/DROP/GRANT/SET/ENABLE/...) are not permitted."
+  "error": "DDL and administrative statements (CREATE/ALTER/DROP/GRANT/COPY/SET/ENABLE/...) are not permitted."
 }
 ```
 
@@ -218,7 +218,7 @@ Returns schema details for a specific table, including column names, data types,
 | `table_name` | `string` | ✓ | Name of the table to describe. Accepts a plain name, such as `orders`, or an owner-qualified name, such as `actian.customers`. |
 
 !!! tip "Qualify the name when several owners have the same table"
-    Given a plain name, the server describes your own table if you own one with that name. Otherwise it picks one of the other owners. Pass `owner.table` to describe a specific one.
+    Given a plain name, the server describes the table you own if one exists with that name. Otherwise it selects one belonging to another owner. Pass `owner.table` to describe a specific one.
 
 ### Output Schema
 
@@ -285,7 +285,7 @@ Show me schema information about the customers table
 ```
 
 !!! warning
-    If the authenticated database user lacks access to a table, the error response includes a permission message. For example: `"error": "No permission to access table 'ii_tables'"`.
+    If the authenticated database user lacks access to a table, the error response includes a permission message. For example: `"error": "No permission to access table 'hr.salaries'"`.
 
 ### Example: Naming the Owner
 
