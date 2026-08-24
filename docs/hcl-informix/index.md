@@ -85,7 +85,7 @@ Create a file named `conf.json` in the working directory and add the database-sp
 | `database` | `string` | Name of the database to connect to target database |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool|
 | `host` | `string` | Host address that the MCP Server listens on inside the container|
-| `port` | `string` | Port that the MCP Server listens on inside the container |
+| `port` | `integer` | Port that the MCP Server listens on inside the container |
 | `database_user` | `string` | Database username. |
 | `database_password` | `string` | Database password. |
 
