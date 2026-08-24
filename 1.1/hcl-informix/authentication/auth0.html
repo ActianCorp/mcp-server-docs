@@ -3401,7 +3401,7 @@
 <li><strong>Create an API:</strong> Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>Create API</strong>. The <strong>Identifier</strong> serves as the <code>FASTMCP_SERVER_AUTH_AUDIENCE</code>.</li>
 <li><strong>Create an Application:</strong> Navigate to <strong>Applications</strong> &gt; <strong>Applications</strong> &gt; <strong>Create Application</strong>. Select <strong>Machine to Machine</strong>. Authorize it for the API when prompted. Copy the <strong>Client ID</strong> and <strong>Client Secret</strong>.</li>
 <li>
-<p><strong>Authorize the Application:</strong> In your API settings, verify that <strong>User Access</strong> and <strong>Client Access</strong> are set to <strong>Authorized</strong>.</p>
+<p><strong>Authorize the Application:</strong> In your API's <strong>Application Access</strong> tab, select <code>mcp:write</code> under both <strong>User-Delegated Access</strong> and <strong>Client Access</strong> for your application.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>If you skip this step, Auth0 returns an <code>invalid_request</code> error.</p>
@@ -3418,7 +3418,7 @@
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li>An Auth0 account (<a href="https://auth0.com/signup">sign up free</a>).</li>
-<li>An Auth0 <strong>Tenant</strong> (created automatically on sign-up, for example, <code>dev-abc123</code>).</li>
+<li>An Auth0 <strong>Tenant</strong> (created automatically on sign-up, for example, <code>dev-abc123</code>). Every API, Application, and user you create below lives inside this tenant, and its domain (for example, <code>dev-abc123.us.auth0.com</code>) becomes part of the <code>FASTMCP_SERVER_AUTH_CONFIG_URL</code> you set in <code>conf.json</code>.</li>
 <li>Actian MCP Server installed and ready to run.</li>
 </ul>
 <h2 id="step-1-create-an-auth0-api">Step 1: Create an Auth0 API<a class="headerlink" href="#step-1-create-an-auth0-api" title="Permanent link">&para;</a></h2>
@@ -3570,8 +3570,8 @@
 <li>
 <p>Select <strong>Create</strong>.</p>
 </li>
-<li>When prompted, select your <strong>Actian MCP Server</strong> API and grant all scopes (You can also do this later in <a href="#step-3-authorize-the-application-for-the-api">Step 3</a>.</li>
-<li>The application's <strong>Settings</strong> tab opens.</li>
+<li>When prompted, select your <strong>Actian MCP Server</strong> API, grant all scopes, and select <strong>Authorize</strong> (you can also do this later in <a href="#step-3-authorize-the-application-for-the-api">Step 3</a>).</li>
+<li>The application's <strong>Quickstart</strong> tab opens.</li>
 </ol>
 <h3 id="configure-application-settings">Configure Application Settings<a class="headerlink" href="#configure-application-settings" title="Permanent link">&para;</a></h3>
 <p>On the <strong>Settings</strong> tab, configure the following:</p>
@@ -3657,35 +3657,33 @@
 <p class="admonition-title">This step is critical</p>
 <p>Auth0 requires an explicit grant between an application and an API before it issues tokens. Without this authorization, token requests fail with <code>invalid_request</code>.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Authorizing means selecting permissions</p>
+<p>Authorizing the application means selecting, from a permission checklist, which of the API's permissions (in this guide, just <code>mcp:write</code>, defined in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>) the application is allowed to request. If your API defines no permissions yet, the checklist is empty and there is nothing to select — that is expected for read-only deployments.</p>
+</div>
 <p>You can authorize from either the application's APIs tab or the API's Application Access tab:</p>
 <p><strong>Option A - Authorize from Application:</strong></p>
 <ol>
-<li>Navigate to <strong>Applications</strong> &gt; <strong>Applications</strong> &gt; <strong>your app</strong>. For example, <code>Actian MCP Server App</code>.</li>
-<li>Select the <strong>APIs</strong> tab.</li>
-<li>Search your API. For example, <code>mcp_server</code> with the identifier <code>https://&lt;mcp-server-host&gt;:8000/mcp</code>.</li>
-<li>Select <strong>Edit</strong> next to your API.</li>
-<li>Authorize both access types:<ul>
-<li><strong>User Access</strong>: Set to <strong>Authorized</strong>. This is required for the browser-based login flow and user impersonation.</li>
-<li><strong>Client Access</strong>: Set to <strong>Authorized</strong>. This may already be authorized if you selected the API during Machine to Machine application creation.</li>
-</ul>
-</li>
-<li>Select <strong>Update</strong> to save.</li>
+<li>Navigate to <strong>Applications</strong> &gt; <strong>Applications</strong> &gt; <strong>your app</strong> &gt; <strong>APIs</strong> tab. For example, <code>Actian MCP Server App</code>.</li>
+<li>Select your API from the list. For example, <code>mcp_server</code> with the identifier <code>https://&lt;mcp-server-host&gt;:8000/mcp</code>.</li>
+<li>On the <strong>User-Delegated Access</strong> tab, select <code>mcp:write</code> from the permission checklist (or <strong>Select: All</strong>), then select <strong>Save</strong>.</li>
+<li>Switch to the <strong>Client Access</strong> tab, select <code>mcp:write</code> from its own permission checklist the same way, then select <strong>Save</strong>.</li>
 </ol>
 <p><strong>Option B - Authorize From API:</strong></p>
 <ol>
 <li>Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>your API</strong>. For example, <code>mcp_server</code>.</li>
 <li>Select the <strong>Application Access</strong> tab.</li>
-<li>Search your application and select <strong>Edit</strong>.</li>
-<li>Authorize both <strong>User Access</strong> and <strong>Client Access</strong> as described in Option A, step 5.</li>
+<li>Select your application from the list. For example, <code>mcp_server (Test Application)</code>.</li>
+<li>Authorize both <strong>User-Delegated Access</strong> and <strong>Client Access</strong> as described in Option A, steps 3-4.</li>
 </ol>
-<p>After saving, the application displays two <strong>AUTHORIZED</strong> badges — User Access and Client Access.</p>
+<p>After saving, the application row on the <strong>Application Access</strong> tab shows a green checkmark and "1 / 1 permissions granted" under both <strong>User-Delegated Access</strong> and <strong>Client Access</strong>.</p>
 <div class="admonition important">
-<p class="admonition-title">User Access is required for user impersonation</p>
-<p>If you plan to use <code>user_impersonation: true</code>, the <strong>User Access</strong> column must show AUTHORIZED. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server will not be able to extract a database username.</p>
+<p class="admonition-title">User-Delegated Access is required for user impersonation</p>
+<p>If you plan to use <code>user_impersonation: true</code>, the application must be authorized for <strong>User-Delegated Access</strong>. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server will not be able to extract a database username.</p>
 </div>
 <div class="admonition note">
-<p class="admonition-title">This is not the write scope grant</p>
-<p>Authorizing the application lets it request tokens for the API. It does not give any user the <code>mcp:write</code> scope. That is a separate, per-user role assignment in <a href="#step-43-grant-the-write-scope-read-write-deployments-only">Step 4.3</a>.</p>
+<p class="admonition-title">This is not the same as granting the scope to a user</p>
+<p>Authorizing the application here means it is <em>allowed to request</em> <code>mcp:write</code> — not that any particular user's token will carry it. With <strong>Enable RBAC</strong> on (required in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>), whether a specific user's token actually includes <code>mcp:write</code> depends on that user holding it through a role, which is a separate, per-user assignment in <a href="#step-43-grant-the-write-scope-read-write-deployments-only">Step 4.3</a>. Both steps are required for read-write deployments.</p>
 </div>
 <h2 id="step-4-create-auth0-users-if-using-user-impersonation">Step 4: Create Auth0 Users (If Using User Impersonation)<a class="headerlink" href="#step-4-create-auth0-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
 <p>If <code>user_impersonation</code> is <code>true</code>, the authenticated user's identity is forwarded to the database through <code>SET SESSION AUTHORIZATION</code>. Each Auth0 user must have a matching database account. For more information, see <a href="index.html#user-impersonation">User Impersonation</a>.</p>
@@ -3830,6 +3828,8 @@
 <span class="w">    </span><span class="nt">"max_connections"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"query_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"read-write"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"write_confirmation"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"ssl_certfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.crt"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"ssl_keyfile"</span><span class="p">:</span><span class="w">  </span><span class="s2">"/app/server.key"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3853,6 +3853,7 @@
 <ol>
 <li>Open a browser and navigate to your server's <code>/mcp</code> endpoint, for example, <code>https://&lt;your-server-host&gt;:8000/mcp</code>.</li>
 <li>You should be <strong>redirected to the Auth0 login page</strong>.</li>
+<li>Log in with an Auth0 user, for example, the user you created in <a href="#step-4-create-auth0-users-if-using-user-impersonation">Step 4</a>.</li>
 <li>After logging in, Auth0 redirects you back to the MCP server with a valid token.</li>
 <li>Check the server logs for <code>Stored database username: &lt;username&gt;</code> to confirm user impersonation is active.</li>
 </ol>
@@ -4046,7 +4047,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2026 17:56:43 UTC">August 20, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 24, 2026 10:11:32 UTC">August 24, 2026</span>
   </span>
 
     

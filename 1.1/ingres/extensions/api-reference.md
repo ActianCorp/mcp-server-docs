@@ -9,29 +9,29 @@ Everything an extension needs is importable from `actian_mcp_server.extension_ap
 
 ## Module Entry Points
 
-You define these in your module. See [Writing the Module](index.md#writing-the-module).
+Define these symbols in the extension module. For more information, see [Writing the Module](index.md#writing-the-module).
 
 | Symbol | Signature | Notes |
 |--------|-----------|-------|
-| `register` | `register(server, config) -> None` | Required, synchronous. Called once at startup. Register tools, resources, and prompts on `server`. `config` is your scoped settings. |
+| `register` | `register(server, config) -> None` | Required, synchronous. Called once at startup. Register tools, resources, and prompts on `server`. `config` is the scoped settings for the extension. |
 | `setup` | `setup(config)` | Optional. Open resources at startup. May be `async` or plain. |
 | `teardown` | `teardown()` | Optional. Release resources at shutdown, in reverse load order. May be `async` or plain. |
 
 ## Functions
 
-You call these.
+Call these functions from the extension module.
 
 | Symbol | Signature | Returns |
 |--------|-----------|---------|
 | `get_current_user` | `get_current_user() -> str \| None` | The authenticated username, or `None` when OAuth or impersonation is off. Treat `None` as unknown, not as an authorization decision. |
 | `get_current_scopes` | `get_current_scopes() -> frozenset[str]` | The scopes on the current request's access token, as exact strings. Empty unless OAuth is enabled and the server is in read-write mode. |
-| `has_scope` | `has_scope(scope: str) -> bool` | `True` if the current token carries `scope`, matched exactly. Same availability as `get_current_scopes()`. For your own checks. The `mcp:write` gate is enforced automatically. |
+| `has_scope` | `has_scope(scope: str) -> bool` | `True` if the current token carries `scope`, matched exactly. Same availability as `get_current_scopes()`. Use it for custom checks. The `mcp:write` gate is enforced automatically. |
 | `get_database` | `get_database() -> DatabaseAccess` | The database facade. |
 | `request_write_confirmation` | `await request_write_confirmation(description: str, details: dict \| None = None, timeout: int = 60) -> bool` | `True` only on explicit approval. A decline, cancel, timeout, or missing context returns `False`. `description` and `details` are shown to the user. |
 
 ## DatabaseAccess
 
-Returned by `get_database()`.
+The `get_database()` function returns this object.
 
 | Method | Signature | Behavior |
 |--------|-----------|----------|
@@ -42,7 +42,7 @@ There is no `db.write()`. Every write goes through a transaction. Bind `params` 
 
 ## Transaction
 
-Returned by `db.transaction()`.
+The `db.transaction()` method returns this object.
 
 | Member | Signature | Behavior |
 |--------|-----------|----------|

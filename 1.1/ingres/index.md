@@ -46,12 +46,14 @@ Create a file named `conf.json` in the working directory and define the environm
 ```json
 {
   "driver": "<odbc_driver>",
-  "server": "<database_host>",
+  "server": "@<db-host>,tcp_ip,<installation_id>",
   "database": "<database_name>",
-  "max_connections": "<max_concurrent_connections>",
-  "max_rows": "<max_rows_per_query_response>",
+  "max_connections": 10,
+  "max_rows": 1000,
   "host": "<mcp_server_host>",
-  "port": "<mcp_server_port>",
+  "port": 8000,
+  "query_mode": "read-only",
+  "write_confirmation": true,
   "database_user": "<database_user>",
   "database_password": "<database_password>",
   "log_level": "INFO",

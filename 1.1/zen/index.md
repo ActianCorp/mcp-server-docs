@@ -18,7 +18,7 @@ The Actian MCP Server for Zen supports the following operations:
 | **Run SQL queries** | Execute `SELECT` with automatic translation to Zen dialect. |
 | **List tables and views** | Discover available objects and inspect their structures.|
 | **ORM operations** | Query data using `JOIN`, `WHERE`, `ORDER BY`, and `LIMIT` clauses. |
-| **Write data** | `INSERT`, `UPDATE`, and `DELETE`, when `query_mode` is `read-write`. A conditional write states how many rows currently match before it is approved. |
+| **Write data** | `INSERT`, `UPDATE`, `DELETE`, and `MERGE`, when `query_mode` is `read-write`. A conditional write states how many rows currently match before it is approved. |
 | **Blob and file data** | List and download blob or file data stored in the database. Read-only mode. |
 | **Server management** | Query server capabilities, list DSNs, and release locks. Read-only mode.|
 | **Schema metadata** | View the database schema as a structured resource. |
@@ -50,7 +50,9 @@ Use this format when the built-in is `odbc.ini` and DSN is sufficient for requir
   "database": "demodata",
   "conn_string": "DSN=demodata",
   "host": "0.0.0.0",
-  "port": 8000
+  "port": 8000,
+  "query_mode": "read-only",
+  "write_confirmation": true
 }
 ```
 
@@ -63,7 +65,9 @@ Use this format when the database requires authentication. This bypasses the con
   "database": "demodata",
   "conn_string": "Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA;UID=myuser;PWD=mypassword",
   "host": "0.0.0.0",
-  "port": 8000
+  "port": 8000,
+  "query_mode": "read-only",
+  "write_confirmation": true
 }
 ```
 
@@ -119,7 +123,6 @@ After connecting, the MCP client automatically discovers the server's capabiliti
 - **Inspect before querying:** List tables and review structure before writing SQL.
 - **Run a query:** Execute a read-only SQL statement and receive formatted results.
 - **Explore relationships:**  Traverse foreign keys and related tables using ORM operations.
-- **Summarize results:**  Ask the client to interpret or summarize query output.
 
 
 

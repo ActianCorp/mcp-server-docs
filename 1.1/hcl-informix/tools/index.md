@@ -132,7 +132,7 @@ Before running the statement, the server asks you to approve it in the client. T
 
 ### Write Errors
 
-These apply when `query_mode` is `read-write`.
+The following errors apply when `query_mode` is `read-write`.
 
 **The token lacks the `mcp:write` scope**
 

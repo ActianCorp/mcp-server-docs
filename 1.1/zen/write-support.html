@@ -2869,7 +2869,7 @@
 
 
 <h1 id="write-support">Write Support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
-<p>By default, the Actian MCP Server permits only read queries. Set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also allow Data Manipulation Language (DML) statements, that is <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>.</p>
+<p>By default, the Actian MCP Server permits only read queries. Set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also allow Data Manipulation Language (DML) statements, that is <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, and <code>MERGE</code>.</p>
 <p>Write support remains off until it is enabled. Existing read-only deployments are not affected.</p>
 <p>Extensions can write too, through the same authorization checks described below. See <a href="extensions/index.html">Extensions</a>.</p>
 <p>For which tools accept a write, and how, see <a href="tools/index.html">Zen tools</a>. The <code>query_mode</code> setting and the authorization checks described below apply the same way regardless of which tool performs the write.</p>
@@ -2897,7 +2897,7 @@ prompt.</p>
 </tr>
 <tr>
 <td><code>read-write</code></td>
-<td>Read queries plus <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> are permitted.</td>
+<td>Read queries plus <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, and <code>MERGE</code> are permitted.</td>
 </tr>
 </tbody>
 </table>
@@ -2940,7 +2940,7 @@ sequenceDiagram
     participant Server as MCP Server
     participant DB as Database
 
-    Client-&gt;&gt;Server: Write request (INSERT / UPDATE / DELETE)
+    Client-&gt;&gt;Server: Write request (INSERT / UPDATE / DELETE / MERGE)
     Server-&gt;&gt;Server: Check mcp:write scope
     alt Scope missing
         Server--&gt;&gt;Client: Rejected (authorization error)
@@ -2969,7 +2969,7 @@ sequenceDiagram
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">This removes human oversight of every write</p>
-<p>With <code>write_confirmation</code> set to <code>false</code>, the server runs <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and unattended writes by the AI agent are acceptable.</p>
+<p>With <code>write_confirmation</code> set to <code>false</code>, the server runs <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, and <code>MERGE</code> statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and unattended writes by the AI agent are acceptable.</p>
 <p>The <code>mcp:write</code> scope check still applies. Disabling the prompt does not grant write access to callers that lack the scope.</p>
 <p>This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See <a href="extensions/index.html#extension-security-controls">Extensions</a>.</p>
 </div>
@@ -3011,7 +3011,7 @@ sequenceDiagram
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2026 17:56:43 UTC">August 20, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 24, 2026 10:11:32 UTC">August 24, 2026</span>
   </span>
 
     

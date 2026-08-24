@@ -54,10 +54,12 @@ Create a file named `conf.json` in the working directory and add the database-sp
   "database": "<database_name>",
   "database_user": "<database_user>",
   "database_password": "<database_password>",
-  "max_connections": "<max_concurrent_connections>",
-  "max_rows": "<max_rows_per_query_response>",
+  "max_connections": 10,
+  "max_rows": 1000,
   "host": "<mcp_server_host>",
-  "port": "<mcp_server_port>",
+  "port": 8000,
+  "query_mode": "read-only",
+  "write_confirmation": true,
   "log_level": "INFO",
   "ssl_certfile": "/app/server.crt",
   "ssl_keyfile": "/app/server.key",
@@ -85,7 +87,7 @@ Create a file named `conf.json` in the working directory and add the database-sp
 | `database` | `string` | Name of the database to connect to target database |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool|
 | `host` | `string` | Host address that the MCP Server listens on inside the container|
-| `port` | `string` | Port that the MCP Server listens on inside the container |
+| `port` | `integer` | Port that the MCP Server listens on inside the container |
 | `database_user` | `string` | Database username. |
 | `database_password` | `string` | Database password. |
 

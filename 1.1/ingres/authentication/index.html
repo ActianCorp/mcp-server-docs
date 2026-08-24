@@ -2990,6 +2990,7 @@ sequenceDiagram
 <div class="admonition note">
 <p class="admonition-title">Configuration Considerations</p>
 <p>You must either provide all four required OAuth fields (<code>CONFIG_URL</code>, <code>CLIENT_ID</code>, <code>CLIENT_SECRET</code>, and <code>BASE_URL</code>) or none. If you include <code>CONFIG_URL</code> and <code>CLIENT_ID</code>, and omit <code>CLIENT_SECRET</code> or <code>BASE_URL</code>, the server fails to start and throws a <code>KeyError</code>. To disable OAuth, remove the entire <code>oauth</code> block.</p>
+<p>These values come from your identity provider. Set up <a href="auth0.html">Auth0</a> or <a href="keycloak.html">Keycloak</a> first if you have not already, then come back to fill in these fields.</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Scopes</p>
@@ -3060,10 +3061,10 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Production certificates</p>
-<p>For production environments, use a certificate issued by a trusted Certificate Authority (CA), such as <code>Let's Encrypt or your corporate CA</code>.</p>
+<p>For production environments, use a certificate issued by a trusted Certificate Authority (CA), such as Let's Encrypt or the corporate CA.</p>
 </div>
 <h3 id="step-2-configure-tls-in-confjson">Step 2: Configure TLS in <code>conf.json</code><a class="headerlink" href="#step-2-configure-tls-in-confjson" title="Permanent link">&para;</a></h3>
-<p>Add the <code>ssl_certfile</code> certificate and <code>ssl_keyfile</code> key paths to the top level of the <code>conf.json</code> file (outside the <code>oauth</code> block). Ensure the usage of <code>https://</code> in <code>BASE_URL</code>:</p>
+<p>Add the <code>ssl_certfile</code> and <code>ssl_keyfile</code> fields to the top level of the <code>conf.json</code> file (outside the <code>oauth</code> block), and ensure <code>BASE_URL</code> uses <code>https://</code>:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"ssl_certfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.crt"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"ssl_keyfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.key"</span><span class="p">,</span>
@@ -3072,7 +3073,8 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>The server validates the existance of both paths at startup, and the usage of <code>https://</code> for <code>BASE_URL</code> when SSL is active.</p>
+<p>The <code>ssl_certfile</code> and <code>ssl_keyfile</code> values are always the fixed <strong>in-container</strong> paths shown above, not the paths to the certificate files on the host. The server reads <code>ssl_certfile</code>/<code>ssl_keyfile</code> only from <code>conf.json</code> — there is no default and no way to supply them via the <code>docker run</code> command instead. What varies per deployment is where the certificate and key live on the host; that is set in <a href="#step-3-deploy-the-docker">Step 3</a>, which mounts them to these exact container paths.</p>
+<p>The server validates that both paths exist at startup, and that <code>BASE_URL</code> uses <code>https://</code> when SSL is active.</p>
 <h3 id="step-3-deploy-the-docker">Step 3: Deploy the Docker<a class="headerlink" href="#step-3-deploy-the-docker" title="Permanent link">&para;</a></h3>
 <p>Mount the certificate and key into the container using volume flags:</p>
 <div class="admonition note">
@@ -3204,7 +3206,7 @@ sudo<span class="w"> </span>update-ca-certificates
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2026 17:56:43 UTC">August 20, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 24, 2026 10:11:32 UTC">August 24, 2026</span>
   </span>
 
     

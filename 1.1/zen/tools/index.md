@@ -320,7 +320,7 @@ reaches the database. See [Write support](../write-support.md).
     - Multiple statements in one call
     - Data Definition Language — deferred, not permitted in this release
 
-    These are refused on inspection, so no approval prompt appears. A missing prompt therefore does
+    The server refuses these statements on inspection, so no approval prompt appears. A missing prompt therefore does
     not by itself mean the write was declined.
 
 ### Parameters
