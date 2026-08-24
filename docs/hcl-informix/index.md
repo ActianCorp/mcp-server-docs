@@ -35,6 +35,9 @@ Before starting the server, ensure the following requirements are met:
 * **Secure deployment files (Optional):** TLS certificate and key files.
 * **Authentication (Optional):** An OIDC provider, if you require OAuth
 
+!!! note Database Compatibility
+    The Actian MCP server for HCL Informix requires version 15.0.1 and above. Earlier Informix versions are not supported.
+
 ---
 
 ## Configuration
