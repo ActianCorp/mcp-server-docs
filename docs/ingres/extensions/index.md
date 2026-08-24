@@ -179,7 +179,7 @@ An extension does not run with the server's own privileges. Three controls apply
 
 ### Write Scope Enforcement
 
-The write scope is enforced automatically. When OAuth is enabled, starting a transaction requires the caller's access token to carry the `mcp:write` scope. Without it the transaction raises and nothing is written. Reads need no extra scope. No action is required to enable this behavior. Grant `mcp:write` to the users allowed to write, as described for [Auth0](../authentication/auth0.md) and [Keycloak](../authentication/keycloak.md).
+The write scope is enforced automatically. When OAuth is enabled, starting a transaction requires the caller's access token to carry the `mcp:write` scope. Without it the transaction raises and nothing is written. Reads need no extra scope. No action is required to enable this behavior. Grant `mcp:write` to the users or roles allowed to write, as described for [Auth0](../authentication/auth0.md) and [Keycloak](../authentication/keycloak.md).
 
 For finer-grained checks, read the token's scopes with `has_scope()` or `get_current_scopes()`. Both return values only in read-write mode.
 

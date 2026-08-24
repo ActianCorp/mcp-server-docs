@@ -22,7 +22,7 @@ Use the following tools to interact with the database:
 
 Use this tool to run a SQL query against Actian Ingres. The server returns the result set as structured `JSON`.
 
-By default the tool accepts only `SELECT`. When the server runs with `query_mode` set to `read-write`, it also accepts the Data Manipulation Language (DML) statements `INSERT`, `UPDATE`, and `DELETE`. See [Write support](../write-support.md).
+By default the tool accepts only `SELECT`. When the server runs with `query_mode` set to `read-write`, it also accepts the Data Manipulation Language (DML) statements `INSERT`, `UPDATE`, `DELETE`, and `MERGE`. See [Write support](../write-support.md).
 
 !!! note "Result truncation:"
     If the number of rows exceeds the `max_rows` configuration, the response includes the `truncated` and `warning` fields.
@@ -34,7 +34,7 @@ By default the tool accepts only `SELECT`. When the server runs with `query_mode
 
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
-| `query` | `string` | ✓ | The SQL query you want to execute. `SELECT` is always accepted. `INSERT`, `UPDATE`, and `DELETE` require `query_mode` set to `read-write`. |
+| `query` | `string` | ✓ | The SQL query you want to execute. `SELECT` is always accepted. `INSERT`, `UPDATE`, `DELETE`, and `MERGE` require `query_mode` set to `read-write`. |
 
 ### Output Schema
 
@@ -151,7 +151,7 @@ The server checks the scope before it asks anyone to approve the statement, so n
 ```json
 {
 	"success": false,
-	"error": "DDL and administrative statements (CREATE/ALTER/DROP/GRANT/SET/ENABLE/...) are not permitted."
+	"error": "DDL and administrative statements (CREATE/ALTER/DROP/GRANT/COPY/SET/ENABLE/...) are not permitted."
 }
 ```
 
@@ -289,7 +289,7 @@ Show me schema information about the customers table
 ```json
 {
 	"success": false,
-	"error": "No permission to access table 'ii_tables'"
+	"error": "No permission to access table 'hr.salaries'"
 }
 ```
 

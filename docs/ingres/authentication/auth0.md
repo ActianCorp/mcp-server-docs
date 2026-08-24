@@ -278,7 +278,7 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
 ```json
 {
     "driver": "{Ingres}",
-    "server": "@<db-host>,tcp_ip,<port>",
+    "server": "@<db-host>,tcp_ip,<installation_id>",
     "database": "mydb",
     "database_user": "<database_user>",
     "database_password": "<database_password>",
