@@ -6,35 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Overview of the prompts available when using the Actian MCP Server with Actian Ingres.">
+        <meta name="description" content="New features and changes in Actian MCP Server 1.1.0, including unified query modes, human-in-the-loop write approval, Data Platform sidecar deployment, and custom extensions.">
       
       
       
-        <link rel="canonical" href="https://docs.actian.com/mcp-server/1.1/ingres/prompts/index.html">
+        <link rel="canonical" href="https://docs.actian.com/mcp-server/1.1/whats-new/index.html">
       
       
-        <link rel="prev" href="../resources/index.html">
+        <link rel="prev" href="../index.html">
       
       
-        <link rel="next" href="../../hcl-informix/index.html">
+        <link rel="next" href="../intro/index.html">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.png">
+      <link rel="icon" href="../assets/favicon.png">
       <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.7">
     
     
       
-        <title>Prompts - Actian MCP Server</title>
+        <title>What's New - Actian MCP Server</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,11 +53,11 @@
       
     
     
-      <link rel="stylesheet" href="../../stylesheets/site-theme.css">
+      <link rel="stylesheet" href="../stylesheets/site-theme.css">
     
-      <link rel="stylesheet" href="../../stylesheets/minichat.css">
+      <link rel="stylesheet" href="../stylesheets/minichat.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prompts" class="md-skip">
+        <a href="#whats-new-in-actian-mcp-server-110" class="md-skip">
           Skip to content
         </a>
       
@@ -135,9 +135,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../index.html" title="Actian MCP Server" class="md-header__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
+    <a href="../index.html" title="Actian MCP Server" class="md-header__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
       
-  <img src="../../assets/images/actian-logo.svg" alt="logo">
+  <img src="../assets/images/actian-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -154,7 +154,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Prompts
+              What's New
             
           </span>
         </div>
@@ -277,9 +277,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../index.html" title="Actian MCP Server" class="md-nav__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
+    <a href="../index.html" title="Actian MCP Server" class="md-nav__button md-logo" aria-label="Actian MCP Server" data-md-component="logo">
       
-  <img src="../../assets/images/actian-logo.svg" alt="logo">
+  <img src="../assets/images/actian-logo.svg" alt="logo">
 
     </a>
     Actian MCP Server
@@ -306,7 +306,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../index.html" class="md-nav__link">
+      <a href="../index.html" class="md-nav__link">
         
   
   
@@ -330,10 +330,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../whats-new/index.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="index.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -349,6 +376,83 @@
   
 
       </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unified-query-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unified Query Modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hitl-write-approval-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HITL Write Approval Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-platform-sidecar-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Platform Sidecar Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-extension-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Extension Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -360,7 +464,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../intro/index.html" class="md-nav__link">
+      <a href="../intro/index.html" class="md-nav__link">
         
   
   
@@ -387,7 +491,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../get-started/index.html" class="md-nav__link">
+      <a href="../get-started/index.html" class="md-nav__link">
         
   
   
@@ -414,7 +518,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mcp-clients/index.html" class="md-nav__link">
+      <a href="../mcp-clients/index.html" class="md-nav__link">
         
   
   
@@ -438,8 +542,6 @@
       
   
   
-    
-  
   
   
     
@@ -465,15 +567,15 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../index.html" class="md-nav__link ">
+            <a href="../ingres/index.html" class="md-nav__link ">
               
   
   
@@ -497,7 +599,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -539,7 +641,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../authentication/index.html" class="md-nav__link ">
+            <a href="../ingres/authentication/index.html" class="md-nav__link ">
               
   
   
@@ -583,7 +685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../authentication/auth0.html" class="md-nav__link">
+      <a href="../ingres/authentication/auth0.html" class="md-nav__link">
         
   
   
@@ -611,7 +713,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../authentication/keycloak.html" class="md-nav__link">
+      <a href="../ingres/authentication/keycloak.html" class="md-nav__link">
         
   
   
@@ -647,7 +749,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../write-support.html" class="md-nav__link">
+      <a href="../ingres/write-support.html" class="md-nav__link">
         
   
   
@@ -697,7 +799,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../extensions/index.html" class="md-nav__link ">
+            <a href="../ingres/extensions/index.html" class="md-nav__link ">
               
   
   
@@ -741,7 +843,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../extensions/examples.html" class="md-nav__link">
+      <a href="../ingres/extensions/examples.html" class="md-nav__link">
         
   
   
@@ -769,7 +871,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../extensions/api-reference.html" class="md-nav__link">
+      <a href="../ingres/extensions/api-reference.html" class="md-nav__link">
         
   
   
@@ -805,7 +907,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tools/index.html" class="md-nav__link">
+      <a href="../ingres/tools/index.html" class="md-nav__link">
         
   
   
@@ -833,7 +935,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../resources/index.html" class="md-nav__link">
+      <a href="../ingres/resources/index.html" class="md-nav__link">
         
   
   
@@ -858,37 +960,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Prompts
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="index.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../ingres/prompts/index.html" class="md-nav__link">
         
   
   
@@ -904,100 +979,6 @@
   
 
       </a>
-      
-        
-
-  
-
-<nav class="md-nav md-nav--secondary" aria-label="On this page">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      On this page
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#available-prompts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Available Prompts
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ask_question" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ask_question
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ask_question">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-template" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Template
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1047,7 +1028,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/index.html" class="md-nav__link ">
               
   
   
@@ -1113,7 +1094,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/authentication/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/authentication/index.html" class="md-nav__link ">
               
   
   
@@ -1157,7 +1138,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hcl-informix/authentication/auth0.html" class="md-nav__link">
+      <a href="../hcl-informix/authentication/auth0.html" class="md-nav__link">
         
   
   
@@ -1185,7 +1166,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hcl-informix/authentication/keycloak.html" class="md-nav__link">
+      <a href="../hcl-informix/authentication/keycloak.html" class="md-nav__link">
         
   
   
@@ -1221,7 +1202,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hcl-informix/write-support.html" class="md-nav__link">
+      <a href="../hcl-informix/write-support.html" class="md-nav__link">
         
   
   
@@ -1271,7 +1252,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../hcl-informix/extensions/index.html" class="md-nav__link ">
+            <a href="../hcl-informix/extensions/index.html" class="md-nav__link ">
               
   
   
@@ -1315,7 +1296,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hcl-informix/extensions/examples.html" class="md-nav__link">
+      <a href="../hcl-informix/extensions/examples.html" class="md-nav__link">
         
   
   
@@ -1343,7 +1324,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hcl-informix/extensions/api-reference.html" class="md-nav__link">
+      <a href="../hcl-informix/extensions/api-reference.html" class="md-nav__link">
         
   
   
@@ -1379,7 +1360,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hcl-informix/tools/index.html" class="md-nav__link">
+      <a href="../hcl-informix/tools/index.html" class="md-nav__link">
         
   
   
@@ -1407,7 +1388,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hcl-informix/resources/index.html" class="md-nav__link">
+      <a href="../hcl-informix/resources/index.html" class="md-nav__link">
         
   
   
@@ -1435,7 +1416,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hcl-informix/prompts/index.html" class="md-nav__link">
+      <a href="../hcl-informix/prompts/index.html" class="md-nav__link">
         
   
   
@@ -1500,7 +1481,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/index.html" class="md-nav__link ">
+            <a href="../zen/index.html" class="md-nav__link ">
               
   
   
@@ -1566,7 +1547,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/authentication/index.html" class="md-nav__link ">
+            <a href="../zen/authentication/index.html" class="md-nav__link ">
               
   
   
@@ -1610,7 +1591,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../zen/authentication/auth0.html" class="md-nav__link">
+      <a href="../zen/authentication/auth0.html" class="md-nav__link">
         
   
   
@@ -1638,7 +1619,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../zen/authentication/keycloak.html" class="md-nav__link">
+      <a href="../zen/authentication/keycloak.html" class="md-nav__link">
         
   
   
@@ -1674,7 +1655,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../zen/write-support.html" class="md-nav__link">
+      <a href="../zen/write-support.html" class="md-nav__link">
         
   
   
@@ -1724,7 +1705,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../zen/extensions/index.html" class="md-nav__link ">
+            <a href="../zen/extensions/index.html" class="md-nav__link ">
               
   
   
@@ -1768,7 +1749,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../zen/extensions/examples.html" class="md-nav__link">
+      <a href="../zen/extensions/examples.html" class="md-nav__link">
         
   
   
@@ -1796,7 +1777,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../zen/extensions/api-reference.html" class="md-nav__link">
+      <a href="../zen/extensions/api-reference.html" class="md-nav__link">
         
   
   
@@ -1832,7 +1813,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../zen/tools/index.html" class="md-nav__link">
+      <a href="../zen/tools/index.html" class="md-nav__link">
         
   
   
@@ -1860,7 +1841,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../zen/resources/index.html" class="md-nav__link">
+      <a href="../zen/resources/index.html" class="md-nav__link">
         
   
   
@@ -1888,7 +1869,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../zen/prompts/index.html" class="md-nav__link">
+      <a href="../zen/prompts/index.html" class="md-nav__link">
         
   
   
@@ -1955,7 +1936,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../analytics-engine/index.html" class="md-nav__link ">
+            <a href="../analytics-engine/index.html" class="md-nav__link ">
               
   
   
@@ -1999,7 +1980,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics-engine/data-platform.html" class="md-nav__link">
+      <a href="../analytics-engine/data-platform.html" class="md-nav__link">
         
   
   
@@ -2049,7 +2030,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../analytics-engine/authentication/index.html" class="md-nav__link ">
+            <a href="../analytics-engine/authentication/index.html" class="md-nav__link ">
               
   
   
@@ -2093,7 +2074,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics-engine/authentication/auth0.html" class="md-nav__link">
+      <a href="../analytics-engine/authentication/auth0.html" class="md-nav__link">
         
   
   
@@ -2121,7 +2102,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics-engine/authentication/keycloak.html" class="md-nav__link">
+      <a href="../analytics-engine/authentication/keycloak.html" class="md-nav__link">
         
   
   
@@ -2157,7 +2138,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics-engine/write-support.html" class="md-nav__link">
+      <a href="../analytics-engine/write-support.html" class="md-nav__link">
         
   
   
@@ -2207,7 +2188,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../analytics-engine/extensions/index.html" class="md-nav__link ">
+            <a href="../analytics-engine/extensions/index.html" class="md-nav__link ">
               
   
   
@@ -2251,7 +2232,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics-engine/extensions/examples.html" class="md-nav__link">
+      <a href="../analytics-engine/extensions/examples.html" class="md-nav__link">
         
   
   
@@ -2279,7 +2260,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics-engine/extensions/api-reference.html" class="md-nav__link">
+      <a href="../analytics-engine/extensions/api-reference.html" class="md-nav__link">
         
   
   
@@ -2315,7 +2296,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics-engine/tools/index.html" class="md-nav__link">
+      <a href="../analytics-engine/tools/index.html" class="md-nav__link">
         
   
   
@@ -2343,7 +2324,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics-engine/resources/index.html" class="md-nav__link">
+      <a href="../analytics-engine/resources/index.html" class="md-nav__link">
         
   
   
@@ -2371,7 +2352,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics-engine/prompts/index.html" class="md-nav__link">
+      <a href="../analytics-engine/prompts/index.html" class="md-nav__link">
         
   
   
@@ -2436,7 +2417,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/index.html" class="md-nav__link ">
+            <a href="../nosql/index.html" class="md-nav__link ">
               
   
   
@@ -2502,7 +2483,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../nosql/authentication/index.html" class="md-nav__link ">
+            <a href="../nosql/authentication/index.html" class="md-nav__link ">
               
   
   
@@ -2546,7 +2527,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../nosql/authentication/auth0/index.html" class="md-nav__link">
+      <a href="../nosql/authentication/auth0/index.html" class="md-nav__link">
         
   
   
@@ -2574,7 +2555,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../nosql/authentication/keycloak/index.html" class="md-nav__link">
+      <a href="../nosql/authentication/keycloak/index.html" class="md-nav__link">
         
   
   
@@ -2610,7 +2591,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../nosql/write-support.html" class="md-nav__link">
+      <a href="../nosql/write-support.html" class="md-nav__link">
         
   
   
@@ -2638,7 +2619,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../nosql/extensions/index.html" class="md-nav__link">
+      <a href="../nosql/extensions/index.html" class="md-nav__link">
         
   
   
@@ -2666,7 +2647,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../nosql/tools/index.html" class="md-nav__link">
+      <a href="../nosql/tools/index.html" class="md-nav__link">
         
   
   
@@ -2694,7 +2675,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../nosql/resources/index.html" class="md-nav__link">
+      <a href="../nosql/resources/index.html" class="md-nav__link">
         
   
   
@@ -2722,7 +2703,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../nosql/prompts/index.html" class="md-nav__link">
+      <a href="../nosql/prompts/index.html" class="md-nav__link">
         
   
   
@@ -2779,10 +2760,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#available-prompts" class="md-nav__link">
+  <a href="#unified-query-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Prompts
+        Unified Query Modes
       
     </span>
   </a>
@@ -2790,52 +2771,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ask_question" class="md-nav__link">
+  <a href="#hitl-write-approval-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ask_question
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ask_question">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        HITL Write Approval Path
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#output-template" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#data-platform-sidecar-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Template
+        Data Platform Sidecar Support
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#custom-extension-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example
+        Custom Extension Support
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2868,46 +2832,6 @@
   
 
 
-  <nav class="md-path" aria-label="Navigation" >
-    <ol class="md-path__list">
-      
-        
-  
-  
-    <li class="md-path__item">
-      <a href="../../index.html" class="md-path__link">
-        
-  <span class="md-ellipsis">
-    Home
-  </span>
-
-      </a>
-    </li>
-  
-
-      
-      
-        
-  
-  
-    
-    
-      <li class="md-path__item">
-        <a href="../index.html" class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Ingres
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-      
-    </ol>
-  </nav>
-
               
               <article class="md-content__inner md-typeset">
                 
@@ -2924,66 +2848,42 @@
 
 
 
-<h1 id="prompts">Prompts<a class="headerlink" href="#prompts" title="Permanent link">&para;</a></h1>
-<p>The Actian MCP Server for Actian Ingres includes a built-in prompt that converts plain language questions into expert-level database queries.</p>
-<h2 id="available-prompts">Available Prompts<a class="headerlink" href="#available-prompts" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Prompt</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="#ask_question"><code>ask_question</code></a></td>
-<td>Formats a plain language question into a structured prompt template designed for database experts.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ask_question">ask_question<a class="headerlink" href="#ask_question" title="Permanent link">&para;</a></h2>
-<p>Renders a database expert prompt from a plain language question and returns the formatted prompt text ready for use.</p>
-<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th style="text-align: center;">Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>question</code></td>
-<td><code>string</code></td>
-<td style="text-align: center;">✓</td>
-<td>The specific question you want to insert into the expert prompt template.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="output-template">Output Template<a class="headerlink" href="#output-template" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code>You are a database expert. Answer the following question: &lt;question&gt;
-</code></pre></div>
-<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
-<p><strong>Input</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"question"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What are the top 5 customers by revenue this quarter?"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Output</strong></p>
-<div class="language-text highlight"><pre><span></span><code>You are a database expert. Answer the following question: What are the top 5 customers by revenue this quarter?
-</code></pre></div>
+<h1 id="whats-new-in-actian-mcp-server-110">What's New in Actian MCP Server 1.1.0<a class="headerlink" href="#whats-new-in-actian-mcp-server-110" title="Permanent link">&para;</a></h1>
+<p>The release of Actian MCP Server, version 1.1.0, offers the following new features and changes:</p>
+<ul>
+<li><a href="#unified-query-modes">Unified Query Modes</a></li>
+<li><a href="#hitl-write-approval-path">HITL Write Approval Path</a></li>
+<li><a href="#data-platform-sidecar-support">Data Platform Sidecar Support</a></li>
+<li><a href="#custom-extension-support">Custom Extension Support</a></li>
+</ul>
+<h2 id="unified-query-modes">Unified Query Modes<a class="headerlink" href="#unified-query-modes" title="Permanent link">&para;</a></h2>
+<p>The <code>conf.json</code> file supports exactly two query modes: <code>read-only</code>, which is the default, and <code>read-write</code>. In <code>read-only</code> mode, the server permits only read queries. In <code>read-write</code> mode, it also permits the Data Manipulation Language (DML) statements <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>.</p>
+<p>Data Definition Language (DDL) operations are unsupported in both modes. The server rejects statements such as <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, and <code>GRANT</code>, and this behavior is not configurable. Use the native database tools for schema changes.</p>
+<p>For more information, see <a href="../ingres/write-support.html#enabling-write-mode">Enabling Write Mode</a>.</p>
+<h2 id="hitl-write-approval-path">HITL Write Approval Path<a class="headerlink" href="#hitl-write-approval-path" title="Permanent link">&para;</a></h2>
+<p>Every write passes through a human-in-the-loop (HITL) approval path. In <code>read-write</code> mode, a DML statement must satisfy two independent checks before it reaches the database:</p>
+<ul>
+<li>The access token carries the <code>mcp:write</code> OAuth scope, when OAuth is enabled.</li>
+<li>A person explicitly approves the statement in the connected MCP client.</li>
+</ul>
+<p>The server evaluates the scope first, so a caller without it is rejected before an approval is requested.</p>
+<p>For more information, see <a href="../ingres/write-support.html#authorizing-a-write">Authorizing a Write</a>.</p>
+<h2 id="data-platform-sidecar-support">Data Platform Sidecar Support<a class="headerlink" href="#data-platform-sidecar-support" title="Permanent link">&para;</a></h2>
+<p>The MCP Server deploys as a sidecar alongside the warehouse leader pod of Actian Data Platform. Clients connect using only the MCP server URL, and no separate Auth0 setup is required. Internally, the server acts as an OAuth2 Authorization Server proxy and hides the Auth0 token exchange from the clients entirely.</p>
+<p>For more information, see <a href="../analytics-engine/data-platform.html">Actian MCP Server on Actian Data Platform</a>.</p>
+<h2 id="custom-extension-support">Custom Extension Support<a class="headerlink" href="#custom-extension-support" title="Permanent link">&para;</a></h2>
+<p>Plain Python modules mounted at <code>/app/extensions</code> add custom tools and resources dynamically, without any modification to the core database plugins. Extensions run behind the same authentication and write controls as the built-in tools.</p>
+<p>For more information, see <a href="../ingres/extensions/index.html">Extensions</a>.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.71 20.29-1.42 1.42a1 1 0 0 1-1.41 0L7 9.85A3.8 3.8 0 0 1 6 10a4 4 0 0 1-3.78-5.3l2.54 2.54.53-.53 1.42-1.42.53-.53L4.7 2.22A4 4 0 0 1 10 6a3.8 3.8 0 0 1-.15 1l11.86 11.88a1 1 0 0 1 0 1.41M2.29 18.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0l5.47-5.46-2.83-2.83M20 2l-4 2v2l-2.17 2.17 2 2L18 8h2l2-4Z"/></svg></span> <strong><a href="../tools/index.html">Tools</a></strong><br />
-  Learn about the SQL and schema tools provided by the MCP Server for Ingres.</p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg></span> <strong><a href="../intro/index.html">Introduction</a></strong><br />
+  To review the core concepts and the architecture of the server, see <a href="../intro/index.html">Introduction</a>.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 20H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h7a2 2 0 0 1 2 2H4v10l2.14-8h17.07l-2.28 8.5c-.23.87-1.01 1.5-1.93 1.5"/></svg></span> <strong><a href="../resources/index.html">Resources</a></strong><br />
-  Explore the various resource types available through the MCP Server for Ingres.</p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg></span> <strong><a href="../get-started/index.html">Get Started</a></strong><br />
+  To deploy an Actian MCP Server instance and connect it to an AI client, see <a href="../get-started/index.html">Getting Started with MCP Server</a>.</p>
 </li>
 </ul>
 </div>
@@ -3007,7 +2907,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 22, 2026 02:55:14 UTC">April 22, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 24, 2026 07:47:12 UTC">August 24, 2026</span>
   </span>
 
     
@@ -3096,7 +2996,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../resources/index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Resources">
+          <a href="../index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -3106,20 +3006,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Resources
+                Home
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../hcl-informix/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../intro/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Introduction">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                Introduction
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -3160,20 +3060,20 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "navigation.indexes", "navigation.top", "navigation.path", "navigation.footer", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["announce.dismiss", "navigation.indexes", "navigation.top", "navigation.path", "navigation.footer", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
       
         <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
       
-        <script src="../../javascripts/mermaid-init.js"></script>
+        <script src="../javascripts/mermaid-init.js"></script>
       
-        <script src="../../javascripts/extra.js"></script>
+        <script src="../javascripts/extra.js"></script>
       
-        <script src="../../javascripts/MiniChatJavaScript.js" defer></script>
+        <script src="../javascripts/MiniChatJavaScript.js" defer></script>
       
     
   </body>
