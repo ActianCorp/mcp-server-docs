@@ -35,6 +35,9 @@ Before starting the server, ensure the following requirements are met:
 * **Secure deployment files (Optional):** TLS certificate and key files.
 * **Authentication (Optional):** An OIDC provider, required for OAuth authentication.
 
+!!! note "Database Compatibility"
+    The Actian MCP server for HCL Informix requires version 15.0.1 and above. Earlier Informix versions are not supported.
+
 ---
 
 ## Configuration
@@ -54,10 +57,10 @@ Create a file named `conf.json` in the working directory and add the database-sp
   "database": "<database_name>",
   "database_user": "<database_user>",
   "database_password": "<database_password>",
-  "max_connections": 10,
-  "max_rows": 1000,
+  "max_connections": "<max_concurrent_connections>",
+  "max_rows": "<max_rows_per_query_response>",
   "host": "<mcp_server_host>",
-  "port": 8000,
+  "port": "<mcp_server_port>",
   "query_mode": "read-only",
   "write_confirmation": true,
   "log_level": "INFO",
@@ -85,9 +88,9 @@ Create a file named `conf.json` in the working directory and add the database-sp
 | `dsn` | `string` | Data source name |
 | `server` | `string` | Host address for the HCL Informix® database |
 | `database` | `string` | Name of the database to connect to target database |
-| `max_connections` | `integer` | Maximum concurrent database connections in the pool|
+| `max_connections` | integer | Maximum concurrent database connections in the pool|
 | `host` | `string` | Host address that the MCP Server listens on inside the container|
-| `port` | `integer` | Port that the MCP Server listens on inside the container |
+| `port` | integer | Port that the MCP Server listens on inside the container |
 | `database_user` | `string` | Database username. |
 | `database_password` | `string` | Database password. |
 
@@ -95,7 +98,7 @@ Create a file named `conf.json` in the working directory and add the database-sp
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. |
+| `max_rows` | integer | 1000 | Maximum number of rows returned per query response. |
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` inside the container. |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` inside the container. |
