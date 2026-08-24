@@ -3,9 +3,9 @@ title: HCL Informix®
 description: Use the Actian MCP Server to connect MCP clients to HCL Informix® Database.
 ---
 
-# Actian MCP Server for HCL Informix®
+# Actian MCP Server for HCL Informix® 
 
-Connect the MCP-compatible client to an HCL Informix® database using the Actian MCP Server. Once configured, you can use the server to explore schema metadata and execute SQL queries through a standardized interface. The MCP Server for HCL Informix® enables communication between any MCP client and the HCL Informix® database. The server automatically manages connection pooling, response formatting, and schema discovery, allowing you to focus on business data analysis.
+Connect the MCP-compatible client to an HCL Informix® database using the Actian MCP Server. Once configured, you can use the server to explore schema metadata and execute SQL queries through a standardized interface. The MCP Server for HCL Informix® enables communication between any MCP client and the HCL Informix® database. The server automatically manages connection pooling, response formatting, and schema discovery, allowing you to focus on your business data analysis.
 
 
 ## Capabilities
@@ -19,10 +19,10 @@ The Actian MCP Server for HCL Informix® supports the following operations:
 | **Inspect table structure** | Retrieve column definitions, data types, and key information. |
 | **Read schema metadata** | Explore comprehensive database-level metadata. |
 | **List functions and procedures** | View available user-defined routines. |
-| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write`. |
+| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
 
 !!! note "Write support is opt-in"
-    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](write-support.md).
+    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](../intro/write-support.md).
 
 ---
 
@@ -33,9 +33,9 @@ Before starting the server, ensure the following requirements are met:
 * **Container Engine:** Docker installed and running on the host machine.
 * **Database credentials:** Access details for the HCL Informix database.
 * **Secure deployment files (Optional):** TLS certificate and key files.
-* **Authentication (Optional):** An OIDC provider, required for OAuth authentication.
+* **Authentication (Optional):** An OIDC provider, if you require OAuth
 
-!!! note Database Compatibility
+!!! note "Database Compatibility"
     The Actian MCP server for HCL Informix requires version 15.0.1 and above. Earlier Informix versions are not supported.
 
 ---
@@ -46,7 +46,7 @@ The server runs as a Docker container. To configure the server, mount the (`conf
 
 ### Create Configuration File
 
-Create a file named `conf.json` in the working directory and add the database-specific configuration details:
+Create a file named `conf.json` in the working directory and add the database specific configuration details:
 
 ```json
 {
@@ -57,12 +57,10 @@ Create a file named `conf.json` in the working directory and add the database-sp
   "database": "<database_name>",
   "database_user": "<database_user>",
   "database_password": "<database_password>",
-  "max_connections": 10,
-  "max_rows": 1000,
+  "max_connections": "<max_concurrent_connections>",
+  "max_rows": "<max_rows_per_query_response>",
   "host": "<mcp_server_host>",
-  "port": 8000,
-  "query_mode": "read-only",
-  "write_confirmation": true,
+  "port": "<mcp_server_port>",
   "log_level": "INFO",
   "ssl_certfile": "/app/server.crt",
   "ssl_keyfile": "/app/server.key",
@@ -90,7 +88,7 @@ Create a file named `conf.json` in the working directory and add the database-sp
 | `database` | `string` | Name of the database to connect to target database |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool|
 | `host` | `string` | Host address that the MCP Server listens on inside the container|
-| `port` | `integer` | Port that the MCP Server listens on inside the container |
+| `port` | `string` | Port that the MCP Server listens on inside the container |
 | `database_user` | `string` | Database username. |
 | `database_password` | `string` | Database password. |
 
@@ -102,10 +100,10 @@ Create a file named `conf.json` in the working directory and add the database-sp
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` inside the container. |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` inside the container. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments, see [OAuth configuration](authentication/index.md#configuring-oauth-block) for more information. |
-| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md) |
-| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt) |
-| `extensions` | `array` | — | Extension modules to load, each object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md) |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments, see [OAuth configuration](../authentication/index.md#the-oauth-configuration-block) for more information. |
+| `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](../intro/write-support.md) |
+| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](../intro/write-support.md#skipping-the-approval-prompt) |
+| `extensions` | `array` | — | Extension modules to load, each object with a required `module` and an optional `config`. For more information, see [Extensions](../extensions/index.md) |
 
 ---
 
@@ -132,12 +130,6 @@ Once the container is running, connect the MCP client to the exposed server endp
 
 <div class="grid cards" markdown>
 
-- :material-pencil: **[Write Support](write-support.md)**  
-  Enable data-modifying SQL, and what gates each write.
-
-- :material-lock: **[Authentication](authentication/index.md)**  
-  Secure the server with OAuth 2.0 and an external identity provider.
-
 - :material-tools: **[Tools](tools/index.md)**  
   Explore the available MCP tools for HCL Informix® database operations.
 
@@ -147,7 +139,7 @@ Once the container is running, connect the MCP client to the exposed server endp
 - :material-chat-processing: **[Prompts](prompts/index.md)**  
   Use pre-built prompt templates for common workflows.
 
-- :material-puzzle: **[Extensions](extensions/index.md)**  
+- :material-puzzle: **[Extensions](../extensions/index.md)**  
   Add your own tools to the server with a Python extension.
 
 </div>
