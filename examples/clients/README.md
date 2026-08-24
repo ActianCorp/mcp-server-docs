@@ -18,7 +18,7 @@ python hitl_demo_client.py http://localhost:8000/mcp adjust_stock '{"product_id"
 # -> prints the approval request, you type y/n, then shows the result
 ```
 
-Approve and the write commits (for example, stock changes). Decline and it is
+Approve, and the write commits (for example, stock changes). Decline, and it is
 cancelled with nothing written.
 
 ### Passing tool arguments

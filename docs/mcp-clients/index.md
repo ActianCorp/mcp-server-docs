@@ -25,7 +25,7 @@ When write support is enabled, the server asks a person to approve each write be
 | Claude Code | Yes |
 | Claude Desktop | No |
 | GitHub Copilot | No |
-| Cursor, fast-agent, Codex | Not confirmed. Treat as unsupported until you verify it. |
+| Cursor, fast-agent, Codex | Not confirmed. Treat as unsupported until you have confirmed elicitation support in the deployment. |
 
 !!! warning "A client that cannot prompt cannot write"
     If the connected client does not support elicitation, no write goes through. There is no silent approval. Reads are not affected.

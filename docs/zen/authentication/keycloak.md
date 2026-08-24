@@ -346,6 +346,8 @@ GRANT SELECT ON TABLE products TO jdoe;
     "max_connections": 10,
     "host": "0.0.0.0",
     "port": 8000,
+    "query_mode": "read-write",
+    "write_confirmation": true,
     "ssl_certfile": "/app/server.crt",
     "ssl_keyfile":  "/app/server.key",
     "oauth": {

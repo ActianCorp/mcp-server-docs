@@ -144,7 +144,7 @@ chmod 600 server.key
     The `-addext "subjectAltName=IP:..."` flag is required. Node.js-based MCP clients (like VS Code and Cursor) strictly enforce SAN validation and reject certificates that only use the Common Name (CN) field.
 
 !!! tip "Production certificates"
-    For production environments, use a certificate issued by a trusted Certificate Authority (CA), such as `Let's Encrypt or your corporate CA`.
+    For production environments, use a certificate issued by a trusted Certificate Authority (CA), such as Let's Encrypt or the corporate CA.
 
 ### Step 2: Configure TLS in `conf.json`
 
@@ -160,9 +160,9 @@ Add the `ssl_certfile` and `ssl_keyfile` fields to the top level of the `conf.js
 }
 ```
 
-These are always the fixed **in-container** paths shown above, not the paths to your certificate files on the host. The server reads `ssl_certfile`/`ssl_keyfile` only from `conf.json` — there is no default and no way to supply them via the `docker run` command instead. What varies per deployment is where your certificate and key live on the host; that's set in [Step 3](#step-3-deploy-the-docker), which mounts them to these exact container paths.
+The `ssl_certfile` and `ssl_keyfile` values are always the fixed **in-container** paths shown above, not the paths to the certificate files on the host. The server reads `ssl_certfile`/`ssl_keyfile` only from `conf.json` — there is no default and no way to supply them via the `docker run` command instead. What varies per deployment is where the certificate and key live on the host; that is set in [Step 3](#step-3-deploy-the-docker), which mounts them to these exact container paths.
 
-The server validates the existance of both paths at startup, and the usage of `https://` for `BASE_URL` when SSL is active.
+The server validates that both paths exist at startup, and that `BASE_URL` uses `https://` when SSL is active.
 
 ### Step 3: Deploy the Docker
 

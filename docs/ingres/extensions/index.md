@@ -200,7 +200,7 @@ The `write_confirmation` setting does not silence the extension's prompt. If you
 ## Rules and Caveats
 
 !!! warning "A bad extension stops the server from starting"
-    This is deliberate. A misconfigured extension never leaves the server running in a quietly degraded state with fewer tools than you configured. Startup aborts if a module cannot be imported, does not define `register()`, raises during `register()`, or registers a tool whose name matches a built-in tool or an earlier extension. Any tools that extension already registered are rolled back first.
+    This behavior is deliberate. A misconfigured extension never leaves the server running in a quietly degraded state with fewer tools than you configured. Startup aborts if a module cannot be imported, does not define `register()`, raises during `register()`, or registers a tool whose name matches a built-in tool or an earlier extension. Any tools that extension already registered are rolled back first.
 
 | Point | Detail |
 |-------|--------|

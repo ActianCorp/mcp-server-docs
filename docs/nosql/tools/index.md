@@ -45,7 +45,7 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
     The following are **not** supported in this dialect:
 
     - `JOIN` — use dot notation instead (for example, `p.department.name = 'Engineering'`)
-    - Aggregate functions (`COUNT`, `SUM`, `AVG`, etc.)
+    - Aggregate functions, such as `COUNT`, `SUM`, and `AVG`
     - Collection traversal — only single-reference paths are allowed
     - The `in` operator on collections
 

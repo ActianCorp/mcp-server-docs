@@ -287,6 +287,8 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
     "max_connections": 10,
     "host": "0.0.0.0",
     "port": 8000,
+    "query_mode": "read-write",
+    "write_confirmation": true,
     "ssl_certfile": "/app/server.crt",
     "ssl_keyfile":  "/app/server.key",
     "oauth": {

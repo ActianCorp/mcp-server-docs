@@ -9,7 +9,7 @@ hide:
 <div class="landing-hero">
   <div class="landing-hero__content">
     <h1 class="landing-hero__heading">Connect Actian and HCL Informix® Databases to AI Applications</h1>
-    <p class="landing-hero__sub">Deploy specialized MCP servers from our central hub to turn your data into actionable intelligence</p>
+    <p class="landing-hero__sub">Deploy specialized MCP servers from the Actian MCP Hub to turn your data into actionable intelligence</p>
   </div>
 </div>
 
@@ -57,7 +57,7 @@ hide:
   <div class="databases-header" style="text-align: center;">
     <h3 class="jumbo-heading">The Actian MCP Hub: Specialized Connectors</h3>
     <p class="databases-subtitle" style="max-width: 700px; margin: 0 auto;">
-      While MCP is a universal protocol, performance must be native: we provide a centralized Docker Hub repository with optimized images for our entire database portfolio.
+      While MCP is a universal protocol, performance must be native: Actian provides a centralized Docker Hub repository with optimized images for the entire database portfolio.
     </p>
   </div>
 
@@ -132,7 +132,7 @@ hide:
     <div class="content-side">
       <h2 class="jumbo-heading">Get Started in Minutes</h2>
       <p class="section-description">
-        All MCP server images are available at <strong>hub.docker.com/u/actian</strong>. You can deploy a specific server quickly using standard container orchestration.
+        All MCP server images are available at <strong>hub.docker.com/u/actian</strong>. You can deploy a specific server using standard container orchestration.
       </p>
       <div class="section-cta">
         <a href="./get-started/index.html" class="primary-link">Read the Get Started Guide →</a>
