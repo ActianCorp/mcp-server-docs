@@ -10,6 +10,7 @@ site_dir: site
 # Navigation (explicit; self-contained per connector, shared content single-sourced via includes/)
 nav:
   - Home: index.md
+  - What's New: whats-new/index.md
   - Introduction: intro/index.md
   - Getting Started: get-started/index.md
   - MCP Clients: mcp-clients/index.md
