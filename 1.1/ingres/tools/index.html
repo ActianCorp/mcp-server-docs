@@ -3322,7 +3322,7 @@
 </table>
 <h2 id="execute_query">execute_query<a class="headerlink" href="#execute_query" title="Permanent link">&para;</a></h2>
 <p>Use this tool to run a SQL query against Actian Ingres. The server returns the result set as structured <code>JSON</code>.</p>
-<p>By default the tool accepts only <code>SELECT</code>. When the server runs with <code>query_mode</code> set to <code>read-write</code>, it also accepts the Data Manipulation Language (DML) statements <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>. See <a href="../write-support.html">Write support</a>.</p>
+<p>By default the tool accepts only <code>SELECT</code>. When the server runs with <code>query_mode</code> set to <code>read-write</code>, it also accepts the Data Manipulation Language (DML) statements <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, and <code>MERGE</code>. See <a href="../write-support.html">Write support</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Result truncation:</p>
 <p>If the number of rows exceeds the <code>max_rows</code> configuration, the response includes the <code>truncated</code> and <code>warning</code> fields.</p>
@@ -3346,7 +3346,7 @@
 <td><code>query</code></td>
 <td><code>string</code></td>
 <td style="text-align: center;">✓</td>
-<td>The SQL query you want to execute. <code>SELECT</code> is always accepted. <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> require <code>query_mode</code> set to <code>read-write</code>.</td>
+<td>The SQL query you want to execute. <code>SELECT</code> is always accepted. <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, and <code>MERGE</code> require <code>query_mode</code> set to <code>read-write</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -3424,7 +3424,7 @@
 <p><strong>The statement is DDL or administrative</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">    </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DDL and administrative statements (CREATE/ALTER/DROP/GRANT/SET/ENABLE/...) are not permitted."</span>
+<span class="w">    </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DDL and administrative statements (CREATE/ALTER/DROP/GRANT/COPY/SET/ENABLE/...) are not permitted."</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="list_tables">list_tables<a class="headerlink" href="#list_tables" title="Permanent link">&para;</a></h2>
@@ -3536,7 +3536,7 @@
 <p><strong>Error Response</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">    </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"No permission to access table 'ii_tables'"</span>
+<span class="w">    </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"No permission to access table 'hr.salaries'"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="example-naming-the-owner">Example: Naming the Owner<a class="headerlink" href="#example-naming-the-owner" title="Permanent link">&para;</a></h3>
@@ -3616,7 +3616,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 18, 2026 09:56:22 UTC">August 18, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 21, 2026 21:42:36 UTC">August 21, 2026</span>
   </span>
 
     

@@ -25,7 +25,7 @@ Use the following tools to interact with the database:
 
 Use this tool to run SQL queries. The server returns the result set as a structured JSON object.
 
-By default the tool accepts only `SELECT`. When the server runs with `query_mode` set to `read-write`, it also accepts the Data Manipulation Language (DML) statements `INSERT`, `UPDATE`, and `DELETE`. See [Write support](../write-support.md).
+By default the tool accepts only `SELECT`. When the server runs with `query_mode` set to `read-write`, it also accepts the Data Manipulation Language (DML) statements `INSERT`, `UPDATE`, `DELETE`, and `MERGE`. See [Write support](../write-support.md).
 
 !!! warning "Data Definition Language is never permitted"
     This tool does not run Data Definition Language (DDL) or administrative statements in any mode. `CREATE`, `ALTER`, `DROP`, `GRANT`, `SET`, `ENABLE`, `DISABLE`, and `SELECT ... INTO` are rejected. Use Analytics Engine tooling for schema changes.
@@ -34,7 +34,7 @@ By default the tool accepts only `SELECT`. When the server runs with `query_mode
 
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
-| `query` | `string` | ✓ | SQL query to execute. `SELECT` is always accepted. `INSERT`, `UPDATE`, and `DELETE` require `query_mode` set to `read-write`. |
+| `query` | `string` | ✓ | SQL query to execute. `SELECT` is always accepted. `INSERT`, `UPDATE`, `DELETE`, and `MERGE` require `query_mode` set to `read-write`. |
 
 ### Output Schema
 
@@ -149,7 +149,7 @@ The server checks the scope before it asks anyone to approve the statement, so n
 ```json
 {
   "success": false,
-  "error": "DDL and administrative statements (CREATE/ALTER/DROP/GRANT/SET/ENABLE/...) are not permitted."
+  "error": "DDL and administrative statements (CREATE/ALTER/DROP/GRANT/COPY/SET/ENABLE/...) are not permitted."
 }
 ```
 
@@ -285,7 +285,7 @@ Show me schema information about the customers table
 ```
 
 !!! warning
-    If the authenticated database user lacks access to a table, the error response includes a permission message. For example: `"error": "No permission to access table 'ii_tables'"`.
+    If the authenticated database user lacks access to a table, the error response includes a permission message. For example: `"error": "No permission to access table 'hr.salaries'"`.
 
 ### Example: Naming the Owner
 

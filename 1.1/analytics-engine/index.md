@@ -22,7 +22,7 @@ The Actian Analytics Engine MCP Server supports the following operations:
 | **Inspect table structure** | Retrieve column definitions and types |
 | **Read schema metadata** | Explore database-level metadata |
 | **List functions and procedures** | View available user-defined functions and procedures |
-| **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write` |
+| **Execute write queries** | Run `INSERT`, `UPDATE`, `DELETE`, and `MERGE` statements. Off by default. Requires `query_mode` set to `read-write` |
 
 !!! note "Write support is opt-in"
     The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](write-support.md).
@@ -82,7 +82,7 @@ Create a file named `conf.json` in your working directory using the following st
 | `database` | `string` | Name of the database. |
 | `max_connections` | `integer` | Maximum concurrent database connections in the pool|
 | `host` | `string` | Host address that the MCP Server listens to in the container |
-| `port` | `string` | Port that the MCP Server listens to in the container |
+| `port` | `integer` | Port that the MCP Server listens to in the container |
 | `database_user` | `string` | Database username|
 | `database_password` | `string` | Database password |
 
@@ -126,7 +126,6 @@ Once connected, the MCP client automatically discovers the server capabilities. 
 - **Inspect before querying**: List tables and review structure before writing SQL.
 - **Run a query**: Execute a SQL statement and receive formatted results.
 - **Explore functions**: Look up available user-defined functions and stored procedures.
-- **Summarize results**: Ask the client to interpret or summarize query output.
 
 
 ## Next Steps
