@@ -10,7 +10,9 @@ The Actian MCP Server for Actian NoSQL registers eight tools for exploring the s
 !!! note "Response format"
     All tools return results as structured content (`structuredContent`). For compatibility with older MCP clients, each response also includes the same data serialized as a JSON string in a text content item within the `content` array.
 
-    Values that are `null` or absent are omitted from responses entirely, so check whether a key is present rather than whether its value is `null`.
+    Optional response properties — such as `cursorId` when there are no more pages, or `data` when an object was not found — are omitted rather than sent as `null`.
+
+    Field values behave differently. A field whose stored value is `null` is reported as an explicit `null`, so you can tell it apart from a field the object's class does not declare. Every field the class declares is present in `fields`.
 
 ## Available Tools
 
@@ -65,14 +67,14 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
       "loid": "string",    // the LOID of the object
       "class": "string",   // class name of the object
       "version": "string", // optimistic-concurrency token; pass back as expectedVersion to update
-      "fields": {}         // map of field names to their values
+      "fields": {}         // map of field names to their values; a null value is reported as null
     }
   ],
   "count": 0,        // number of items in this page
   "query": "string", // the original JPQL query string
   "pagination": {
     "hasMore": false,       // true if more pages are available
-    "cursorId": "string"    // cursor handle for query_next; null when hasMore is false
+    "cursorId": "string"    // cursor handle for query_next; omitted when hasMore is false
   }
 }
 ```
@@ -113,7 +115,10 @@ Show me all employees
         "active": true,
         "address": "135.0.2142",
         "accessLevels": [1, 5, 10, 99],
-        "subordinates": ["135.0.2145"]
+        "subordinates": ["135.0.2145"],
+        "skills": ["135.0.2138"],
+        "technicalTags": null,
+        "metadata": null
       }
     },
     "..."
@@ -125,6 +130,11 @@ Show me all employees
   }
 }
 ```
+
+This response shows the complete `fields` object for one object: every field the class declares is
+present, and the two the object has no value for — `technicalTags` and `metadata` — are reported as
+`null` rather than left out. `cursorId` is absent because `hasMore` is `false`. To keep them
+readable, the remaining examples on this page show only a few fields per object.
 
 ---
 
@@ -150,14 +160,14 @@ The output is identical to `execute_query`:
       "loid": "string",    // the LOID of the object
       "class": "string",   // class name of the object
       "version": "string", // optimistic-concurrency token; pass back as expectedVersion to update
-      "fields": {}         // map of field names to their values
+      "fields": {}         // map of field names to their values; a null value is reported as null
     }
   ],
   "count": 0,        // number of items in this page
   "query": "string", // the original JPQL query string
   "pagination": {
     "hasMore": false,       // true if more pages are available
-    "cursorId": "string"    // cursor handle for the next call; null when hasMore is false
+    "cursorId": "string"    // cursor handle for the next call; omitted when hasMore is false
   }
 }
 ```
@@ -187,6 +197,7 @@ The output is identical to `execute_query`:
         "annualSalary": 120000,
         "active": true,
         "address": "135.0.2142"
+        // abridged — a real response carries every field the class declares
       }
     },
     "..."
@@ -220,7 +231,7 @@ Retrieves a single object from the database by its LOID (Logical Object ID). Fet
     "loid": "string",    // the LOID of the object
     "class": "string",   // class name of the object
     "version": "string", // optimistic-concurrency token; pass back as expectedVersion to update
-    "fields": {}         // map of field names to their values
+    "fields": {}         // map of field names to their values; a null value is reported as null
   }
 }
 ```
@@ -254,6 +265,7 @@ To change the object you just read, pass its `version` back as `expectedVersion`
       "address": "135.0.2143",
       "skills": ["135.0.2138", "135.0.2136"],
       "technicalTags": ["Backend", "API"]
+      // abridged — a real response carries every field the class declares
     }
   }
 }
@@ -280,7 +292,7 @@ Retrieves multiple objects from the database by their LOIDs (Logical Object IDs)
       "loid": "string",      // the LOID of the object
       "class": "string",     // class name of the object
       "version": "string",   // optimistic-concurrency token; pass back as expectedVersion to update
-      "fields": {}           // map of field names to their values
+      "fields": {}           // map of field names to their values; a null value is reported as null
     }
   ],
   "count": 0                 // number of objects returned
@@ -315,6 +327,7 @@ LOIDs that match no object are left out of `objects`, so `count` may be lower th
         "active": true,
         "address": "135.0.2142",
         "subordinates": ["135.0.2146", "135.0.2147"]
+        // abridged — a real response carries every field the class declares
       }
     },
     {
@@ -328,6 +341,7 @@ LOIDs that match no object are left out of `objects`, so `count` may be lower th
         "active": true,
         "address": "135.0.2143",
         "technicalTags": ["Backend", "API"]
+        // abridged — a real response carries every field the class declares
       }
     }
   ],
@@ -595,6 +609,7 @@ Field values go in the per-object maps of `create_objects` (`objects[]`) and in 
 | Single references | The target object's LOID string — `"address": "135.0.2142"`. |
 | Reference collections | An array of LOID strings — `"subordinates": ["135.0.2145", "135.0.2146"]`. An empty array clears the collection. |
 | Maps | An object with exactly the two keys `keys` and `values`, holding equal-length arrays — `"metadata": { "keys": ["role"], "values": ["dev"] }`. No other keys are accepted. Either side may hold LOID strings. |
+| Clearing a nullable field | `null` — `"department": null`. The field is set to `null`, and a later read returns it as an explicit `null`. For collections and maps, an empty array or `{ "keys": [], "values": [] }` sets an empty container instead. |
 | Custom references | Not writable. |
 
 !!! warning "Enum values are not validated"
