@@ -303,11 +303,18 @@ Retrieves multiple objects from the database by their LOIDs (Logical Object IDs)
       "fields": {}           // map of field names to their values; a null value is reported as null
     }
   ],
-  "count": 0                 // number of objects returned
+  "count": 0,                // number of objects returned
+  "notFoundLoids": []        // distinct requested LOIDs that matched no object, in request order
 }
 ```
 
-LOIDs that match no object are left out of `objects`, so `count` may be lower than the number of LOIDs you asked for. To change any of the objects you read, pass each one's `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
+LOIDs that match no object are left out of `objects`, so `count` may be lower than the number of LOIDs you asked for. Each one is named in `notFoundLoids`, so you can tell which references are dead without comparing counts. The array is always present, and empty when every LOID was found.
+
+A LOID you ask for twice is named once if it is absent — the response has no positional relationship to the LOIDs you sent, since a missing one leaves no gap in `objects`. A LOID that *is* found and asked for twice is returned twice.
+
+A malformed LOID is a different case: it fails the whole call with an error rather than appearing in `notFoundLoids`, which only ever reports well-formed LOIDs that matched nothing.
+
+To change any of the objects you read, pass each one's `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
 ### Example
 
@@ -353,7 +360,8 @@ LOIDs that match no object are left out of `objects`, so `count` may be lower th
       }
     }
   ],
-  "count": 2
+  "count": 2,
+  "notFoundLoids": []
 }
 ```
 
