@@ -51,6 +51,14 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
     - Collection traversal — only single-reference paths are allowed
     - The `in` operator on collections
 
+!!! note "Date and timestamp literals"
+    Compare a date or timestamp field using a JDBC escape literal. A plain quoted string is **not** coerced to a date, and is rejected.
+
+    - `{ts 'yyyy-MM-dd HH:mm:ss'}` for a timestamp. The time part is required, and an optional fractional part of up to nine digits is allowed — for example, `{ts '2000-01-01 00:00:00.123'}`.
+    - `{d 'yyyy-MM-dd'}` for a date alone.
+
+    For example, `select w from Worker w where w.startDate > {ts '2020-01-01 00:00:00'}`.
+
 ### Parameters
 
 | Field | Type | Required | Description |
