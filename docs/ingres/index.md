@@ -89,7 +89,7 @@ Create a file named `conf.json` in the working directory and define the environm
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `max_rows` | `integer` | `1000` | The maximum number of rows returned in a single query response. |
+| `max_rows` | `integer` | `1000` | Maximum number of rows returned in a single query response. A statement that matches more rows is truncated to this limit, and the response includes the `truncated` and `warning` fields. Default is `1000`. |
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` in the container |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` in the container |

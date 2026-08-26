@@ -58,7 +58,7 @@ nav:
       - Prompts: zen/prompts/index.md
   - Analytics Engine:
       - Overview: analytics-engine/index.md
-      - Actian Data Platform: analytics-engine/data-platform.md
+      - Warehouse Management: analytics-engine/data-platform.md
       - Authentication:
           - analytics-engine/authentication/index.md
           - Auth0: analytics-engine/authentication/auth0.md

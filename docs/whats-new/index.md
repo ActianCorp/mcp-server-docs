@@ -1,6 +1,6 @@
 ---
 title: What's New
-description: New features and changes in Actian MCP Server 1.1.0, including unified query modes, human-in-the-loop write approval, Data Platform sidecar deployment, and custom extensions.
+description: New features and changes in Actian MCP Server 1.1.0, including unified query modes, human-in-the-loop write approval, warehouse sidecar deployment, and custom extensions.
 ---
 
 # What's New in Actian MCP Server 1.1.0
@@ -9,7 +9,7 @@ The release of Actian MCP Server, version 1.1.0, offers the following new featur
 
 - [Unified Query Modes](#unified-query-modes)
 - [HITL Write Approval Path](#hitl-write-approval-path)
-- [Data Platform Sidecar Support](#data-platform-sidecar-support)
+- [Warehouse Sidecar Support](#warehouse-sidecar-support)
 - [Custom Extension Support](#custom-extension-support)
 
 ## Unified Query Modes
@@ -31,11 +31,11 @@ The server evaluates the scope first, so a caller without it is rejected before 
 
 For more information, see [Authorizing a Write](../ingres/write-support.md#authorizing-a-write).
 
-## Data Platform Sidecar Support
+## Warehouse Sidecar Support
 
-The MCP Server deploys as a sidecar alongside the warehouse leader pod of Actian Data Platform. Clients connect using only the MCP server URL, and no separate Auth0 setup is required. Internally, the server acts as an OAuth2 Authorization Server proxy and hides the Auth0 token exchange from the clients entirely.
+The MCP Server deploys as a sidecar alongside the warehouse leader pod. Clients connect using only the MCP server URL, and no separate Auth0 setup is required. Internally, the server acts as an OAuth2 Authorization Server proxy and hides the Auth0 token exchange from the clients entirely.
 
-For more information, see [Actian MCP Server on Actian Data Platform](../analytics-engine/data-platform.md).
+For more information, see [Actian MCP Server for Warehouse Management](../analytics-engine/data-platform.md).
 
 ## Custom Extension Support
 

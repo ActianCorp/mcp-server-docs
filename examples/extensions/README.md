@@ -14,7 +14,7 @@ rebuilding the image. They use only the public `actian_mcp_server.extension_api`
 
 All examples share **one database** — provision every table at once with the
 schema file for your engine (see below). The authoring contract is documented in the
-[Extensions guide](https://docs.actian.com/mcp-server/extensions/index.html).
+[Extensions guide](https://docs.actian.com/mcp-server/latest/ingres/extensions/index.html).
 
 ## Database compatibility — works out of the box on all four engines
 
