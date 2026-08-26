@@ -118,6 +118,16 @@ Describes the schema of a specific class, including its direct superclasses, dec
 }
 ```
 
+### Reading field types
+
+The `type` string carries enough detail to build a write payload without trial and error:
+
+- **Containers name their element types.** `java.util.List<java.lang.String>` holds scalars, `java.util.List<Worker>` holds references to `Worker`, `java.util.Map<java.lang.String,Skill>` has scalar keys and reference values, and `int[]` is an array of `int`.
+- **A type naming a database class is a reference.** If the type matches a class returned by [`db://schema/classes`](#dbschemaclasses), the field is a reference: it is read and written as a LOID string, never as a nested object — `"address": "1.0.5"`, not `"address": { "city": "..." }`.
+- **Everything else is a scalar** — Java primitives and `java.*` types.
+
+See [`create_objects` and `update_objects`](../tools/index.md) for the exact input shape each field kind expects when writing.
+
 ### Example
 
 ```json
@@ -129,12 +139,13 @@ Describes the schema of a specific class, including its direct superclasses, dec
   "declaredFields": [
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
-    { "name": "subordinates", "type": "java.util.List" },
+    { "name": "subordinates", "type": "java.util.List<Worker>" },
+    { "name": "metadata", "type": "java.util.Map<java.lang.String,java.lang.String>" },
     "..."
   ],
   "allFields": [
     { "name": "active", "type": "boolean" },
-    { "name": "address", "type": "Address {city: java.lang.String; street: java.lang.String; }" },
+    { "name": "address", "type": "Address" },
     { "name": "name", "type": "java.lang.String" },
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
