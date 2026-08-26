@@ -35,7 +35,7 @@ For more information, see [Authorizing a Write](../ingres/write-support.md#autho
 
 The MCP Server deploys as a sidecar alongside the warehouse leader pod. Clients connect using only the MCP server URL, and no separate Auth0 setup is required. Internally, the server acts as an OAuth2 Authorization Server proxy and hides the Auth0 token exchange from the clients entirely.
 
-For more information, see [Actian MCP Server for Warehouse Management](../analytics-engine/data-platform.md).
+For more information, see [Actian MCP Server for Warehouse Management](../analytics-engine/warehouse.md).
 
 ## Custom Extension Support
 
