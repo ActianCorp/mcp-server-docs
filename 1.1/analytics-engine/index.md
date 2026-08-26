@@ -7,8 +7,8 @@ description: Connect MCP clients to Actian Analytics Engine for schema explorati
 
 Connect the MCP-compatible client to the Actian Analytics Engine using the Actian MCP Server. With this setup, the client can explore schema metadata and run SQL queries through a standard interface. Queries are read-only unless you enable write mode. The MCP Server for Analytics Engine bridges the gap between the MCP client and the Actian database. The server manages connection pooling, response formatting, and schema discovery automatically.
 
-!!! note "Using Actian Data Platform?"
-    This page describes how to run the server in a container. If the Analytics Engine is a warehouse in Actian Data Platform, the MCP Server is already configured. See [Actian Data Platform](data-platform.md).
+!!! note "Running a managed warehouse?"
+    This page describes how to run the server in a container. If the Analytics Engine runs as a managed warehouse, the MCP Server is already configured. See [Warehouse Management](data-platform.md).
 
 
 ## Capabilities
@@ -92,7 +92,7 @@ Create a file named `conf.json` in your working directory using the following st
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Default is `1000`.|
+| `max_rows` | `integer` | `1000` | Maximum number of rows returned in a single query response. A statement that matches more rows is truncated to this limit, and the response includes the `truncated` and `warning` fields. Default is `1000`. |
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` in the container. |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` in the container. |
