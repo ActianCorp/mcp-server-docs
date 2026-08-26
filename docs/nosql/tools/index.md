@@ -476,11 +476,16 @@ Describes the schema of a specific class, including its direct superclasses, dec
 
 ### Reading field types
 
-The `type` string carries enough detail to build a write payload without trial and error:
+The `type` string tells you whether a field holds a scalar, a reference, or a container.
 
-- **Containers name their element types.** `java.util.List<java.lang.String>` holds scalars, `java.util.List<Worker>` holds references to `Worker`, `java.util.Map<java.lang.String,Skill>` has scalar keys and reference values, and `int[]` is an array of `int`.
-- **A type naming a database class is a reference.** If the type matches a class returned by [`list_classes`](#list_classes), the field is a reference: it is read and written as a LOID string, never as a nested object — `"address": "1.0.5"`, not `"address": { "city": "..." }`.
-- **Everything else is a scalar** — Java primitives and `java.*` types.
+- **Containers** are `java.util.List<X>`, `java.util.Map<K,V>` and `X[]`. Strip the wrapper to get the element type(s), then read each one by the rules below.
+- **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.` — send the value itself.
+- **References** are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object — `"address": "1.0.5"`, not `"address": { "city": "..." }`.
+
+So `java.util.List<Worker>` holds LOID strings, `java.util.List<java.lang.String>` holds plain strings, and `java.util.Map<java.lang.String,Skill>` has scalar keys and LOID-string values.
+
+!!! warning "A `<` alone does not mean a container"
+    Only the `java.util.` prefix does. A class name may itself contain angle brackets — schemas mapped from C++ commonly declare classes such as `BiLink<CsaStudy>` or `CsaPwLinearLUT<o_double,o_double>`. `BiLink<CsaStudy>` is one class name, so a field of that type takes a single LOID, not an array. Use [`list_classes`](#list_classes) to confirm a name if you need certainty.
 
 See [`create_objects`](#create_objects) and [`update_objects`](#update_objects) for the exact input shape each field kind expects when writing.
 
