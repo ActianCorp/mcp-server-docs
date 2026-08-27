@@ -123,7 +123,7 @@ Describes the schema of a specific class, including its direct superclasses, dec
 The `type` string tells you whether a field holds a scalar, a reference, or a container.
 
 - **Containers** are `java.util.List<X>`, `java.util.Map<K,V>` and `X[]`. Strip the wrapper to get the element type(s), then read each one by the rules below.
-- **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.` — send the value itself.
+- **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.` — send the value itself. A `long` or `java.math.BigInteger` is the exception: as a **field value** send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form — an unquoted literal with an `L` suffix, never a quoted string. See [Large integer literals](../tools/index.md#execute_query).
 - **References** are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object — `"address": "1.0.5"`, not `"address": { "city": "..." }`.
 
 So `java.util.List<Worker>` holds LOID strings, `java.util.List<java.lang.String>` holds plain strings, and `java.util.Map<java.lang.String,Skill>` has scalar keys and LOID-string values.
