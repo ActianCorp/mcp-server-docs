@@ -58,7 +58,7 @@ nav:
       - Prompts: zen/prompts/index.md
   - Analytics Engine:
       - Overview: analytics-engine/index.md
-      - Warehouse Management: analytics-engine/warehouse.md
+      - Managed Warehouse: analytics-engine/managed-warehouse.md
       - Authentication:
           - analytics-engine/authentication/index.md
           - Auth0: analytics-engine/authentication/auth0.md
@@ -208,7 +208,8 @@ plugins:
         'extensions/index.md': 'ingres/extensions/index.md'
         'extensions/examples.md': 'ingres/extensions/examples.md'
         'extensions/api-reference.md': 'ingres/extensions/api-reference.md'
-        'analytics-engine/data-platform.md': 'analytics-engine/warehouse.md'
+        'analytics-engine/data-platform.md': 'analytics-engine/managed-warehouse.md'
+        'analytics-engine/warehouse.md': 'analytics-engine/managed-warehouse.md'
 
 # Hooks
 hooks:

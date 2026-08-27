@@ -7,8 +7,25 @@ description: Connect MCP clients to Actian Analytics Engine for schema explorati
 
 Connect the MCP-compatible client to the Actian Analytics Engine using the Actian MCP Server. With this setup, the client can explore schema metadata and run SQL queries through a standard interface. Queries are read-only unless you enable write mode. The MCP Server for Analytics Engine bridges the gap between the MCP client and the Actian database. The server manages connection pooling, response formatting, and schema discovery automatically.
 
-!!! note "Running a managed warehouse?"
-    This page describes how to run the server in a container. If the Analytics Engine runs as a managed warehouse, the MCP Server is already configured. See [Warehouse Management](warehouse.md).
+Analytics Engine runs in two deployments, and the MCP Server supports both:
+
+- **Self-managed.** You run Analytics Engine yourself, on-premises or in your own cloud account, and you deploy the MCP Server alongside it.
+- **Managed warehouse (SaaS offering).** Analytics Engine runs as the engine behind a warehouse on the Actian Analytics AI Platform, and the MCP Server is configured for you.
+
+The tools, resources, and prompts are the same in both deployments. Only the setup and the connection details differ.
+
+
+## Deployment Options
+
+### Self-managed
+
+You run the MCP Server in a container alongside your own Analytics Engine instance. You supply the database connection details in `conf.json`, secure the endpoint, and manage the server lifecycle. The rest of this page describes that setup.
+
+### Managed warehouse (SaaS offering)
+
+The MCP Server is deployed and configured with the warehouse. There is nothing to install and no configuration file to write. The client connects to a URL specific to that warehouse and signs in with OAuth, and your existing database privileges apply to every query.
+
+For instructions, see [Managed Warehouse](managed-warehouse.md).
 
 
 ## Capabilities
@@ -30,7 +47,7 @@ The Actian Analytics Engine MCP Server supports the following operations:
 
 ## Prerequisites
 
-Before starting the server, ensure the following requirements are met:
+The following sections apply to a self-managed deployment. Before starting the server, ensure the following requirements are met:
 
 - **Container Engine:** Docker installed and running on the host machine.
 - **Database credentials:** Valid access for the Analytics Engine database.
@@ -94,12 +111,12 @@ Create a file named `conf.json` in your working directory using the following st
 |-------|------|---------|-------------|
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned in a single query response. A statement that matches more rows is truncated to this limit, and the response includes the `truncated` and `warning` fields. Default is `1000`. |
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
-| `ssl_certfile` | `string` | — | Path to the TLS certificate file. Add `/app/server.crt` in the container. |
-| `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` in the container. |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-oauth-block).|
+| `ssl_certfile` | `string` | None | Path to the TLS certificate file. Add `/app/server.crt` in the container. |
+| `ssl_keyfile` | `string` | None | Path to the TLS private key file. Add `/app/server.key` in the container. |
+| `oauth` | `object` | None | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-oauth-block).|
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md).|
 | `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt). Applies only when `query_mode` is `read-write`. |
-| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md).|
+| `extensions` | `array` | None | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md).|
 
 
 ## Start the Server
