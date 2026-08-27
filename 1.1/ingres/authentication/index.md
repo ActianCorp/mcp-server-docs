@@ -41,7 +41,7 @@ sequenceDiagram
     end
 ```
 
-## Configuring `oauth` Block
+## Configuring OAuth Block
 
 To enable authentication, add an `oauth` object to the `conf.json` file. The server reads the following data during startup:
 
