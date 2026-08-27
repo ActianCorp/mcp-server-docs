@@ -118,6 +118,21 @@ Describes the schema of a specific class, including its direct superclasses, dec
 }
 ```
 
+### Reading field types
+
+The `type` string tells you whether a field holds a scalar, a reference, or a container.
+
+- **Containers** are `java.util.List<X>`, `java.util.Map<K,V>` and `X[]`. Strip the wrapper to get the element type(s), then read each one by the rules below.
+- **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.` — send the value itself. A `long` or `java.math.BigInteger` is the exception: as a **field value** send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form — an unquoted literal with an `L` suffix, never a quoted string. See [Large integer literals](../tools/index.md#execute_query).
+- **References** are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object — `"address": "1.0.5"`, not `"address": { "city": "..." }`.
+
+So `java.util.List<Worker>` holds LOID strings, `java.util.List<java.lang.String>` holds plain strings, and `java.util.Map<java.lang.String,Skill>` has scalar keys and LOID-string values.
+
+!!! warning "A `<` alone does not mean a container"
+    Only the `java.util.` prefix does. A class name may itself contain angle brackets — schemas mapped from C++ commonly declare classes such as `BiLink<CsaStudy>` or `CsaPwLinearLUT<o_double,o_double>`. `BiLink<CsaStudy>` is one class name, so a field of that type takes a single LOID, not an array. Use [`db://schema/classes`](#dbschemaclasses) to confirm a name if you need certainty.
+
+See [`create_objects` and `update_objects`](../tools/index.md) for the exact input shape each field kind expects when writing.
+
 ### Example
 
 ```json
@@ -129,12 +144,13 @@ Describes the schema of a specific class, including its direct superclasses, dec
   "declaredFields": [
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
-    { "name": "subordinates", "type": "java.util.List" },
+    { "name": "subordinates", "type": "java.util.List<Worker>" },
+    { "name": "metadata", "type": "java.util.Map<java.lang.String,java.lang.String>" },
     "..."
   ],
   "allFields": [
     { "name": "active", "type": "boolean" },
-    { "name": "address", "type": "Address {city: java.lang.String; street: java.lang.String; }" },
+    { "name": "address", "type": "Address" },
     { "name": "name", "type": "java.lang.String" },
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },

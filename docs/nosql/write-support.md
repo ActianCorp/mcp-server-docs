@@ -218,7 +218,7 @@ WARN  nsql-mcp-server Mode: READ-WRITE. Write tools are exposed; writes execute 
 
 ## Optimistic Concurrency
 
-Every object a read returns carries a `version` field: an opaque token that changes whenever the object is modified. It is returned as a string so that large values survive JSON without losing precision. Do not parse it or compare it for ordering — the only thing to do with it is hand it back.
+Every object a read returns carries a `version` field: an opaque token that changes whenever the object is modified. It is returned as a string so that large values survive JSON without losing precision — the same reason 64-bit integer fields are, as described under [Response format](tools/index.md). Do not parse it or compare it for ordering — the only thing to do with it is hand it back.
 
 `update_objects` requires it. Each update item carries the target `loid`, the `expectedVersion` you read earlier, and the `fields` to change:
 
