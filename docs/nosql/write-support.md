@@ -60,7 +60,7 @@ Every call that does reach the server passes three independent checks, in the or
 The sequence below picks up at this second stage, with the tool already registered:
 
 ```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     participant User as User
     participant Client as MCP Client

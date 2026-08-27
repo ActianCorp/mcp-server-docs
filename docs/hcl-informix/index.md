@@ -104,7 +104,7 @@ Create a file named `conf.json` in the working directory and add the database-sp
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` inside the container. |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments, see [OAuth configuration](authentication/index.md#configuring-oauth-block) for more information. |
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md) |
-| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt) |
+| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt). Applies only when `query_mode` is `read-write`. |
 | `extensions` | `array` | — | Extension modules to load, each object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md) |
 
 ---

@@ -89,7 +89,7 @@ Use this format when the database requires authentication. This bypasses the con
 | `max_rows` | `integer` | `1000` | Maximum number of rows returned per query response. Default is `1000`. |
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 | `query_mode` | `string` | `read-only` | `read-only` or `read-write`. Determines which tools are registered. See [Write support](write-support.md). |
-| `write_confirmation` | `boolean` | `true` | Set to `false` to run the built-in write tools without the human approval prompt. The `mcp:write` scope check still applies. |
+| `write_confirmation` | `boolean` | `true` | Set to `false` to run the built-in write tools without the human approval prompt. The `mcp:write` scope check still applies. Applies only when `query_mode` is `read-write`. |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments, see [Authentication](authentication/index.md) for more information. |
 | `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md). |
 

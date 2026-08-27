@@ -33,7 +33,7 @@ Set `query_mode` in the `conf.json` file:
 
 ## Authorizing a Write
 
-In `read-write` mode, every DML statement must pass two independent checks before it reaches the database. Either one can reject it.
+Writes require `"query_mode": "read-write"` in `conf.json`. In that mode, every DML statement must pass two independent checks before it reaches the database. Either one can reject it.
 
 | Check | What it requires | When it applies |
 |-------|------------------|-----------------|
@@ -43,7 +43,7 @@ In `read-write` mode, every DML statement must pass two independent checks befor
 The scope is checked first, so a caller without it is rejected before anyone is asked to approve anything.
 
 ```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     participant User as User
     participant Client as MCP Client
