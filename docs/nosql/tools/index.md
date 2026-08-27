@@ -98,7 +98,9 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
 }
 ```
 
-A query that selects whole entities (`select e from Employee e`) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values positionally, not wrapped in `fields`. Each value is rendered by the same rules either way, so a 64-bit integer is a decimal string whichever form you select it in.
+A query that selects whole entities (`select e from Employee e`) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values positionally, not wrapped in `fields`. Each value is rendered by the same rules either way, so a 64-bit integer is a decimal string whichever form you select it in, and a referenced object inside a collection or map is an LOID string.
+
+Two shapes differ between the two forms. A collection or map selected on its own (`select e.skillMap from Employee e`) is returned in its natural JSON form — an array, or an object keyed by the map's own keys — rather than the `{keys, values}` pair the whole-entity shape uses. And a reference field selected on its own (`select e.address from Employee e`) returns the whole referenced object, where the whole-entity shape gives its LOID.
 
 To change an object you read here, pass its `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
