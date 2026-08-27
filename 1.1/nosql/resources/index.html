@@ -2780,6 +2780,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#reading-field-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading field types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#example_2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3074,6 +3085,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#reading-field-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading field types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#example_2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3337,6 +3359,19 @@
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="reading-field-types">Reading field types<a class="headerlink" href="#reading-field-types" title="Permanent link">&para;</a></h3>
+<p>The <code>type</code> string tells you whether a field holds a scalar, a reference, or a container.</p>
+<ul>
+<li><strong>Containers</strong> are <code>java.util.List&lt;X&gt;</code>, <code>java.util.Map&lt;K,V&gt;</code> and <code>X[]</code>. Strip the wrapper to get the element type(s), then read each one by the rules below.</li>
+<li><strong>Scalars</strong> are Java primitives (<code>int</code>, <code>long</code>, <code>short</code>, <code>double</code>, <code>float</code>, <code>boolean</code>, <code>byte</code>, <code>char</code>) and any type starting with <code>java.</code> — send the value itself. A <code>long</code> or <code>java.math.BigInteger</code> is the exception: as a <strong>field value</strong> send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form — an unquoted literal with an <code>L</code> suffix, never a quoted string. See <a href="../tools/index.html#execute_query">Large integer literals</a>.</li>
+<li><strong>References</strong> are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object — <code>"address": "1.0.5"</code>, not <code>"address": { "city": "..." }</code>.</li>
+</ul>
+<p>So <code>java.util.List&lt;Worker&gt;</code> holds LOID strings, <code>java.util.List&lt;java.lang.String&gt;</code> holds plain strings, and <code>java.util.Map&lt;java.lang.String,Skill&gt;</code> has scalar keys and LOID-string values.</p>
+<div class="admonition warning">
+<p class="admonition-title">A <code>&lt;</code> alone does not mean a container</p>
+<p>Only the <code>java.util.</code> prefix does. A class name may itself contain angle brackets — schemas mapped from C++ commonly declare classes such as <code>BiLink&lt;CsaStudy&gt;</code> or <code>CsaPwLinearLUT&lt;o_double,o_double&gt;</code>. <code>BiLink&lt;CsaStudy&gt;</code> is one class name, so a field of that type takes a single LOID, not an array. Use <a href="#dbschemaclasses"><code>db://schema/classes</code></a> to confirm a name if you need certainty.</p>
+</div>
+<p>See <a href="../tools/index.html"><code>create_objects</code> and <code>update_objects</code></a> for the exact input shape each field kind expects when writing.</p>
 <h3 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Employee"</span><span class="p">,</span>
@@ -3346,12 +3381,13 @@
 <span class="w">  </span><span class="nt">"declaredFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"annualSalary"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"department"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subordinates"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.util.List"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subordinates"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.util.List&lt;Worker&gt;"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.util.Map&lt;java.lang.String,java.lang.String&gt;"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="s2">"..."</span>
 <span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="nt">"allFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"address"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Address {city: java.lang.String; street: java.lang.String; }"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"address"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Address"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"annualSalary"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"department"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">},</span>
@@ -3465,7 +3501,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 22, 2026 11:36:33 UTC">April 22, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 12:52:39 UTC">August 27, 2026</span>
   </span>
 
     

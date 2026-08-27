@@ -10,7 +10,11 @@ The Actian MCP Server for Actian NoSQL registers eight tools for exploring the s
 !!! note "Response format"
     All tools return results as structured content (`structuredContent`). For compatibility with older MCP clients, each response also includes the same data serialized as a JSON string in a text content item within the `content` array.
 
-    Values that are `null` or absent are omitted from responses entirely, so check whether a key is present rather than whether its value is `null`.
+    Optional response properties — such as `cursorId` when there are no more pages, or `data` when an object was not found — are omitted rather than sent as `null`.
+
+    Field values behave differently. A field whose stored value is `null` is reported as an explicit `null`, so you can tell it apart from a field the object's class does not declare. Every field the class declares is present in `fields`.
+
+    Integer fields wider than 32 bits — `long`, and the unsigned 64-bit domain that surfaces as `java.math.BigInteger` — are returned as decimal strings rather than bare JSON numbers, for the same reason `version` is. The server writes exact digits either way; the loss happens in the client, where a JSON number becomes a double and silently rounds anything above 2^53. The rule applies wherever such a value appears: a field value, an element of an array or collection, a map key or value, and a field selected on its own by a query. Write the value back unchanged — the server parses these strings exactly. To use one in a JPQL comparison, see [Large integer literals](#execute_query).
 
 ## Available Tools
 
@@ -49,6 +53,23 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
     - Collection traversal — only single-reference paths are allowed
     - The `in` operator on collections
 
+!!! note "Date and timestamp literals"
+    Compare a date or timestamp field using a JDBC escape literal. A plain quoted string is **not** coerced to a date, and is rejected.
+
+    - `{ts 'yyyy-MM-dd HH:mm:ss'}` for a timestamp. The time part is required, and an optional fractional part of up to nine digits is allowed — for example, `{ts '2000-01-01 00:00:00.123'}`.
+    - `{d 'yyyy-MM-dd'}` for a date alone.
+
+    For example, `select w from Worker w where w.startDate > {ts '2020-01-01 00:00:00'}`.
+
+!!! note "Large integer literals"
+    A 64-bit integer literal needs an `L` suffix — `select e from Employee e where e.badgeSerialNumber = 9007199254740993L`.
+
+    Without the suffix the literal is read as a 32-bit integer, so any value above `2147483647` fails to parse. That ceiling is far below 2^53, so the suffix is needed well before precision is a concern.
+
+    A quoted string is rejected as a type mismatch, because the field is numeric — so a value read back as `"9007199254740993"` cannot be pasted into a query with its quotes.
+
+    A value above `9223372036854775807`, which only an unsigned 64-bit field can hold, has no literal form in this dialect and cannot be filtered on directly.
+
 ### Parameters
 
 | Field | Type | Required | Description |
@@ -65,19 +86,21 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
       "loid": "string",    // the LOID of the object
       "class": "string",   // class name of the object
       "version": "string", // optimistic-concurrency token; pass back as expectedVersion to update
-      "fields": {}         // map of field names to their values
+      "fields": {}         // map of field names to their values; null stays null, 64-bit integers are strings
     }
   ],
   "count": 0,        // number of items in this page
   "query": "string", // the original JPQL query string
   "pagination": {
     "hasMore": false,       // true if more pages are available
-    "cursorId": "string"    // cursor handle for query_next; null when hasMore is false
+    "cursorId": "string"    // cursor handle for query_next; omitted when hasMore is false
   }
 }
 ```
 
-A query that selects whole entities (`select e from Employee e`) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values as they are, not wrapped in `fields`.
+A query that selects whole entities (`select e from Employee e`) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values positionally, not wrapped in `fields`. Each value is rendered by the same rules either way, so a 64-bit integer is a decimal string whichever form you select it in, and a referenced object inside a collection or map is an LOID string.
+
+Two shapes differ between the two forms. A collection or map selected on its own (`select e.skillMap from Employee e`) is returned in its natural JSON form — an array, or an object keyed by the map's own keys — rather than the `{keys, values}` pair the whole-entity shape uses. And a reference field selected on its own (`select e.address from Employee e`) returns the whole referenced object, where the whole-entity shape gives its LOID.
 
 To change an object you read here, pass its `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
@@ -110,10 +133,14 @@ Show me all employees
         "name": "Diana",
         "department": "Executive",
         "annualSalary": 250000,
+        "badgeSerialNumber": "9007199254740993",
         "active": true,
         "address": "135.0.2142",
         "accessLevels": [1, 5, 10, 99],
-        "subordinates": ["135.0.2145"]
+        "subordinates": ["135.0.2145"],
+        "skills": ["135.0.2138"],
+        "technicalTags": null,
+        "metadata": null
       }
     },
     "..."
@@ -125,6 +152,12 @@ Show me all employees
   }
 }
 ```
+
+This response shows the complete `fields` object for one object: every field the class declares is
+present, and the two the object has no value for — `technicalTags` and `metadata` — are reported as
+`null` rather than left out. `annualSalary` is an `int` and stays a bare number, while
+`badgeSerialNumber` is a `long` and is quoted. `cursorId` is absent because `hasMore` is `false`. To
+keep them readable, the remaining examples on this page show only a few fields per object.
 
 ---
 
@@ -150,14 +183,14 @@ The output is identical to `execute_query`:
       "loid": "string",    // the LOID of the object
       "class": "string",   // class name of the object
       "version": "string", // optimistic-concurrency token; pass back as expectedVersion to update
-      "fields": {}         // map of field names to their values
+      "fields": {}         // map of field names to their values; null stays null, 64-bit integers are strings
     }
   ],
   "count": 0,        // number of items in this page
   "query": "string", // the original JPQL query string
   "pagination": {
     "hasMore": false,       // true if more pages are available
-    "cursorId": "string"    // cursor handle for the next call; null when hasMore is false
+    "cursorId": "string"    // cursor handle for the next call; omitted when hasMore is false
   }
 }
 ```
@@ -187,6 +220,7 @@ The output is identical to `execute_query`:
         "annualSalary": 120000,
         "active": true,
         "address": "135.0.2142"
+        // abridged — a real response carries every field the class declares
       }
     },
     "..."
@@ -220,7 +254,7 @@ Retrieves a single object from the database by its LOID (Logical Object ID). Fet
     "loid": "string",    // the LOID of the object
     "class": "string",   // class name of the object
     "version": "string", // optimistic-concurrency token; pass back as expectedVersion to update
-    "fields": {}         // map of field names to their values
+    "fields": {}         // map of field names to their values; null stays null, 64-bit integers are strings
   }
 }
 ```
@@ -254,6 +288,7 @@ To change the object you just read, pass its `version` back as `expectedVersion`
       "address": "135.0.2143",
       "skills": ["135.0.2138", "135.0.2136"],
       "technicalTags": ["Backend", "API"]
+      // abridged — a real response carries every field the class declares
     }
   }
 }
@@ -280,14 +315,21 @@ Retrieves multiple objects from the database by their LOIDs (Logical Object IDs)
       "loid": "string",      // the LOID of the object
       "class": "string",     // class name of the object
       "version": "string",   // optimistic-concurrency token; pass back as expectedVersion to update
-      "fields": {}           // map of field names to their values
+      "fields": {}           // map of field names to their values; null stays null, 64-bit integers are strings
     }
   ],
-  "count": 0                 // number of objects returned
+  "count": 0,                // number of objects returned
+  "notFoundLoids": []        // distinct requested LOIDs that matched no object, in request order
 }
 ```
 
-LOIDs that match no object are left out of `objects`, so `count` may be lower than the number of LOIDs you asked for. To change any of the objects you read, pass each one's `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
+LOIDs that match no object are left out of `objects`, so `count` may be lower than the number of LOIDs you asked for. Each one is named in `notFoundLoids`, so you can tell which references are dead without comparing counts. The array is always present, and empty when every LOID was found.
+
+A LOID you ask for twice is named once if it is absent — the response has no positional relationship to the LOIDs you sent, since a missing one leaves no gap in `objects`. A LOID that *is* found and asked for twice is returned twice.
+
+A malformed LOID is a different case: it fails the whole call with an error rather than appearing in `notFoundLoids`, which only ever reports well-formed LOIDs that matched nothing.
+
+To change any of the objects you read, pass each one's `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
 ### Example
 
@@ -315,6 +357,7 @@ LOIDs that match no object are left out of `objects`, so `count` may be lower th
         "active": true,
         "address": "135.0.2142",
         "subordinates": ["135.0.2146", "135.0.2147"]
+        // abridged — a real response carries every field the class declares
       }
     },
     {
@@ -328,10 +371,12 @@ LOIDs that match no object are left out of `objects`, so `count` may be lower th
         "active": true,
         "address": "135.0.2143",
         "technicalTags": ["Backend", "API"]
+        // abridged — a real response carries every field the class declares
       }
     }
   ],
-  "count": 2
+  "count": 2,
+  "notFoundLoids": []
 }
 ```
 
@@ -444,6 +489,21 @@ Describes the schema of a specific class, including its direct superclasses, dec
 }
 ```
 
+### Reading field types
+
+The `type` string tells you whether a field holds a scalar, a reference, or a container.
+
+- **Containers** are `java.util.List<X>`, `java.util.Map<K,V>` and `X[]`. Strip the wrapper to get the element type(s), then read each one by the rules below.
+- **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.` — send the value itself. A `long` or `java.math.BigInteger` is the exception: as a **field value** send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form — an unquoted literal with an `L` suffix, never a quoted string. See [Large integer literals](#execute_query).
+- **References** are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object — `"address": "1.0.5"`, not `"address": { "city": "..." }`.
+
+So `java.util.List<Worker>` holds LOID strings, `java.util.List<java.lang.String>` holds plain strings, and `java.util.Map<java.lang.String,Skill>` has scalar keys and LOID-string values.
+
+!!! warning "A `<` alone does not mean a container"
+    Only the `java.util.` prefix does. A class name may itself contain angle brackets — schemas mapped from C++ commonly declare classes such as `BiLink<CsaStudy>` or `CsaPwLinearLUT<o_double,o_double>`. `BiLink<CsaStudy>` is one class name, so a field of that type takes a single LOID, not an array. Use [`list_classes`](#list_classes) to confirm a name if you need certainty.
+
+See [`create_objects`](#create_objects) and [`update_objects`](#update_objects) for the exact input shape each field kind expects when writing.
+
 ### Example
 
 **Input**
@@ -465,12 +525,13 @@ Describes the schema of a specific class, including its direct superclasses, dec
   "declaredFields": [
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
-    { "name": "subordinates", "type": "java.util.List" },
+    { "name": "subordinates", "type": "java.util.List<Worker>" },
+    { "name": "metadata", "type": "java.util.Map<java.lang.String,java.lang.String>" },
     "..."
   ],
   "allFields": [
     { "name": "active", "type": "boolean" },
-    { "name": "address", "type": "Address {city: java.lang.String; street: java.lang.String; }" },
+    { "name": "address", "type": "Address" },
     { "name": "name", "type": "java.lang.String" },
     { "name": "annualSalary", "type": "int" },
     { "name": "department", "type": "java.lang.String" },
@@ -588,13 +649,14 @@ Field values go in the per-object maps of `create_objects` (`objects[]`) and in 
 
 | Field kind | How to write it |
 |------------|-----------------|
-| Scalars | Numbers, strings, and booleans, written directly. |
+| Scalars | Numbers, strings, and booleans, written directly. An integer outside ±2^53 must be sent as a JSON string — `"badgeSerialNumber": "9007199254740993"` — which is the form reads return it in. Sent as a bare number it is rounded by the client's own JSON encoding before the server ever sees it. |
 | Dates | Epoch milliseconds (`1700000000000`) or an ISO 8601 string (`"2026-08-10T09:00:00Z"`). |
-| Arrays of scalars | A JSON array — `"accessLevels": [1, 5, 10]`. |
+| Arrays of scalars | A JSON array — `"accessLevels": [1, 5, 10]`. The same ±2^53 rule applies per element — `"timestamps": ["9007199254740993", "0"]`. |
 | Enums | The **stored** value, because the schema does not surface enums as enums. An ordinal-mapped enum is an integer field: write the ordinal (`1`). A string-mapped enum is a string field: write the constant name (`"NICHES"`). |
 | Single references | The target object's LOID string — `"address": "135.0.2142"`. |
 | Reference collections | An array of LOID strings — `"subordinates": ["135.0.2145", "135.0.2146"]`. An empty array clears the collection. |
 | Maps | An object with exactly the two keys `keys` and `values`, holding equal-length arrays — `"metadata": { "keys": ["role"], "values": ["dev"] }`. No other keys are accepted. Either side may hold LOID strings. |
+| Clearing a nullable field | `null` — `"department": null`. The field is set to `null`, and a later read returns it as an explicit `null`. For collections and maps, an empty array or `{ "keys": [], "values": [] }` sets an empty container instead. |
 | Custom references | Not writable. |
 
 !!! warning "Enum values are not validated"

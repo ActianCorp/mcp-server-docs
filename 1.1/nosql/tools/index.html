@@ -2952,6 +2952,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#reading-field-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading field types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#example_6" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3668,6 +3679,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#reading-field-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading field types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#example_6" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4017,7 +4039,9 @@
 <div class="admonition note">
 <p class="admonition-title">Response format</p>
 <p>All tools return results as structured content (<code>structuredContent</code>). For compatibility with older MCP clients, each response also includes the same data serialized as a JSON string in a text content item within the <code>content</code> array.</p>
-<p>Values that are <code>null</code> or absent are omitted from responses entirely, so check whether a key is present rather than whether its value is <code>null</code>.</p>
+<p>Optional response properties — such as <code>cursorId</code> when there are no more pages, or <code>data</code> when an object was not found — are omitted rather than sent as <code>null</code>.</p>
+<p>Field values behave differently. A field whose stored value is <code>null</code> is reported as an explicit <code>null</code>, so you can tell it apart from a field the object's class does not declare. Every field the class declares is present in <code>fields</code>.</p>
+<p>Integer fields wider than 32 bits — <code>long</code>, and the unsigned 64-bit domain that surfaces as <code>java.math.BigInteger</code> — are returned as decimal strings rather than bare JSON numbers, for the same reason <code>version</code> is. The server writes exact digits either way; the loss happens in the client, where a JSON number becomes a double and silently rounds anything above 2^53. The rule applies wherever such a value appears: a field value, an element of an array or collection, a map key or value, and a field selected on its own by a query. Write the value back unchanged — the server parses these strings exactly. To use one in a JPQL comparison, see <a href="#execute_query">Large integer literals</a>.</p>
 </div>
 <h2 id="available-tools">Available Tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
 <table>
@@ -4106,6 +4130,22 @@ configuration.</p>
 <li>The <code>in</code> operator on collections</li>
 </ul>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Date and timestamp literals</p>
+<p>Compare a date or timestamp field using a JDBC escape literal. A plain quoted string is <strong>not</strong> coerced to a date, and is rejected.</p>
+<ul>
+<li><code>{ts 'yyyy-MM-dd HH:mm:ss'}</code> for a timestamp. The time part is required, and an optional fractional part of up to nine digits is allowed — for example, <code>{ts '2000-01-01 00:00:00.123'}</code>.</li>
+<li><code>{d 'yyyy-MM-dd'}</code> for a date alone.</li>
+</ul>
+<p>For example, <code>select w from Worker w where w.startDate &gt; {ts '2020-01-01 00:00:00'}</code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Large integer literals</p>
+<p>A 64-bit integer literal needs an <code>L</code> suffix — <code>select e from Employee e where e.badgeSerialNumber = 9007199254740993L</code>.</p>
+<p>Without the suffix the literal is read as a 32-bit integer, so any value above <code>2147483647</code> fails to parse. That ceiling is far below 2^53, so the suffix is needed well before precision is a concern.</p>
+<p>A quoted string is rejected as a type mismatch, because the field is numeric — so a value read back as <code>"9007199254740993"</code> cannot be pasted into a query with its quotes.</p>
+<p>A value above <code>9223372036854775807</code>, which only an unsigned 64-bit field can hold, has no literal form in this dialect and cannot be filtered on directly.</p>
+</div>
 <h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4138,18 +4178,19 @@ configuration.</p>
 <span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">    </span><span class="c1">// the LOID of the object</span>
 <span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// class name of the object</span>
 <span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
-<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values; null stays null, 64-bit integers are strings</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">        </span><span class="c1">// number of items in this page</span>
 <span class="w">  </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="c1">// the original JPQL query string</span>
 <span class="w">  </span><span class="nt">"pagination"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">"hasMore"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">       </span><span class="c1">// true if more pages are available</span>
-<span class="w">    </span><span class="nt">"cursorId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">    </span><span class="c1">// cursor handle for query_next; null when hasMore is false</span>
+<span class="w">    </span><span class="nt">"cursorId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">    </span><span class="c1">// cursor handle for query_next; omitted when hasMore is false</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>A query that selects whole entities (<code>select e from Employee e</code>) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values as they are, not wrapped in <code>fields</code>.</p>
+<p>A query that selects whole entities (<code>select e from Employee e</code>) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values positionally, not wrapped in <code>fields</code>. Each value is rendered by the same rules either way, so a 64-bit integer is a decimal string whichever form you select it in, and a referenced object inside a collection or map is an LOID string.</p>
+<p>Two shapes differ between the two forms. A collection or map selected on its own (<code>select e.skillMap from Employee e</code>) is returned in its natural JSON form — an array, or an object keyed by the map's own keys — rather than the <code>{keys, values}</code> pair the whole-entity shape uses. And a reference field selected on its own (<code>select e.address from Employee e</code>) returns the whole referenced object, where the whole-entity shape gives its LOID.</p>
 <p>To change an object you read here, pass its <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <p><strong>User Request</strong></p>
@@ -4171,10 +4212,14 @@ configuration.</p>
 <span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Diana"</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"department"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Executive"</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"annualSalary"</span><span class="p">:</span><span class="w"> </span><span class="mi">250000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"badgeSerialNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9007199254740993"</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2142"</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"accessLevels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">99</span><span class="p">],</span>
-<span class="w">        </span><span class="nt">"subordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2145"</span><span class="p">]</span>
+<span class="w">        </span><span class="nt">"subordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2145"</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"skills"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2138"</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"technicalTags"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="s2">"..."</span>
@@ -4186,6 +4231,11 @@ configuration.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<p>This response shows the complete <code>fields</code> object for one object: every field the class declares is
+present, and the two the object has no value for — <code>technicalTags</code> and <code>metadata</code> — are reported as
+<code>null</code> rather than left out. <code>annualSalary</code> is an <code>int</code> and stays a bare number, while
+<code>badgeSerialNumber</code> is a <code>long</code> and is quoted. <code>cursorId</code> is absent because <code>hasMore</code> is <code>false</code>. To
+keep them readable, the remaining examples on this page show only a few fields per object.</p>
 <hr />
 <h2 id="query_next">query_next<a class="headerlink" href="#query_next" title="Permanent link">&para;</a></h2>
 <p>Fetches the next page of results from a paginated query. Call this tool after <code>execute_query</code> returns <code>pagination.hasMore=true</code>, passing the <code>cursorId</code> from that response. The cursor is automatically closed when exhausted or after a period of inactivity — if it has expired, restart with <code>execute_query</code>.</p>
@@ -4222,14 +4272,14 @@ configuration.</p>
 <span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">    </span><span class="c1">// the LOID of the object</span>
 <span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// class name of the object</span>
 <span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
-<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values; null stays null, 64-bit integers are strings</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">        </span><span class="c1">// number of items in this page</span>
 <span class="w">  </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="c1">// the original JPQL query string</span>
 <span class="w">  </span><span class="nt">"pagination"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">"hasMore"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">       </span><span class="c1">// true if more pages are available</span>
-<span class="w">    </span><span class="nt">"cursorId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">    </span><span class="c1">// cursor handle for the next call; null when hasMore is false</span>
+<span class="w">    </span><span class="nt">"cursorId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">    </span><span class="c1">// cursor handle for the next call; omitted when hasMore is false</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -4252,6 +4302,7 @@ configuration.</p>
 <span class="w">        </span><span class="nt">"annualSalary"</span><span class="p">:</span><span class="w"> </span><span class="mi">120000</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2142"</span>
+<span class="w">        </span><span class="c1">// abridged — a real response carries every field the class declares</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="s2">"..."</span>
@@ -4292,7 +4343,7 @@ configuration.</p>
 <span class="w">    </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">    </span><span class="c1">// the LOID of the object</span>
 <span class="w">    </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// class name of the object</span>
 <span class="w">    </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
-<span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values</span>
+<span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">         </span><span class="c1">// map of field names to their values; null stays null, 64-bit integers are strings</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -4318,6 +4369,7 @@ configuration.</p>
 <span class="w">      </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2143"</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">"skills"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2138"</span><span class="p">,</span><span class="w"> </span><span class="s2">"135.0.2136"</span><span class="p">],</span>
 <span class="w">      </span><span class="nt">"technicalTags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Backend"</span><span class="p">,</span><span class="w"> </span><span class="s2">"API"</span><span class="p">]</span>
+<span class="w">      </span><span class="c1">// abridged — a real response carries every field the class declares</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -4351,13 +4403,17 @@ configuration.</p>
 <span class="w">      </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">      </span><span class="c1">// the LOID of the object</span>
 <span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">     </span><span class="c1">// class name of the object</span>
 <span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// optimistic-concurrency token; pass back as expectedVersion to update</span>
-<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">           </span><span class="c1">// map of field names to their values</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">           </span><span class="c1">// map of field names to their values; null stays null, 64-bit integers are strings</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">                 </span><span class="c1">// number of objects returned</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">                </span><span class="c1">// number of objects returned</span>
+<span class="w">  </span><span class="nt">"notFoundLoids"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">        </span><span class="c1">// distinct requested LOIDs that matched no object, in request order</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>LOIDs that match no object are left out of <code>objects</code>, so <code>count</code> may be lower than the number of LOIDs you asked for. To change any of the objects you read, pass each one's <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
+<p>LOIDs that match no object are left out of <code>objects</code>, so <code>count</code> may be lower than the number of LOIDs you asked for. Each one is named in <code>notFoundLoids</code>, so you can tell which references are dead without comparing counts. The array is always present, and empty when every LOID was found.</p>
+<p>A LOID you ask for twice is named once if it is absent — the response has no positional relationship to the LOIDs you sent, since a missing one leaves no gap in <code>objects</code>. A LOID that <em>is</em> found and asked for twice is returned twice.</p>
+<p>A malformed LOID is a different case: it fails the whole call with an error rather than appearing in <code>notFoundLoids</code>, which only ever reports well-formed LOIDs that matched nothing.</p>
+<p>To change any of the objects you read, pass each one's <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
 <h3 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h3>
 <p><strong>Input</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -4378,6 +4434,7 @@ configuration.</p>
 <span class="w">        </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2142"</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"subordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"135.0.2146"</span><span class="p">,</span><span class="w"> </span><span class="s2">"135.0.2147"</span><span class="p">]</span>
+<span class="w">        </span><span class="c1">// abridged — a real response carries every field the class declares</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
@@ -4391,10 +4448,12 @@ configuration.</p>
 <span class="w">        </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2143"</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"technicalTags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Backend"</span><span class="p">,</span><span class="w"> </span><span class="s2">"API"</span><span class="p">]</span>
+<span class="w">        </span><span class="c1">// abridged — a real response carries every field the class declares</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"notFoundLoids"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -4489,6 +4548,19 @@ configuration.</p>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="reading-field-types">Reading field types<a class="headerlink" href="#reading-field-types" title="Permanent link">&para;</a></h3>
+<p>The <code>type</code> string tells you whether a field holds a scalar, a reference, or a container.</p>
+<ul>
+<li><strong>Containers</strong> are <code>java.util.List&lt;X&gt;</code>, <code>java.util.Map&lt;K,V&gt;</code> and <code>X[]</code>. Strip the wrapper to get the element type(s), then read each one by the rules below.</li>
+<li><strong>Scalars</strong> are Java primitives (<code>int</code>, <code>long</code>, <code>short</code>, <code>double</code>, <code>float</code>, <code>boolean</code>, <code>byte</code>, <code>char</code>) and any type starting with <code>java.</code> — send the value itself. A <code>long</code> or <code>java.math.BigInteger</code> is the exception: as a <strong>field value</strong> send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form — an unquoted literal with an <code>L</code> suffix, never a quoted string. See <a href="#execute_query">Large integer literals</a>.</li>
+<li><strong>References</strong> are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object — <code>"address": "1.0.5"</code>, not <code>"address": { "city": "..." }</code>.</li>
+</ul>
+<p>So <code>java.util.List&lt;Worker&gt;</code> holds LOID strings, <code>java.util.List&lt;java.lang.String&gt;</code> holds plain strings, and <code>java.util.Map&lt;java.lang.String,Skill&gt;</code> has scalar keys and LOID-string values.</p>
+<div class="admonition warning">
+<p class="admonition-title">A <code>&lt;</code> alone does not mean a container</p>
+<p>Only the <code>java.util.</code> prefix does. A class name may itself contain angle brackets — schemas mapped from C++ commonly declare classes such as <code>BiLink&lt;CsaStudy&gt;</code> or <code>CsaPwLinearLUT&lt;o_double,o_double&gt;</code>. <code>BiLink&lt;CsaStudy&gt;</code> is one class name, so a field of that type takes a single LOID, not an array. Use <a href="#list_classes"><code>list_classes</code></a> to confirm a name if you need certainty.</p>
+</div>
+<p>See <a href="#create_objects"><code>create_objects</code></a> and <a href="#update_objects"><code>update_objects</code></a> for the exact input shape each field kind expects when writing.</p>
 <h3 id="example_6">Example<a class="headerlink" href="#example_6" title="Permanent link">&para;</a></h3>
 <p><strong>Input</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -4504,12 +4576,13 @@ configuration.</p>
 <span class="w">  </span><span class="nt">"declaredFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"annualSalary"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"department"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subordinates"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.util.List"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subordinates"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.util.List&lt;Worker&gt;"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.util.Map&lt;java.lang.String,java.lang.String&gt;"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="s2">"..."</span>
 <span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="nt">"allFields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"address"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Address {city: java.lang.String; street: java.lang.String; }"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"address"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Address"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"annualSalary"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"department"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java.lang.String"</span><span class="w"> </span><span class="p">},</span>
@@ -4633,7 +4706,7 @@ configuration.</p>
 <tbody>
 <tr>
 <td>Scalars</td>
-<td>Numbers, strings, and booleans, written directly.</td>
+<td>Numbers, strings, and booleans, written directly. An integer outside ±2^53 must be sent as a JSON string — <code>"badgeSerialNumber": "9007199254740993"</code> — which is the form reads return it in. Sent as a bare number it is rounded by the client's own JSON encoding before the server ever sees it.</td>
 </tr>
 <tr>
 <td>Dates</td>
@@ -4641,7 +4714,7 @@ configuration.</p>
 </tr>
 <tr>
 <td>Arrays of scalars</td>
-<td>A JSON array — <code>"accessLevels": [1, 5, 10]</code>.</td>
+<td>A JSON array — <code>"accessLevels": [1, 5, 10]</code>. The same ±2^53 rule applies per element — <code>"timestamps": ["9007199254740993", "0"]</code>.</td>
 </tr>
 <tr>
 <td>Enums</td>
@@ -4658,6 +4731,10 @@ configuration.</p>
 <tr>
 <td>Maps</td>
 <td>An object with exactly the two keys <code>keys</code> and <code>values</code>, holding equal-length arrays — <code>"metadata": { "keys": ["role"], "values": ["dev"] }</code>. No other keys are accepted. Either side may hold LOID strings.</td>
+</tr>
+<tr>
+<td>Clearing a nullable field</td>
+<td><code>null</code> — <code>"department": null</code>. The field is set to <code>null</code>, and a later read returns it as an explicit <code>null</code>. For collections and maps, an empty array or <code>{ "keys": [], "values": [] }</code> sets an empty container instead.</td>
 </tr>
 <tr>
 <td>Custom references</td>
@@ -4906,7 +4983,7 @@ current 8273402). Re-read the object and retry.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 24, 2026 10:11:32 UTC">August 24, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 13:53:28 UTC">August 27, 2026</span>
   </span>
 
     
