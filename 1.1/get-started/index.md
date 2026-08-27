@@ -17,7 +17,7 @@ Before you begin, ensure that the following requirements are met:
 
 ## Step 1: Select a Database Image
 
-Each Actian database uses a specific container image that is preconfigured with the required drivers. Identify the correct image for the environment:
+Each Actian database uses a specific container image that is preconfigured with the required drivers. Choose the correct image for the database:
 
 | Database | Container image |
 |----------|----------------|
@@ -29,7 +29,7 @@ Each Actian database uses a specific container image that is preconfigured with 
 
 ## Step 2: Create a Configuration File
 
-For most databases, you need to create a `conf.json` file that contains the specific connection details.
+Each SQL database requires a `conf.json` file that contains the connection details. Two cases differ: Actian NoSQL is configured through `application.properties` instead, and an Analytics Engine warehouse needs no configuration file at all, because the MCP Server is already configured for it.
 
 Each database has unique settings. For more information, see the database configuration document:
 
@@ -38,6 +38,7 @@ Each database has unique settings. For more information, see the database config
 - [Zen Configuration](../zen/index.md#configuration)
 - [NoSQL Configuration](../nosql/index.md#configuration)
 - [Analytics Engine Configuration](../analytics-engine/index.md#configuration)
+- [Warehouse Management](../analytics-engine/warehouse.md) (no configuration file required)
 
 All database configurations except NoSQL share the following standard MCP server fields:
 

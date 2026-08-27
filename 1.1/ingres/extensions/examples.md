@@ -60,7 +60,8 @@ Claude Desktop and GitHub Copilot cannot display the write-approval prompt, so w
 
 ```bash
 pip install fastmcp
-python hitl_demo_client.py http://localhost:8000/mcp adjust_stock '{"product_id": 1, "delta": 5}'
+python hitl_demo_client.py http://localhost:8000/mcp \
+    adjust_stock '{"product_id": 1, "delta": 5}'
 ```
 
 See the [client README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/README.md) for the environment variables it accepts, and [Connecting MCP Clients](../../mcp-clients/index.md#elicitation-support-for-write-approval) for which clients support the prompt.

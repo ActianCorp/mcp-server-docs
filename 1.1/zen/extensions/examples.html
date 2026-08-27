@@ -2942,7 +2942,8 @@
 <h2 id="answering-the-approval-prompt">Answering the Approval Prompt<a class="headerlink" href="#answering-the-approval-prompt" title="Permanent link">&para;</a></h2>
 <p>Claude Desktop and GitHub Copilot cannot display the write-approval prompt, so writes through them fail closed. To test an approval-gated tool such as <code>adjust_stock</code>, use <a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py"><code>hitl_demo_client.py</code></a>, which prints the request and asks you at the console:</p>
 <div class="language-bash highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fastmcp
-python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>http://localhost:8000/mcp<span class="w"> </span>adjust_stock<span class="w"> </span><span class="s1">'{"product_id": 1, "delta": 5}'</span>
+python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>http://localhost:8000/mcp<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>adjust_stock<span class="w"> </span><span class="s1">'{"product_id": 1, "delta": 5}'</span>
 </code></pre></div>
 <p>See the <a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/README.md">client README</a> for the environment variables it accepts, and <a href="../../mcp-clients/index.html#elicitation-support-for-write-approval">Connecting MCP Clients</a> for which clients support the prompt.</p>
 
@@ -2965,7 +2966,7 @@ python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>http://
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2026 17:56:43 UTC">August 20, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 10:35:46 UTC">August 27, 2026</span>
   </span>
 
     

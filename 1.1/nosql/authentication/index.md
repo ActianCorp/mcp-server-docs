@@ -25,7 +25,7 @@ The server supports two primary flows:
 The diagram below illustrates the Authorization Code flow:
 
 ```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     participant Client as MCP Client
     participant Server as MCP Server

@@ -157,6 +157,10 @@ Most tools share the same interface across databases and the parameter names may
 | `execute_query` | Zen | `sql` |
 | `describe_table` | Ingres / Analytics Engine / HCL Informix® | `table_name` |
 | `describe_table` | Zen | `table` |
+| `list_tables` | All databases | None |
+| `list_functions` | Ingres / Analytics Engine / HCL Informix® | None |
+
+`list_tables` and `list_functions` take no input parameters, so those calls are identical on every database. `list_functions` is not registered on Zen, and Zen adds tools the other databases do not have, such as `orm_operation` and `execute_write_query`. For the tools a given database exposes, see its Tools page, for example [Zen tools](../zen/tools/index.md).
 
 The following examples use the Ingres, Analytics Engine, and HCL Informix® parameter names. For Zen, substitute the parameter names from the table above.
 
@@ -208,10 +212,8 @@ async def main():
         # 4. Execute a read-only SQL query
         # Replace table and column names to match your schema
         # For Zen, use {"sql": "..."} instead of {"query": "..."}
-        result = await client.call_tool(
-            "execute_query",
-            {"query": "SELECT name, email FROM customers WHERE status = 'active'"},
-        )
+        sql = "SELECT name, email FROM customers WHERE status = 'active'"
+        result = await client.call_tool("execute_query", {"query": sql})
         print(f"\nQuery results:\n{result.content[0].text}")
 
 

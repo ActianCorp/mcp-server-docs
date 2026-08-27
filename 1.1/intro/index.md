@@ -28,6 +28,10 @@ Depending on the configuration, the server enables AI clients to:
 
 The server also manages backend requirements, including transport, configuration, authentication, and secure database access.
 
+## MCP Server Advantages
+
+By removing the need to build individual integrations for every AI use case, the Actian MCP Server provides a standardized way to use the trusted database capabilities. It ensures that deployment and access control remain securely managed at the server layer.
+
 ## Architecture and Request Flow
 
 ### Workflow
@@ -35,7 +39,7 @@ The server also manages backend requirements, including transport, configuration
 The Actian MCP Server sits between AI clients and the databases that they need to access.
 
 ```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': {'fontSize': '12px', 'fontFamily': 'arial'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '12px', 'fontFamily': 'arial'}}}%%
 flowchart TB
     subgraph Clients["MCP Clients"]
         claude["Claude Desktop"]
@@ -87,7 +91,9 @@ JWT Validation"]
         readonly["Query Mode
 (read-only by default)"]
         writegate["Write Gates
-(mcp:write scope + approval)"]
+(query_mode: read-write
++ mcp:write scope
++ human approval)"]
         impersonation["User Impersonation
 (SET SESSION AUTHORIZATION)"]
         tls["TLS / HTTPS"]
@@ -110,18 +116,18 @@ JWT Validation"]
 
 ### End-to-End Request Flow
 
-When an AI agent interacts with the database, the system follows the standard sequence:
+When an AI agent interacts with the database, the system follows the standard sequence. The client is any MCP-compatible tool, such as Claude Desktop, Cursor, or Codex. Authentication runs against Keycloak or Auth0, and the database is whichever Actian engine the server instance is configured for:
 
 ```mermaid
-%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '44px', 'fontFamily': 'arial'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '28px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     actor User
-    participant Client as MCP Client (Claude/Cursor/Codex)
-    participant Transport as HTTP / SSE Transport
-    participant Auth as OAuth 2.0 (Keycloak/Auth0)
-    participant Server as Actian MCP Server
-    participant Plugin as Database Plugin
-    participant DB as Actian Database (Analytics Engine/Ingres/Zen/HCL Informix®/NoSQL)
+    participant Client as MCP Client
+    participant Transport as HTTP / SSE
+    participant Auth as OAuth 2.0
+    participant Server as MCP Server
+    participant Plugin as DB Plugin
+    participant DB as Actian Database
 
     User->>Client: Natural language query
     Client->>Transport: MCP request
@@ -199,10 +205,6 @@ You can deploy an MCP Server as follows:
 
 !!! info 
     Each Actian DBMS requires its own dedicated Actian MCP Server instance, which means there is a single server, database, and MCP endpoint.
-
-## MCP Server Advantages
-
-By removing the need to build individual integrations for every AI use case, the Actian MCP Server provides a standardized way to use the trusted database capabilities. It ensures that deployment and access control remain securely managed at the server layer.
 
 ## Next Steps
 

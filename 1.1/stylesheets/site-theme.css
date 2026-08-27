@@ -477,6 +477,35 @@ html .md-footer-meta.md-typeset a:focus {
   padding: 0;
 }
 
+/* ---- Landing hero text colour ----
+   Material's `.md-typeset h1` rule is more specific than a single class, so the
+   hero heading needs the `.md-typeset` prefix or it renders in the theme's
+   foreground colour (near-black) over the dark banner image. ---- */
+.md-typeset .landing-hero__heading {
+  color: #ffffff;
+}
+.md-typeset .landing-hero__sub {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* ---- Sidebar site title: hide on desktop ----
+   Material renders the site name as the drawer label at the top of the primary
+   nav. On desktop it duplicates the header title and is not clickable, so hide
+   it there; the mobile drawer keeps it, where it carries the logo. ---- */
+@media screen and (min-width: 76.25em) {
+  .md-nav--primary > .md-nav__title {
+    display: none;
+  }
+}
+
+/* ---- Tables: keep the first-column keyword on one line ----
+   Field names such as `database_password` were breaking mid-word. Material
+   wraps tables in a horizontally scrollable container, so nowrap is safe. ---- */
+.md-typeset table:not([class]) th:first-child,
+.md-typeset table:not([class]) td:first-child {
+  white-space: nowrap;
+}
+
 /* ---- Databases / intro section ---- */
 .databases-section {
   max-width: 1600px;

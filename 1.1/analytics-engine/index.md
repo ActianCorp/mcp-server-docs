@@ -48,7 +48,7 @@ Create a file named `conf.json` in your working directory using the following st
 
 ```json
 {
-  "driver": "<odbc_driver>",
+  "driver": "{Ingres}",
   "server": "@<db-host>,tcp_ip,<installation_id>",
   "database": "<database_name>",
   "max_connections": 10,
@@ -98,7 +98,7 @@ Create a file named `conf.json` in your working directory using the following st
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Add `/app/server.key` in the container. |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-oauth-block).|
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md).|
-| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt).|
+| `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt). Applies only when `query_mode` is `read-write`. |
 | `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md).|
 
 

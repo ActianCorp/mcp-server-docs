@@ -22,7 +22,7 @@ For more information, see [Enabling Write Mode](../ingres/write-support.md#enabl
 
 ## HITL Write Approval Path
 
-Every write passes through a human-in-the-loop (HITL) approval path. In `read-write` mode, a DML statement must satisfy two independent checks before it reaches the database:
+Every write passes through a human-in-the-loop (HITL) approval path. Writes require `"query_mode": "read-write"` in `conf.json`; in that mode, a DML statement must satisfy two independent checks before it reaches the database:
 
 - The access token carries the `mcp:write` OAuth scope, when OAuth is enabled.
 - A person explicitly approves the statement in the connected MCP client.

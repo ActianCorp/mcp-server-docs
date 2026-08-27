@@ -3102,7 +3102,7 @@
 <p>The <code>write_confirmation</code> setting does not silence the extension's prompt. If your extension calls <code>request_write_confirmation()</code>, the prompt always appears. The <code>write_confirmation</code> setting in <code>conf.json</code> applies only to the server's built-in write tools. This works both ways:</p>
 <ul>
 <li>You cannot use that setting to skip an approval step your extension asked for.</li>
-<li>Turning it on for a client that cannot display prompts does not silently approve your extension's writes. Those writes still fail closed.</li>
+<li>Turning it on for a client that cannot display prompts does not silently approve your extension's writes. The server rejects those writes and nothing is written.</li>
 </ul>
 <h2 id="rules-and-caveats">Rules and Caveats<a class="headerlink" href="#rules-and-caveats" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
@@ -3168,7 +3168,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 24, 2026 10:11:32 UTC">August 24, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 10:35:46 UTC">August 27, 2026</span>
   </span>
 
     

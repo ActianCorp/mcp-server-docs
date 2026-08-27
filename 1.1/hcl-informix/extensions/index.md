@@ -195,7 +195,7 @@ Statements run as the end user. On Informix, your statements run as the authenti
 The `write_confirmation` setting does not silence the extension's prompt. If your extension calls `request_write_confirmation()`, the prompt always appears. The `write_confirmation` setting in `conf.json` applies only to the server's built-in write tools. This works both ways:
 
 - You cannot use that setting to skip an approval step your extension asked for.
-- Turning it on for a client that cannot display prompts does not silently approve your extension's writes. Those writes still fail closed.
+- Turning it on for a client that cannot display prompts does not silently approve your extension's writes. The server rejects those writes and nothing is written.
 
 ## Rules and Caveats
 
