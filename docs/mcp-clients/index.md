@@ -274,6 +274,14 @@ if __name__ == "__main__":
 !!! tip
     When you use OAuth, the FastMCP client automatically handles the browser-based login flow. Ensure you run the client on a machine that has a web browser.
 
+!!! note "In-memory token storage warning"
+    The FastMCP client may print a `UserWarning` about using in-memory OAuth
+    token storage. This is expected: by default the client does not persist
+    tokens across restarts, so you will need to complete the browser login
+    again each time you run the script. It does not indicate a connection
+    problem. See the [FastMCP OAuth documentation](https://gofastmcp.com/clients/auth/oauth#token-storage)
+    for configuring a persistent token store.
+
 ## Deployment Considerations
 
 Review the following guidelines to ensure a stable and secure connection:
