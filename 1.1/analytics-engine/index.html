@@ -16,7 +16,7 @@
         <link rel="prev" href="../zen/prompts/index.html">
       
       
-        <link rel="next" href="warehouse.html">
+        <link rel="next" href="managed-warehouse.html">
       
       
         
@@ -1878,14 +1878,14 @@
   
   
     <li class="md-nav__item">
-      <a href="warehouse.html" class="md-nav__link">
+      <a href="managed-warehouse.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Warehouse Management
+    Managed Warehouse
   
 
     
@@ -2658,6 +2658,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#deployment-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#self-managed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-managed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#managed-warehouse-saas-offering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managed warehouse (SaaS offering)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#capabilities" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2827,10 +2866,18 @@
 
 <h1 id="actian-mcp-server-for-analytics-engine">Actian MCP Server for Analytics Engine<a class="headerlink" href="#actian-mcp-server-for-analytics-engine" title="Permanent link">&para;</a></h1>
 <p>Connect the MCP-compatible client to the Actian Analytics Engine using the Actian MCP Server. With this setup, the client can explore schema metadata and run SQL queries through a standard interface. Queries are read-only unless you enable write mode. The MCP Server for Analytics Engine bridges the gap between the MCP client and the Actian database. The server manages connection pooling, response formatting, and schema discovery automatically.</p>
-<div class="admonition note">
-<p class="admonition-title">Running a managed warehouse?</p>
-<p>This page describes how to run the server in a container. If the Analytics Engine runs as a managed warehouse, the MCP Server is already configured. See <a href="warehouse.html">Warehouse Management</a>.</p>
-</div>
+<p>Analytics Engine runs in two deployments, and the MCP Server supports both:</p>
+<ul>
+<li><strong>Self-managed.</strong> You run Analytics Engine yourself, on-premises or in your own cloud account, and you deploy the MCP Server alongside it.</li>
+<li><strong>Managed warehouse (SaaS offering).</strong> Analytics Engine runs as the engine behind a warehouse on the Actian Analytics AI Platform, and the MCP Server is configured for you.</li>
+</ul>
+<p>The tools, resources, and prompts are the same in both deployments. Only the setup and the connection details differ.</p>
+<h2 id="deployment-options">Deployment Options<a class="headerlink" href="#deployment-options" title="Permanent link">&para;</a></h2>
+<h3 id="self-managed">Self-managed<a class="headerlink" href="#self-managed" title="Permanent link">&para;</a></h3>
+<p>You run the MCP Server in a container alongside your own Analytics Engine instance. You supply the database connection details in <code>conf.json</code>, secure the endpoint, and manage the server lifecycle. The rest of this page describes that setup.</p>
+<h3 id="managed-warehouse-saas-offering">Managed warehouse (SaaS offering)<a class="headerlink" href="#managed-warehouse-saas-offering" title="Permanent link">&para;</a></h3>
+<p>The MCP Server is deployed and configured with the warehouse. There is nothing to install and no configuration file to write. The client connects to a URL specific to that warehouse and signs in with OAuth, and your existing database privileges apply to every query.</p>
+<p>For instructions, see <a href="managed-warehouse.html">Managed Warehouse</a>.</p>
 <h2 id="capabilities">Capabilities<a class="headerlink" href="#capabilities" title="Permanent link">&para;</a></h2>
 <p>The Actian Analytics Engine MCP Server supports the following operations:</p>
 <table>
@@ -2872,7 +2919,7 @@
 <p>The server permits only read queries unless you set <code>query_mode</code> to <code>read-write</code>. Each write then requires the <code>mcp:write</code> scope and human approval. For more information, see <a href="write-support.html">Write support</a>.</p>
 </div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<p>Before starting the server, ensure the following requirements are met:</p>
+<p>The following sections apply to a self-managed deployment. Before starting the server, ensure the following requirements are met:</p>
 <ul>
 <li><strong>Container Engine:</strong> Docker installed and running on the host machine.</li>
 <li><strong>Database credentials:</strong> Valid access for the Analytics Engine database.</li>
@@ -2987,19 +3034,19 @@
 <tr>
 <td><code>ssl_certfile</code></td>
 <td><code>string</code></td>
-<td>—</td>
+<td>None</td>
 <td>Path to the TLS certificate file. Add <code>/app/server.crt</code> in the container.</td>
 </tr>
 <tr>
 <td><code>ssl_keyfile</code></td>
 <td><code>string</code></td>
-<td>—</td>
+<td>None</td>
 <td>Path to the TLS private key file. Add <code>/app/server.key</code> in the container.</td>
 </tr>
 <tr>
 <td><code>oauth</code></td>
 <td><code>object</code></td>
-<td>—</td>
+<td>None</td>
 <td>OAuth configuration block for protected deployments. For more information, see <a href="authentication/index.html#configuring-oauth-block">OAuth configuration</a>.</td>
 </tr>
 <tr>
@@ -3017,7 +3064,7 @@
 <tr>
 <td><code>extensions</code></td>
 <td><code>array</code></td>
-<td>—</td>
+<td>None</td>
 <td>Extension modules to load, each an object with a required <code>module</code> and an optional <code>config</code>. For more information, see <a href="extensions/index.html">Extensions</a>.</td>
 </tr>
 </tbody>
@@ -3091,7 +3138,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 10:35:46 UTC">August 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 20:21:16 UTC">August 27, 2026</span>
   </span>
 
     
@@ -3197,13 +3244,13 @@
         
         
           
-          <a href="warehouse.html" class="md-footer__link md-footer__link--next" aria-label="Next: Warehouse Management">
+          <a href="managed-warehouse.html" class="md-footer__link md-footer__link--next" aria-label="Next: Managed Warehouse">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Warehouse Management
+                Managed Warehouse
               </div>
             </div>
             <div class="md-footer__button md-icon">

@@ -38,7 +38,7 @@ Each database has unique settings. For more information, see the database config
 - [Zen Configuration](../zen/index.md#configuration)
 - [NoSQL Configuration](../nosql/index.md#configuration)
 - [Analytics Engine Configuration](../analytics-engine/index.md#configuration)
-- [Warehouse Management](../analytics-engine/warehouse.md) (no configuration file required)
+- [Managed Warehouse](../analytics-engine/managed-warehouse.md) (no configuration file required)
 
 All database configurations except NoSQL share the following standard MCP server fields:
 

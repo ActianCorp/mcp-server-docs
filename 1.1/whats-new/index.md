@@ -7,10 +7,12 @@ description: New features and changes in Actian MCP Server 1.1.0, including unif
 
 The release of Actian MCP Server, version 1.1.0, offers the following new features and changes:
 
-- [Unified Query Modes](#unified-query-modes)
-- [HITL Write Approval Path](#hitl-write-approval-path)
-- [Warehouse Sidecar Support](#warehouse-sidecar-support)
-- [Custom Extension Support](#custom-extension-support)
+- [What's New in Actian MCP Server 1.1.0](#whats-new-in-actian-mcp-server-110)
+  - [Unified Query Modes](#unified-query-modes)
+  - [HITL Write Approval Path](#hitl-write-approval-path)
+  - [Warehouse Sidecar Support](#warehouse-sidecar-support)
+  - [Custom Extension Support](#custom-extension-support)
+  - [Next Steps](#next-steps)
 
 ## Unified Query Modes
 
@@ -35,7 +37,7 @@ For more information, see [Authorizing a Write](../ingres/write-support.md#autho
 
 The MCP Server deploys as a sidecar alongside the warehouse leader pod. Clients connect using only the MCP server URL, and no separate Auth0 setup is required. Internally, the server acts as an OAuth2 Authorization Server proxy and hides the Auth0 token exchange from the clients entirely.
 
-For more information, see [Actian MCP Server for Warehouse Management](../analytics-engine/warehouse.md).
+For more information, see [Actian MCP Server on a Managed Warehouse](../analytics-engine/managed-warehouse.md).
 
 ## Custom Extension Support
 

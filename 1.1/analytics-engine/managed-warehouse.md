@@ -1,13 +1,13 @@
 ---
-title: Warehouse Management
-description: Connect MCP clients to an Analytics Engine warehouse, where the MCP Server is managed and auto-configured.
+title: Managed Warehouse
+description: Connect MCP clients to Analytics Engine running as a managed warehouse, where the MCP Server is managed and auto-configured.
 ---
 
-# Actian MCP Server for Warehouse Management
+# Actian MCP Server on a Managed Warehouse
 
-When the Analytics Engine runs as a managed warehouse, the MCP Server is configured automatically. There is nothing to install, no container to run, and no `conf.json` to write. You need only the warehouse endpoint and an MCP client.
+When Analytics Engine runs as a managed warehouse (SaaS offering) on the Actian Analytics AI Platform, the MCP Server is configured automatically. There is nothing to install, no container to run, and no `conf.json` to write. You need only the warehouse endpoint and an MCP client.
 
-To run the server against a separate Analytics Engine instance, see [Actian Analytics Engine](index.md).
+To run the server against a self-managed Analytics Engine instance, see [Actian Analytics Engine](index.md).
 
 
 ## Connect Your MCP Client
@@ -18,7 +18,9 @@ The MCP endpoint for a warehouse is:
 https://<warehouse-host>/mcp
 ```
 
-Use the same warehouse host shown on the warehouse **Connections** page. For example, in Visual Studio Code:
+Use the same warehouse host shown on the warehouse **Connections** page. For the steps to find it, see [MCP Server for warehouse data access](https://actiancorp.github.io/data-platform-docs/User/MCP_Server_Data_Access.html) in the Actian Analytics AI Platform documentation.
+
+For example, in Visual Studio Code:
 
 ```json
 {
@@ -34,15 +36,16 @@ Use the same warehouse host shown on the warehouse **Connections** page. For exa
 For Claude Desktop, GitHub Copilot, and Python client formats, see [Connecting MCP Clients](../mcp-clients/index.md).
 
 !!! note "Before you connect"
-    The endpoint is available only on warehouses that have MCP enabled, and only while the warehouse is running. Warehouse access is also restricted by IP address, and this applies to MCP connections. Make sure the machine running your MCP client falls within the warehouse IP allow list. For more information, see [Data Access and Authentication](https://docs.actian.com/actiandataplatform/Security/Data_Access_and_Authentication.htm) in the warehouse documentation.
+    The endpoint is available only on warehouses that have MCP enabled, and only while the warehouse is running. Warehouse access is also restricted by IP address, and this applies to MCP connections. Make sure the machine running your MCP client falls within the warehouse IP allow list. For more information, see [Data Access and Authentication](https://docs.actian.com/actiandataplatform/Security/Data_Access_and_Authentication.htm) in the Actian Analytics AI Platform documentation.
 
 
 ## Authentication
 
 The MCP client signs you in with an OAuth login against the warehouse. This is different from the other connection options on the **Connections** page, which use a database username and password.
 
-After you sign in, queries run under your own database identity. The privileges that apply are the ones already granted to you on the warehouse, enforced per table. To grant or change those privileges, see [User Management](https://docs.actian.com/actiandataplatform/Connectivity/User_Management.htm) in the warehouse documentation.
+After you sign in, queries run under your own database identity. The privileges that apply are the ones already granted to you on the warehouse, enforced per table. To grant or change those privileges, see [User Management](https://docs.actian.com/actiandataplatform/Connectivity/User_Management.htm) in the Actian Analytics AI Platform documentation.
 
+![](../assets/connection-url.png)
 
 ## Write Operations
 
@@ -67,6 +70,12 @@ The following are configured and maintained by Actian, and cannot be changed for
 - The OAuth provider used for sign-in
 
 Custom extensions are not supported on a warehouse. To load custom Python extensions, run the server using the [Analytics Engine](index.md) configuration.
+
+
+## Related Documentation
+
+- [MCP Server for warehouse data access](https://actiancorp.github.io/data-platform-docs/User/MCP_Server_Data_Access.html), for finding the endpoint and the connection requirements in the Actian Analytics AI Platform
+
 
 
 ## Next Steps

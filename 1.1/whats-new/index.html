@@ -1980,14 +1980,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../analytics-engine/warehouse.html" class="md-nav__link">
+      <a href="../analytics-engine/managed-warehouse.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Warehouse Management
+    Managed Warehouse
   
 
     
@@ -2851,10 +2851,12 @@
 <h1 id="whats-new-in-actian-mcp-server-110">What's New in Actian MCP Server 1.1.0<a class="headerlink" href="#whats-new-in-actian-mcp-server-110" title="Permanent link">&para;</a></h1>
 <p>The release of Actian MCP Server, version 1.1.0, offers the following new features and changes:</p>
 <ul>
+<li><a href="#whats-new-in-actian-mcp-server-110">What's New in Actian MCP Server 1.1.0</a></li>
 <li><a href="#unified-query-modes">Unified Query Modes</a></li>
 <li><a href="#hitl-write-approval-path">HITL Write Approval Path</a></li>
 <li><a href="#warehouse-sidecar-support">Warehouse Sidecar Support</a></li>
 <li><a href="#custom-extension-support">Custom Extension Support</a></li>
+<li><a href="#next-steps">Next Steps</a></li>
 </ul>
 <h2 id="unified-query-modes">Unified Query Modes<a class="headerlink" href="#unified-query-modes" title="Permanent link">&para;</a></h2>
 <p>The <code>conf.json</code> file supports exactly two query modes: <code>read-only</code>, which is the default, and <code>read-write</code>. In <code>read-only</code> mode, the server permits only read queries. In <code>read-write</code> mode, it also permits the Data Manipulation Language (DML) statements <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>.</p>
@@ -2870,7 +2872,7 @@
 <p>For more information, see <a href="../ingres/write-support.html#authorizing-a-write">Authorizing a Write</a>.</p>
 <h2 id="warehouse-sidecar-support">Warehouse Sidecar Support<a class="headerlink" href="#warehouse-sidecar-support" title="Permanent link">&para;</a></h2>
 <p>The MCP Server deploys as a sidecar alongside the warehouse leader pod. Clients connect using only the MCP server URL, and no separate Auth0 setup is required. Internally, the server acts as an OAuth2 Authorization Server proxy and hides the Auth0 token exchange from the clients entirely.</p>
-<p>For more information, see <a href="../analytics-engine/warehouse.html">Actian MCP Server for Warehouse Management</a>.</p>
+<p>For more information, see <a href="../analytics-engine/managed-warehouse.html">Actian MCP Server on a Managed Warehouse</a>.</p>
 <h2 id="custom-extension-support">Custom Extension Support<a class="headerlink" href="#custom-extension-support" title="Permanent link">&para;</a></h2>
 <p>Plain Python modules mounted at <code>/app/extensions</code> add custom tools and resources dynamically, without any modification to the core database plugins. Extensions run behind the same authentication and write controls as the built-in tools.</p>
 <p>For more information, see <a href="../ingres/extensions/index.html">Extensions</a>.</p>
@@ -2907,7 +2909,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 10:35:46 UTC">August 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 20:21:16 UTC">August 27, 2026</span>
   </span>
 
     
