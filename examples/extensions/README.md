@@ -16,14 +16,19 @@ All examples share **one database** — provision every table at once with the
 schema file for your engine (see below). The authoring contract is documented in the
 [Extensions guide](https://docs.actian.com/mcp-server/latest/ingres/extensions/index.html).
 
-## Database compatibility — works out of the box on all four engines
+## Database compatibility — the code runs unmodified on all four engines
 
-These examples run **unmodified** on Analytics Engine, Ingres, Informix, and Zen.
-The extension **API** (`query()`, `transaction()` / `tx.write()`,
-`request_write_confirmation()`, `get_current_user()`) is identical across engines,
-and the example **SQL is deliberately plain ANSI** — standard
-`INSERT`/`UPDATE`/`DELETE`/`SELECT` with no dialect-specific syntax and no
-per-engine branching.
+These examples run **unmodified** on Analytics Engine, Ingres, Informix, and Zen —
+no per-engine edits to the extension `.py` files or their SQL. The extension
+**API** (`query()`, `transaction()` / `tx.write()`, `request_write_confirmation()`,
+`get_current_user()`) is identical across engines, and the example **SQL is
+deliberately plain ANSI** — standard `INSERT`/`UPDATE`/`DELETE`/`SELECT` with no
+dialect-specific syntax and no per-engine branching.
+
+Setup isn't entirely zero-touch, though: after loading the schema file, you must
+`GRANT` each table to the user the MCP server connects as (see the comment at the
+top of each `schema.<engine>.sql`) — the schema is created as whichever user runs
+the file, which usually isn't the MCP server's own database user.
 
 The one operation whose syntax differs across engines — top-N row limiting
 (`FETCH FIRST n ROWS ONLY` on Ingres/Analytics Engine (AE) vs `SELECT FIRST n` on Informix vs
@@ -54,11 +59,11 @@ Control Center's SQL Data Manager), not one that naively splits the file on `;`.
 ## Expected schema
 
 Seven tables, all in one database — run the schema file for your engine (see the
-table above) to create and seed them. Tables and seed data are the same across all
-four; they differ only in statement terminator and how (if at all) the
-stock-quantity rule is enforced (see the table above). Tables 1–4 back the
-e-commerce examples; 5–7 back the revenue example (`sales` is named separately so
-nothing clashes).
+compatibility table above) to create and seed them. Tables and seed data are the
+same across all four; they differ only in statement terminator and how (if at
+all) the stock-quantity rule is enforced (see the compatibility table above).
+Tables 1–4 back the e-commerce examples; 5–7 back the revenue example (`sales`
+is named separately so nothing clashes).
 
 ```sql
 -- e-commerce (order_ops, catalog_insights, approval_required)
@@ -66,7 +71,7 @@ CREATE TABLE products (
     product_id INTEGER NOT NULL PRIMARY KEY,
     name       VARCHAR(50) NOT NULL,
     unit_price DECIMAL(12,2) NOT NULL,                   -- place_order looks this up
-    stock_qty  INTEGER NOT NULL                          -- see table above for enforcement
+    stock_qty  INTEGER NOT NULL                          -- enforced per engine, see notes above
 );
 CREATE TABLE orders (
     order_id    INTEGER NOT NULL PRIMARY KEY,
@@ -97,10 +102,12 @@ CREATE TABLE sales (customer_id INTEGER NOT NULL, amount DECIMAL(12,2) NOT NULL)
 ## Run it
 
 Mount each extension under `/app/extensions/` and your config at `/app/conf.json`.
-Copy the conf template for your engine (from the table above) to `conf.json` and
-fill in your database/host — the example `.py` files themselves need no edits.
-Credentials are passed as env vars, as in the shipped compose file. Use your
-engine's MCP image (`<actian-ingres-mcp-image>`, `<actian-informix-mcp-image>`, …).
+Copy the conf template for your engine (from the compatibility table above) to
+`conf.json` and fill in your database/host — the example `.py` files themselves
+need no edits. Credentials are passed as env vars, as in the shipped compose
+file. Use your engine's MCP image with an explicit version tag, e.g.
+`<actian-mcp-image-for-your-engine>:1.1.0` — omitting the tag pulls `:latest`,
+which isn't guaranteed to match what these examples were verified against.
 
 ```bash
 docker run -d --name my-mcp -p 8000:8000 \
@@ -111,7 +118,7 @@ docker run -d --name my-mcp -p 8000:8000 \
   -v "$PWD/catalog_resources.py:/app/extensions/catalog_resources.py:ro" \
   -v "$PWD/revenue_extension.py:/app/extensions/revenue_extension.py:ro" \
   -v "$PWD/conf.json:/app/conf.json:ro" \
-  <actian-mcp-image-for-your-engine>
+  <actian-mcp-image-for-your-engine>:1.1.0
 ```
 
 All nine extension tools — `place_order`, `cancel_order`, `order_summary`,

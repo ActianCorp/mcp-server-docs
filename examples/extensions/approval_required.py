@@ -47,11 +47,24 @@ def register(server, config):
 
         # Writes go through a transaction (a single write is a one-statement txn).
         async with get_database().transaction() as tx:
+            # Guard in the UPDATE itself (not a separate check-then-write) so a
+            # concurrent adjustment can't race between reading stock and writing
+            # it: the row only updates if the result would stay non-negative.
             res = await tx.write(
-                f"UPDATE {products_t} SET stock_qty = stock_qty + ? WHERE product_id = ?",
-                [delta, product_id])
+                f"UPDATE {products_t} SET stock_qty = stock_qty + ? "
+                f"WHERE product_id = ? AND stock_qty + ? >= 0",
+                [delta, product_id, delta])
             if res["row_count"] == 0:
-                return json.dumps({"success": False, "error": f"product {product_id} does not exist"})
+                # Zero rows now means either "doesn't exist" or "would go
+                # negative" -- look the product up to tell them apart.
+                existing = await tx.query(
+                    f"SELECT stock_qty FROM {products_t} WHERE product_id = ?", [product_id])
+                if not existing["rows"]:
+                    return json.dumps({"success": False, "error": f"product {product_id} does not exist"})
+                current_stock = existing["rows"][0][0]
+                return json.dumps({"success": False, "error":
+                                   f"adjustment would take stock below zero "
+                                   f"({current_stock} available, {delta:+d} requested)"})
             new = await tx.query(
                 f"SELECT name, stock_qty FROM {products_t} WHERE product_id = ?", [product_id])
         name, new_stock = new["rows"][0]
