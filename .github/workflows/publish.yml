@@ -44,5 +44,9 @@ jobs:
 
       - name: Deploy 1.1 as latest
         run: |
-          mike deploy --push --update-aliases 1.1 latest
+          # --alias-type=copy: mike's default is a symlink, which becomes a
+          # 1 KB text file when gh-pages is checked out on Windows, so /latest/
+          # 404s on IIS. `set-default` writes a redirect page, not an alias,
+          # and does not accept this flag.
+          mike deploy --push --update-aliases --alias-type=copy 1.1 latest
           mike set-default --push latest
