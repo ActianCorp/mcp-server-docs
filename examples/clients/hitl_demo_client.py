@@ -14,6 +14,11 @@ Requires: pip install fastmcp
 Usage:
     python hitl_demo_client.py <server_url> <tool_name> ['{"json": "args"}']
 
+Tool args can also come from a file or stdin, which is far easier on PowerShell
+than quoting JSON that contains SQL:
+    python hitl_demo_client.py <url> execute_write_query @args.json
+    Get-Content args.json | python hitl_demo_client.py <url> execute_write_query -
+
 Plain HTTP, no auth:
     python hitl_demo_client.py http://localhost:8000/mcp execute_query '{"query": "select * from customer limit 1"}'
 
@@ -80,6 +85,16 @@ def _text(result):
 def _parse_tool_args(raw: str) -> dict:
     if not raw:
         return {}
+    # PowerShell mangles nested quotes badly enough that inline JSON with SQL in
+    # it is close to unusable, so take the args from a file or stdin instead.
+    if raw == "-":
+        raw = sys.stdin.read().strip()
+    elif raw.startswith("@"):
+        with open(raw[1:], "r", encoding="utf-8-sig") as handle:
+            raw = handle.read().strip()
+    if not raw:
+        return {}
+    raw = raw.lstrip("﻿")   # Set-Content -Encoding utf8 writes a BOM
     data = json.loads(raw)
     if not isinstance(data, dict):
         raise ValueError("Tool args must be a JSON object")
