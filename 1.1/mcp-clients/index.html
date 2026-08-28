@@ -609,6 +609,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#testing-write-approval-gated-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Write-Approval-Gated Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3018,6 +3029,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#testing-write-approval-gated-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Write-Approval-Gated Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3197,17 +3219,17 @@
 <p class="admonition-title">Actian NoSQL</p>
 <p>Actian NoSQL uses different tools (JPQL-based queries, LOID fetches, etc) and a different authentication model. For a NoSQL-specific Python client example, see <a href="../nosql/index.html#connect-using-a-python-client">Connect Using a Python Client</a>.</p>
 </div>
-<p>This section demonstrates how to connect to a running Actian MCP Server instance using the <a href="https://pypi.org/project/fastmcp/">FastMCP</a> Python client. This approach supports all database plugins (Ingres, HCL Informix®, Zen, and Analytics Engine).</p>
+<p>This section demonstrates how to connect to a running Actian MCP Server instance using the example Python client <a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py"><code>hitl_demo_client.py</code></a>. It works for read-only queries and, on clients that cannot render a write-approval prompt (Claude Desktop, GitHub Copilot), for testing write-approval-gated tools directly. This approach supports all database plugins (Ingres, HCL Informix®, Zen, and Analytics Engine).</p>
 <h3 id="prerequisites_1">Prerequisites<a class="headerlink" href="#prerequisites_1" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p>Install the required FastMCP package:</p>
-<div class="language-bash highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fastmcp
+<p>Download the client script:</p>
+<div class="language-bash highlight"><pre><span></span><code>curl<span class="w"> </span>-O<span class="w"> </span>https://raw.githubusercontent.com/ActianCorp/mcp-server-docs/main/examples/clients/hitl_demo_client.py
 </code></pre></div>
 </li>
 <li>
-<p>To use OAuth authentication, install the <code>HTTPX</code> library:</p>
-<div class="language-bash highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>httpx
+<p>Install the required FastMCP package:</p>
+<div class="language-bash highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fastmcp
 </code></pre></div>
 </li>
 </ol>
@@ -3257,108 +3279,46 @@
 <p><code>list_tables</code> and <code>list_functions</code> take no input parameters, so those calls are identical on every database. <code>list_functions</code> is not registered on Zen, and Zen adds tools the other databases do not have, such as <code>orm_operation</code> and <code>execute_write_query</code>. For the tools a given database exposes, see its Tools page, for example <a href="../zen/tools/index.html">Zen tools</a>.</p>
 <p>The following examples use the Ingres, Analytics Engine, and HCL Informix® parameter names. For Zen, substitute the parameter names from the table above.</p>
 <h3 id="basic-connection-example">Basic Connection Example<a class="headerlink" href="#basic-connection-example" title="Permanent link">&para;</a></h3>
-<p>The following Python script demonstrates a standard connection:</p>
-<div class="language-python highlight"><pre><span></span><code><span class="sd">"""Actian MCP Server — Python client example."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastmcp.client.transports</span><span class="w"> </span><span class="kn">import</span> <span class="n">StreamableHttpTransport</span>
-
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="c1"># Replace with your Actian MCP Server URL</span>
-    <span class="n">server_url</span> <span class="o">=</span> <span class="s2">"http://localhost:8000/mcp"</span>
-
-    <span class="n">transport</span> <span class="o">=</span> <span class="n">StreamableHttpTransport</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">server_url</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">with</span> <span class="n">Client</span><span class="p">(</span><span class="n">transport</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-
-        <span class="c1"># 1. Discover available tools and their parameters</span>
-        <span class="n">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">list_tools</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Available tools:"</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - </span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-        <span class="c1"># Print parameter schema for a specific tool</span>
-        <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">tool</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"execute_query"</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">execute_query parameters:"</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()[</span><span class="s2">"parameters"</span><span class="p">],</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
-
-        <span class="c1"># 2. List tables in the connected database</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="s2">"list_tables"</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Tables:</span><span class="se">\n</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-        <span class="c1"># 3. Describe a specific table</span>
-        <span class="c1"># Replace "customers" with a table from your database</span>
-        <span class="c1"># For Zen, use {"table": "customers"} instead</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span>
-            <span class="s2">"describe_table"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"table_name"</span><span class="p">:</span> <span class="s2">"customers"</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Table structure:</span><span class="se">\n</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-        <span class="c1"># 4. Execute a read-only SQL query</span>
-        <span class="c1"># Replace table and column names to match your schema</span>
-        <span class="c1"># For Zen, use {"sql": "..."} instead of {"query": "..."}</span>
-        <span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT name, email FROM customers WHERE status = 'active'"</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="s2">"execute_query"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"query"</span><span class="p">:</span> <span class="n">sql</span><span class="p">})</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Query results:</span><span class="se">\n</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<p>Run the script with a server URL, a tool name, and the tool's arguments as a JSON object:</p>
+<div class="language-bash highlight"><pre><span></span><code>python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>http://localhost:8000/mcp<span class="w"> </span>list_tables
+python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>http://localhost:8000/mcp<span class="w"> </span>describe_table<span class="w"> </span><span class="s1">'{"table_name": "customers"}'</span>
+python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>http://localhost:8000/mcp<span class="w"> </span>execute_query<span class="w"> </span><span class="s1">'{"query": "SELECT name, email FROM customers"}'</span>
 </code></pre></div>
+<p>Each call prints the tools available on the server, then the result, for example:</p>
+<div class="language-text highlight"><pre><span></span><code>Connected to http://localhost:8000/mcp (5 tools): describe_table, execute_query, list_functions, list_tables, ...
+Calling execute_query({'query': 'SELECT name, email FROM customers'}) ...
+Result: {"success": true, "columns": ["name", "email"], "rows": [["Ada", "ada@example.com"]], "row_count": 1}
+</code></pre></div>
+<p>The tool count and list depend on your deployment — a server with custom extensions loaded (like <code>adjust_stock</code> below) shows more.</p>
+<p>Quoting JSON that contains SQL is painful on PowerShell — pass the arguments from a file or stdin instead:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span class="n">python</span> <span class="n">hitl_demo_client</span><span class="p">.</span><span class="n">py</span> <span class="n">http</span><span class="p">://</span><span class="n">localhost</span><span class="p">:</span><span class="n">8000</span><span class="p">/</span><span class="n">mcp</span> <span class="n">execute_query</span> <span class="nv">@args</span><span class="p">.</span><span class="n">json</span>
+<span class="nb">Get-Content</span> <span class="n">args</span><span class="p">.</span><span class="n">json</span> <span class="p">|</span> <span class="n">python</span> <span class="n">hitl_demo_client</span><span class="p">.</span><span class="n">py</span> <span class="n">http</span><span class="p">://</span><span class="n">localhost</span><span class="p">:</span><span class="n">8000</span><span class="p">/</span><span class="n">mcp</span> <span class="n">execute_query</span> <span class="p">-</span>
+</code></pre></div>
+<p>For Zen, use <code>{"sql": "..."}</code> and <code>{"table": "customers"}</code> instead — see <a href="#parameter-naming-differences">Parameter Naming Differences</a> above.</p>
 <h3 id="connect-using-oauth-authentication">Connect Using OAuth Authentication<a class="headerlink" href="#connect-using-oauth-authentication" title="Permanent link">&para;</a></h3>
-<p>When you deploy the server with OAuth enabled over HTTPS, provide authentication and TLS/SSL parameters in the client code:</p>
-<div class="language-python highlight"><pre><span></span><code><span class="sd">"""Actian MCP Server — Python client with OAuth and TLS."""</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">ssl</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastmcp.client.transports</span><span class="w"> </span><span class="kn">import</span> <span class="n">StreamableHttpTransport</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
-
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">server_url</span> <span class="o">=</span> <span class="s2">"https://mcp.example.com:8000/mcp"</span>
-
-    <span class="c1"># Trust a self-signed certificate (omit for publicly trusted certs)</span>
-    <span class="n">ssl_ctx</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">create_default_context</span><span class="p">(</span><span class="n">cafile</span><span class="o">=</span><span class="s2">"/path/to/server.crt"</span><span class="p">)</span>
-
-    <span class="n">transport</span> <span class="o">=</span> <span class="n">StreamableHttpTransport</span><span class="p">(</span>
-        <span class="n">url</span><span class="o">=</span><span class="n">server_url</span><span class="p">,</span>
-        <span class="n">auth</span><span class="o">=</span><span class="s2">"oauth"</span><span class="p">,</span>
-        <span class="n">httpx_client_factory</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">(</span>
-            <span class="n">verify</span><span class="o">=</span><span class="n">ssl_ctx</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">with</span> <span class="n">Client</span><span class="p">(</span><span class="n">transport</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-        <span class="n">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">list_tools</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Connected — </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="si">}</span><span class="s2"> tools available"</span><span class="p">)</span>
-
-        <span class="c1"># Verify the authenticated database user</span>
-        <span class="c1"># For Zen, use {"sql": "..."} instead of {"query": "..."}</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span>
-            <span class="s2">"execute_query"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"query"</span><span class="p">:</span> <span class="s2">"SELECT CURRENT_USER"</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Current user: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<p>When the server requires OAuth, set <code>MCP_AUTH=oauth</code>. Add <code>MCP_CA_CERT</code> if the server presents a self-signed certificate:</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">MCP_AUTH</span><span class="o">=</span>oauth
+<span class="nb">export</span><span class="w"> </span><span class="nv">MCP_CA_CERT</span><span class="o">=</span>/path/to/server.crt<span class="w">   </span><span class="c1"># only needed for a self-signed certificate</span>
+python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>https://mcp.example.com:8000/mcp<span class="w"> </span>execute_query<span class="w"> </span><span class="s1">'{"query": "SELECT CURRENT_USER"}'</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>When you use OAuth, the FastMCP client automatically handles the browser-based login flow. Ensure you run the client on a machine that has a web browser.</p>
+<p>When you use OAuth, the script opens your browser automatically to complete the login and continues once the token exchange finishes. Ensure you run it on a machine that has a web browser.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">In-memory token storage warning</p>
+<p>The FastMCP client may print a <code>UserWarning</code> about using in-memory OAuth
+token storage. This is expected: by default the client does not persist
+tokens across restarts, so you will need to complete the browser login
+again each time you run the script. It does not indicate a connection
+problem. See the <a href="https://gofastmcp.com/clients/auth/oauth#token-storage">FastMCP OAuth documentation</a>
+for configuring a persistent token store.</p>
+</div>
+<h3 id="testing-write-approval-gated-tools">Testing Write-Approval-Gated Tools<a class="headerlink" href="#testing-write-approval-gated-tools" title="Permanent link">&para;</a></h3>
+<p>When write support is enabled and the connected client cannot render an approval prompt (see the client compatibility table above), use this same script to exercise those tools directly — it prints the approval request at the console and asks you to accept or decline:</p>
+<div class="language-bash highlight"><pre><span></span><code>python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>http://localhost:8000/mcp<span class="w"> </span>adjust_stock<span class="w"> </span><span class="s1">'{"product_id": 1, "delta": 5}'</span>
+</code></pre></div>
+<p>See <a href="../ingres/extensions/examples.html#answering-the-approval-prompt">Answering the Approval Prompt</a> for the full write-approval walkthrough.</p>
 <h2 id="deployment-considerations">Deployment Considerations<a class="headerlink" href="#deployment-considerations" title="Permanent link">&para;</a></h2>
 <p>Review the following guidelines to ensure a stable and secure connection:</p>
 <ul>
@@ -3386,7 +3346,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 10:35:46 UTC">August 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 20:59:29 UTC">August 27, 2026</span>
   </span>
 
     
