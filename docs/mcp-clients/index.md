@@ -1,62 +1,62 @@
 ---
 title: Connecting MCP Clients
-description: Connect MCP-compatible clients to a running Actian MCP Server instance.
+description: Connect MCP clients to a running Actian MCP Server instance.
 ---
 
-# Connect AI Clients to Actian MCP Server
+# Connect MCP Clients to the Actian MCP Server
 
-After you deploy the Actian MCP Server container, you can connect to the MCP-compatible artificial intelligence (AI) clients. The server uses HTTP transport mode, and clients can connect directly to the endpoint exposed by the container.
+After you deploy the Actian MCP Server container, you can connect an MCP client to it. The server uses HTTP transport mode, and the client connects directly to the endpoint that the container exposes.
 
 ## Connection URL Formats
 
-Identify the deployment type to determine the connection URL. The standard endpoint path used for the server deployment is `/mcp`.
+Identify the deployment type to determine the connection URL. The standard endpoint path for the server is `/mcp`.
 
 - Local deployment: `http://localhost:<port>/mcp`
 - Remote deployment: `http://<hostname>:<port>/mcp`
 
 ## Elicitation Support for Write Approval
 
-This section matters only if write support is enabled on the server. On a read-only server, every client below works the same way.
+This section applies only when write support is enabled on the server. On a read-only server, every client in the following table behaves the same way.
 
-When write support is enabled, the server asks a person to approve each write before running it. It sends that request using the Model Context Protocol (MCP) elicitation capability, which not every client implements.
+When write support is enabled, the server asks a person to approve each write before it runs. The server sends that request through the Model Context Protocol (MCP) elicitation capability, which not every client implements.
 
 | Client | Displays the write approval prompt |
 |--------|------------------------------------|
 | Claude Code | Yes |
 | Claude Desktop | No |
 | GitHub Copilot | No |
-| Cursor, fast-agent, Codex | Not confirmed. Treat as unsupported until you have confirmed elicitation support in the deployment. |
+| Cursor, fast-agent, Codex | Not verified. Treat these clients as unsupported until you confirm elicitation support in your deployment. |
 
 !!! warning "A client that cannot prompt cannot write"
-    If the connected client does not support elicitation, no write goes through. There is no silent approval. Reads are not affected.
+    If the connected client does not support elicitation, no write goes through. The server never approves a write silently. Read queries are not affected.
 
-    On the SQL databases, the server rejects the write, exactly as if a person had declined it. To let such a client write, set `write_confirmation` to `false` in `conf.json`. That runs writes without asking anyone first. See [Write support](../ingres/write-support.md#skipping-the-approval-prompt).
+    On the SQL databases, the server rejects the write in the same way as it rejects a write that a person declines. To let such a client write, set `write_confirmation` to `false` in `conf.json`. The server then runs writes without asking anyone first. For more information, see [Write support](../ingres/write-support.md#skipping-the-approval-prompt).
 
-    On Actian NoSQL, such a client is never offered the write tools in the first place: they are absent from its tool list, and calling one fails as an unknown tool. See [Why the write tools may not appear](../nosql/write-support.md#missing-write-tools).
+    On Actian NoSQL, the server does not offer the write tools to such a client at all. The tools are absent from the tool list, and a call to one of them fails as an unknown tool. For more information, see [Why the write tools may not appear](../nosql/write-support.md#missing-write-tools).
 
 ## Client Configuration Examples
 
-You can connect popular AI clients, such as Claude Desktop, Cursor, fast-agent, and Codex, using the connection URL.
+You can connect MCP clients such as Claude Desktop, Cursor, fast-agent, and Codex using the connection URL.
 
 === ":material-brain: Claude Desktop"
 
     ### Connecting Claude Desktop to the Actian MCP Server
 
-    Claude Desktop connects to the Actian MCP Server through the `mcp-remote` bridge. This connection requires Node.js (version 18 or later) to be installed on the local machine.
+    Claude Desktop connects to the Actian MCP Server through the `mcp-remote` bridge. This connection requires Node.js version 18 or later on the local machine.
 
     #### Prerequisites
 
     Before starting the connection, ensure the following requirements are met:
 
-    - **Node.js:** Version 18 or higher.
+    - **Node.js:** Version 18 or later.
     - **Actian MCP Server:** Running and accessible over the network.
 
     #### Configuration
 
-    1. Open the Claude Desktop configuration file located at the following path:
+    1. Open the Claude Desktop configuration file:
         - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
         - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
-    2. Add the following entry under the `mcpServers` section and replace the placeholder URL with the server address:
+    2. Add the following entry under the `mcpServers` section:
 
         ```json
         "actian-mcp-server": {
@@ -69,8 +69,10 @@ You can connect popular AI clients, such as Claude Desktop, Cursor, fast-agent, 
         }
         ```
 
+    3. Replace the placeholder URL with the address of your server.
+
         !!! note
-            If the server uses HTTPS and a self-signed TLS certificate, include the `env` block shown below to bypass certificate verification:
+            If the server uses HTTPS with a self-signed TLS certificate, include the following `env` block to bypass certificate verification:
 
             ```json
             "actian-mcp-server": {
@@ -85,7 +87,7 @@ You can connect popular AI clients, such as Claude Desktop, Cursor, fast-agent, 
             }
             ```
 
-    3. Save the file and restart Claude Desktop. The Actian MCP Server appears as an available tool within the conversations.
+    4. Save the file and restart Claude Desktop. The Actian MCP Server then appears as an available tool in your conversations.
 
 === ":material-cursor-default-click: Cursor"
 
@@ -130,7 +132,7 @@ You can connect popular AI clients, such as Claude Desktop, Cursor, fast-agent, 
 !!! warning "Actian NoSQL"
     Actian NoSQL uses different tools, such as JPQL-based queries and LOID fetches, and a different authentication model. For a NoSQL-specific Python client example, see [Connect Using a Python Client](../nosql/index.md#connect-using-a-python-client).
 
-This section demonstrates how to connect to a running Actian MCP Server instance using the example Python client [`hitl_demo_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py). The script works for read-only queries. On clients that cannot render a write-approval prompt, such as Claude Desktop and GitHub Copilot, it also tests write-approval-gated tools directly. This approach supports all database plugins (Ingres, HCL Informix®, Zen, and Analytics Engine).
+This section describes how to connect to a running Actian MCP Server instance with the example Python client [`hitl_demo_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py). The script runs read-only queries against every database plugin: Ingres, HCL Informix®, Zen, and Analytics Engine. It also calls write-approval-gated tools directly, which is useful on clients that cannot render a write-approval prompt, such as Claude Desktop and GitHub Copilot.
 
 ### Prerequisites
 
@@ -159,13 +161,13 @@ Most tools share the same interface across databases, but the parameter names va
 | `list_tables` | All databases | None |
 | `list_functions` | Ingres / Analytics Engine / HCL Informix® | None |
 
-`list_tables` and `list_functions` take no input parameters, so those calls are identical on every database. `list_functions` is not registered on Zen, and Zen adds tools the other databases do not have, such as `orm_operation` and `execute_write_query`. For the tools a given database exposes, see its Tools page, for example [Zen tools](../zen/tools/index.md).
+`list_tables` and `list_functions` take no input parameters, so those calls are identical on every database. Zen does not register `list_functions`, and Zen adds tools that the other databases do not have, such as `orm_operation` and `execute_write_query`. For the tools that a given database exposes, see its Tools page, for example [Zen tools](../zen/tools/index.md).
 
-The following examples use the Ingres, Analytics Engine, and HCL Informix® parameter names. For Zen, substitute the parameter names from the table above.
+The following examples use the parameter names for Ingres, Analytics Engine, and HCL Informix®. For Zen, substitute the parameter names from the preceding table.
 
 ### Basic Connection Example
 
-Run the script with a server URL, a tool name, and the tool's arguments as a JSON object:
+Run the script with a server URL, a tool name, and the arguments for the tool as a JSON object:
 
 ```bash
 python hitl_demo_client.py http://localhost:8000/mcp list_tables
@@ -173,7 +175,7 @@ python hitl_demo_client.py http://localhost:8000/mcp describe_table '{"table_nam
 python hitl_demo_client.py http://localhost:8000/mcp execute_query '{"query": "SELECT name, email FROM customers"}'
 ```
 
-Each call prints the tools available on the server, then the result, for example:
+Each call prints the tools available on the server, and then the result, for example:
 
 ```text
 Connected to http://localhost:8000/mcp (5 tools): describe_table, execute_query, list_functions, list_tables, ...
@@ -181,16 +183,16 @@ Calling execute_query({'query': 'SELECT name, email FROM customers'}) ...
 Result: {"success": true, "columns": ["name", "email"], "rows": [["Ada", "ada@example.com"]], "row_count": 1}
 ```
 
-The tool count and list depend on the deployment — a server with custom extensions loaded, such as `adjust_stock` below, shows more.
+The tool count and the tool list depend on the deployment. A server with custom extensions loaded, such as `adjust_stock` described below, shows more tools.
 
-In PowerShell, quoting JSON that contains SQL is error-prone. Pass the arguments from a file or standard input instead:
+In PowerShell, quoting JSON that contains SQL is error-prone. Pass the arguments from a file or from standard input instead:
 
 ```powershell
 python hitl_demo_client.py http://localhost:8000/mcp execute_query @args.json
 Get-Content args.json | python hitl_demo_client.py http://localhost:8000/mcp execute_query -
 ```
 
-For Zen, use `{"sql": "..."}` and `{"table": "customers"}` instead — see [Parameter Naming Differences](#parameter-naming-differences) above.
+For Zen, use `{"sql": "..."}` and `{"table": "customers"}` instead. For more information, see [Parameter Naming Differences](#parameter-naming-differences).
 
 ### Connect Using OAuth Authentication
 
@@ -203,25 +205,25 @@ python hitl_demo_client.py https://mcp.example.com:8000/mcp execute_query '{"que
 ```
 
 !!! tip
-    When you use OAuth, the script opens your browser automatically to complete the login and continues once the token exchange finishes. Ensure you run it on a machine that has a web browser.
+    When you use OAuth, the script opens your browser automatically to complete the login, and continues after the token exchange finishes. Run the script on a machine that has a web browser.
 
 !!! note "In-memory token storage warning"
-    The FastMCP client may print a `UserWarning` about using in-memory OAuth
-    token storage. This is expected: by default the client does not persist
-    tokens across restarts, so you will need to complete the browser login
-    again each time you run the script. It does not indicate a connection
-    problem. See the [FastMCP OAuth documentation](https://gofastmcp.com/clients/auth/oauth#token-storage)
-    for configuring a persistent token store.
+    The FastMCP client might print a `UserWarning` about in-memory OAuth token
+    storage. This warning is expected. By default, the client does not persist
+    tokens across restarts, so you complete the browser login again each time
+    you run the script. The warning does not indicate a connection problem. For
+    information about configuring a persistent token store, see the
+    [FastMCP OAuth documentation](https://gofastmcp.com/clients/auth/oauth#token-storage).
 
 ### Testing Write-Approval-Gated Tools
 
-When write support is enabled and the connected client cannot render an approval prompt (see the client compatibility table above), use this same script to exercise those tools directly — it prints the approval request at the console and asks you to accept or decline:
+When write support is enabled and the connected client cannot render an approval prompt, use this script to call those tools directly. The script prints the approval request at the console and asks you to accept or decline it. For the clients affected, see [Elicitation Support for Write Approval](#elicitation-support-for-write-approval).
 
 ```bash
 python hitl_demo_client.py http://localhost:8000/mcp adjust_stock '{"product_id": 1, "delta": 5}'
 ```
 
-See [Answering the Approval Prompt](../ingres/extensions/examples.md#answering-the-approval-prompt) for the full write-approval walkthrough.
+For the full write-approval walkthrough, see [Answering the Approval Prompt](../ingres/extensions/examples.md#answering-the-approval-prompt).
 
 ## Deployment Considerations
 
@@ -229,4 +231,4 @@ Review the following guidelines to ensure a stable and secure connection:
 
 - **Port mapping:** Always connect using the specific port configured for the MCP Server container.
 - **Production security:** Enforce HTTPS and configure authentication whenever you expose the server outside a trusted local environment.
-- **Remote deployments:** If you enable OAuth on a non-localhost deployment, the server requires TLS and a public `https://` base URL. For detailed instructions on generating certificates, configuring Docker, and trusting self-signed certificates, see [HTTPS / TLS for remote deployments](../ingres/authentication/index.md#secure-remote-deployments-with-https-and-tls).
+- **Remote deployments:** If you enable OAuth on a deployment other than localhost, the server requires TLS and a public `https://` base URL. For instructions about generating certificates, configuring Docker, and trusting self-signed certificates, see [HTTPS / TLS for remote deployments](../ingres/authentication/index.md#secure-remote-deployments-with-https-and-tls).
