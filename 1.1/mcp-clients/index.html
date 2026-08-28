@@ -3319,6 +3319,15 @@ for configuring a persistent token store.</p>
 <div class="language-bash highlight"><pre><span></span><code>python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>http://localhost:8000/mcp<span class="w"> </span>adjust_stock<span class="w"> </span><span class="s1">'{"product_id": 1, "delta": 5}'</span>
 </code></pre></div>
 <p>See <a href="../ingres/extensions/examples.html#answering-the-approval-prompt">Answering the Approval Prompt</a> for the full write-approval walkthrough.</p>
+<div class="admonition note">
+<p class="admonition-title">In-memory token storage warning</p>
+<p>The FastMCP client may print a <code>UserWarning</code> about using in-memory OAuth
+token storage. This is expected: by default the client does not persist
+tokens across restarts, so you will need to complete the browser login
+again each time you run the script. It does not indicate a connection
+problem. See the <a href="https://gofastmcp.com/clients/auth/oauth#token-storage">FastMCP OAuth documentation</a>
+for configuring a persistent token store.</p>
+</div>
 <h2 id="deployment-considerations">Deployment Considerations<a class="headerlink" href="#deployment-considerations" title="Permanent link">&para;</a></h2>
 <p>Review the following guidelines to ensure a stable and secure connection:</p>
 <ul>
