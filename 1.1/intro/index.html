@@ -3068,9 +3068,18 @@
 <h2 id="mcp-server-advantages">MCP Server Advantages<a class="headerlink" href="#mcp-server-advantages" title="Permanent link">&para;</a></h2>
 <p>By removing the need to build individual integrations for every AI use case, the Actian MCP Server provides a standardized way to use the trusted database capabilities. It ensures that deployment and access control remain securely managed at the server layer.</p>
 <h2 id="architecture-and-request-flow">Architecture and Request Flow<a class="headerlink" href="#architecture-and-request-flow" title="Permanent link">&para;</a></h2>
-<h3 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h3>
+<h4 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h4>
 <p>The Actian MCP Server sits between AI clients and the databases that they need to access.</p>
-<pre class="mermaid"><code>%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '12px', 'fontFamily': 'arial'}}}%%
+<pre class="mermaid"><code>%%{init: {
+  'theme': 'default',
+  'themeVariables': {'fontSize': '12px', 'fontFamily': 'arial'},
+  'flowchart': {
+    'subGraphTitleMargin': {'top': 8, 'bottom': 16},
+    'padding': 15,
+    'nodeSpacing': 50,
+    'rankSpacing': 60
+  }
+}}%%
 flowchart TB
     subgraph Clients["MCP Clients"]
         claude["Claude Desktop"]
@@ -3082,30 +3091,19 @@ flowchart TB
     end
 
     subgraph Transport["Transport Layer"]
-        http["HTTP / SSE
-(Network)"]
+        http["HTTP / SSE&lt;br/&gt;(Network)"]
     end
 
     subgraph Auth["Authentication"]
-        idp["Identity Provider
-(Keycloak / Auth0)"]
-        oauth["OAuth 2.0 / OIDC
-JWT Validation"]
+        idp["Identity Provider&lt;br/&gt;(Keycloak / Auth0)"]
+        oauth["OAuth 2.0 / OIDC&lt;br/&gt;JWT Validation"]
     end
 
     subgraph MCP["Actian MCP Server"]
         direction TB
         core["MCP Protocol Handler"]
-        tools["Tools
-─────────────
-• Execute SQL Queries
-• List Tables &amp; Views
-• Describe Table Schema
-• List Functions"]
-        resources["Resources
-─────────────
-• Schema Metadata
-• Table Definitions"]
+        tools["&lt;b&gt;Tools&lt;/b&gt;&lt;br/&gt;• Execute SQL Queries&lt;br/&gt;• List Tables and Views&lt;br/&gt;• Describe Table Schema&lt;br/&gt;• List Functions"]
+        resources["&lt;b&gt;Resources&lt;/b&gt;&lt;br/&gt;• Schema Metadata&lt;br/&gt;• Table Definitions"]
         plugins["Database Plugins"]
         pool["Connection Pool"]
     end
@@ -3119,14 +3117,9 @@ JWT Validation"]
     end
 
     subgraph Security["Security Controls"]
-        readonly["Query Mode
-(read-only by default)"]
-        writegate["Write Gates
-(query_mode: read-write
-+ mcp:write scope
-+ human approval)"]
-        impersonation["User Impersonation
-(SET SESSION AUTHORIZATION)"]
+        readonly["Query Mode&lt;br/&gt;(read-only by default)"]
+        writegate["Write Gates&lt;br/&gt;(query_mode: read-write&lt;br/&gt;+ mcp:write scope&lt;br/&gt;+ human approval)"]
+        impersonation["User Impersonation&lt;br/&gt;(SET SESSION AUTHORIZATION)"]
         tls["TLS / HTTPS"]
     end
 
@@ -3262,7 +3255,7 @@ sequenceDiagram
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 10:35:46 UTC">August 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 28, 2026 04:53:59 UTC">August 28, 2026</span>
   </span>
 
     

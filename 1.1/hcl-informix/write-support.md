@@ -40,7 +40,7 @@ Writes require `"query_mode": "read-write"` in `conf.json`. In that mode, every 
 | `mcp:write` scope | The access token must carry the `mcp:write` scope. | Only when OAuth is enabled. A read-only server never requests or requires this scope. |
 | Human approval | A person must approve the statement in the connected client. | Always, unless disabled with `write_confirmation`. |
 
-The scope is checked first, so a caller without it is rejected before anyone is asked to approve anything.
+The scope is checked first, so a caller without it is rejected before anyone is asked to approve anything. A write counts as not approved if the person declines, does not answer before the timeout, or the client cannot display the prompt at all.
 
 ```mermaid
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
@@ -51,7 +51,7 @@ sequenceDiagram
     participant DB as Database
 
     Client->>Server: Write request (INSERT / UPDATE / DELETE)
-    Server->>Server: Check mcp:write scope
+    Server->>Server: Check mcp:write
     alt Scope missing
         Server-->>Client: Rejected (authorization error)
     else Scope present
@@ -63,7 +63,7 @@ sequenceDiagram
             Server->>DB: Run statement
             DB-->>Server: Rows affected
             Server-->>Client: Success
-        else Declined, no response, or client cannot prompt
+        else Not approved
             Client-->>Server: Not approved
             Server-->>Client: Rejected (write not approved)
         end

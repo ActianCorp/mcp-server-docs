@@ -2932,7 +2932,7 @@ prompt.</p>
 </tr>
 </tbody>
 </table>
-<p>The scope is checked first, so a caller without it is rejected before anyone is asked to approve anything.</p>
+<p>The scope is checked first, so a caller without it is rejected before anyone is asked to approve anything. A write counts as not approved if the person declines, does not answer before the timeout, or the client cannot display the prompt at all.</p>
 <pre class="mermaid"><code>%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     participant User as User
@@ -2941,7 +2941,7 @@ sequenceDiagram
     participant DB as Database
 
     Client-&gt;&gt;Server: Write request (INSERT / UPDATE / DELETE / MERGE)
-    Server-&gt;&gt;Server: Check mcp:write scope
+    Server-&gt;&gt;Server: Check mcp:write
     alt Scope missing
         Server--&gt;&gt;Client: Rejected (authorization error)
     else Scope present
@@ -2953,7 +2953,7 @@ sequenceDiagram
             Server-&gt;&gt;DB: Run statement
             DB--&gt;&gt;Server: Rows affected
             Server--&gt;&gt;Client: Success
-        else Declined, no response, or client cannot prompt
+        else Not approved
             Client--&gt;&gt;Server: Not approved
             Server--&gt;&gt;Client: Rejected (write not approved)
         end
@@ -3011,7 +3011,7 @@ sequenceDiagram
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 10:35:46 UTC">August 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 28, 2026 04:53:59 UTC">August 28, 2026</span>
   </span>
 
     

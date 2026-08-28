@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Connect MCP clients to Analytics Engine running as a managed warehouse, where the MCP Server is managed and auto-configured.">
+        <meta name="description" content="Connect MCP clients to Analytics Engine powering a warehouse on the Actian Analytics AI Platform, where the MCP Server is configured for you.">
       
       
       
@@ -27,7 +27,7 @@
     
     
       
-        <title>Managed Warehouse - Actian MCP Server</title>
+        <title>SaaS - Actian MCP Server</title>
       
     
     
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#actian-mcp-server-on-a-managed-warehouse" class="md-skip">
+        <a href="#actian-mcp-server-on-the-actian-analytics-ai-platform" class="md-skip">
           Skip to content
         </a>
       
@@ -154,7 +154,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Managed Warehouse
+              SaaS
             
           </span>
         </div>
@@ -2912,9 +2912,9 @@
 
 
 
-<h1 id="actian-mcp-server-on-a-managed-warehouse">Actian MCP Server on a Managed Warehouse<a class="headerlink" href="#actian-mcp-server-on-a-managed-warehouse" title="Permanent link">&para;</a></h1>
-<p>When Analytics Engine runs as a managed warehouse (SaaS offering) on the Actian Analytics AI Platform, the MCP Server is configured automatically. There is nothing to install, no container to run, and no <code>conf.json</code> to write. You need only the warehouse endpoint and an MCP client.</p>
-<p>To run the server against a self-managed Analytics Engine instance, see <a href="index.html">Actian Analytics Engine</a>.</p>
+<h1 id="actian-mcp-server-on-the-actian-analytics-ai-platform">Actian MCP Server on the Actian Analytics AI Platform<a class="headerlink" href="#actian-mcp-server-on-the-actian-analytics-ai-platform" title="Permanent link">&para;</a></h1>
+<p>When Analytics Engine powers a warehouse on the Actian Analytics AI Platform, the MCP Server is configured automatically. There is nothing to install, no container to run, and no <code>conf.json</code> to write. You need only the warehouse endpoint and an MCP client.</p>
+<p>To run the server against a self-hosted Analytics Engine instance, see <a href="index.html">Actian Analytics Engine</a>.</p>
 <h2 id="connect-your-mcp-client">Connect Your MCP Client<a class="headerlink" href="#connect-your-mcp-client" title="Permanent link">&para;</a></h2>
 <p>The MCP endpoint for a warehouse is:</p>
 <div class="language-text highlight"><pre><span></span><code>https://&lt;warehouse-host&gt;/mcp
@@ -2938,9 +2938,8 @@
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
 <p>The MCP client signs you in with an OAuth login against the warehouse. This is different from the other connection options on the <strong>Connections</strong> page, which use a database username and password.</p>
 <p>After you sign in, queries run under your own database identity. The privileges that apply are the ones already granted to you on the warehouse, enforced per table. To grant or change those privileges, see <a href="https://docs.actian.com/actiandataplatform/Connectivity/User_Management.htm">User Management</a> in the Actian Analytics AI Platform documentation.</p>
-<p><img alt="" src="../assets/connection-url.png" /></p>
 <h2 id="write-operations">Write Operations<a class="headerlink" href="#write-operations" title="Permanent link">&para;</a></h2>
-<p>Write queries are enabled on managed warehouses. Two conditions must be met before a write runs:</p>
+<p>Write queries are enabled on a warehouse. Two conditions must be met before a write runs:</p>
 <ol>
 <li><strong>Your database privileges allow it.</strong> The warehouse enforces your existing grants on each table, so the MCP Server cannot perform any write that your grants do not permit.</li>
 <li><strong>You approve the write.</strong> The server describes the statement and waits for your confirmation before running it.</li>
@@ -2962,6 +2961,7 @@
 <h2 id="related-documentation">Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://actiancorp.github.io/data-platform-docs/User/MCP_Server_Data_Access.html">MCP Server for warehouse data access</a>, for finding the endpoint and the connection requirements in the Actian Analytics AI Platform</li>
+<li><a href="https://actiancorp.github.io/data-platform-docs/User/MCP_Server.html">MCP Server</a>, for creating, starting, stopping, and monitoring warehouses from an MCP client</li>
 </ul>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
@@ -3000,7 +3000,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 09:31:40 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 28, 2026 04:53:59 UTC">August 28, 2026</span>
   </span>
 
     

@@ -1,13 +1,13 @@
 ---
-title: Managed Warehouse
-description: Connect MCP clients to Analytics Engine running as a managed warehouse, where the MCP Server is managed and auto-configured.
+title: SaaS
+description: Connect MCP clients to Analytics Engine powering a warehouse on the Actian Analytics AI Platform, where the MCP Server is configured for you.
 ---
 
-# Actian MCP Server on a Managed Warehouse
+# Actian MCP Server on the Actian Analytics AI Platform
 
-When Analytics Engine runs as a managed warehouse (SaaS offering) on the Actian Analytics AI Platform, the MCP Server is configured automatically. There is nothing to install, no container to run, and no `conf.json` to write. You need only the warehouse endpoint and an MCP client.
+When Analytics Engine powers a warehouse on the Actian Analytics AI Platform, the MCP Server is configured automatically. There is nothing to install, no container to run, and no `conf.json` to write. You need only the warehouse endpoint and an MCP client.
 
-To run the server against a self-managed Analytics Engine instance, see [Actian Analytics Engine](index.md).
+To run the server against a self-hosted Analytics Engine instance, see [Actian Analytics Engine](index.md).
 
 
 ## Connect Your MCP Client
@@ -45,11 +45,10 @@ The MCP client signs you in with an OAuth login against the warehouse. This is d
 
 After you sign in, queries run under your own database identity. The privileges that apply are the ones already granted to you on the warehouse, enforced per table. To grant or change those privileges, see [User Management](https://docs.actian.com/actiandataplatform/Connectivity/User_Management.htm) in the Actian Analytics AI Platform documentation.
 
-![](../assets/connection-url.png)
 
 ## Write Operations
 
-Write queries are enabled on managed warehouses. Two conditions must be met before a write runs:
+Write queries are enabled on a warehouse. Two conditions must be met before a write runs:
 
 1. **Your database privileges allow it.** The warehouse enforces your existing grants on each table, so the MCP Server cannot perform any write that your grants do not permit.
 2. **You approve the write.** The server describes the statement and waits for your confirmation before running it.
@@ -75,7 +74,7 @@ Custom extensions are not supported on a warehouse. To load custom Python extens
 ## Related Documentation
 
 - [MCP Server for warehouse data access](https://actiancorp.github.io/data-platform-docs/User/MCP_Server_Data_Access.html), for finding the endpoint and the connection requirements in the Actian Analytics AI Platform
-
+- [MCP Server](https://actiancorp.github.io/data-platform-docs/User/MCP_Server.html), for creating, starting, stopping, and monitoring warehouses from an MCP client
 
 
 ## Next Steps

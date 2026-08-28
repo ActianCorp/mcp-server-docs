@@ -9,23 +9,23 @@ Connect the MCP-compatible client to the Actian Analytics Engine using the Actia
 
 Analytics Engine runs in two deployments, and the MCP Server supports both:
 
-- **Self-managed.** You run Analytics Engine yourself, on-premises or in your own cloud account, and you deploy the MCP Server alongside it.
-- **Managed warehouse (SaaS offering).** Analytics Engine runs as the engine behind a warehouse on the Actian Analytics AI Platform, and the MCP Server is configured for you.
+- **Self-hosted.** You run Analytics Engine on your own infrastructure, on premises or in your own cloud account, and you deploy the MCP Server alongside it.
+- **SaaS.** Analytics Engine powers the warehouse on the Actian Analytics AI Platform, and the MCP Server is configured for you.
 
 The tools, resources, and prompts are the same in both deployments. Only the setup and the connection details differ.
 
 
 ## Deployment Options
 
-### Self-managed
+### Self-Hosted
 
 You run the MCP Server in a container alongside your own Analytics Engine instance. You supply the database connection details in `conf.json`, secure the endpoint, and manage the server lifecycle. The rest of this page describes that setup.
 
-### Managed warehouse (SaaS offering)
+### SaaS
 
 The MCP Server is deployed and configured with the warehouse. There is nothing to install and no configuration file to write. The client connects to a URL specific to that warehouse and signs in with OAuth, and your existing database privileges apply to every query.
 
-For instructions, see [Managed Warehouse](managed-warehouse.md).
+For instructions, see [SaaS deployment](managed-warehouse.md).
 
 
 ## Capabilities
@@ -47,7 +47,7 @@ The Actian Analytics Engine MCP Server supports the following operations:
 
 ## Prerequisites
 
-The following sections apply to a self-managed deployment. Before starting the server, ensure the following requirements are met:
+The following sections apply to a self-hosted deployment. Before starting the server, ensure the following requirements are met:
 
 - **Container Engine:** Docker installed and running on the host machine.
 - **Database credentials:** Valid access for the Analytics Engine database.

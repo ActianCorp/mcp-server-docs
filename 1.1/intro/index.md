@@ -34,12 +34,21 @@ By removing the need to build individual integrations for every AI use case, the
 
 ## Architecture and Request Flow
 
-### Workflow
+#### Workflow
 
 The Actian MCP Server sits between AI clients and the databases that they need to access.
 
 ```mermaid
-%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '12px', 'fontFamily': 'arial'}}}%%
+%%{init: {
+  'theme': 'default',
+  'themeVariables': {'fontSize': '12px', 'fontFamily': 'arial'},
+  'flowchart': {
+    'subGraphTitleMargin': {'top': 8, 'bottom': 16},
+    'padding': 15,
+    'nodeSpacing': 50,
+    'rankSpacing': 60
+  }
+}}%%
 flowchart TB
     subgraph Clients["MCP Clients"]
         claude["Claude Desktop"]
@@ -51,30 +60,19 @@ flowchart TB
     end
 
     subgraph Transport["Transport Layer"]
-        http["HTTP / SSE
-(Network)"]
+        http["HTTP / SSE<br/>(Network)"]
     end
 
     subgraph Auth["Authentication"]
-        idp["Identity Provider
-(Keycloak / Auth0)"]
-        oauth["OAuth 2.0 / OIDC
-JWT Validation"]
+        idp["Identity Provider<br/>(Keycloak / Auth0)"]
+        oauth["OAuth 2.0 / OIDC<br/>JWT Validation"]
     end
 
     subgraph MCP["Actian MCP Server"]
         direction TB
         core["MCP Protocol Handler"]
-        tools["Tools
-─────────────
-• Execute SQL Queries
-• List Tables & Views
-• Describe Table Schema
-• List Functions"]
-        resources["Resources
-─────────────
-• Schema Metadata
-• Table Definitions"]
+        tools["<b>Tools</b><br/>• Execute SQL Queries<br/>• List Tables and Views<br/>• Describe Table Schema<br/>• List Functions"]
+        resources["<b>Resources</b><br/>• Schema Metadata<br/>• Table Definitions"]
         plugins["Database Plugins"]
         pool["Connection Pool"]
     end
@@ -88,14 +86,9 @@ JWT Validation"]
     end
 
     subgraph Security["Security Controls"]
-        readonly["Query Mode
-(read-only by default)"]
-        writegate["Write Gates
-(query_mode: read-write
-+ mcp:write scope
-+ human approval)"]
-        impersonation["User Impersonation
-(SET SESSION AUTHORIZATION)"]
+        readonly["Query Mode<br/>(read-only by default)"]
+        writegate["Write Gates<br/>(query_mode: read-write<br/>+ mcp:write scope<br/>+ human approval)"]
+        impersonation["User Impersonation<br/>(SET SESSION AUTHORIZATION)"]
         tls["TLS / HTTPS"]
     end
 
@@ -113,6 +106,7 @@ JWT Validation"]
 
     Security -.-> MCP
 ```
+
 
 ### End-to-End Request Flow
 
