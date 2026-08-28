@@ -196,13 +196,41 @@ For Zen, use `{"sql": "..."}` and `{"table": "customers"}` instead. For more inf
 
 ### Connect Using OAuth Authentication
 
-When the server requires OAuth, set `MCP_AUTH=oauth`. Add `MCP_CA_CERT` if the server presents a self-signed certificate:
+When the server requires OAuth, set `MCP_AUTH=oauth`. Add `MCP_CA_CERT` if the server presents a self-signed certificate. The command to set an environment variable, and the quoting the shell requires around the JSON argument, differ by platform:
 
-```bash
-export MCP_AUTH=oauth
-export MCP_CA_CERT=/path/to/server.crt   # only needed for a self-signed certificate
-python hitl_demo_client.py https://mcp.example.com:8000/mcp execute_query '{"query": "SELECT CURRENT_USER"}'
-```
+=== ":material-apple: macOS and Linux"
+
+    ```bash
+    export MCP_AUTH=oauth
+    export MCP_CA_CERT=/path/to/server.crt   # only needed for a self-signed certificate
+    python hitl_demo_client.py https://mcp.example.com:8000/mcp execute_query '{"query": "SELECT CURRENT_USER"}'
+    ```
+
+    Single quotes keep the double quotes inside the JSON intact.
+
+=== ":material-microsoft-windows: Windows (Command Prompt)"
+
+    ```bat
+    set MCP_AUTH=oauth
+    set MCP_CA_CERT=C:\path\to\server.crt
+    python hitl_demo_client.py https://mcp.example.com:8000/mcp execute_query "{\"query\":\"SELECT CURRENT_USER\"}"
+    ```
+
+    Command Prompt uses `set` rather than `export`, and it does not treat single
+    quotes as quoting. Wrap the JSON in double quotes and escape the inner ones
+    with a backslash.
+
+=== ":material-powershell: Windows (PowerShell)"
+
+    ```powershell
+    $env:MCP_AUTH = "oauth"
+    $env:MCP_CA_CERT = "C:\path\to\server.crt"
+    python hitl_demo_client.py https://mcp.example.com:8000/mcp execute_query '{"query": "SELECT CURRENT_USER"}'
+    ```
+
+    PowerShell sets environment variables through `$env:`, and single quotes pass
+    the JSON through unchanged. For longer statements, pass the arguments from a
+    file instead, as shown in [Basic Connection Example](#basic-connection-example).
 
 !!! tip
     When you use OAuth, the script opens your browser automatically to complete the login, and continues after the token exchange finishes. Run the script on a machine that has a web browser.

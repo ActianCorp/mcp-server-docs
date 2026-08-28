@@ -3299,11 +3299,36 @@ Result: {"success": true, "columns": ["name", "email"], "rows": [["Ada", "ada@ex
 </code></pre></div>
 <p>For Zen, use <code>{"sql": "..."}</code> and <code>{"table": "customers"}</code> instead. For more information, see <a href="#parameter-naming-differences">Parameter Naming Differences</a>.</p>
 <h3 id="connect-using-oauth-authentication">Connect Using OAuth Authentication<a class="headerlink" href="#connect-using-oauth-authentication" title="Permanent link">&para;</a></h3>
-<p>When the server requires OAuth, set <code>MCP_AUTH=oauth</code>. Add <code>MCP_CA_CERT</code> if the server presents a self-signed certificate:</p>
+<p>When the server requires OAuth, set <code>MCP_AUTH=oauth</code>. Add <code>MCP_CA_CERT</code> if the server presents a self-signed certificate. The command to set an environment variable, and the quoting the shell requires around the JSON argument, differ by platform:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"/></svg></span> macOS and Linux</label><label for="__tabbed_2_2"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12V6.75l6-1.32v6.48zm17-9v8.75l-10 .15V5.21zM3 13l6 .09v6.81l-6-1.15zm17 .25V22l-10-1.91V13.1z"/></svg></span> Windows (Command Prompt)</label><label for="__tabbed_2_3"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.83 4c.49 0 .8.4.67.89l-3.16 14.22c-.11.49-.59.89-1.08.89H2.17c-.49 0-.8-.4-.67-.89L4.66 4.89C4.77 4.4 5.25 4 5.74 4zm-6 12h-4c-.46 0-.83.38-.83.84 0 .47.37.85.83.85h4c.47 0 .85-.38.85-.85 0-.46-.38-.84-.85-.84m-10.05.28a.87.87 0 0 0-.21 1.22c.28.42.84.5 1.24.23 7.35-5.17 7.4-5.23 7.45-5.26.18-.16.27-.38.28-.6.01-.2-.04-.37-.16-.56L9.46 6.03A.867.867 0 0 0 8.21 6c-.36.32-.38.88-.05 1.24l4.15 4.44z"/></svg></span> Windows (PowerShell)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="language-bash highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">MCP_AUTH</span><span class="o">=</span>oauth
 <span class="nb">export</span><span class="w"> </span><span class="nv">MCP_CA_CERT</span><span class="o">=</span>/path/to/server.crt<span class="w">   </span><span class="c1"># only needed for a self-signed certificate</span>
 python<span class="w"> </span>hitl_demo_client.py<span class="w"> </span>https://mcp.example.com:8000/mcp<span class="w"> </span>execute_query<span class="w"> </span><span class="s1">'{"query": "SELECT CURRENT_USER"}'</span>
 </code></pre></div>
+<p>Single quotes keep the double quotes inside the JSON intact.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-bat highlight"><pre><span></span><code><span class="k">set</span> <span class="nv">MCP_AUTH</span><span class="p">=</span>oauth
+<span class="k">set</span> <span class="nv">MCP_CA_CERT</span><span class="p">=</span>C:\path\to\server.crt
+python hitl_demo_client.py https://mcp.example.com:8000/mcp execute_query <span class="s2">"{\"</span>query\<span class="s2">":\"</span>SELECT CURRENT_USER\<span class="s2">"}"</span>
+</code></pre></div>
+<p>Command Prompt uses <code>set</code> rather than <code>export</code>, and it does not treat single
+quotes as quoting. Wrap the JSON in double quotes and escape the inner ones
+with a backslash.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-powershell highlight"><pre><span></span><code><span class="nv">$env:MCP_AUTH</span> <span class="p">=</span> <span class="s2">"oauth"</span>
+<span class="nv">$env:MCP_CA_CERT</span> <span class="p">=</span> <span class="s2">"C:\path\to\server.crt"</span>
+<span class="n">python</span> <span class="n">hitl_demo_client</span><span class="p">.</span><span class="n">py</span> <span class="n">https</span><span class="p">://</span><span class="n">mcp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="p">:</span><span class="n">8000</span><span class="p">/</span><span class="n">mcp</span> <span class="n">execute_query</span> <span class="s1">'{"query": "SELECT CURRENT_USER"}'</span>
+</code></pre></div>
+<p>PowerShell sets environment variables through <code>$env:</code>, and single quotes pass
+the JSON through unchanged. For longer statements, pass the arguments from a
+file instead, as shown in <a href="#basic-connection-example">Basic Connection Example</a>.</p>
+</div>
+</div>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>When you use OAuth, the script opens your browser automatically to complete the login, and continues after the token exchange finishes. Run the script on a machine that has a web browser.</p>
@@ -3349,7 +3374,7 @@ information about configuring a persistent token store, see the
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 28, 2026 11:10:31 UTC">August 28, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 28, 2026 11:33:28 UTC">August 28, 2026</span>
   </span>
 
     
