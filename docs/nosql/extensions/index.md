@@ -27,6 +27,9 @@ A tool argument does not have to be a scalar. A record, a POJO, a list or set of
 
 Handlers never serialize their own return values — the loader does it from the method's declared return type, so an extension needs no JSON library of its own.
 
+!!! warning "Render database field values with `ExtensionValues.jsonSafe`"
+    What the loader cannot decide is how a raw database field value should be rendered. An extension reads through its own `EntityManager` and builds its own result, so nothing applies the [rendering rules the built-in read tools follow](../tools/index.md) on its behalf. Pass every scalar field value — and every element of a collection, array, or map you render — through `ExtensionValues.jsonSafe` before returning it. It renders `long` and `java.math.BigInteger` values as decimal strings, because a bare JSON number is silently rounded above 2^53 by a JavaScript client's `JSON.parse`, and it leaves every other value untouched, so a timestamp reaches the loader intact and is rendered ISO-8601 with an offset rather than a hand-stringified form no client parses as a timestamp. Both mistakes are silent — the output looks right in every log and is wrong only in the client. Flattening references to LOID strings, as the built-in tools do, remains your own job; the SDK example's `renderValue` shows the split.
+
 ## Authoring Overview
 
 Every extension implements `McpExtension` and names its implementation in a `META-INF/services` file. That interface is how the server finds the extension at all: discovery runs through `ServiceLoader`, not through a class name in configuration.
