@@ -7,13 +7,12 @@ description: New features and changes in Actian MCP Server 1.1.0, including unif
 
 The release of Actian MCP Server, version 1.1.0, offers the following new features and changes:
 
-- [What's New in Actian MCP Server 1.1.0](#whats-new-in-actian-mcp-server-110)
-  - [Unified Query Modes](#unified-query-modes)
-  - [HITL Write Approval Path](#hitl-write-approval-path)
-  - [Warehouse Sidecar Support](#warehouse-sidecar-support)
-  - [Custom Extension Support](#custom-extension-support)
-  - [Next Steps](#next-steps)
+- [Unified Query Modes](#unified-query-modes)
+- [HITL Write Approval Path](#hitl-write-approval-path)
+- [Warehouse Sidecar Support](#warehouse-sidecar-support)
+- [Custom Extension Support](#custom-extension-support)
 
+  
 ## Unified Query Modes
 
 The `conf.json` file supports exactly two query modes: `read-only`, which is the default, and `read-write`. In `read-only` mode, the server permits only read queries. In `read-write` mode, it also permits the Data Manipulation Language (DML) statements `INSERT`, `UPDATE`, and `DELETE`.
@@ -35,9 +34,9 @@ For more information, see [Authorizing a Write](../ingres/write-support.md#autho
 
 ## Warehouse Sidecar Support
 
-The MCP Server deploys as a sidecar alongside the warehouse leader pod. Clients connect using only the MCP server URL, and no separate Auth0 setup is required. Internally, the server acts as an OAuth2 Authorization Server proxy and hides the Auth0 token exchange from the clients entirely.
+In the SaaS deployment, the MCP Server deploys as a sidecar alongside the warehouse leader pod on the Actian Analytics AI Platform. Clients connect using only the MCP server URL, and no separate Auth0 setup is required. Internally, the server acts as an OAuth2 Authorization Server proxy and hides the Auth0 token exchange from the clients entirely.
 
-For more information, see [Actian MCP Server on a Managed Warehouse](../analytics-engine/managed-warehouse.md).
+For more information, see [Actian MCP Server for Analytics Engine (SaaS)](../analytics-engine/saas.md).
 
 ## Custom Extension Support
 

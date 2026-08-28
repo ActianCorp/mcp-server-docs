@@ -98,7 +98,7 @@ The server records what it skipped. At startup it logs a warning banner stating 
 
 <div class="grid cards" markdown>
 
-- :material-chart-box: **[Analytics Engine configuration](index.md#configuration-reference)**  
+- :material-chart-box: **[Analytics Engine configuration](self-hosted.md#configuration-reference)**  
   The `query_mode` and `write_confirmation` fields for Actian Analytics Engine.
 
 - :material-shield-check: **[Authentication](authentication/index.md)**  

@@ -29,7 +29,7 @@ Each Actian database uses a specific container image that is preconfigured with 
 
 ## Step 2: Create a Configuration File
 
-Each SQL database requires a `conf.json` file that contains the connection details. Two cases differ: Actian NoSQL is configured through `application.properties` instead, and an Analytics Engine warehouse needs no configuration file at all, because the MCP Server is already configured for it.
+Each self-hosted SQL database requires a `conf.json` file that contains the connection details. Two cases differ: Actian NoSQL is configured through `application.properties` instead, and the SaaS deployment of Analytics Engine needs no configuration file at all, because the MCP Server is configured for you.
 
 Each database has unique settings. For more information, see the database configuration document:
 
@@ -37,8 +37,8 @@ Each database has unique settings. For more information, see the database config
 - [HCL Informix® Configuration](../hcl-informix/index.md#configuration)
 - [Zen Configuration](../zen/index.md#configuration)
 - [NoSQL Configuration](../nosql/index.md#configuration)
-- [Analytics Engine Configuration](../analytics-engine/index.md#configuration)
-- [Managed Warehouse](../analytics-engine/managed-warehouse.md) (no configuration file required)
+- [Analytics Engine Configuration](../analytics-engine/self-hosted.md#configuration)
+- [SaaS deployment](../analytics-engine/saas.md) (no configuration file required)
 
 All database configurations except NoSQL share the following standard MCP server fields:
 
