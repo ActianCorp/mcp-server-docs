@@ -7,10 +7,10 @@ description: Connect MCP clients to Actian Analytics Engine for schema explorati
 
 Connect the MCP-compatible client to the Actian Analytics Engine using the Actian MCP Server. With this setup, the client can explore schema metadata and run SQL queries through a standard interface. Queries are read-only unless you enable write mode. The server manages connection pooling, response formatting, and schema discovery automatically.
 
-Analytics Engine runs in two deployments, and the MCP Server supports both:
+The Analytics Engine runs in two deployments, and the MCP Server supports both:
 
-- **Self-hosted.** You run Analytics Engine on your own infrastructure, on premises or in your own cloud account, and you deploy the MCP Server alongside it.
-- **SaaS.** Analytics Engine powers the warehouse on the Actian Analytics AI Platform, and the MCP Server is configured for you.
+- **Self-hosted.** The Analytics Engine runs on your own infrastructure, on premises or in your own cloud environment, and you deploy the MCP Server alongside it.
+- **SaaS.** The Analytics Engine powers the warehouse on the Actian Analytics AI Platform, and the MCP Server is configured for you.
 
 The tools, resources, and prompts are the same in both deployments. Only the setup and the connection details differ.
 
