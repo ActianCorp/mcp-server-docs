@@ -18,7 +18,7 @@ The MCP endpoint for a warehouse is:
 https://<warehouse-host>/mcp
 ```
 
-Use the same warehouse host shown on the warehouse **Connections** page. For the steps to find it, see [MCP Server for warehouse data access](https://actiancorp.github.io/data-platform-docs/User/MCP_Server_Data_Access.html) in the Actian Analytics AI Platform documentation.
+Use the same warehouse host shown on the warehouse **Connections** page. For the steps to find it, see [MCP Server for warehouse data access](https://docs.actian.com/actiandataplatform/User/MCP_Server_Data_Access.html) in the Actian Analytics AI Platform documentation.
 
 For example, in Visual Studio Code:
 
@@ -74,8 +74,8 @@ Custom extensions are not supported on a warehouse. To load custom Python extens
 
 ## Related Documentation
 
-- [MCP Server for warehouse data access](https://actiancorp.github.io/data-platform-docs/User/MCP_Server_Data_Access.html), for finding the endpoint and the connection requirements in the Actian Analytics AI Platform
-- [MCP Server](https://actiancorp.github.io/data-platform-docs/User/MCP_Server.html), for creating, starting, stopping, and monitoring warehouses from an MCP client
+- [MCP Server for warehouse data access](https://docs.actian.com/actiandataplatform/User/MCP_Server_Data_Access.html), for finding the endpoint and the connection requirements in the Actian Analytics AI Platform
+- [MCP Server](https://docs.actian.com/actiandataplatform/User/MCP_Server.html), for creating, starting, stopping, and monitoring warehouses from an MCP client
 
 
 ## Next Steps
