@@ -36,14 +36,14 @@ For example, in Visual Studio Code:
 For Claude Desktop, GitHub Copilot, and Python client formats, see [Connecting MCP Clients](../mcp-clients/index.md).
 
 !!! note "Before you connect"
-    The endpoint is available only on warehouses that have MCP enabled, and only while the warehouse is running. Warehouse access is also restricted by IP address, and this applies to MCP connections. Make sure the machine running your MCP client falls within the warehouse IP allow list. For more information, see [Data Access and Authentication](https://docs.actian.com/actiandataplatform/Security/Data_Access_and_Authentication.htm) in the Actian Analytics AI Platform documentation.
+    The endpoint is available only on warehouses that have MCP enabled, and only while the warehouse is running. Warehouse access is also restricted by IP address, and this applies to MCP connections. Make sure the machine running your MCP client falls within the warehouse IP allow list. For more information, see [Data Access and Authentication](https://docs.actian.com/actiandataplatform/Security/Data_Access_and_Authentication.html) in the Actian Analytics AI Platform documentation.
 
 
 ## Authentication
 
 The MCP client signs you in with an OAuth login against the warehouse. This is different from the other connection options on the **Connections** page, which use a database username and password.
 
-After you sign in, queries run under your own database identity. The privileges that apply are the ones already granted to you on the warehouse, enforced per table. To grant or change those privileges, see [User Management](https://docs.actian.com/actiandataplatform/Connectivity/User_Management.htm) in the Actian Analytics AI Platform documentation.
+After you sign in, queries run under your own database identity. The privileges that apply are the ones already granted to you on the warehouse, enforced per table. To grant or change those privileges, see [User Management](https://docs.actian.com/actiandataplatform/Connectivity/User_Management.html) in the Actian Analytics AI Platform documentation.
 
 ![](../assets/connection-url.png)
 
