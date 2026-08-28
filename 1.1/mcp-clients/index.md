@@ -34,15 +34,15 @@ When write support is enabled, the server asks a person to approve each write be
 
     On Actian NoSQL, such a client is never offered the write tools in the first place: they are absent from its tool list, and calling one fails as an unknown tool. See [Why the write tools may not appear](../nosql/write-support.md#missing-write-tools).
 
-#### Client Configuration Examples
+## Client Configuration Examples
 
-You can connect to popular AI clients like Claude Desktop, Cursor, fast-agent, and Codex using the connection URL.
+You can connect popular AI clients, such as Claude Desktop, Cursor, fast-agent, and Codex, using the connection URL.
 
 === ":material-brain: Claude Desktop"
 
     ### Connecting Claude Desktop to the Actian MCP Server
 
-    Claude Desktop connects to the Actian MCP Server via the `mcp-remote` bridge. This connection requires Node.js (version 18 or later) to be installed on the local machine.
+    Claude Desktop connects to the Actian MCP Server through the `mcp-remote` bridge. This connection requires Node.js (version 18 or later) to be installed on the local machine.
 
     #### Prerequisites
 
@@ -56,7 +56,7 @@ You can connect to popular AI clients like Claude Desktop, Cursor, fast-agent, a
     1. Open the Claude Desktop configuration file located at the following path:
         - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
         - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
-    2. Add the following entry under the `mcpServers` section and replace the placeholder URL with the specific server address:
+    2. Add the following entry under the `mcpServers` section and replace the placeholder URL with the server address:
 
         ```json
         "actian-mcp-server": {
@@ -125,12 +125,12 @@ You can connect to popular AI clients like Claude Desktop, Cursor, fast-agent, a
 
     For a remote deployment, replace `localhost` and `<port>` with the public hostname and port of the Actian MCP Server.
 
-## Connect Using Python Client
+## Connect Using a Python Client
 
 !!! warning "Actian NoSQL"
-    Actian NoSQL uses different tools (JPQL-based queries, LOID fetches, etc) and a different authentication model. For a NoSQL-specific Python client example, see [Connect Using a Python Client](../nosql/index.md#connect-using-a-python-client).
+    Actian NoSQL uses different tools, such as JPQL-based queries and LOID fetches, and a different authentication model. For a NoSQL-specific Python client example, see [Connect Using a Python Client](../nosql/index.md#connect-using-a-python-client).
 
-This section demonstrates how to connect to a running Actian MCP Server instance using the example Python client [`hitl_demo_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py). It works for read-only queries and, on clients that cannot render a write-approval prompt (Claude Desktop, GitHub Copilot), for testing write-approval-gated tools directly. This approach supports all database plugins (Ingres, HCL Informix®, Zen, and Analytics Engine).
+This section demonstrates how to connect to a running Actian MCP Server instance using the example Python client [`hitl_demo_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py). The script works for read-only queries. On clients that cannot render a write-approval prompt, such as Claude Desktop and GitHub Copilot, it also tests write-approval-gated tools directly. This approach supports all database plugins (Ingres, HCL Informix®, Zen, and Analytics Engine).
 
 ### Prerequisites
 
@@ -148,7 +148,7 @@ This section demonstrates how to connect to a running Actian MCP Server instance
 
 ### Parameter Naming Differences
 
-Most tools share the same interface across databases and the parameter names may vary depending on the specific plugin.
+Most tools share the same interface across databases, but the parameter names vary by plugin.
 
 | Tool | Product | Parameter |
 |------|---------|-----------|
@@ -181,9 +181,9 @@ Calling execute_query({'query': 'SELECT name, email FROM customers'}) ...
 Result: {"success": true, "columns": ["name", "email"], "rows": [["Ada", "ada@example.com"]], "row_count": 1}
 ```
 
-The tool count and list depend on your deployment — a server with custom extensions loaded (like `adjust_stock` below) shows more.
+The tool count and list depend on the deployment — a server with custom extensions loaded, such as `adjust_stock` below, shows more.
 
-Quoting JSON that contains SQL is painful on PowerShell — pass the arguments from a file or stdin instead:
+In PowerShell, quoting JSON that contains SQL is error-prone. Pass the arguments from a file or standard input instead:
 
 ```powershell
 python hitl_demo_client.py http://localhost:8000/mcp execute_query @args.json
@@ -222,14 +222,6 @@ python hitl_demo_client.py http://localhost:8000/mcp adjust_stock '{"product_id"
 ```
 
 See [Answering the Approval Prompt](../ingres/extensions/examples.md#answering-the-approval-prompt) for the full write-approval walkthrough.
-
-!!! note "In-memory token storage warning"
-    The FastMCP client may print a `UserWarning` about using in-memory OAuth
-    token storage. This is expected: by default the client does not persist
-    tokens across restarts, so you will need to complete the browser login
-    again each time you run the script. It does not indicate a connection
-    problem. See the [FastMCP OAuth documentation](https://gofastmcp.com/clients/auth/oauth#token-storage)
-    for configuring a persistent token store.
 
 ## Deployment Considerations
 
