@@ -3,11 +3,11 @@ title: SaaS
 description: Connect MCP clients to Analytics Engine powering a warehouse on the Actian Analytics AI Platform, where the MCP Server is configured for you.
 ---
 
-# Actian MCP Server on the Actian Analytics AI Platform
+# Actian MCP Server for Analytics Engine (SaaS)
 
 When Analytics Engine powers a warehouse on the Actian Analytics AI Platform, the MCP Server is configured automatically. There is nothing to install, no container to run, and no `conf.json` to write. You need only the warehouse endpoint and an MCP client.
 
-To run the server against a self-hosted Analytics Engine instance, see [Actian Analytics Engine](index.md).
+To run the server against an Analytics Engine instance that you host yourself, see [Self-Hosted](self-hosted.md).
 
 
 ## Connect Your MCP Client
@@ -45,6 +45,7 @@ The MCP client signs you in with an OAuth login against the warehouse. This is d
 
 After you sign in, queries run under your own database identity. The privileges that apply are the ones already granted to you on the warehouse, enforced per table. To grant or change those privileges, see [User Management](https://docs.actian.com/actiandataplatform/Connectivity/User_Management.htm) in the Actian Analytics AI Platform documentation.
 
+![](../assets/connection-url.png)
 
 ## Write Operations
 
@@ -68,7 +69,7 @@ The following are configured and maintained by Actian, and cannot be changed for
 - Query mode, row limits, and log verbosity
 - The OAuth provider used for sign-in
 
-Custom extensions are not supported on a warehouse. To load custom Python extensions, run the server using the [Analytics Engine](index.md) configuration.
+Custom extensions are not supported on a warehouse. To load custom Python extensions, run the server yourself. See [Self-Hosted](self-hosted.md).
 
 
 ## Related Documentation
