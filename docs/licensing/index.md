@@ -5,15 +5,6 @@ description: Software Bill of Materials (SBOM) and third-party attribution notic
 
 # Licensing & Third-Party Notices
 
-!!! warning "Draft — pending legal review"
-    The files linked from this page are **drafts generated for review, not certified compliance artifacts.** Do not treat them as final until this notice is removed. Specifically still open:
-
-    - Legal review of the third-party NOTICE files has not been completed.
-    - The official HCLSoftware `hsvt` SBOM validator has not yet been run against these files.
-    - The product's SCAL (Supply Chain Assurance Level) has not been confirmed, which affects whether component hashes are required.
-    - A small number of components (mostly the base image's system `pip` and its vendored dependencies) have no machine-readable license and are listed as gaps in each NOTICE file rather than given a fabricated license.
-    - The `actian-mcp-server` package's own version/license entry was corrected by hand for this release rather than produced by a rebuild; this is noted inline in both the SBOM (as a `properties` entry) and the NOTICE file. A future rebuild will produce this correctly without manual correction.
-
 Each Actian MCP Server for Databases container image ships with a [CycloneDX](https://cyclonedx.org/) 1.6 Software Bill of Materials (SBOM) and a corresponding third-party NOTICE file listing every open-source and third-party component included in the image, together with its license and, where available, the applicable copyright notice and license text.
 
 ## Release 1.1.0
