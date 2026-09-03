@@ -2,242 +2,242 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/saas.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/self-hosted.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/write-support.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/authentication/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/authentication/auth0.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/authentication/keycloak.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/extensions/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/extensions/api-reference.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/extensions/examples.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/prompts/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/resources/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/analytics-engine/tools/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/get-started/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/write-support.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/authentication/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/authentication/auth0.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/authentication/keycloak.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/extensions/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/extensions/api-reference.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/extensions/examples.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/prompts/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/resources/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/hcl-informix/tools/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/write-support.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/authentication/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/authentication/auth0.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/authentication/keycloak.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/extensions/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/extensions/api-reference.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/extensions/examples.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/prompts/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/resources/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/ingres/tools/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/intro/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/mcp-clients/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/nosql/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/nosql/write-support.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/nosql/authentication/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/nosql/authentication/auth0/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/nosql/authentication/keycloak/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/nosql/extensions/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/nosql/prompts/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/nosql/resources/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/nosql/tools/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/whats-new/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/write-support.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/authentication/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/authentication/auth0.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/authentication/keycloak.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/extensions/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/extensions/api-reference.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/extensions/examples.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/prompts/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/resources/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.1/zen/tools/index.html</loc>
-         <lastmod>2026-08-28</lastmod>
+         <lastmod>2026-09-03</lastmod>
     </url>
 </urlset>

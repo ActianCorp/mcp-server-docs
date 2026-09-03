@@ -64,4 +64,13 @@ python hitl_demo_client.py http://localhost:8000/mcp \
     adjust_stock '{"product_id": 1, "delta": 5}'
 ```
 
+On PowerShell, no inline quoting form of the JSON argument works reliably across
+PowerShell versions — pass the arguments from a file instead, and quote
+"@args.json" itself, since a bare @ is PowerShell's splatting operator:
+
+```powershell
+'{"product_id": 1, "delta": 5}' | Set-Content -Encoding utf8 args.json
+python hitl_demo_client.py http://localhost:8000/mcp adjust_stock "@args.json"
+```
+
 See the [client README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/README.md) for the environment variables it accepts, and [Connecting MCP Clients](../../mcp-clients/index.md#elicitation-support-for-write-approval) for which clients support the prompt.
