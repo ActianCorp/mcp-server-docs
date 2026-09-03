@@ -7,20 +7,20 @@ Connects to an Actian MCP server, calls a tool, and when the tool asks for
 approval (via request_write_confirmation -> MCP elicitation) it prints the
 request and asks YOU at the console to approve or decline. Use it to exercise
 the human-in-the-loop tools (adjust_stock, tag_vip_customer) on a server whose
-normal client can't render the approval prompt (Claude Desktop, Copilot Chat).
+normal client cannot render the approval prompt (Claude Desktop, Copilot Chat).
 
 Requires: pip install fastmcp
 
 Usage:
     python hitl_demo_client.py <server_url> <tool_name> ['{"json": "args"}']
 
-Tool args can also come from a file or stdin, which avoids quoting JSON that
-contains SQL:
+Tool args can also come from a file or stdin. This approach avoids shell
+quoting issues for JSON that contains SQL:
     python hitl_demo_client.py <url> execute_write_query @args.json
     Get-Content args.json | python hitl_demo_client.py <url> execute_write_query -
 
-Quote the argument on PowerShell -- a bare @ is the splatting operator, so the
-line fails to parse before Python starts:
+In PowerShell, always quote this argument. A bare @ is the splatting operator,
+so the line fails to parse before Python starts:
     python hitl_demo_client.py <url> execute_write_query "@args.json"
 
 Plain HTTP, no auth:
