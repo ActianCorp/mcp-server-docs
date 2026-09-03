@@ -185,14 +185,27 @@ Result: {"success": true, "columns": ["name", "email"], "rows": [["Ada", "ada@ex
 
 The tool count and the tool list depend on the deployment. A server with custom extensions loaded, such as `adjust_stock` described below, shows more tools.
 
-In PowerShell, quoting JSON that contains SQL is error-prone. Pass the arguments from a file or from standard input instead:
+In PowerShell, quoting JSON inline is unreliable — Windows PowerShell 5.1 and PowerShell 7 handle embedded double quotes differently, and neither inline form works on both. Pass the arguments from a file or from standard input instead:
 
 ```powershell
-python hitl_demo_client.py http://localhost:8000/mcp execute_query @args.json
+python hitl_demo_client.py http://localhost:8000/mcp execute_query "@args.json"
 Get-Content args.json | python hitl_demo_client.py http://localhost:8000/mcp execute_query -
 ```
 
-For Zen, use `{"sql": "..."}` and `{"table": "customers"}` instead. For more information, see [Parameter Naming Differences](#parameter-naming-differences).
+Quote `"@args.json"` — a bare `@` is PowerShell's splatting operator, and the line fails to parse without the quotes.
+
+For Zen, the tool takes different parameter names and `SELECT CURRENT_USER` is not supported:
+
+```bash
+python hitl_demo_client.py http://localhost:8000/mcp execute_query '{"sql": "SELECT DATABASE()"}'
+```
+
+```powershell
+'{"sql": "SELECT DATABASE()"}' | Set-Content -Encoding utf8 args.json
+python hitl_demo_client.py http://localhost:8000/mcp execute_query "@args.json"
+```
+
+See [Parameter Naming Differences](#parameter-naming-differences) for the full list of substitutions.
 
 ### Connect Using OAuth Authentication
 
@@ -225,12 +238,17 @@ When the server requires OAuth, set `MCP_AUTH=oauth`. Add `MCP_CA_CERT` if the s
     ```powershell
     $env:MCP_AUTH = "oauth"
     $env:MCP_CA_CERT = "C:\path\to\server.crt"
-    python hitl_demo_client.py https://mcp.example.com:8000/mcp execute_query '{"query": "SELECT CURRENT_USER"}'
+    '{"query": "SELECT CURRENT_USER"}' | Set-Content -Encoding utf8 args.json
+    python hitl_demo_client.py https://mcp.example.com:8000/mcp execute_query "@args.json"
     ```
 
-    PowerShell sets environment variables through `$env:`, and single quotes pass
-    the JSON through unchanged. For longer statements, pass the arguments from a
-    file instead, as shown in [Basic Connection Example](#basic-connection-example).
+    PowerShell sets environment variables through `$env:`. No inline quoting
+    form of the JSON argument works reliably across PowerShell versions — Windows
+    PowerShell 5.1 strips the double quotes before the argument reaches Python,
+    while PowerShell 7 handles that form correctly but breaks on backslash-escaped
+    quotes instead. Passing the argument from a file avoids the difference
+    entirely; quote `"@args.json"` itself, since a bare `@` is PowerShell's
+    splatting operator.
 
 !!! tip
     When you use OAuth, the script opens your browser automatically to complete the login, and continues after the token exchange finishes. Run the script on a machine that has a web browser.
@@ -249,6 +267,13 @@ When write support is enabled and the connected client cannot render an approval
 
 ```bash
 python hitl_demo_client.py http://localhost:8000/mcp adjust_stock '{"product_id": 1, "delta": 5}'
+```
+
+On PowerShell, pass the arguments from a file for the same reason described in [Basic Connection Example](#basic-connection-example):
+
+```powershell
+'{"product_id": 1, "delta": 5}' | Set-Content -Encoding utf8 args.json
+python hitl_demo_client.py http://localhost:8000/mcp adjust_stock "@args.json"
 ```
 
 For the full write-approval walkthrough, see [Answering the Approval Prompt](../ingres/extensions/examples.md#answering-the-approval-prompt).

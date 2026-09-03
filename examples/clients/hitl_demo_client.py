@@ -14,10 +14,14 @@ Requires: pip install fastmcp
 Usage:
     python hitl_demo_client.py <server_url> <tool_name> ['{"json": "args"}']
 
-Tool args can also come from a file or stdin, which is far easier on PowerShell
-than quoting JSON that contains SQL:
+Tool args can also come from a file or stdin, which avoids quoting JSON that
+contains SQL:
     python hitl_demo_client.py <url> execute_write_query @args.json
     Get-Content args.json | python hitl_demo_client.py <url> execute_write_query -
+
+Quote the argument on PowerShell -- a bare @ is the splatting operator, so the
+line fails to parse before Python starts:
+    python hitl_demo_client.py <url> execute_write_query "@args.json"
 
 Plain HTTP, no auth:
     python hitl_demo_client.py http://localhost:8000/mcp execute_query '{"query": "select * from customer limit 1"}'
