@@ -185,14 +185,17 @@ Result: {"success": true, "columns": ["name", "email"], "rows": [["Ada", "ada@ex
 
 The tool count and the tool list depend on the deployment. A server with custom extensions loaded, such as `adjust_stock` described below, shows more tools.
 
-In PowerShell, quoting JSON inline is unreliable — Windows PowerShell 5.1 and PowerShell 7 handle embedded double quotes differently, and neither inline form works on both. Pass the arguments from a file or from standard input instead:
+In PowerShell, do not pass JSON arguments inline. Windows PowerShell 5.1 and
+PowerShell 7 parse embedded double quotes differently, so a command that works
+in one version can fail in the other. Use a file or standard input instead:
 
 ```powershell
 python hitl_demo_client.py http://localhost:8000/mcp execute_query "@args.json"
 Get-Content args.json | python hitl_demo_client.py http://localhost:8000/mcp execute_query -
 ```
 
-Quote `"@args.json"` — a bare `@` is PowerShell's splatting operator, and the line fails to parse without the quotes.
+Always quote `"@args.json"`. A bare `@` is PowerShell's splatting operator,
+and the line fails to parse without the quotes.
 
 For Zen, the tool takes different parameter names and `SELECT CURRENT_USER` is not supported:
 
@@ -242,13 +245,12 @@ When the server requires OAuth, set `MCP_AUTH=oauth`. Add `MCP_CA_CERT` if the s
     python hitl_demo_client.py https://mcp.example.com:8000/mcp execute_query "@args.json"
     ```
 
-    PowerShell sets environment variables through `$env:`. No inline quoting
-    form of the JSON argument works reliably across PowerShell versions — Windows
-    PowerShell 5.1 strips the double quotes before the argument reaches Python,
-    while PowerShell 7 handles that form correctly but breaks on backslash-escaped
-    quotes instead. Passing the argument from a file avoids the difference
-    entirely; quote `"@args.json"` itself, since a bare `@` is PowerShell's
-    splatting operator.
+    PowerShell sets environment variables through `$env:`. Do not pass JSON
+    arguments inline. Windows PowerShell 5.1 strips the embedded double quotes
+    before Python receives the argument, while PowerShell 7 can fail on the
+    backslash-escaped form. Use a file to avoid cross-version differences.
+    Always quote `"@args.json"`, because a bare `@` is PowerShell's splatting
+    operator.
 
 !!! tip
     When you use OAuth, the script opens your browser automatically to complete the login, and continues after the token exchange finishes. Run the script on a machine that has a web browser.

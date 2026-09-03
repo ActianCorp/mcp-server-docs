@@ -64,9 +64,9 @@ python hitl_demo_client.py http://localhost:8000/mcp \
     adjust_stock '{"product_id": 1, "delta": 5}'
 ```
 
-On PowerShell, no inline quoting form of the JSON argument works reliably across
-PowerShell versions — pass the arguments from a file instead, and quote
-"@args.json" itself, since a bare @ is PowerShell's splatting operator:
+In PowerShell, do not pass JSON arguments inline. Windows PowerShell 5.1 and
+PowerShell 7 parse quoted JSON differently. Use a file instead, and quote
+`"@args.json"` because a bare `@` is PowerShell's splatting operator:
 
 ```powershell
 '{"product_id": 1, "delta": 5}' | Set-Content -Encoding utf8 args.json
