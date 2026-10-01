@@ -34,7 +34,7 @@ pipeline {
     }
 
     environment {
-        DOC_VERSION=1.0
+        DOC_VERSION=1.1
         DOCNAME="${JOB_NAME}"
         DOC_NAME_VERSION="mcp-server-${DOC_VERSION}.doc"
 
@@ -59,9 +59,9 @@ pipeline {
                     env.REPO_COMMIT_URL_ANCHOR = "[${GIT_COMMIT[0..6]}](https://github.com/ActianCorp/mcp-server-docs/commit/${GIT_COMMIT})"
                     currentBuild.description = "**Commit**: ${REPO_COMMIT_URL_ANCHOR}"
 
-                    echo "JOB_BASE_NAME:             [" + JOB_BASE_NAME + "]"
-                    echo "JOB_NAME:                  [" + JOB_NAME + "]"
-                    echo "BUILD_NUMBER:              [" + BUILD_NUMBER + "]"
+                    echo "JOB_BASE_NAME:            [" + JOB_BASE_NAME + "]"
+                    echo "JOB_NAME:                 [" + JOB_NAME + "]"
+                    echo "BUILD_NUMBER:             [" + BUILD_NUMBER + "]"
                     echo "BRANCH_NAME:              [" + BRANCH_NAME + "]"
                     echo "DEVOPS_BUILD:             [" + DEVOPS_BUILD + "]"
                     echo "GIT_COMMIT:               [" + GIT_COMMIT + "]"
