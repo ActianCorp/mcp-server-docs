@@ -110,8 +110,8 @@ pipeline {
             steps {
                 unstash 'output.zip'
                 fileOperations([fileUnZipOperation(filePath: 'output.zip', targetLocation: '.')])
-                bat "move D:\\Sites\\mcp-server D:\\backups\\mcp-server-${DOC_VERSION}-${BUILD_NUMBER}.backup"
-                bat "move ${WORKSPACE}\\site D:\\Sites\\mcp-server"
+                bat "move D:\\Sites\\mcp-server\\${DOC_VERSION} D:\\backups\\mcp-server-${DOC_VERSION}-${BUILD_NUMBER}.backup"
+                bat "move ${WORKSPACE}\\site D:\\Sites\\mcp-server\\${DOC_VERSION}"
             }
         }
     }
