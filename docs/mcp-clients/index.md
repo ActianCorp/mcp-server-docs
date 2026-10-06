@@ -18,7 +18,7 @@ Identify the deployment type to determine the connection URL. The standard endpo
 
 This section applies only when write support is enabled on the server. On a read-only server, every client in the following table behaves the same way.
 
-When write support is enabled, the server asks a person to approve each write before it runs. The server sends that request through the Model Context Protocol (MCP) elicitation capability, which not every client implements.
+When write support is enabled, the server asks a person to approve each write before it runs. The server sends that request through the Model Context Protocol (MCP) elicitation capability, which not every client implements. Clients on the 2026-07-28 protocol answer the confirmation by repeating the tool call, as described on the [Protocol Versions](../nosql/protocol-versions.md#write-confirmation-on-each-protocol) page.
 
 | Client | Displays the write approval prompt |
 |--------|------------------------------------|
