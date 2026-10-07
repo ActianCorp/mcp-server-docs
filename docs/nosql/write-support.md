@@ -137,7 +137,7 @@ WARN  Confirmation not received within 60s; rejecting operation.
 
 Sixty seconds suits someone watching the conversation as it happens. Raise it when approvals go to a person who may be away from the screen. On the stateful protocol the tool call stays open for the whole wait, so the agent making the request is blocked until somebody answers or the timeout closes it. Lower it if you would rather a batch fail fast than sit pending.
 
-For a client on the stateless 2026-07-28 protocol, the same setting is how long the person has to answer before the question must be asked again. The tool call does not stay open: the first call returns the question, and the client repeats the call with the answer. See [Protocol Versions](protocol-versions.md#write-confirmation-on-each-protocol).
+For a client on the stateless 2026-07-28 protocol, the same setting is how long the person has to answer; a later answer is refused and the operation must be run again. The tool call does not stay open: the first call returns the question, and the client repeats the call with the answer. See [Protocol Versions](protocol-versions.md#write-confirmation-on-each-protocol).
 
 The timeout plays no part when `nsql.writes.confirmation-required` is `false`, because no prompt is sent.
 

@@ -31,15 +31,15 @@ For a stateless client, the approval the server records when it asks has these p
 
 - It is valid only for that exact call: the same tool, the same arguments, and, when authentication is on, the same signed-in user.
 - It can be used once.
-- It lasts `nsql.writes.confirmation-timeout-seconds` (default `60`). For a stateless client this is how long the person has to answer before the question must be asked again.
-- A changed argument, an expired, unknown, or already used approval, or a "yes" sent without having been asked, is asked again, and nothing is written.
+- It lasts `nsql.writes.confirmation-timeout-seconds` (default `60`). For a stateless client this is how long the person has to answer; a later answer is refused and the operation must be run again.
+- A retry with a changed argument, or with an expired, unknown, or already used approval, is refused and nothing is written. The client must run the operation again from the start, which asks the question afresh. A "yes" sent without an approval is not accepted either: the server asks the question instead of writing.
 - Declining and cancelling are refused with the same messages as on the stateful protocol, for example `Create not performed: the client declined the confirmation prompt.`
 - A client that declares only URL-mode elicitation cannot show the confirmation form, so it never sees the write tools, on either protocol. For a stateless client this is decided on every request, from the capabilities that request declares.
 
 ## Running More Than One Server Instance
 
 !!! warning "Route each client to one instance"
-    A stateless approval is held in the memory of the instance that asked, the same way query cursors are. If the retry reaches a different instance, that instance does not know the approval and asks again. Nothing is written, so the failure is safe, but the client never completes. Route each client's requests to one instance (sticky routing).
+    A stateless approval is held in the memory of the instance that asked, the same way query cursors are. If the retry reaches a different instance, that instance does not know the approval and refuses the retry. Nothing is written, so the failure is safe, but the client cannot complete the operation. Route each client's requests to one instance (sticky routing).
 
 ## Resource Not Found
 
