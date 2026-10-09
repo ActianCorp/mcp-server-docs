@@ -16,7 +16,7 @@ The Actian MCP Server for NoSQL speaks two families of the Model Context Protoco
 
 Both arrive on the same `/mcp` endpoint, and the client chooses per request. No setting refuses stateless clients, and no setting is needed to accept them.
 
-A client that should use the older protocol is configured on the client side. For example, Claude Code 2.1.285 used the stateless protocol by default when this was tested, and used the stateful protocol when started with the environment variable `MCP_PROTOCOL_NEGOTIATION=legacy`. Other clients and other versions of Claude Code may behave differently; check the client's own documentation.
+Which protocol a client uses is decided by the client. To make a client use the stateful protocol, see that client's own documentation.
 
 ## Write Confirmation on Each Protocol
 
