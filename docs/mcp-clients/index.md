@@ -18,7 +18,7 @@ Identify the deployment type to determine the connection URL. The standard endpo
 
 This section applies only when write support is enabled on the server. On a read-only server, every client in the following table behaves the same way.
 
-When write support is enabled, the server asks a person to approve each write before it runs. The server sends that request through the Model Context Protocol (MCP) elicitation capability, which not every client implements. Clients on the 2026-07-28 protocol answer the confirmation by repeating the tool call, as described on the [Protocol Versions](../nosql/protocol-versions.md#write-confirmation-on-each-protocol) page.
+When write support is enabled, the server asks a person to approve each write before it runs. The server sends that request through the Model Context Protocol (MCP) elicitation capability, which not every client implements.
 
 | Client | Displays the write approval prompt |
 |--------|------------------------------------|
@@ -26,6 +26,9 @@ When write support is enabled, the server asks a person to approve each write be
 | Claude Desktop | No |
 | GitHub Copilot | No |
 | Cursor, fast-agent, Codex | Not verified. Treat these clients as unsupported until you confirm elicitation support in your deployment. |
+
+!!! note "Actian NoSQL and the 2026-07-28 protocol"
+    On Actian NoSQL, a client on the stateless 2026-07-28 protocol answers the confirmation by repeating the tool call instead of replying while the call waits. For more information, see [Protocol Versions](../nosql/protocol-versions.md#write-confirmation-on-each-protocol).
 
 !!! warning "A client that cannot prompt cannot write"
     If the connected client does not support elicitation, no write goes through. The server never approves a write silently. Read queries are not affected.
