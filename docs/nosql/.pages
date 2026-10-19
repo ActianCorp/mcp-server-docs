@@ -2,6 +2,7 @@ title: NoSQL
 nav:
   - index.md
   - write-support.md
+  - protocol-versions.md
   - authentication
   - tools
   - resources

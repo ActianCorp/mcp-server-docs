@@ -79,6 +79,7 @@ nav:
           - Auth0: nosql/authentication/auth0/index.md
           - Keycloak: nosql/authentication/keycloak/index.md
       - Write Support: nosql/write-support.md
+      - Protocol Versions: nosql/protocol-versions.md
       - Extensions: nosql/extensions/index.md
       - Tools: nosql/tools/index.md
       - Resources: nosql/resources/index.md
