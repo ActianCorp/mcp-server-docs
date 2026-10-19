@@ -13,7 +13,7 @@ This guide explains how to create and configure a Keycloak Realm and Client for 
 By the completion of this guide, you will have obtained the issuer URL needed for `quarkus.oidc.auth-server-url`, as well as the audience value for `quarkus.oidc.token.audience` and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
 
 !!! note "Keycloak version"
-    This guide applies to **Keycloak 22 and later** (Quarkus-based). Versions older than version 17 (WildFly-based) use a different admin interface and URL structure. Token exchange for a calling application (see [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application)) requires Keycloak 26.2 or later.
+    This guide applies to **Keycloak 22 and later** (Quarkus-based). Versions older than version 17 (WildFly-based) use a different admin interface and URL structure. [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application) requires Keycloak 26.2 or later, the first version with standard token exchange.
 
 ## Quick Start
 
@@ -125,7 +125,7 @@ Create one client for each required flow:
 
 ### Step 2.1: Add the Token Audience
 
-A 1.2 server rejects any token whose `aud` claim does not contain the value of `quarkus.oidc.token.audience`. Keycloak does not add such an audience on its own, so tokens carry no audience for this server until you add one.
+The server rejects any token whose `aud` claim does not contain the value of `quarkus.oidc.token.audience`. Keycloak does not add such an audience on its own, so tokens carry no audience for this server until you add one.
 
 #### Create the Client Scope
 
@@ -144,7 +144,7 @@ A 1.2 server rejects any token whose `aud` claim does not contain the value of `
 #### Add the Audience Mapper
 
 1. Open the new scope and select the **Mappers** tab.
-2. Select **Configure a new mapper**, then choose **Audience**. Do not choose **Audience Resolve**: that is a different mapper, which derives audiences from client roles. This guide uses the plain **Audience** mapper.
+2. Select **Configure a new mapper**, then choose **Audience**.
 3. Complete the following fields:
 
     | Field | Value |
@@ -171,9 +171,11 @@ A 1.2 server rejects any token whose `aud` claim does not contain the value of `
 
 Attached as **Default**, the scope puts the audience in every token the client issues, without the client having to request it.
 
-#### Check the Audience Before You Start the Server
+#### Check the Audience (Optional)
 
-1. Navigate to **Clients >** your client **> Client scopes > Evaluate**.
+Keycloak can show the token it would issue, without a login:
+
+1. Navigate to **Clients >** your client, select the **Client scopes** tab, then the **Evaluate** sub-tab.
 2. Select a user, then open **Generated access token**.
 3. Confirm that the `aud` claim contains `nsql-mcp`.
 
@@ -252,6 +254,8 @@ Create users in Keycloak who will sign in through your MCP client.
 
 The Actian MCP Server requires the Keycloak realm issuer URL and the audience value from [Step 2.1](#step-21-add-the-token-audience) to validate tokens. It does not require the client ID or secret; those are used exclusively by the MCP client.
 
+If Keycloak uses a self-signed or internal-CA certificate, also see [Trusting a Self-Signed or Internal-CA Identity Provider Certificate](../index.md#trusting-a-self-signed-or-internal-ca-identity-provider-certificate).
+
 ### Mapping Summary
 
 | `application.properties` Property | Keycloak Source | Example Value |
@@ -295,18 +299,15 @@ Use this section for an application that has already signed the user in and call
         invalid_scope: Invalid scopes: nsql-mcp-audience mcp:write
         ```
 
-4. **Send the exchange request.** The calling application posts the user's existing access token to the realm's token endpoint:
+4. **Send the exchange request.** The calling application posts the user's existing access token to the realm's token endpoint, `<issuer-url>/protocol/openid-connect/token`, authenticating with its client ID and secret and sending these form parameters:
 
-    ```bash
-    curl -X POST "http://<keycloak-host>:8080/realms/actian-nosql-mcp/protocol/openid-connect/token" \
-      -d "grant_type=urn:ietf:params:oauth:grant-type:token-exchange" \
-      -d "client_id=actian-agentic" \
-      -d "client_secret=<client-secret>" \
-      -d "subject_token=<user-access-token>" \
-      -d "subject_token_type=urn:ietf:params:oauth:token-type:access_token" \
-      -d "audience=nsql-mcp" \
-      --data-urlencode "scope=nsql-mcp-audience mcp:write"
-    ```
+    | Parameter | Value |
+    |---|---|
+    | `grant_type` | `urn:ietf:params:oauth:grant-type:token-exchange` |
+    | `subject_token` | The user's access token |
+    | `subject_token_type` | `urn:ietf:params:oauth:token-type:access_token` |
+    | `audience` | `nsql-mcp` |
+    | `scope` | `nsql-mcp-audience mcp:write` |
 
 5. **Check the result.** In the returned token, `aud` is exactly `nsql-mcp` (the original audience, for example `account`, is dropped), `azp` is the calling client, and the user is the same (`preferred_username`). Omit `mcp:write` from `scope` to get a read-only token.
 
@@ -334,15 +335,6 @@ For automated clients using Service Accounts:
 2. Keycloak issues an access token without any user interaction.
 3. The client includes the Bearer token in all requests to the MCP server.
 4. The server validates the token signature against Keycloak's JWKS endpoint and checks the audience, then grants access.
-
-## Troubleshooting
-
-| Symptom | Cause | Fix |
-|---|---|---|
-| The calling application gets 401 with the user's token. | The calling application sent its own login token instead of an exchanged one. | Exchange the token first. See [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application). |
-| The exchange fails with `invalid_scope: Invalid scopes: nsql-mcp-audience mcp:write`. | The scopes are not attached to the calling client. | Attach both as **Optional**, as in step 3 of [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application). |
-| Keycloak uses a self-signed or internal-CA certificate. | The server does not trust that certificate. | See [Trusting a Self-Signed or Internal-CA Identity Provider Certificate](../index.md#trusting-a-self-signed-or-internal-ca-identity-provider-certificate). |
-
 
 ## Staging Versus Production
 

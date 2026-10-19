@@ -102,7 +102,7 @@ In write mode, the server checks every write call for the `mcp:write` scope and 
 
 On the API's **Settings** tab, scroll to **RBAC Settings**, turn on **Enable RBAC**, and select **Save**. With RBAC on, Auth0 checks what the caller holds before it fills the token's `scope` claim, which is the claim the server reads. Without RBAC, Auth0 grants any defined API scope that a client requests, so any user of an authorized application can obtain `mcp:write`. RBAC is what makes write access per user.
 
-!!! note "**Add Permissions in the Access Token** is not needed"
+!!! note "**Add Permissions in the Access Token** is optional"
     That neighboring toggle adds the user's granted permissions to a separate `permissions` claim. The server reads `mcp:write` from that claim as well as from `scope`. With the toggle on, a user whose role grants `mcp:write` can write even when the client did not request the scope, so a client cannot limit itself below the user's role. With the toggle off, only `scope` counts and a client can ask for less. This guide keeps the toggle off and relies on the scope request.
 
 #### Grant It Through a Role
@@ -195,7 +195,7 @@ This is a **tenant-level** setting required for MCP clients to pass the audience
 3. Enable **Resource Parameter Compatibility Profile**.
 4. Select **Save**.
 
-Generic MCP clients send a `resource` parameter, and this profile is what turns it into the audience of the token.
+MCP clients name the server they want a token for in the standard `resource` parameter, not in the Auth0-specific `audience` parameter. With this profile on, Auth0 treats `resource` as the audience, so the API Identifier must match the server URL that clients send, for example `https://<mcp-server-host>:8443/mcp`.
 
 ## Step 6: Configure and Start the Server
 
@@ -252,14 +252,6 @@ For automated clients using the Machine to Machine application:
 2. Auth0 issues an access token without any user interaction.
 3. The client includes the Bearer token in all requests to the MCP server.
 4. The server validates the token signature against Auth0's JWKS endpoint and checks the audience, then grants access.
-
-## Troubleshooting
-
-| Symptom | Cause | Fix |
-|---|---|---|
-| Writes are rejected for a missing scope although the user holds the role. | RBAC is off, the application is not allowed to request `mcp:write`, or the server does not advertise the scope. | Check [Enable RBAC](#enable-rbac), [Grant API Access](#grant-api-access) and [Step 6](#step-6-configure-and-start-the-server). |
-
-Auth0 adds `https://<tenant>.auth0.com/userinfo` to `aud` when the client requests `openid`. That is normal and needs no change.
 
 ## Staging Versus Production
 

@@ -111,7 +111,7 @@ The server never requests scopes of its own. It publishes the list in `quarkus.o
 | Set | Each client requests exactly the scopes you listed. A client that offers a manual scope field ignores it and uses the advertised list. |
 | Unset | `scopes_supported` is absent, so each client chooses on its own. Some request nothing and receive no write access. Others request every scope the identity provider advertises, which usually includes scopes the client cannot obtain. |
 
-Only one scope in that list matters to the server itself. In write mode, the server looks for `mcp:write` in the union of three claims: `scope` (a space-delimited string), `scp` (a space-delimited string or an array) and the Auth0 role-based access control (RBAC) `permissions` claim (an array). A match in any one of them is enough. The server never consumes an ID token, so `openid` is present only for clients that need one. The same applies to `profile` and `email`, which populate user claims that the server does not use.
+Only one scope in that list matters to the server itself. In write mode, the server looks for `mcp:write` in the union of three claims: `scope` (a space-delimited string), `scp` (a space-delimited string or an array) and `permissions` (an array, used by Auth0 role-based access control). A match in any one of them is enough. The server never consumes an ID token, so `openid` is present only for clients that need one. The same applies to `profile` and `email`, which populate user claims that the server does not use.
 
 Auth0 emits the `permissions` claim only when a specific setting is on. See [Enable RBAC](auth0/index.md#enable-rbac) in the Auth0 guide.
 
@@ -159,7 +159,7 @@ quarkus.oidc.tls.tls-configuration-name=idp
 quarkus.oidc.sse-tenant.tls.tls-configuration-name=idp
 ```
 
-Mount the CA file into the container. This is separate from the certificate the server presents to MCP clients, described in [Secure Remote Deployments with HTTPS and TLS](#secure-remote-deployments-with-https-and-tls).
+Put the CA file in the certificate directory you mount into the container, as in the `-v $(pwd)/certs:/certs:ro` line of the [TLS example](#example_1). This is separate from the certificate the server presents to MCP clients, described in [Secure Remote Deployments with HTTPS and TLS](#secure-remote-deployments-with-https-and-tls).
 
 ## Secure Remote Deployments with HTTPS and TLS
 
