@@ -13,14 +13,6 @@ The Actian MCP Server for Actian NoSQL supports OAuth 2.0 and OpenID Connect (OI
      - **Database credentials:** The `user:password` portion of the NoSQL connection URL (for example, `cars@localhost#admin:secret`) is used to authenticate with the database itself when the server starts.
      - **OAuth 2.0:** This protocol controls access to the MCP Server endpoint.
 
-!!! warning "Upgrading to 1.2: the token audience is now required"
-    With `mcp.auth.enabled=true`, version 1.2 refuses to start unless `quarkus.oidc.token.audience` is set, and it rejects every token whose `aud` claim does not contain that value (HTTP 401). Under Kubernetes, the missing setting shows as a crash loop. To fix an existing deployment:
-
-    - **Auth0:** Set `quarkus.oidc.token.audience` to the API Identifier. See [Step 3: Create an Auth0 API](auth0/index.md#step-3-create-an-auth0-api).
-    - **Keycloak:** Add an audience client scope with an Audience mapper to your clients, and set `quarkus.oidc.token.audience` to its value. See [Step 2.1: Add the Token Audience](keycloak/index.md#step-21-add-the-token-audience).
-
-    For the full rules, see [Token Audience](#token-audience).
-
 ## Working with OAuth
 
 Authentication is disabled by default. When enabled, all `/mcp/*` endpoints require a valid Bearer token issued by an OIDC provider. The server acts as an OAuth 2.0 resource server and exposes a resource metadata endpoint at `/.well-known/oauth-protected-resource`. MCP clients use this endpoint to discover the identity provider and initiate the appropriate OAuth flow.
@@ -91,7 +83,6 @@ The audience (`aud` claim) says which service a token is for; the `mcp:write` sc
 - Matching is exact, so a trailing `/` matters.
 - A token without an `aud` claim is rejected.
 - The `aud` claim may be a string or an array. One matching value is enough.
-- The accepted audience is independent of `quarkus.oidc.resource-metadata.resource`.
 - The value `any` is refused, because Quarkus treats it as "skip the check".
 - The SSE tenant inherits the value.
 
@@ -100,12 +91,7 @@ What to set depends on your provider:
 - **Auth0:** The API Identifier, character for character. See [Step 3: Create an Auth0 API](auth0/index.md#step-3-create-an-auth0-api).
 - **Keycloak:** The Included Custom Audience value of the Audience mapper, for example `nsql-mcp`. See [Step 2.1: Add the Token Audience](keycloak/index.md#step-21-add-the-token-audience).
 
-With authentication on and no audience set, the server exits at startup with an error that names `quarkus.oidc.token.audience`. Under Kubernetes this shows as a crash loop, so read the container log for the cause.
-
-A token without the configured audience gets HTTP 401. The client sees only the 401; the server log gives the reason at WARN level, in a line that starts with `Token verification has failed:`.
-
-!!! caution "Logs can contain tokens"
-    When a token fails signature verification, Quarkus writes the full token to the server log at WARN level. Treat server logs as sensitive, and replace tokens with `<redacted>` before you share a log.
+With authentication on and no audience set, the server exits at startup with an error that names `quarkus.oidc.token.audience`.
 
 ### Calling Applications
 
@@ -163,6 +149,17 @@ quarkus.oidc.auth-server-url=https://your-idp.example.com/
 quarkus.oidc.token.audience=<your-audience>
 ```
 
+### Trusting a Self-Signed or Internal-CA Identity Provider Certificate
+
+The server calls your IdP over HTTPS to read its discovery document and signing keys. It trusts certificates issued by public certificate authorities, so this applies only when the IdP certificate is self-signed or issued by an internal certificate authority. Give the server the IdP's CA certificate in a named TLS configuration and point both OIDC tenants at it:
+
+```properties
+quarkus.tls.idp.trust-store.pem.certs=/certs/idp-ca.crt
+quarkus.oidc.tls.tls-configuration-name=idp
+quarkus.oidc.sse-tenant.tls.tls-configuration-name=idp
+```
+
+Mount the CA file into the container. This is separate from the certificate the server presents to MCP clients, described in [Secure Remote Deployments with HTTPS and TLS](#secure-remote-deployments-with-https-and-tls).
 
 ## Secure Remote Deployments with HTTPS and TLS
 
@@ -203,44 +200,6 @@ docker run \
   -p 8443:8443 \
   actian/nsql-mcp-server:1.1.0
 ```
-
-### Trusting a Self-Signed or Internal-CA Identity Provider Certificate
-
-The certificate above is the one this server presents to MCP clients. The server also calls your IdP over HTTPS, and it must trust the IdP certificate to do so. A public certificate authority (CA) is trusted by default, so you need this only when your IdP certificate is self-signed or issued by an internal CA. You do not need it for Auth0 or for any other IdP with a publicly trusted certificate.
-
-The two certificates point in opposite directions and use different stores:
-
-| | Server certificate | IdP certificate |
-|---|---|---|
-| Direction | Incoming: MCP clients connect to this server | Outgoing: this server connects to the IdP |
-| Store type | `key-store`: certificate plus private key | `trust-store`: certificate only |
-| TLS configuration | Default, unnamed (`quarkus.tls.*`) | Named (`quarkus.tls.idp.*`) |
-| Used by | The HTTPS listener | The OIDC client of each tenant |
-| When required | When the server is reached over HTTPS | Only for a self-signed or internal-CA IdP |
-
-The following example keeps the two apart:
-
-```properties
-nsql.connectionURL=<connection-url>
-######## Authentication ########
-mcp.auth.enabled=true
-quarkus.oidc.auth-server-url=https://<keycloak-host>:8443/realms/<realm>
-quarkus.oidc.token.audience=<your-audience>
-
-######## Server certificate: what this server PRESENTS to MCP clients ########
-quarkus.tls.key-store.pem.0.cert=/certs/server.crt
-quarkus.tls.key-store.pem.0.key=/certs/server.key
-quarkus.http.insecure-requests=redirect
-
-######## IdP certificate: what this server TRUSTS when calling the IdP ########
-# Only for a self-signed or internal-CA IdP. Trust store only, no private key.
-quarkus.tls.idp.trust-store.pem.certs=/certs/idp-ca.crt
-quarkus.oidc.tls.tls-configuration-name=idp
-quarkus.oidc.sse-tenant.tls.tls-configuration-name=idp
-```
-
-Place the IdP CA file in the same mounted `/certs` directory as the example above. Do not reuse the server's key-store settings for IdP trust.
-
 
 ## Provider Setup Guides
 
