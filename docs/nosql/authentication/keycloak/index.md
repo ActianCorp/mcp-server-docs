@@ -125,7 +125,7 @@ Create one client for each required flow:
 
 ### Step 2.1: Add the Token Audience
 
-A 1.2 server rejects any token whose `aud` claim does not contain the value of `quarkus.oidc.token.audience`. Keycloak does not add such an audience on its own, so tokens carry no audience for this server until you add one. For what a rejected token looks like, see [Rejected Tokens](../index.md#rejected-tokens).
+A 1.2 server rejects any token whose `aud` claim does not contain the value of `quarkus.oidc.token.audience`. Keycloak does not add such an audience on its own, so tokens carry no audience for this server until you add one.
 
 #### Create the Client Scope
 
@@ -282,7 +282,7 @@ quarkus.oidc.resource-metadata.scopes=openid,profile,email
 
 ## Token Exchange for a Calling Application
 
-Use this section for an application that has already signed the user in and calls this server for that user. For the concept, see [Token Exchange for Calling Applications](../index.md#token-exchange-for-calling-applications). The recipe uses Keycloak 26.2 standard token exchange (RFC 8693).
+Use this section for an application that has already signed the user in and calls this server for that user. For the concept, see [Calling Applications](../index.md#calling-applications). The recipe uses Keycloak 26.2 standard token exchange (RFC 8693).
 
 1. **Create a client for the audience.** Create a client whose Client ID equals the audience value, `nsql-mcp`, with every flow off: **Client authentication** `Off`, and **Standard flow**, **Direct access grants** and **Service accounts roles** unchecked. The client exists only so that the `audience` parameter of the exchange request can name it.
 2. **Configure the calling application's client.** For the calling application's client (example Client ID `actian-agentic`), set **Client authentication** to `On`, because only confidential clients may exchange tokens, and check **Standard Token Exchange**.
@@ -335,26 +335,13 @@ For automated clients using Service Accounts:
 3. The client includes the Bearer token in all requests to the MCP server.
 4. The server validates the token signature against Keycloak's JWKS endpoint and checks the audience, then grants access.
 
-### Token Exchange Flow
-
-For a calling application that has already signed the user in:
-
-1. The application exchanges the user's token at the Keycloak token endpoint, as described in [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application).
-2. The application includes the exchanged Bearer token in all requests to the MCP server.
-3. The server validates the token signature against Keycloak's JWKS endpoint and checks the audience, then grants access.
-
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| The server exits at startup with a message beginning `Authentication is enabled (mcp.auth.enabled=true) but quarkus.oidc.token.audience is not set.` | The audience is not set. | Set `quarkus.oidc.token.audience`. See [If the Audience Is Missing](../index.md#if-the-audience-is-missing). |
-| Requests get 401 and the server log shows `Token verification has failed: No Audience (aud) claim present.` | The client has no Audience mapper, or the audience scope is not **Default** on the client. | Follow [Step 2.1](#step-21-add-the-token-audience). |
-| Requests get 401 and the server log shows `Token verification has failed: Audience (aud) claim [account] doesn't contain an acceptable identifier. Expected nsql-mcp as an aud value.` | The calling application sent its own login token instead of an exchanged one. | Exchange the token first. See [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application). |
+| The calling application gets 401 with the user's token. | The calling application sent its own login token instead of an exchanged one. | Exchange the token first. See [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application). |
 | The exchange fails with `invalid_scope: Invalid scopes: nsql-mcp-audience mcp:write`. | The scopes are not attached to the calling client. | Attach both as **Optional**, as in step 3 of [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application). |
 | Keycloak uses a self-signed or internal-CA certificate. | The server does not trust that certificate. | See [Trusting a Self-Signed or Internal-CA Identity Provider Certificate](../index.md#trusting-a-self-signed-or-internal-ca-identity-provider-certificate). |
-
-!!! caution "Logs can contain tokens"
-    Replace tokens with `<redacted>` before you share a server log. See [Rejected Tokens](../index.md#rejected-tokens).
 
 
 ## Staging Versus Production

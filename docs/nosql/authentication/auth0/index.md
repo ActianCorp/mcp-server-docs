@@ -172,7 +172,7 @@ This step allows the application to request tokens for the API and to choose whi
 
 ### Calling Applications
 
-An application that has already signed the user in and calls this server for that user (see [Token Exchange for Calling Applications](../index.md#token-exchange-for-calling-applications)) requests the API Identifier as its `audience` when the user signs in. Auth0 offers no equivalent of the Keycloak standard token exchange for this case, so there is no exchange step.
+An application that has already signed the user in and calls this server for that user (see [Calling Applications](../index.md#calling-applications)) requests the API Identifier as its `audience` when the user signs in. Auth0 offers no equivalent of the Keycloak standard token exchange for this case, so there is no exchange step.
 
 Authorize that application for the API as described in [Grant API Access](#grant-api-access). In write mode, have it include `mcp:write` in its scope request.
 
@@ -257,14 +257,9 @@ For automated clients using the Machine to Machine application:
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| The server exits at startup with a message beginning `Authentication is enabled (mcp.auth.enabled=true) but quarkus.oidc.token.audience is not set.` | The audience is not set. | Set `quarkus.oidc.token.audience` to the API Identifier. See [If the Audience Is Missing](../index.md#if-the-audience-is-missing). |
-| Requests get 401 and the server log shows `Token verification has failed: Audience (aud) claim [http://localhost:8080/mcp, https://<tenant>.auth0.com/userinfo] doesn't contain an acceptable identifier. Expected http://localhost:8081/mcp as an aud value.` | `quarkus.oidc.token.audience` differs from the API Identifier the token was issued for. | Make the two identical. |
 | Writes are rejected for a missing scope although the user holds the role. | RBAC is off, the application is not allowed to request `mcp:write`, or the server does not advertise the scope. | Check [Enable RBAC](#enable-rbac), [Grant API Access](#grant-api-access) and [Step 6](#step-6-configure-and-start-the-server). |
 
 Auth0 adds `https://<tenant>.auth0.com/userinfo` to `aud` when the client requests `openid`. That is normal and needs no change.
-
-!!! caution "Logs can contain tokens"
-    Replace tokens with `<redacted>` before you share a server log. See [Rejected Tokens](../index.md#rejected-tokens).
 
 ## Staging Versus Production
 

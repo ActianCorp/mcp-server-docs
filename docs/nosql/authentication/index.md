@@ -25,17 +25,10 @@ The Actian MCP Server for Actian NoSQL supports OAuth 2.0 and OpenID Connect (OI
 
 Authentication is disabled by default. When enabled, all `/mcp/*` endpoints require a valid Bearer token issued by an OIDC provider. The server acts as an OAuth 2.0 resource server and exposes a resource metadata endpoint at `/.well-known/oauth-protected-resource`. MCP clients use this endpoint to discover the identity provider and initiate the appropriate OAuth flow.
 
-The server supports three primary flows:
+The server supports two primary flows:
 
 - **Authorization Code:** Used for interactive clients (such as Claude Desktop, Cursor, and the FastMCP Python client). The client redirects the user to the IdP for login and receives a token after consent.
 - **Client Credentials:** Used for machine-to-machine (M2M) scenarios where no user interaction is possible. The client authenticates directly with the IdP using its own credentials.
-- **Token Exchange:** Used by an application that has already signed the user in (for example, Actian Agentic). The application exchanges that user's token at the IdP for one whose audience is this server, using OAuth 2.0 Token Exchange (RFC 8693). See [Token Exchange for Calling Applications](#token-exchange-for-calling-applications).
-
-| Flow | At the keyboard | Token represents | Who calls the IdP |
-|---|---|---|---|
-| Authorization Code | The user, in a browser | The user | The MCP client after the login redirect |
-| Client Credentials | Nobody | The application | The application with its client ID and secret |
-| Token Exchange (RFC 8693) | Nobody | The user, acting through the application | The application, presenting the user's existing token |
 
 The diagram below illustrates the Authorization Code flow:
 
@@ -92,25 +85,14 @@ Both tenants share the same authentication server URL by default. Override the S
 
 ### Token Audience
 
-The audience (`aud` claim) says which service a token is for. With authentication on, the server accepts a token only when its `aud` claim contains the value you set in `quarkus.oidc.token.audience`. Audience and scopes answer different questions:
-
-| | Audience (`aud`) | Scopes (`scope`) |
-|---|---|---|
-| Question | Which service is this token for? | What may the holder do there? |
-| Checked by | The receiving service, against its own identifier | The receiving service, per operation |
-| Value set by | Requested by the caller, issued by the IdP for registered resources only | Requested by the caller, granted per client and user entitlement |
-| On failure | Whole request rejected with 401 | Only the operation needing the scope is rejected |
-
-The two are independent: the right audience with no scopes gives read access, and a token with `mcp:write` but the wrong audience is rejected before the scope is read.
-
-The server applies these rules:
+The audience (`aud` claim) says which service a token is for; the `mcp:write` scope says whether the token may write. With authentication on, the server accepts a token only when its `aud` claim contains a value set in `quarkus.oidc.token.audience`:
 
 - The property takes a comma-separated list of audiences.
 - Matching is exact, so a trailing `/` matters.
 - A token without an `aud` claim is rejected.
 - The `aud` claim may be a string or an array. One matching value is enough.
 - The accepted audience is independent of `quarkus.oidc.resource-metadata.resource`.
-- The value `any` is refused at startup, because Quarkus treats it as "skip the check".
+- The value `any` is refused, because Quarkus treats it as "skip the check".
 - The SSE tenant inherits the value.
 
 What to set depends on your provider:
@@ -118,59 +100,21 @@ What to set depends on your provider:
 - **Auth0:** The API Identifier, character for character. See [Step 3: Create an Auth0 API](auth0/index.md#step-3-create-an-auth0-api).
 - **Keycloak:** The Included Custom Audience value of the Audience mapper, for example `nsql-mcp`. See [Step 2.1: Add the Token Audience](keycloak/index.md#step-21-add-the-token-audience).
 
-#### If the Audience Is Missing
+With authentication on and no audience set, the server exits at startup with an error that names `quarkus.oidc.token.audience`. Under Kubernetes this shows as a crash loop, so read the container log for the cause.
 
-When authentication is on and the audience is not set, the server exits at startup. The message is a `Caused by: java.lang.IllegalStateException` line under `Failed to start application: java.lang.RuntimeException: Failed to start quarkus`. About ten stack-trace lines follow it, so it is not the last line of the log.
-
-```text
-Authentication is enabled (mcp.auth.enabled=true) but quarkus.oidc.token.audience is not set. Set it to the audience your identity provider puts in access tokens for this server; a comma-separated list is accepted and tokens whose aud claim matches none of the values are rejected. The SSE tenant (/mcp/sse) takes its value from quarkus.oidc.token.audience. See 'Authentication (OIDC)' in the nsql-mcp-server README and the NoSQL authentication guide in the Actian MCP Server documentation.
-```
-
-The server stops with a different message in two other cases:
-
-| Cause | The message starts with |
-|---|---|
-| `quarkus.oidc.token.audience` contains `any` | `Authentication is enabled (mcp.auth.enabled=true) but quarkus.oidc.token.audience contains the value 'any', which turns off audience validation in Quarkus OIDC and is not accepted.` |
-| `quarkus.oidc.sse-tenant.token.audience` is empty or contains `any` | `Authentication is enabled (mcp.auth.enabled=true) but quarkus.oidc.sse-tenant.token.audience is empty or contains the value 'any', which turns off audience validation in Quarkus OIDC and is not accepted. It takes its value from quarkus.oidc.token.audience unless overridden; remove the override or set a real audience.` |
-
-Under Kubernetes, this shows as a crash loop. The image includes no health probes, so read the container log to find the cause.
-
-#### Rejected Tokens
-
-A token that does not carry the configured audience gets an HTTP 401 response with this header:
-
-```text
-WWW-Authenticate: Bearer resource_metadata="<server>/.well-known/oauth-protected-resource/mcp"
-```
-
-The reason is in the server log at WARN level. For example:
-
-```text
-Token verification has failed: Audience (aud) claim [account] doesn't contain an acceptable identifier. Expected nsql-mcp as an aud value.
-Token verification has failed: No Audience (aud) claim present.
-```
-
-The Troubleshooting section of each provider guide shows the messages you see with that provider: [Auth0](auth0/index.md#troubleshooting) and [Keycloak](keycloak/index.md#troubleshooting).
+A token without the configured audience gets HTTP 401. The client sees only the 401; the server log gives the reason at WARN level, in a line that starts with `Token verification has failed:`.
 
 !!! caution "Logs can contain tokens"
     When a token fails signature verification, Quarkus writes the full token to the server log at WARN level. Treat server logs as sensitive, and replace tokens with `<redacted>` before you share a log.
 
-### Token Exchange for Calling Applications
+### Calling Applications
 
-Some applications sign the user in first and then call this server for that user. Token exchange lets such an application obtain a token for this server without sending the user to the IdP again:
+An application that has already signed the user in, for example Actian Agentic, can call this server for that user. It needs a token for the same user whose `aud` claim contains this server's audience:
 
-1. The user signs in to the calling application, which holds a token for its own API.
-2. The application sends that token to the IdP token endpoint with the grant type `urn:ietf:params:oauth:grant-type:token-exchange` and this server's audience.
-3. The IdP returns a token for the same user whose `aud` claim is this server.
-4. The application calls the server with that token.
+- **Keycloak:** The application exchanges the user's token with standard token exchange (RFC 8693). See [Token Exchange for a Calling Application](keycloak/index.md#token-exchange-for-a-calling-application).
+- **Auth0:** The application requests this server's audience when the user signs in. See [Calling Applications](auth0/index.md#calling-applications).
 
-Client Credentials does not fit this case. That token represents the application, so per-user `mcp:write` and the user name in the server's records collapse to a single identity.
-
-Keep these points in mind:
-
-- The calling application requests its scopes in the exchange request, so the list in `quarkus.oidc.resource-metadata.scopes` does not apply to it. See [Advertising Scopes to MCP Clients](#advertising-scopes-to-mcp-clients).
-- The server cannot tell whether an exchange happened. It accepts any token that carries its audience, including a calling-application token that already has it, so keep this server's audience off the application's own login tokens.
-- Support depends on the IdP. Keycloak 26.2 offers standard token exchange: see [Token Exchange for a Calling Application](keycloak/index.md#token-exchange-for-a-calling-application). Auth0 has no equivalent exchange, so the calling application requests this server's audience directly when the user signs in: see [Calling Applications](auth0/index.md#calling-applications).
+The server accepts any token that carries its audience and cannot tell how the token was obtained, so keep this server's audience off the application's own login tokens. The application requests its own scopes, so `quarkus.oidc.resource-metadata.scopes` does not apply to it.
 
 ### Advertising Scopes to MCP Clients
 
@@ -261,8 +205,6 @@ docker run \
 ```
 
 ### Trusting a Self-Signed or Internal-CA Identity Provider Certificate
-
-<!-- TODO NSQL-4540: capture the real startup/401 symptom text from a self-signed Keycloak run before release (plan 9.3) -->
 
 The certificate above is the one this server presents to MCP clients. The server also calls your IdP over HTTPS, and it must trust the IdP certificate to do so. A public certificate authority (CA) is trusted by default, so you need this only when your IdP certificate is self-signed or issued by an internal CA. You do not need it for Auth0 or for any other IdP with a publicly trusted certificate.
 
