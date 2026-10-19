@@ -17,7 +17,7 @@ The Actian MCP Server for Actian NoSQL supports OAuth 2.0 and OpenID Connect (OI
     With `mcp.auth.enabled=true`, version 1.2 refuses to start unless `quarkus.oidc.token.audience` is set, and it rejects every token whose `aud` claim does not contain that value (HTTP 401). Under Kubernetes, the missing setting shows as a crash loop. To fix an existing deployment:
 
     - **Auth0:** Set `quarkus.oidc.token.audience` to the API Identifier. See [Step 3: Create an Auth0 API](auth0/index.md#step-3-create-an-auth0-api).
-    - **Keycloak:** Add an audience client scope with an Audience mapper to your clients, and set `quarkus.oidc.token.audience` to its value. See [Keycloak setup](keycloak/index.md).
+    - **Keycloak:** Add an audience client scope with an Audience mapper to your clients, and set `quarkus.oidc.token.audience` to its value. See [Step 2.1: Add the Token Audience](keycloak/index.md#step-21-add-the-token-audience).
 
     For the full rules, see [Token Audience](#token-audience).
 
@@ -116,7 +116,7 @@ The server applies these rules:
 What to set depends on your provider:
 
 - **Auth0:** The API Identifier, character for character. See [Step 3: Create an Auth0 API](auth0/index.md#step-3-create-an-auth0-api).
-- **Keycloak:** The Included Custom Audience value of the Audience mapper, for example `nsql-mcp`. See [Step 2.1: Add the Token Audience](keycloak/index.md).
+- **Keycloak:** The Included Custom Audience value of the Audience mapper, for example `nsql-mcp`. See [Step 2.1: Add the Token Audience](keycloak/index.md#step-21-add-the-token-audience).
 
 #### If the Audience Is Missing
 
@@ -150,7 +150,7 @@ Token verification has failed: Audience (aud) claim [account] doesn't contain an
 Token verification has failed: No Audience (aud) claim present.
 ```
 
-The Troubleshooting section of each provider guide shows the messages you see with that provider: [Auth0](auth0/index.md) and [Keycloak](keycloak/index.md).
+The Troubleshooting section of each provider guide shows the messages you see with that provider: [Auth0](auth0/index.md#troubleshooting) and [Keycloak](keycloak/index.md#troubleshooting).
 
 !!! caution "Logs can contain tokens"
     When a token fails signature verification, Quarkus writes the full token to the server log at WARN level. Treat server logs as sensitive, and replace tokens with `<redacted>` before you share a log.
@@ -170,7 +170,7 @@ Keep these points in mind:
 
 - The calling application requests its scopes in the exchange request, so the list in `quarkus.oidc.resource-metadata.scopes` does not apply to it. See [Advertising Scopes to MCP Clients](#advertising-scopes-to-mcp-clients).
 - The server cannot tell whether an exchange happened. It accepts any token that carries its audience, including a calling-application token that already has it, so keep this server's audience off the application's own login tokens.
-- Support depends on the IdP. Keycloak 26.2 offers standard token exchange: see [Token Exchange for a Calling Application](keycloak/index.md). Auth0 has no equivalent exchange, so the calling application requests this server's audience directly when the user signs in: see [Calling Applications](auth0/index.md).
+- Support depends on the IdP. Keycloak 26.2 offers standard token exchange: see [Token Exchange for a Calling Application](keycloak/index.md#token-exchange-for-a-calling-application). Auth0 has no equivalent exchange, so the calling application requests this server's audience directly when the user signs in: see [Calling Applications](auth0/index.md#calling-applications).
 
 ### Advertising Scopes to MCP Clients
 

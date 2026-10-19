@@ -10,7 +10,7 @@ This guide describes how to create and configure an Auth0 API and Application fo
 !!! note "Manual client registration"
     This guide focuses on manually created clients. Dynamic Client Registration (DCR) is not covered in this documentation.
 
-By the completion of this guide, you will have obtained the issuer URL needed for `quarkus.oidc.auth-server-url`, as well as the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
+By the completion of this guide, you will have obtained the issuer URL needed for `quarkus.oidc.auth-server-url`, the audience value for `quarkus.oidc.token.audience`, as well as the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
 
 !!! info "Reference"
     [Auth0 OpenID Connect documentation](https://auth0.com/docs/authenticate/protocols/openid-connect-protocol)
@@ -20,13 +20,13 @@ By the completion of this guide, you will have obtained the issuer URL needed fo
 
 1. **Create a Database Connection:** Navigate to **Authentication > Database > + Create DB Connection** if one does not exist.
 2. **Create users:** Navigate to **User Management > Users > + Create User** for individuals who will log in via the Authorization Code flow.
-3. **Create an API:** Navigate to **Applications > APIs > + Create API**. The "Identifier" becomes the audience for which MCP clients request tokens. Auth0 automatically creates a **Machine to Machine** application with access to this API and uses it directly for Client Credentials flow.
+3. **Create an API:** Navigate to **Applications > APIs > + Create API**. The "Identifier" becomes the audience for which MCP clients request tokens. It is also the value of `quarkus.oidc.token.audience`, character for character. Auth0 automatically creates a **Machine to Machine** application with access to this API and uses it directly for Client Credentials flow.
 4. **Add the write scope**, in write mode only: add an `mcp:write` permission on the API's **Permissions** tab, turn on **Enable RBAC** under **Settings > RBAC Settings**, then grant it through a role under **User Management > Roles**. Each application also selects it on its own **API Access** tab.
 5. **Create an Application:** Navigate to **Applications > Applications > + Create Application**. Choose **Native**, **Regular Web Application**, or **Single Page Application**. Copy the Client ID for the configuration.
 6. **Configure Allowed Callback URLs:** Set the **Allowed Callback URLs** in the application settings to match the MCP client’s redirect URI.
 7. **Grant API access:** Under the **APIs** tab of the application, authorize the API created in step 3.
 8. **Enable compatibility profile:** Under **Settings > Advanced**, enable the **Resource Parameter Compatibility Profile**.
-9. **Update properties:** Set `quarkus.oidc.auth-server-url` in `application.properties` to `https://<your-tenant>.auth0.com/`.
+9. **Update properties:** Set `quarkus.oidc.auth-server-url` in `application.properties` to `https://<your-tenant>.auth0.com/` and `quarkus.oidc.token.audience` to the API Identifier. In write mode, also set `quarkus.oidc.resource-metadata.scopes=mcp:write`.
 10. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../index.md#start-the-server) documentation.
 
 
@@ -79,6 +79,9 @@ The API represents the Actian MCP Server as a protected resource in Auth0. Token
 
 4. Select **Create**.
 
+!!! important "The Identifier is the audience the server checks"
+    Set `quarkus.oidc.token.audience` to the Identifier exactly, with a trailing `/` included or excluded in the same way.
+
 ### Step 3.1: Add the Write Scope (Write Mode Only)
 
 Skip this step when `nsql.writes.enabled` is `false`. A read-only server never inspects the scope.
@@ -97,10 +100,10 @@ In write mode, the server checks every write call for the `mcp:write` scope and 
 
 #### Enable RBAC
 
-On the API's **Settings** tab, scroll to **RBAC Settings**, turn on **Enable RBAC**, and select **Save**. With RBAC on, Auth0 checks what the caller holds before it fills the token's `scope` claim, which is the claim the server reads. If you leave RBAC off, Auth0 ignores the grant, and `mcp:write` never reaches the token.
+On the API's **Settings** tab, scroll to **RBAC Settings**, turn on **Enable RBAC**, and select **Save**. With RBAC on, Auth0 checks what the caller holds before it fills the token's `scope` claim, which is the claim the server reads. Without RBAC, Auth0 grants any defined API scope that a client requests, so any user of an authorized application can obtain `mcp:write`. RBAC is what makes write access per user.
 
 !!! note "**Add Permissions in the Access Token** is not needed"
-    That neighboring toggle adds the same grants to a separate `permissions` claim. This server never reads that claim; the only claim it inspects is `scope`. Turning the toggle on causes no harm if another system in your environment needs it.
+    That neighboring toggle adds the user's granted permissions to a separate `permissions` claim. The server reads `mcp:write` from that claim as well as from `scope`. With the toggle on, a user whose role grants `mcp:write` can write even when the client did not request the scope, so a client cannot limit itself below the user's role. With the toggle off, only `scope` counts and a client can ask for less. This guide keeps the toggle off and relies on the scope request.
 
 #### Grant It Through a Role
 
@@ -167,6 +170,12 @@ This step allows the application to request tokens for the API and to choose whi
 !!! note "Both flows need this, and the interactive one needs a role as well"
     The permission list controls what the application is *allowed to request*. For Client Credentials that is the entire grant, because there is no user whose role could carry it. For the Authorization Code flow it is only half: the signed-in user must also hold `mcp:write` through the role created in [Step 3.1](#step-31-add-the-write-scope-write-mode-only), or the token is issued without the scope.
 
+### Calling Applications
+
+An application that has already signed the user in and calls this server for that user (see [Token Exchange for Calling Applications](../index.md#token-exchange-for-calling-applications)) requests the API Identifier as its `audience` when the user signs in. Auth0 offers no equivalent of the Keycloak standard token exchange for this case, so there is no exchange step.
+
+Authorize that application for the API as described in [Grant API Access](#grant-api-access). In write mode, have it include `mcp:write` in its scope request.
+
 ### Output of Step 4
 
 Retain the following values for your MCP client configuration:
@@ -186,6 +195,8 @@ This is a **tenant-level** setting required for MCP clients to pass the audience
 3. Enable **Resource Parameter Compatibility Profile**.
 4. Select **Save**.
 
+Generic MCP clients send a `resource` parameter, and this profile is what turns it into the audience of the token.
+
 ## Step 6: Configure and Start the Server
 
 The Actian MCP Server requires the Auth0 issuer URL to validate incoming tokens.
@@ -195,6 +206,7 @@ The Actian MCP Server requires the Auth0 issuer URL to validate incoming tokens.
 | `application.properties` Property | Auth0 Source | Example Value |
 |---|---|---|
 | `quarkus.oidc.auth-server-url` | Your Auth0 tenant domain | `https://dev-abc123.us.auth0.com/` |
+| `quarkus.oidc.token.audience` | API Identifier from Step 3 | `https://<mcp-server-host>:8443/mcp` |
 | `quarkus.oidc.resource-metadata.scopes` | — | `mcp:write`, in write mode only |
 
 !!! tip "Finding the Issuer URL"
@@ -213,9 +225,10 @@ Add the following to the `application.properties` and start the server as descri
 nsql.connectionURL=<connection-url>
 mcp.auth.enabled=true
 quarkus.oidc.auth-server-url=https://dev-abc123.us.auth0.com/
+quarkus.oidc.token.audience=https://<mcp-server-host>:8443/mcp
+# Write mode only
+quarkus.oidc.resource-metadata.scopes=mcp:write
 ```
-
-In write mode, add `quarkus.oidc.resource-metadata.scopes=mcp:write` to the same file.
 
 
 ## Verify End-to-End
@@ -229,7 +242,7 @@ After starting the Actian MCP Server with OAuth configured:
 3. The MCP client redirects you to the Auth0 login page.
 4. After logging in, Auth0 issues an access token to the MCP client.
 5. The MCP client includes the Bearer token in all subsequent requests.
-6. The server validates the token signature against Auth0's JWKS endpoint and grants access.
+6. The server validates the token signature against Auth0's JWKS endpoint and checks the audience, then grants access.
 
 ### Client Credentials Flow
 
@@ -238,7 +251,20 @@ For automated clients using the Machine to Machine application:
 1. The client authenticates directly with Auth0 using its **Client ID** and **Client Secret**.
 2. Auth0 issues an access token without any user interaction.
 3. The client includes the Bearer token in all requests to the MCP server.
-4. The server validates the token signature against Auth0's JWKS endpoint and grants access.
+4. The server validates the token signature against Auth0's JWKS endpoint and checks the audience, then grants access.
+
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| The server exits at startup with a message beginning `Authentication is enabled (mcp.auth.enabled=true) but quarkus.oidc.token.audience is not set.` | The audience is not set. | Set `quarkus.oidc.token.audience` to the API Identifier. See [If the Audience Is Missing](../index.md#if-the-audience-is-missing). |
+| Requests get 401 and the server log shows `Token verification has failed: Audience (aud) claim [http://localhost:8080/mcp, https://<tenant>.auth0.com/userinfo] doesn't contain an acceptable identifier. Expected http://localhost:8081/mcp as an aud value.` | `quarkus.oidc.token.audience` differs from the API Identifier the token was issued for. | Make the two identical. |
+| Writes are rejected for a missing scope although the user holds the role. | RBAC is off, the application is not allowed to request `mcp:write`, or the server does not advertise the scope. | Check [Enable RBAC](#enable-rbac), [Grant API Access](#grant-api-access) and [Step 6](#step-6-configure-and-start-the-server). |
+
+Auth0 adds `https://<tenant>.auth0.com/userinfo` to `aud` when the client requests `openid`. That is normal and needs no change.
+
+!!! caution "Logs can contain tokens"
+    Replace tokens with `<redacted>` before you share a server log. See [Rejected Tokens](../index.md#rejected-tokens).
 
 ## Staging Versus Production
 
