@@ -1,10 +1,11 @@
-name: Publish MkDocs Documentation (v1.1 — latest)
+name: Publish MkDocs Documentation (v1.2 — latest)
 
-# Builds the docs from `main` and publishes them as version "1.1" with the
+# Builds the docs from `main` and publishes them as version "1.2" with the
 # "latest" alias, using mike. mike commits each version into its own
 # subdirectory of the gh-pages branch and maintains versions.json, which the
-# Material theme reads to render the version selector. Version 1.0 is published
-# separately from the release/mcp-server-1.0.doc branch and is preserved here
+# Material theme reads to render the version selector. Versions 1.0 and 1.1 are
+# published separately (from release/mcp-server-1.0.doc and
+# release/mcp-server-1.1.doc) and are preserved here
 # because mike only touches the version it deploys.
 
 on:
@@ -42,11 +43,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Deploy 1.1 as latest
+      - name: Deploy 1.2 as latest
         run: |
           # --alias-type=copy: mike's default is a symlink, which becomes a
           # 1 KB text file when gh-pages is checked out on Windows, so /latest/
           # 404s on IIS. `set-default` writes a redirect page, not an alias,
           # and does not accept this flag.
-          mike deploy --push --update-aliases --alias-type=copy 1.1 latest
+          mike deploy --push --update-aliases --alias-type=copy 1.2 latest
           mike set-default --push latest
