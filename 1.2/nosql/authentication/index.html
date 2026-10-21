@@ -2743,6 +2743,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#token-audience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Audience
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling Applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#advertising-scopes-to-mcp-clients" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2771,10 +2793,32 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#caller-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caller Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
       
         Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trusting-a-self-signed-or-internal-ca-identity-provider-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trusting a Self-Signed or Internal-CA Identity Provider Certificate
       
     </span>
   </a>
@@ -2985,6 +3029,16 @@ sequenceDiagram
 <td>Overrides the OIDC provider for the SSE endpoint (<code>/mcp/sse</code>) only. Defaults to <code>quarkus.oidc.auth-server-url</code>.</td>
 </tr>
 <tr>
+<td><code>quarkus.oidc.token.audience</code></td>
+<td>Yes (if enabled)</td>
+<td>The audience the server accepts in the <code>aud</code> claim of a token. Takes a comma-separated list. The server does not start without it. See <a href="#token-audience">Token Audience</a>.</td>
+</tr>
+<tr>
+<td><code>quarkus.oidc.sse-tenant.token.audience</code></td>
+<td>No</td>
+<td>Defaults to <code>quarkus.oidc.token.audience</code>. Set it only when you override the SSE provider. An empty value or <code>any</code> stops the server at startup.</td>
+</tr>
+<tr>
 <td><code>quarkus.oidc.resource-metadata.scopes</code></td>
 <td>Depends on the provider</td>
 <td>The scopes the server publishes as <code>scopes_supported</code> in its resource metadata, comma-separated. MCP clients read this list and request exactly those scopes. A Keycloak deployment should always set it; an Auth0 deployment needs it only in write mode. See <a href="#advertising-scopes-to-mcp-clients">Advertising scopes to MCP clients</a>.</td>
@@ -3017,7 +3071,30 @@ sequenceDiagram
 </tr>
 </tbody>
 </table>
-<p>Both tenants share the same authentication server URL by default. Override the SSE tenant only if that endpoint requires a different identity provider.</p>
+<p>Both tenants share the same authentication server URL by default. Override the SSE tenant only if that endpoint requires a different identity provider. The SSE tenant also takes its audience from <code>quarkus.oidc.token.audience</code>, so you set one property unless you override the SSE provider.</p>
+<h3 id="token-audience">Token Audience<a class="headerlink" href="#token-audience" title="Permanent link">&para;</a></h3>
+<p>The audience (<code>aud</code> claim) says which service a token is for; the <code>mcp:write</code> scope says whether the token may write. With authentication on, the server accepts a token only when its <code>aud</code> claim contains a value set in <code>quarkus.oidc.token.audience</code>:</p>
+<ul>
+<li>The property takes a comma-separated list of audiences.</li>
+<li>Matching is exact, so a trailing <code>/</code> matters.</li>
+<li>A token without an <code>aud</code> claim is rejected.</li>
+<li>The <code>aud</code> claim may be a string or an array. One matching value is enough.</li>
+<li>The value <code>any</code> is refused, because Quarkus treats it as "skip the check".</li>
+<li>The SSE tenant inherits the value.</li>
+</ul>
+<p>What to set depends on your provider:</p>
+<ul>
+<li><strong>Auth0:</strong> The API Identifier, character for character. See <a href="auth0/index.html#step-3-create-an-auth0-api">Step 3: Create an Auth0 API</a>.</li>
+<li><strong>Keycloak:</strong> The Included Custom Audience value of the Audience mapper, for example <code>nsql-mcp</code>. See <a href="keycloak/index.html#step-21-add-the-token-audience">Step 2.1: Add the Token Audience</a>.</li>
+</ul>
+<p>With authentication on and no audience set, the server exits at startup with an error that names <code>quarkus.oidc.token.audience</code>.</p>
+<h3 id="calling-applications">Calling Applications<a class="headerlink" href="#calling-applications" title="Permanent link">&para;</a></h3>
+<p>An application that has already signed the user in, for example Actian Agentic, can call this server for that user. It needs a token for the same user whose <code>aud</code> claim contains this server's audience:</p>
+<ul>
+<li><strong>Keycloak:</strong> The application exchanges the user's token with standard token exchange (RFC 8693). See <a href="keycloak/index.html#token-exchange-for-a-calling-application">Token Exchange for a Calling Application</a>.</li>
+<li><strong>Auth0:</strong> The application requests this server's audience when the user signs in. See <a href="auth0/index.html#calling-applications">Calling Applications</a>.</li>
+</ul>
+<p>The server accepts any token that carries its audience and cannot tell how the token was obtained, so keep this server's audience off the application's own login tokens. The application requests its own scopes, so <code>quarkus.oidc.resource-metadata.scopes</code> does not apply to it.</p>
 <h3 id="advertising-scopes-to-mcp-clients">Advertising Scopes to MCP Clients<a class="headerlink" href="#advertising-scopes-to-mcp-clients" title="Permanent link">&para;</a></h3>
 <p>The server never requests scopes of its own. It publishes the list in <code>quarkus.oidc.resource-metadata.scopes</code> at <code>/.well-known/oauth-protected-resource</code>, and each MCP client decides what to request from there. Set this property carefully: if you leave it out, clients have no sensible default to fall back on:</p>
 <table>
@@ -3038,7 +3115,8 @@ sequenceDiagram
 </tr>
 </tbody>
 </table>
-<p>Only one scope in that list matters to the server itself. In write mode, the server checks the token's <code>scope</code> claim for <code>mcp:write</code> and reads nothing else from the claim. The server never consumes an ID token, so <code>openid</code> is present only for clients that need one. The same applies to <code>profile</code> and <code>email</code>, which populate user claims that the server does not use.</p>
+<p>Only one scope in that list matters to the server itself. In write mode, the server looks for <code>mcp:write</code> in the union of three claims: <code>scope</code> (a space-delimited string), <code>scp</code> (a space-delimited string or an array) and <code>permissions</code> (an array, used by Auth0 role-based access control). A match in any one of them is enough. The server never consumes an ID token, so <code>openid</code> is present only for clients that need one. The same applies to <code>profile</code> and <code>email</code>, which populate user claims that the server does not use.</p>
+<p>Auth0 emits the <code>permissions</code> claim only when a specific setting is on. See <a href="auth0/index.html#enable-rbac">Enable RBAC</a> in the Auth0 guide.</p>
 <h4 id="provider-specific-settings">Provider-Specific Settings<a class="headerlink" href="#provider-specific-settings" title="Permanent link">&para;</a></h4>
 <p>The behavior described above applies to every provider. What differs is how a provider reacts when a client requests a scope it cannot obtain:</p>
 <table>
@@ -3071,12 +3149,23 @@ sequenceDiagram
 <p class="admonition-title">Write mode needs this on both sides</p>
 <p>A server in write mode rejects a write unless the caller's token carries <code>mcp:write</code>. Two separate things must be true: the identity provider must issue the scope, and this server must advertise it. Configuring only the provider is the usual reason a client authenticates cleanly and still cannot write. For the provider half, see <a href="auth0/index.html#step-31-add-the-write-scope-write-mode-only">Auth0</a> or <a href="keycloak/index.html#step-3-add-the-write-scope-write-mode-only">Keycloak</a>; for what the check does, see <a href="../write-support.html#what-each-call-must-clear">Write support</a>.</p>
 </div>
+<h3 id="caller-identity">Caller Identity<a class="headerlink" href="#caller-identity" title="Permanent link">&para;</a></h3>
+<p>The server takes the caller's name from the token's principal (the <code>upn</code> claim, then <code>preferred_username</code>, then <code>sub</code>) for its logs and to tie a pending write confirmation to the user. A token without a user name claim is not rejected.</p>
+<p>The server does not impersonate users. Every database statement runs as the user in <code>nsql.connectionURL</code>, so what a caller may do is decided by the token's audience and the <code>mcp:write</code> scope. See <a href="../write-support.html#what-each-call-must-clear">What each call must clear</a>.</p>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <p>Add the following to your <code>application.properties</code> and start the server as instructed in <a href="../index.html#start-the-server">Start the Server</a>:</p>
 <div class="language-properties highlight"><pre><span></span><code><span class="na">nsql.connectionURL</span><span class="o">=</span><span class="s">&lt;connection-url&gt;</span>
 <span class="na">mcp.auth.enabled</span><span class="o">=</span><span class="s">true</span>
 <span class="na">quarkus.oidc.auth-server-url</span><span class="o">=</span><span class="s">https://your-idp.example.com/</span>
+<span class="na">quarkus.oidc.token.audience</span><span class="o">=</span><span class="s">&lt;your-audience&gt;</span>
 </code></pre></div>
+<h3 id="trusting-a-self-signed-or-internal-ca-identity-provider-certificate">Trusting a Self-Signed or Internal-CA Identity Provider Certificate<a class="headerlink" href="#trusting-a-self-signed-or-internal-ca-identity-provider-certificate" title="Permanent link">&para;</a></h3>
+<p>The server calls your IdP over HTTPS to read its discovery document and signing keys. It trusts certificates issued by public certificate authorities, so this applies only when the IdP certificate is self-signed or issued by an internal certificate authority. Give the server the IdP's CA certificate in a named TLS configuration and point both OIDC tenants at it:</p>
+<div class="language-properties highlight"><pre><span></span><code><span class="na">quarkus.tls.idp.trust-store.pem.certs</span><span class="o">=</span><span class="s">/certs/idp-ca.crt</span>
+<span class="na">quarkus.oidc.tls.tls-configuration-name</span><span class="o">=</span><span class="s">idp</span>
+<span class="na">quarkus.oidc.sse-tenant.tls.tls-configuration-name</span><span class="o">=</span><span class="s">idp</span>
+</code></pre></div>
+<p>Put the CA file in the certificate directory you mount into the container, as in the <code>-v $(pwd)/certs:/certs:ro</code> line of the <a href="#example_1">TLS example</a>. This is separate from the certificate the server presents to MCP clients, described in <a href="#secure-remote-deployments-with-https-and-tls">Secure Remote Deployments with HTTPS and TLS</a>.</p>
 <h2 id="secure-remote-deployments-with-https-and-tls">Secure Remote Deployments with HTTPS and TLS<a class="headerlink" href="#secure-remote-deployments-with-https-and-tls" title="Permanent link">&para;</a></h2>
 <p>To secure the connection, you must provide a certificate and a private key. In the property names below, the <code>.0.</code> represents the index of the PEM keystore entry; increment this index to add multiple certificates.</p>
 <table>
@@ -3168,7 +3257,7 @@ sequenceDiagram
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 27, 2026 10:35:46 UTC">August 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 19, 2026 20:11:20 UTC">October 19, 2026</span>
   </span>
 
     

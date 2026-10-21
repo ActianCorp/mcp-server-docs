@@ -10,20 +10,21 @@ This guide explains how to create and configure a Keycloak Realm and Client for 
 !!! note "Manual client registration"
     This guide focuses on manually created clients. Dynamic Client Registration (DCR) is not covered in this documentation.
 
-By the completion of this guide, you will have obtained the issuer URL needed for `quarkus.oidc.auth-server-url`, as well as the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
+By the completion of this guide, you will have obtained the issuer URL needed for `quarkus.oidc.auth-server-url`, as well as the audience value for `quarkus.oidc.token.audience` and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
 
 !!! note "Keycloak version"
-    This guide applies to **Keycloak 22 and later** (Quarkus-based). Versions older than version 17 (WildFly-based) use a different admin interface and URL structure.
+    This guide applies to **Keycloak 22 and later** (Quarkus-based). Versions older than version 17 (WildFly-based) use a different admin interface and URL structure. [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application) requires Keycloak 26.2 or later, the first version with standard token exchange.
 
 ## Quick Start
 
 1. **Create a realm** (or use an existing one).
 2. **Create a client per flow:** Enable **Standard flow** for Authorization Code. Enable **Client authentication** and **Service accounts roles** for Client Credentials.
-3. **Add the write scope**, in write mode only: create an `mcp:write` client scope under **Client scopes** with **Include in token scope** on, then attach it to the client as **Optional**.
-4. **Create users** for those logging in via the Authorization Code flow. (This is not required for Client Credentials.)
-5. **Note the realm issuer URL**: `http://<keycloak-host>:8080/realms/<realm-name>`.
-6. **Set `quarkus.oidc.auth-server-url`** and **`quarkus.oidc.resource-metadata.scopes`** in `application.properties`. In write mode the scopes list is `mcp:write`, which is what makes the client request it.
-7. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../index.md#start-the-server) documentation.
+3. **Add the token audience:** create a client scope with an **Audience** mapper whose **Included Custom Audience** is the audience value (for example `nsql-mcp`), and attach it to those clients as **Default**.
+4. **Add the write scope**, in write mode only: create an `mcp:write` client scope under **Client scopes** with **Include in token scope** on, then attach it to the client as **Optional**.
+5. **Create users** for those logging in via the Authorization Code flow. (This is not required for Client Credentials.)
+6. **Note the realm issuer URL**: `http://<keycloak-host>:8080/realms/<realm-name>`.
+7. **Set `quarkus.oidc.auth-server-url`**, **`quarkus.oidc.token.audience`** (the Included Custom Audience value) and **`quarkus.oidc.resource-metadata.scopes`** in `application.properties`. In write mode the scopes list is `mcp:write`, which is what makes the client request it.
+8. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../index.md#start-the-server) documentation.
 
 
 ## Prerequisites
@@ -122,6 +123,65 @@ Create one client for each required flow:
 | **Client ID** | The **Client ID** entered for each client.                                             |
 | **Client Secret** | Clients > [your client] > **Credentials** tab. Only needed for the Client Credentials client |
 
+### Step 2.1: Add the Token Audience
+
+The server rejects any token whose `aud` claim does not contain the value of `quarkus.oidc.token.audience`. Keycloak does not add such an audience on its own, so tokens carry no audience for this server until you add one.
+
+#### Create the Client Scope
+
+1. Navigate to **Client scopes** in the left sidebar and select **Create client scope**.
+2. Complete the following fields:
+
+    | Field | Value |
+    |-------|-------|
+    | **Name** | `nsql-mcp-audience` |
+    | **Type** | `None` |
+    | **Protocol** | `openid-connect` |
+    | **Include in token scope** | `On` |
+
+3. Select **Save**.
+
+#### Add the Audience Mapper
+
+1. Open the new scope and select the **Mappers** tab.
+2. Select **Configure a new mapper**, then choose **Audience**.
+3. Complete the following fields:
+
+    | Field | Value |
+    |-------|-------|
+    | **Name** | Any label, for example `nsql-mcp-audience` |
+    | **Included Client Audience** | Leave empty |
+    | **Included Custom Audience** | `nsql-mcp` |
+    | **Add to access token** | `On` |
+    | **Add to ID token** | `Off` |
+
+4. Select **Save**.
+
+!!! note "The mapper Name is only a label"
+    The **Name** field does not affect the token. The audience is the value of **Included Custom Audience**, and that is the value you set in `quarkus.oidc.token.audience`.
+
+!!! warning "Never use the MCP client's own ID as the audience"
+    Do not select the MCP client's own ID (for example `nosql-mcp-client`) under **Included Client Audience**. The `aud` claim must name this server, not the application that requests the token.
+
+#### Attach It to the Clients
+
+1. Navigate to **Clients >** your client, and select the **Client scopes** tab.
+2. Select **Add client scope**, select `nsql-mcp-audience`, then select **Add > Default**.
+3. Repeat for each client that MCP clients use, for example Client A and Client B in [Step 2](#step-2-create-keycloak-clients).
+
+Attached as **Default**, the scope puts the audience in every token the client issues, without the client having to request it.
+
+#### Check the Audience (Optional)
+
+Keycloak can show the token it would issue, without a login:
+
+1. Navigate to **Clients >** your client, select the **Client scopes** tab, then the **Evaluate** sub-tab.
+2. Select a user, then open **Generated access token**.
+3. Confirm that the `aud` claim contains `nsql-mcp`.
+
+!!! tip "Planning to use token exchange?"
+    If a calling application will use token exchange, the audience value must also be the Client ID of a Keycloak client, because the `audience` parameter of a Keycloak token exchange takes a client ID. Using `nsql-mcp` here keeps the two aligned. See [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application).
+
 
 ## Step 3: Add the Write Scope (Write Mode Only)
 
@@ -140,7 +200,7 @@ In write mode, the server checks every write call for the `mcp:write` scope and 
     | **Description** | `Write access to NoSQL objects` | A label for administrators. |
     | **Type** | `None` | You attach it to a client in the next section. |
     | **Protocol** | `openid-connect` | — |
-    | **Include in token scope** | `On` | Puts the scope in the token's `scope` claim, which is the only place the server reads it from. |
+    | **Include in token scope** | `On` | Keycloak puts the scope in the token's `scope` claim, which the server reads. |
 
 3. Select **Save**.
 
@@ -192,13 +252,16 @@ Create users in Keycloak who will sign in through your MCP client.
 
 ## Step 5: Configure and Start the Server
 
-The Actian MCP Server requires the Keycloak realm issuer URL to validate tokens. It does not require the client ID or secret; those are used exclusively by the MCP client.
+The Actian MCP Server requires the Keycloak realm issuer URL and the audience value from [Step 2.1](#step-21-add-the-token-audience) to validate tokens. It does not require the client ID or secret; those are used exclusively by the MCP client.
+
+If Keycloak uses a self-signed or internal-CA certificate, also see [Trusting a Self-Signed or Internal-CA Identity Provider Certificate](../index.md#trusting-a-self-signed-or-internal-ca-identity-provider-certificate).
 
 ### Mapping Summary
 
 | `application.properties` Property | Keycloak Source | Example Value |
 |---|---|---|
 | `quarkus.oidc.auth-server-url` | Realm issuer URL | `http://<keycloak-host>:8080/realms/actian-nosql-mcp` |
+| `quarkus.oidc.token.audience` | Included Custom Audience from Step 2.1 | `nsql-mcp` |
 | `quarkus.oidc.resource-metadata.scopes` | — | `openid,profile,email` on a read-only server, `mcp:write` in write mode |
 
 !!! caution "Set the scopes list, even on a read-only server"
@@ -216,8 +279,39 @@ Add the following to the `application.properties` and start the server as descri
 nsql.connectionURL=<connection-url>
 mcp.auth.enabled=true
 quarkus.oidc.auth-server-url=http://<keycloak-host>:8080/realms/actian-nosql-mcp
+quarkus.oidc.token.audience=nsql-mcp
 quarkus.oidc.resource-metadata.scopes=openid,profile,email
 ```
+
+
+## Token Exchange for a Calling Application
+
+Use this section for an application that has already signed the user in and calls this server for that user. For the concept, see [Calling Applications](../index.md#calling-applications). The recipe uses Keycloak 26.2 standard token exchange (RFC 8693).
+
+1. **Create a client for the audience.** Create a client whose Client ID equals the audience value, `nsql-mcp`, with every flow off: **Client authentication** `Off`, and **Standard flow**, **Direct access grants** and **Service accounts roles** unchecked. The client exists only so that the `audience` parameter of the exchange request can name it.
+2. **Configure the calling application's client.** For the calling application's client (example Client ID `actian-agentic`), set **Client authentication** to `On`, because only confidential clients may exchange tokens, and check **Standard Token Exchange**.
+3. **Attach the scopes as Optional.** On the calling client's **Client scopes** tab, add `nsql-mcp-audience` and `mcp:write` as **Optional**.
+
+    !!! warning "Optional, not Default"
+        If the audience scope is **Default** on the calling client, the application's own login token already carries this server's audience and the server accepts it without any exchange. If the scopes are not attached at all, the exchange fails with this error:
+
+        ```text
+        invalid_scope: Invalid scopes: nsql-mcp-audience mcp:write
+        ```
+
+4. **Send the exchange request.** The calling application posts the user's existing access token to the realm's token endpoint, `<issuer-url>/protocol/openid-connect/token`, authenticating with its client ID and secret and sending these form parameters:
+
+    | Parameter | Value |
+    |---|---|
+    | `grant_type` | `urn:ietf:params:oauth:grant-type:token-exchange` |
+    | `subject_token` | The user's access token |
+    | `subject_token_type` | `urn:ietf:params:oauth:token-type:access_token` |
+    | `audience` | `nsql-mcp` |
+    | `scope` | `nsql-mcp-audience mcp:write` |
+
+5. **Check the result.** In the returned token, `aud` is exactly `nsql-mcp` (the original audience, for example `account`, is dropped), `azp` is the calling client, and the user is the same (`preferred_username`). Omit `mcp:write` from `scope` to get a read-only token.
+
+The server validates the audience, not how the token was obtained.
 
 
 ## Verify End-to-End
@@ -231,7 +325,7 @@ After starting the Actian MCP Server with OAuth configured:
 3. The MCP client redirects you to the Keycloak login page.
 4. After logging in, Keycloak issues an access token to the MCP client.
 5. The MCP client includes the Bearer token in all subsequent requests.
-6. The server validates the token signature against Keycloak's JWKS endpoint and grants access.
+6. The server validates the token signature against Keycloak's JWKS endpoint and checks the audience, then grants access.
 
 ### Client Credentials Flow
 
@@ -240,7 +334,7 @@ For automated clients using Service Accounts:
 1. The client authenticates directly with Keycloak using its **Client ID** and **Client Secret**.
 2. Keycloak issues an access token without any user interaction.
 3. The client includes the Bearer token in all requests to the MCP server.
-4. The server validates the token signature against Keycloak's JWKS endpoint and grants access.
+4. The server validates the token signature against Keycloak's JWKS endpoint and checks the audience, then grants access.
 
 ## Staging Versus Production
 

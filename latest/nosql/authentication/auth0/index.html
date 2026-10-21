@@ -2666,6 +2666,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#calling-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling Applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#output-of-step-4" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3175,6 +3186,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#calling-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling Applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#output-of-step-4" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3388,7 +3410,7 @@
 <p class="admonition-title">Manual client registration</p>
 <p>This guide focuses on manually created clients. Dynamic Client Registration (DCR) is not covered in this documentation.</p>
 </div>
-<p>By the completion of this guide, you will have obtained the issuer URL needed for <code>quarkus.oidc.auth-server-url</code>, as well as the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.</p>
+<p>By the completion of this guide, you will have obtained the issuer URL needed for <code>quarkus.oidc.auth-server-url</code>, the audience value for <code>quarkus.oidc.token.audience</code>, as well as the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.</p>
 <div class="admonition info">
 <p class="admonition-title">Reference</p>
 <p><a href="https://auth0.com/docs/authenticate/protocols/openid-connect-protocol">Auth0 OpenID Connect documentation</a></p>
@@ -3397,13 +3419,13 @@
 <ol>
 <li><strong>Create a Database Connection:</strong> Navigate to <strong>Authentication &gt; Database &gt; + Create DB Connection</strong> if one does not exist.</li>
 <li><strong>Create users:</strong> Navigate to <strong>User Management &gt; Users &gt; + Create User</strong> for individuals who will log in via the Authorization Code flow.</li>
-<li><strong>Create an API:</strong> Navigate to <strong>Applications &gt; APIs &gt; + Create API</strong>. The "Identifier" becomes the audience for which MCP clients request tokens. Auth0 automatically creates a <strong>Machine to Machine</strong> application with access to this API and uses it directly for Client Credentials flow.</li>
+<li><strong>Create an API:</strong> Navigate to <strong>Applications &gt; APIs &gt; + Create API</strong>. The "Identifier" becomes the audience for which MCP clients request tokens. It is also the value of <code>quarkus.oidc.token.audience</code>, character for character. Auth0 automatically creates a <strong>Machine to Machine</strong> application with access to this API and uses it directly for Client Credentials flow.</li>
 <li><strong>Add the write scope</strong>, in write mode only: add an <code>mcp:write</code> permission on the API's <strong>Permissions</strong> tab, turn on <strong>Enable RBAC</strong> under <strong>Settings &gt; RBAC Settings</strong>, then grant it through a role under <strong>User Management &gt; Roles</strong>. Each application also selects it on its own <strong>API Access</strong> tab.</li>
 <li><strong>Create an Application:</strong> Navigate to <strong>Applications &gt; Applications &gt; + Create Application</strong>. Choose <strong>Native</strong>, <strong>Regular Web Application</strong>, or <strong>Single Page Application</strong>. Copy the Client ID for the configuration.</li>
 <li><strong>Configure Allowed Callback URLs:</strong> Set the <strong>Allowed Callback URLs</strong> in the application settings to match the MCP client’s redirect URI.</li>
 <li><strong>Grant API access:</strong> Under the <strong>APIs</strong> tab of the application, authorize the API created in step 3.</li>
 <li><strong>Enable compatibility profile:</strong> Under <strong>Settings &gt; Advanced</strong>, enable the <strong>Resource Parameter Compatibility Profile</strong>.</li>
-<li><strong>Update properties:</strong> Set <code>quarkus.oidc.auth-server-url</code> in <code>application.properties</code> to <code>https://&lt;your-tenant&gt;.auth0.com/</code>.</li>
+<li><strong>Update properties:</strong> Set <code>quarkus.oidc.auth-server-url</code> in <code>application.properties</code> to <code>https://&lt;your-tenant&gt;.auth0.com/</code> and <code>quarkus.oidc.token.audience</code> to the API Identifier. In write mode, also set <code>quarkus.oidc.resource-metadata.scopes=mcp:write</code>.</li>
 <li><strong>Start the server:</strong> Follow the standard server startup instructions as described in <a href="../../index.html#start-the-server">Start the Server</a> documentation.</li>
 </ol>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
@@ -3495,6 +3517,10 @@
 <p>Select <strong>Create</strong>.</p>
 </li>
 </ol>
+<div class="admonition important">
+<p class="admonition-title">The Identifier is the audience the server checks</p>
+<p>Set <code>quarkus.oidc.token.audience</code> to the Identifier exactly, with a trailing <code>/</code> included or excluded in the same way.</p>
+</div>
 <h3 id="step-31-add-the-write-scope-write-mode-only">Step 3.1: Add the Write Scope (Write Mode Only)<a class="headerlink" href="#step-31-add-the-write-scope-write-mode-only" title="Permanent link">&para;</a></h3>
 <p>Skip this step when <code>nsql.writes.enabled</code> is <code>false</code>. A read-only server never inspects the scope.</p>
 <p>In write mode, the server checks every write call for the <code>mcp:write</code> scope and rejects a token that lacks it. Auth0 models that scope as a <strong>permission</strong> on the API, so this step defines the permission and turns on the setting that lets Auth0 issue it. You choose which applications receive it later, in <a href="#grant-api-access">Grant API Access</a>. For what the server does with the scope, see <a href="../../write-support.html#what-each-call-must-clear">Write support</a>.</p>
@@ -3524,10 +3550,10 @@
 </li>
 </ol>
 <h4 id="enable-rbac">Enable RBAC<a class="headerlink" href="#enable-rbac" title="Permanent link">&para;</a></h4>
-<p>On the API's <strong>Settings</strong> tab, scroll to <strong>RBAC Settings</strong>, turn on <strong>Enable RBAC</strong>, and select <strong>Save</strong>. With RBAC on, Auth0 checks what the caller holds before it fills the token's <code>scope</code> claim, which is the claim the server reads. If you leave RBAC off, Auth0 ignores the grant, and <code>mcp:write</code> never reaches the token.</p>
+<p>On the API's <strong>Settings</strong> tab, scroll to <strong>RBAC Settings</strong>, turn on <strong>Enable RBAC</strong>, and select <strong>Save</strong>. With RBAC on, Auth0 checks what the caller holds before it fills the token's <code>scope</code> claim, which is the claim the server reads. Without RBAC, Auth0 grants any defined API scope that a client requests, so any user of an authorized application can obtain <code>mcp:write</code>. RBAC is what makes write access per user.</p>
 <div class="admonition note">
-<p class="admonition-title"><strong>Add Permissions in the Access Token</strong> is not needed</p>
-<p>That neighboring toggle adds the same grants to a separate <code>permissions</code> claim. This server never reads that claim; the only claim it inspects is <code>scope</code>. Turning the toggle on causes no harm if another system in your environment needs it.</p>
+<p class="admonition-title"><strong>Add Permissions in the Access Token</strong> is optional</p>
+<p>That neighboring toggle adds the user's granted permissions to a separate <code>permissions</code> claim. The server reads <code>mcp:write</code> from that claim as well as from <code>scope</code>. With the toggle on, a user whose role grants <code>mcp:write</code> can write even when the client did not request the scope, so a client cannot limit itself below the user's role. With the toggle off, only <code>scope</code> counts and a client can ask for less. This guide keeps the toggle off and relies on the scope request.</p>
 </div>
 <h4 id="grant-it-through-a-role">Grant It Through a Role<a class="headerlink" href="#grant-it-through-a-role" title="Permanent link">&para;</a></h4>
 <p>A role is how an interactive user receives the permission. Skip this section if you use only the Client Credentials flow, which has no user.</p>
@@ -3640,6 +3666,9 @@
 <p class="admonition-title">Both flows need this, and the interactive one needs a role as well</p>
 <p>The permission list controls what the application is <em>allowed to request</em>. For Client Credentials that is the entire grant, because there is no user whose role could carry it. For the Authorization Code flow it is only half: the signed-in user must also hold <code>mcp:write</code> through the role created in <a href="#step-31-add-the-write-scope-write-mode-only">Step 3.1</a>, or the token is issued without the scope.</p>
 </div>
+<h3 id="calling-applications">Calling Applications<a class="headerlink" href="#calling-applications" title="Permanent link">&para;</a></h3>
+<p>An application that has already signed the user in and calls this server for that user (see <a href="../index.html#calling-applications">Calling Applications</a>) requests the API Identifier as its <code>audience</code> when the user signs in. Auth0 offers no equivalent of the Keycloak standard token exchange for this case, so there is no exchange step.</p>
+<p>Authorize that application for the API as described in <a href="#grant-api-access">Grant API Access</a>. In write mode, have it include <code>mcp:write</code> in its scope request.</p>
 <h3 id="output-of-step-4">Output of Step 4<a class="headerlink" href="#output-of-step-4" title="Permanent link">&para;</a></h3>
 <p>Retain the following values for your MCP client configuration:</p>
 <table>
@@ -3668,6 +3697,7 @@
 <li>Enable <strong>Resource Parameter Compatibility Profile</strong>.</li>
 <li>Select <strong>Save</strong>.</li>
 </ol>
+<p>MCP clients name the server they want a token for in the standard <code>resource</code> parameter, not in the Auth0-specific <code>audience</code> parameter. With this profile on, Auth0 treats <code>resource</code> as the audience, so the API Identifier must match the server URL that clients send, for example <code>https://&lt;mcp-server-host&gt;:8443/mcp</code>.</p>
 <h2 id="step-6-configure-and-start-the-server">Step 6: Configure and Start the Server<a class="headerlink" href="#step-6-configure-and-start-the-server" title="Permanent link">&para;</a></h2>
 <p>The Actian MCP Server requires the Auth0 issuer URL to validate incoming tokens.</p>
 <h3 id="mapping-summary">Mapping Summary<a class="headerlink" href="#mapping-summary" title="Permanent link">&para;</a></h3>
@@ -3684,6 +3714,11 @@
 <td><code>quarkus.oidc.auth-server-url</code></td>
 <td>Your Auth0 tenant domain</td>
 <td><code>https://dev-abc123.us.auth0.com/</code></td>
+</tr>
+<tr>
+<td><code>quarkus.oidc.token.audience</code></td>
+<td>API Identifier from Step 3</td>
+<td><code>https://&lt;mcp-server-host&gt;:8443/mcp</code></td>
 </tr>
 <tr>
 <td><code>quarkus.oidc.resource-metadata.scopes</code></td>
@@ -3706,8 +3741,10 @@
 <div class="language-properties highlight"><pre><span></span><code><span class="na">nsql.connectionURL</span><span class="o">=</span><span class="s">&lt;connection-url&gt;</span>
 <span class="na">mcp.auth.enabled</span><span class="o">=</span><span class="s">true</span>
 <span class="na">quarkus.oidc.auth-server-url</span><span class="o">=</span><span class="s">https://dev-abc123.us.auth0.com/</span>
+<span class="na">quarkus.oidc.token.audience</span><span class="o">=</span><span class="s">https://&lt;mcp-server-host&gt;:8443/mcp</span>
+<span class="c1"># Write mode only</span>
+<span class="na">quarkus.oidc.resource-metadata.scopes</span><span class="o">=</span><span class="s">mcp:write</span>
 </code></pre></div>
-<p>In write mode, add <code>quarkus.oidc.resource-metadata.scopes=mcp:write</code> to the same file.</p>
 <h2 id="verify-end-to-end">Verify End-to-End<a class="headerlink" href="#verify-end-to-end" title="Permanent link">&para;</a></h2>
 <h3 id="authorization-code-flow">Authorization Code Flow<a class="headerlink" href="#authorization-code-flow" title="Permanent link">&para;</a></h3>
 <p>After starting the Actian MCP Server with OAuth configured:</p>
@@ -3717,7 +3754,7 @@
 <li>The MCP client redirects you to the Auth0 login page.</li>
 <li>After logging in, Auth0 issues an access token to the MCP client.</li>
 <li>The MCP client includes the Bearer token in all subsequent requests.</li>
-<li>The server validates the token signature against Auth0's JWKS endpoint and grants access.</li>
+<li>The server validates the token signature against Auth0's JWKS endpoint and checks the audience, then grants access.</li>
 </ol>
 <h3 id="client-credentials-flow">Client Credentials Flow<a class="headerlink" href="#client-credentials-flow" title="Permanent link">&para;</a></h3>
 <p>For automated clients using the Machine to Machine application:</p>
@@ -3725,7 +3762,7 @@
 <li>The client authenticates directly with Auth0 using its <strong>Client ID</strong> and <strong>Client Secret</strong>.</li>
 <li>Auth0 issues an access token without any user interaction.</li>
 <li>The client includes the Bearer token in all requests to the MCP server.</li>
-<li>The server validates the token signature against Auth0's JWKS endpoint and grants access.</li>
+<li>The server validates the token signature against Auth0's JWKS endpoint and checks the audience, then grants access.</li>
 </ol>
 <h2 id="staging-versus-production">Staging Versus Production<a class="headerlink" href="#staging-versus-production" title="Permanent link">&para;</a></h2>
 <table>
@@ -3766,7 +3803,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 19, 2026 20:11:20 UTC">October 19, 2026</span>
   </span>
 
     

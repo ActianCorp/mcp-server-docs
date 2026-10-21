@@ -2643,6 +2643,67 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-21-add-the-token-audience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.1: Add the Token Audience
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.1: Add the Token Audience">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-client-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create the Client Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-the-audience-mapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add the Audience Mapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attach-it-to-the-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attach It to the Clients
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-the-audience-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check the Audience (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2661,7 +2722,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#create-the-client-scope" class="md-nav__link">
+  <a href="#create-the-client-scope_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Create the Client Scope
@@ -2745,6 +2806,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#token-exchange-for-a-calling-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Exchange for a Calling Application
+      
+    </span>
+  </a>
   
 </li>
       
@@ -3113,6 +3185,67 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-21-add-the-token-audience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.1: Add the Token Audience
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.1: Add the Token Audience">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-client-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create the Client Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-the-audience-mapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add the Audience Mapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attach-it-to-the-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attach It to the Clients
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-the-audience-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check the Audience (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3131,7 +3264,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#create-the-client-scope" class="md-nav__link">
+  <a href="#create-the-client-scope_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Create the Client Scope
@@ -3215,6 +3348,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#token-exchange-for-a-calling-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Exchange for a Calling Application
+      
+    </span>
+  </a>
   
 </li>
       
@@ -3366,19 +3510,20 @@
 <p class="admonition-title">Manual client registration</p>
 <p>This guide focuses on manually created clients. Dynamic Client Registration (DCR) is not covered in this documentation.</p>
 </div>
-<p>By the completion of this guide, you will have obtained the issuer URL needed for <code>quarkus.oidc.auth-server-url</code>, as well as the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.</p>
+<p>By the completion of this guide, you will have obtained the issuer URL needed for <code>quarkus.oidc.auth-server-url</code>, as well as the audience value for <code>quarkus.oidc.token.audience</code> and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.</p>
 <div class="admonition note">
 <p class="admonition-title">Keycloak version</p>
-<p>This guide applies to <strong>Keycloak 22 and later</strong> (Quarkus-based). Versions older than version 17 (WildFly-based) use a different admin interface and URL structure.</p>
+<p>This guide applies to <strong>Keycloak 22 and later</strong> (Quarkus-based). Versions older than version 17 (WildFly-based) use a different admin interface and URL structure. <a href="#token-exchange-for-a-calling-application">Token Exchange for a Calling Application</a> requires Keycloak 26.2 or later, the first version with standard token exchange.</p>
 </div>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Create a realm</strong> (or use an existing one).</li>
 <li><strong>Create a client per flow:</strong> Enable <strong>Standard flow</strong> for Authorization Code. Enable <strong>Client authentication</strong> and <strong>Service accounts roles</strong> for Client Credentials.</li>
+<li><strong>Add the token audience:</strong> create a client scope with an <strong>Audience</strong> mapper whose <strong>Included Custom Audience</strong> is the audience value (for example <code>nsql-mcp</code>), and attach it to those clients as <strong>Default</strong>.</li>
 <li><strong>Add the write scope</strong>, in write mode only: create an <code>mcp:write</code> client scope under <strong>Client scopes</strong> with <strong>Include in token scope</strong> on, then attach it to the client as <strong>Optional</strong>.</li>
 <li><strong>Create users</strong> for those logging in via the Authorization Code flow. (This is not required for Client Credentials.)</li>
 <li><strong>Note the realm issuer URL</strong>: <code>http://&lt;keycloak-host&gt;:8080/realms/&lt;realm-name&gt;</code>.</li>
-<li><strong>Set <code>quarkus.oidc.auth-server-url</code></strong> and <strong><code>quarkus.oidc.resource-metadata.scopes</code></strong> in <code>application.properties</code>. In write mode the scopes list is <code>mcp:write</code>, which is what makes the client request it.</li>
+<li><strong>Set <code>quarkus.oidc.auth-server-url</code></strong>, <strong><code>quarkus.oidc.token.audience</code></strong> (the Included Custom Audience value) and <strong><code>quarkus.oidc.resource-metadata.scopes</code></strong> in <code>application.properties</code>. In write mode the scopes list is <code>mcp:write</code>, which is what makes the client request it.</li>
 <li><strong>Start the server:</strong> Follow the standard server startup instructions as described in <a href="../../index.html#start-the-server">Start the Server</a> documentation.</li>
 </ol>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
@@ -3623,10 +3768,115 @@
 </tr>
 </tbody>
 </table>
+<h3 id="step-21-add-the-token-audience">Step 2.1: Add the Token Audience<a class="headerlink" href="#step-21-add-the-token-audience" title="Permanent link">&para;</a></h3>
+<p>The server rejects any token whose <code>aud</code> claim does not contain the value of <code>quarkus.oidc.token.audience</code>. Keycloak does not add such an audience on its own, so tokens carry no audience for this server until you add one.</p>
+<h4 id="create-the-client-scope">Create the Client Scope<a class="headerlink" href="#create-the-client-scope" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Navigate to <strong>Client scopes</strong> in the left sidebar and select <strong>Create client scope</strong>.</li>
+<li>
+<p>Complete the following fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>nsql-mcp-audience</code></td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><strong>Protocol</strong></td>
+<td><code>openid-connect</code></td>
+</tr>
+<tr>
+<td><strong>Include in token scope</strong></td>
+<td><code>On</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Select <strong>Save</strong>.</p>
+</li>
+</ol>
+<h4 id="add-the-audience-mapper">Add the Audience Mapper<a class="headerlink" href="#add-the-audience-mapper" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Open the new scope and select the <strong>Mappers</strong> tab.</li>
+<li>Select <strong>Configure a new mapper</strong>, then choose <strong>Audience</strong>.</li>
+<li>
+<p>Complete the following fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td>Any label, for example <code>nsql-mcp-audience</code></td>
+</tr>
+<tr>
+<td><strong>Included Client Audience</strong></td>
+<td>Leave empty</td>
+</tr>
+<tr>
+<td><strong>Included Custom Audience</strong></td>
+<td><code>nsql-mcp</code></td>
+</tr>
+<tr>
+<td><strong>Add to access token</strong></td>
+<td><code>On</code></td>
+</tr>
+<tr>
+<td><strong>Add to ID token</strong></td>
+<td><code>Off</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Select <strong>Save</strong>.</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">The mapper Name is only a label</p>
+<p>The <strong>Name</strong> field does not affect the token. The audience is the value of <strong>Included Custom Audience</strong>, and that is the value you set in <code>quarkus.oidc.token.audience</code>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Never use the MCP client's own ID as the audience</p>
+<p>Do not select the MCP client's own ID (for example <code>nosql-mcp-client</code>) under <strong>Included Client Audience</strong>. The <code>aud</code> claim must name this server, not the application that requests the token.</p>
+</div>
+<h4 id="attach-it-to-the-clients">Attach It to the Clients<a class="headerlink" href="#attach-it-to-the-clients" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Navigate to <strong>Clients &gt;</strong> your client, and select the <strong>Client scopes</strong> tab.</li>
+<li>Select <strong>Add client scope</strong>, select <code>nsql-mcp-audience</code>, then select <strong>Add &gt; Default</strong>.</li>
+<li>Repeat for each client that MCP clients use, for example Client A and Client B in <a href="#step-2-create-keycloak-clients">Step 2</a>.</li>
+</ol>
+<p>Attached as <strong>Default</strong>, the scope puts the audience in every token the client issues, without the client having to request it.</p>
+<h4 id="check-the-audience-optional">Check the Audience (Optional)<a class="headerlink" href="#check-the-audience-optional" title="Permanent link">&para;</a></h4>
+<p>Keycloak can show the token it would issue, without a login:</p>
+<ol>
+<li>Navigate to <strong>Clients &gt;</strong> your client, select the <strong>Client scopes</strong> tab, then the <strong>Evaluate</strong> sub-tab.</li>
+<li>Select a user, then open <strong>Generated access token</strong>.</li>
+<li>Confirm that the <code>aud</code> claim contains <code>nsql-mcp</code>.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Planning to use token exchange?</p>
+<p>If a calling application will use token exchange, the audience value must also be the Client ID of a Keycloak client, because the <code>audience</code> parameter of a Keycloak token exchange takes a client ID. Using <code>nsql-mcp</code> here keeps the two aligned. See <a href="#token-exchange-for-a-calling-application">Token Exchange for a Calling Application</a>.</p>
+</div>
 <h2 id="step-3-add-the-write-scope-write-mode-only">Step 3: Add the Write Scope (Write Mode Only)<a class="headerlink" href="#step-3-add-the-write-scope-write-mode-only" title="Permanent link">&para;</a></h2>
 <p>Skip this step when <code>nsql.writes.enabled</code> is <code>false</code>. A read-only server never inspects the scope.</p>
 <p>In write mode, the server checks every write call for the <code>mcp:write</code> scope and rejects a token that lacks it. In Keycloak, you create that scope once as a client scope, then attach it to the client that your writers authenticate through. For what the server does with the scope, see <a href="../../write-support.html#what-each-call-must-clear">Write support</a>.</p>
-<h3 id="create-the-client-scope">Create the Client Scope<a class="headerlink" href="#create-the-client-scope" title="Permanent link">&para;</a></h3>
+<h3 id="create-the-client-scope_1">Create the Client Scope<a class="headerlink" href="#create-the-client-scope_1" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Navigate to <strong>Client scopes</strong> in the left sidebar and select <strong>Create client scope</strong>.</li>
 <li>
@@ -3663,7 +3913,7 @@
 <tr>
 <td><strong>Include in token scope</strong></td>
 <td><code>On</code></td>
-<td>Puts the scope in the token's <code>scope</code> claim, which is the only place the server reads it from.</td>
+<td>Keycloak puts the scope in the token's <code>scope</code> claim, which the server reads.</td>
 </tr>
 </tbody>
 </table>
@@ -3744,7 +3994,8 @@
 <p>Some MCP clients add <code>offline_access</code> to their scope request to obtain a refresh token. Keycloak grants that scope only to a user who holds the <code>offline_access</code> <strong>realm role</strong>; making the client scope available is not enough. The failure looks like a client misconfiguration when it is really a user configuration problem. Assign the role under <strong>Users &gt;</strong> the user <strong>&gt; Role mapping &gt; Assign role &gt; Realm roles</strong>.</p>
 </div>
 <h2 id="step-5-configure-and-start-the-server">Step 5: Configure and Start the Server<a class="headerlink" href="#step-5-configure-and-start-the-server" title="Permanent link">&para;</a></h2>
-<p>The Actian MCP Server requires the Keycloak realm issuer URL to validate tokens. It does not require the client ID or secret; those are used exclusively by the MCP client.</p>
+<p>The Actian MCP Server requires the Keycloak realm issuer URL and the audience value from <a href="#step-21-add-the-token-audience">Step 2.1</a> to validate tokens. It does not require the client ID or secret; those are used exclusively by the MCP client.</p>
+<p>If Keycloak uses a self-signed or internal-CA certificate, also see <a href="../index.html#trusting-a-self-signed-or-internal-ca-identity-provider-certificate">Trusting a Self-Signed or Internal-CA Identity Provider Certificate</a>.</p>
 <h3 id="mapping-summary">Mapping Summary<a class="headerlink" href="#mapping-summary" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3759,6 +4010,11 @@
 <td><code>quarkus.oidc.auth-server-url</code></td>
 <td>Realm issuer URL</td>
 <td><code>http://&lt;keycloak-host&gt;:8080/realms/actian-nosql-mcp</code></td>
+</tr>
+<tr>
+<td><code>quarkus.oidc.token.audience</code></td>
+<td>Included Custom Audience from Step 2.1</td>
+<td><code>nsql-mcp</code></td>
 </tr>
 <tr>
 <td><code>quarkus.oidc.resource-metadata.scopes</code></td>
@@ -3778,8 +4034,61 @@
 <div class="language-properties highlight"><pre><span></span><code><span class="na">nsql.connectionURL</span><span class="o">=</span><span class="s">&lt;connection-url&gt;</span>
 <span class="na">mcp.auth.enabled</span><span class="o">=</span><span class="s">true</span>
 <span class="na">quarkus.oidc.auth-server-url</span><span class="o">=</span><span class="s">http://&lt;keycloak-host&gt;:8080/realms/actian-nosql-mcp</span>
+<span class="na">quarkus.oidc.token.audience</span><span class="o">=</span><span class="s">nsql-mcp</span>
 <span class="na">quarkus.oidc.resource-metadata.scopes</span><span class="o">=</span><span class="s">openid,profile,email</span>
 </code></pre></div>
+<h2 id="token-exchange-for-a-calling-application">Token Exchange for a Calling Application<a class="headerlink" href="#token-exchange-for-a-calling-application" title="Permanent link">&para;</a></h2>
+<p>Use this section for an application that has already signed the user in and calls this server for that user. For the concept, see <a href="../index.html#calling-applications">Calling Applications</a>. The recipe uses Keycloak 26.2 standard token exchange (RFC 8693).</p>
+<ol>
+<li><strong>Create a client for the audience.</strong> Create a client whose Client ID equals the audience value, <code>nsql-mcp</code>, with every flow off: <strong>Client authentication</strong> <code>Off</code>, and <strong>Standard flow</strong>, <strong>Direct access grants</strong> and <strong>Service accounts roles</strong> unchecked. The client exists only so that the <code>audience</code> parameter of the exchange request can name it.</li>
+<li><strong>Configure the calling application's client.</strong> For the calling application's client (example Client ID <code>actian-agentic</code>), set <strong>Client authentication</strong> to <code>On</code>, because only confidential clients may exchange tokens, and check <strong>Standard Token Exchange</strong>.</li>
+<li>
+<p><strong>Attach the scopes as Optional.</strong> On the calling client's <strong>Client scopes</strong> tab, add <code>nsql-mcp-audience</code> and <code>mcp:write</code> as <strong>Optional</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Optional, not Default</p>
+<p>If the audience scope is <strong>Default</strong> on the calling client, the application's own login token already carries this server's audience and the server accepts it without any exchange. If the scopes are not attached at all, the exchange fails with this error:</p>
+<div class="language-text highlight"><pre><span></span><code>invalid_scope: Invalid scopes: nsql-mcp-audience mcp:write
+</code></pre></div>
+</div>
+</li>
+<li>
+<p><strong>Send the exchange request.</strong> The calling application posts the user's existing access token to the realm's token endpoint, <code>&lt;issuer-url&gt;/protocol/openid-connect/token</code>, authenticating with its client ID and secret and sending these form parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grant_type</code></td>
+<td><code>urn:ietf:params:oauth:grant-type:token-exchange</code></td>
+</tr>
+<tr>
+<td><code>subject_token</code></td>
+<td>The user's access token</td>
+</tr>
+<tr>
+<td><code>subject_token_type</code></td>
+<td><code>urn:ietf:params:oauth:token-type:access_token</code></td>
+</tr>
+<tr>
+<td><code>audience</code></td>
+<td><code>nsql-mcp</code></td>
+</tr>
+<tr>
+<td><code>scope</code></td>
+<td><code>nsql-mcp-audience mcp:write</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>Check the result.</strong> In the returned token, <code>aud</code> is exactly <code>nsql-mcp</code> (the original audience, for example <code>account</code>, is dropped), <code>azp</code> is the calling client, and the user is the same (<code>preferred_username</code>). Omit <code>mcp:write</code> from <code>scope</code> to get a read-only token.</p>
+</li>
+</ol>
+<p>The server validates the audience, not how the token was obtained.</p>
 <h2 id="verify-end-to-end">Verify End-to-End<a class="headerlink" href="#verify-end-to-end" title="Permanent link">&para;</a></h2>
 <h3 id="authorization-code-flow">Authorization Code Flow<a class="headerlink" href="#authorization-code-flow" title="Permanent link">&para;</a></h3>
 <p>After starting the Actian MCP Server with OAuth configured:</p>
@@ -3789,7 +4098,7 @@
 <li>The MCP client redirects you to the Keycloak login page.</li>
 <li>After logging in, Keycloak issues an access token to the MCP client.</li>
 <li>The MCP client includes the Bearer token in all subsequent requests.</li>
-<li>The server validates the token signature against Keycloak's JWKS endpoint and grants access.</li>
+<li>The server validates the token signature against Keycloak's JWKS endpoint and checks the audience, then grants access.</li>
 </ol>
 <h3 id="client-credentials-flow">Client Credentials Flow<a class="headerlink" href="#client-credentials-flow" title="Permanent link">&para;</a></h3>
 <p>For automated clients using Service Accounts:</p>
@@ -3797,7 +4106,7 @@
 <li>The client authenticates directly with Keycloak using its <strong>Client ID</strong> and <strong>Client Secret</strong>.</li>
 <li>Keycloak issues an access token without any user interaction.</li>
 <li>The client includes the Bearer token in all requests to the MCP server.</li>
-<li>The server validates the token signature against Keycloak's JWKS endpoint and grants access.</li>
+<li>The server validates the token signature against Keycloak's JWKS endpoint and checks the audience, then grants access.</li>
 </ol>
 <h2 id="staging-versus-production">Staging Versus Production<a class="headerlink" href="#staging-versus-production" title="Permanent link">&para;</a></h2>
 <table>
@@ -3838,7 +4147,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 17, 2026 17:57:43 UTC">August 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 19, 2026 20:11:20 UTC">October 19, 2026</span>
   </span>
 
     

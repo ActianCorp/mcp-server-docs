@@ -58,6 +58,8 @@ sequenceDiagram
 | `mcp.auth.enabled` | Yes (to enable) | Set to `true` to enable OAuth2 authentication. Disabled by default. |
 | `quarkus.oidc.auth-server-url` | Yes (if enabled) | Issuer URL of your OIDC provider, for example, `https://your-idp.example.com/`. |
 | `quarkus.oidc.sse-tenant.auth-server-url` | No | Overrides the OIDC provider for the SSE endpoint (`/mcp/sse`) only. Defaults to `quarkus.oidc.auth-server-url`. |
+| `quarkus.oidc.token.audience` | Yes (if enabled) | The audience the server accepts in the `aud` claim of a token. Takes a comma-separated list. The server does not start without it. See [Token Audience](#token-audience). |
+| `quarkus.oidc.sse-tenant.token.audience` | No | Defaults to `quarkus.oidc.token.audience`. Set it only when you override the SSE provider. An empty value or `any` stops the server at startup. |
 | `quarkus.oidc.resource-metadata.scopes` | Depends on the provider | The scopes the server publishes as `scopes_supported` in its resource metadata, comma-separated. MCP clients read this list and request exactly those scopes. A Keycloak deployment should always set it; an Auth0 deployment needs it only in write mode. See [Advertising scopes to MCP clients](#advertising-scopes-to-mcp-clients). |
 
 !!! note "Quarkus OIDC configuration"
@@ -71,7 +73,34 @@ Two OIDC tenants are preconfigured:
 | Default | `/mcp/*` | `quarkus.oidc.*` |
 | SSE | `/mcp/sse` | `quarkus.oidc.sse-tenant.*` |
 
-Both tenants share the same authentication server URL by default. Override the SSE tenant only if that endpoint requires a different identity provider.
+Both tenants share the same authentication server URL by default. Override the SSE tenant only if that endpoint requires a different identity provider. The SSE tenant also takes its audience from `quarkus.oidc.token.audience`, so you set one property unless you override the SSE provider.
+
+### Token Audience
+
+The audience (`aud` claim) says which service a token is for; the `mcp:write` scope says whether the token may write. With authentication on, the server accepts a token only when its `aud` claim contains a value set in `quarkus.oidc.token.audience`:
+
+- The property takes a comma-separated list of audiences.
+- Matching is exact, so a trailing `/` matters.
+- A token without an `aud` claim is rejected.
+- The `aud` claim may be a string or an array. One matching value is enough.
+- The value `any` is refused, because Quarkus treats it as "skip the check".
+- The SSE tenant inherits the value.
+
+What to set depends on your provider:
+
+- **Auth0:** The API Identifier, character for character. See [Step 3: Create an Auth0 API](auth0/index.md#step-3-create-an-auth0-api).
+- **Keycloak:** The Included Custom Audience value of the Audience mapper, for example `nsql-mcp`. See [Step 2.1: Add the Token Audience](keycloak/index.md#step-21-add-the-token-audience).
+
+With authentication on and no audience set, the server exits at startup with an error that names `quarkus.oidc.token.audience`.
+
+### Calling Applications
+
+An application that has already signed the user in, for example Actian Agentic, can call this server for that user. It needs a token for the same user whose `aud` claim contains this server's audience:
+
+- **Keycloak:** The application exchanges the user's token with standard token exchange (RFC 8693). See [Token Exchange for a Calling Application](keycloak/index.md#token-exchange-for-a-calling-application).
+- **Auth0:** The application requests this server's audience when the user signs in. See [Calling Applications](auth0/index.md#calling-applications).
+
+The server accepts any token that carries its audience and cannot tell how the token was obtained, so keep this server's audience off the application's own login tokens. The application requests its own scopes, so `quarkus.oidc.resource-metadata.scopes` does not apply to it.
 
 ### Advertising Scopes to MCP Clients
 
@@ -82,7 +111,9 @@ The server never requests scopes of its own. It publishes the list in `quarkus.o
 | Set | Each client requests exactly the scopes you listed. A client that offers a manual scope field ignores it and uses the advertised list. |
 | Unset | `scopes_supported` is absent, so each client chooses on its own. Some request nothing and receive no write access. Others request every scope the identity provider advertises, which usually includes scopes the client cannot obtain. |
 
-Only one scope in that list matters to the server itself. In write mode, the server checks the token's `scope` claim for `mcp:write` and reads nothing else from the claim. The server never consumes an ID token, so `openid` is present only for clients that need one. The same applies to `profile` and `email`, which populate user claims that the server does not use.
+Only one scope in that list matters to the server itself. In write mode, the server looks for `mcp:write` in the union of three claims: `scope` (a space-delimited string), `scp` (a space-delimited string or an array) and `permissions` (an array, used by Auth0 role-based access control). A match in any one of them is enough. The server never consumes an ID token, so `openid` is present only for clients that need one. The same applies to `profile` and `email`, which populate user claims that the server does not use.
+
+Auth0 emits the `permissions` claim only when a specific setting is on. See [Enable RBAC](auth0/index.md#enable-rbac) in the Auth0 guide.
 
 #### Provider-Specific Settings
 
@@ -101,6 +132,12 @@ The value to use, and how much it matters, depends on your provider:
 !!! note "Write mode needs this on both sides"
     A server in write mode rejects a write unless the caller's token carries `mcp:write`. Two separate things must be true: the identity provider must issue the scope, and this server must advertise it. Configuring only the provider is the usual reason a client authenticates cleanly and still cannot write. For the provider half, see [Auth0](auth0/index.md#step-31-add-the-write-scope-write-mode-only) or [Keycloak](keycloak/index.md#step-3-add-the-write-scope-write-mode-only); for what the check does, see [Write support](../write-support.md#what-each-call-must-clear).
 
+### Caller Identity
+
+The server takes the caller's name from the token's principal (the `upn` claim, then `preferred_username`, then `sub`) for its logs and to tie a pending write confirmation to the user. A token without a user name claim is not rejected.
+
+The server does not impersonate users. Every database statement runs as the user in `nsql.connectionURL`, so what a caller may do is decided by the token's audience and the `mcp:write` scope. See [What each call must clear](../write-support.md#what-each-call-must-clear).
+
 ### Example
 
 Add the following to your `application.properties` and start the server as instructed in [Start the Server](../index.md#start-the-server):
@@ -109,8 +146,20 @@ Add the following to your `application.properties` and start the server as instr
 nsql.connectionURL=<connection-url>
 mcp.auth.enabled=true
 quarkus.oidc.auth-server-url=https://your-idp.example.com/
+quarkus.oidc.token.audience=<your-audience>
 ```
 
+### Trusting a Self-Signed or Internal-CA Identity Provider Certificate
+
+The server calls your IdP over HTTPS to read its discovery document and signing keys. It trusts certificates issued by public certificate authorities, so this applies only when the IdP certificate is self-signed or issued by an internal certificate authority. Give the server the IdP's CA certificate in a named TLS configuration and point both OIDC tenants at it:
+
+```properties
+quarkus.tls.idp.trust-store.pem.certs=/certs/idp-ca.crt
+quarkus.oidc.tls.tls-configuration-name=idp
+quarkus.oidc.sse-tenant.tls.tls-configuration-name=idp
+```
+
+Put the CA file in the certificate directory you mount into the container, as in the `-v $(pwd)/certs:/certs:ro` line of the [TLS example](#example_1). This is separate from the certificate the server presents to MCP clients, described in [Secure Remote Deployments with HTTPS and TLS](#secure-remote-deployments-with-https-and-tls).
 
 ## Secure Remote Deployments with HTTPS and TLS
 
@@ -151,7 +200,6 @@ docker run \
   -p 8443:8443 \
   actian/nsql-mcp-server:1.1.0
 ```
-
 
 ## Provider Setup Guides
 
