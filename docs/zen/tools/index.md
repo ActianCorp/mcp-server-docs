@@ -272,7 +272,7 @@ In `read-write` mode this tool also performs single-row writes. Those go through
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `columns` | `list` | All columns | Columns to return. Supports aggregates like `COUNT(*) AS total`. |
-| `where` | `dict` | — | Filter conditions, for example, `{"field": "salary", "operator": ">", "value": 50000}`. |
+| `where` | `dict` | — | Filter conditions for `select`, for example, `{"field": "salary", "operator": ">", "value": 50000}`. Not accepted for `update` or `delete`: those take `entity_id`; for a conditional UPDATE or DELETE use `execute_write_query`. |
 | `order_by` | `list` | — | Column names to sort by. |
 | `limit` | `integer` | `max_rows` | Maximum rows to return. Capped at `max_rows`. |
 | `offset` | `integer` | — | Number of rows to skip. |
