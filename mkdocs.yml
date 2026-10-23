@@ -49,6 +49,8 @@ nav:
           - Auth0: zen/authentication/auth0.md
           - Keycloak: zen/authentication/keycloak.md
       - Write Support: zen/write-support.md
+      - Multiple Databases: zen/multi-target.md
+      - Deployment Scenarios: zen/deployment.md
       - Extensions:
           - zen/extensions/index.md
           - Examples: zen/extensions/examples.md
