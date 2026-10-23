@@ -7,7 +7,8 @@ description: Built-in tools available when using the Actian MCP Server with Acti
 
 The Actian MCP Server for Actian Zen registers a different set of built-in tools per `query_mode` —
 six in `read-only`, five in `read-write` — so the tool list a client discovers differs between the
-two deployments. See [Write support](../write-support.md).
+two deployments. See [Write support](../write-support.md). A server that
+[serves several databases](../multi-target.md) adds [`list_accessible_targets`](#list_accessible_targets).
 
 ## Available Tools
 
@@ -29,6 +30,21 @@ two deployments. See [Write support](../write-support.md).
 Writes are authorized by the `mcp:write` scope and a human approval prompt, both described in
 [Write support](../write-support.md). Data Definition Language, explicit transactions, and
 bulk `batch_operation` are not available in any mode in this release.
+
+## Tool Annotations
+
+Every tool declares what calling it does, so a client can decide whether to ask the human before a call. The annotations follow the mode the tool is registered in:
+
+| Tool | `read-only` | `read-write` |
+|------|-------------|--------------|
+| `list_tables`, `describe_table`, `execute_query` | read-only | read-only — Zen's `execute_query` rejects every write in both modes |
+| `orm_operation` | read-only — insert, update and delete are refused | destructive write |
+| `blob_operation` | read-only | — |
+| `database_manage` | destructive write — `switch` and `release_locks` change server state, so the whole tool is marked | — |
+| `execute_write_query` | — | destructive write |
+| `list_accessible_targets` | read-only | read-only |
+
+"Read-only" is `readOnlyHint: true`, `idempotentHint: true`, `openWorldHint: false`. "Destructive write" is `readOnlyHint: false`, `destructiveHint: true`, `idempotentHint: false`, `openWorldHint: false`. Under multi-target the server publishes one tool list for all URLs, so a read-only persona still lists the write tools; the engine refuses them. Annotations are hints for the client, not a control: the write scope, the approval prompt and the tool handlers do the enforcing.
 
 ---
 
@@ -495,6 +511,37 @@ Provides server management operations: list available databases, list DSNs with 
   "features": ["sql", "blobs"]
 }
 ```
+
+---
+
+## list_accessible_targets
+
+Returns the databases a client may reach on a server that [serves several databases](../multi-target.md), with the path of each. Registered only when `conf.json` has a `targets` block. Target selection happens by the URL a session connects to, never by a tool argument, so this is how a client that knows a database name finds its URL.
+
+With authentication on, the list contains only the targets the caller's token grants; a token without any grant gets an empty list.
+
+### Parameters
+
+This tool takes no input parameters.
+
+### Output Schema
+
+```json
+{
+  "targets": [
+    {
+      "host": "zen16",
+      "instance": "admin",
+      "alias": null,
+      "databases": [
+        {"name": "DEMODATA", "path": "/mcp/zen16/admin/DEMODATA", "url": "https://mcp.example.com:8000/mcp/zen16/admin/DEMODATA"}
+      ]
+    }
+  ]
+}
+```
+
+`path` is always present; `url` is `null` unless `FASTMCP_SERVER_AUTH_BASE_URL` is configured. Append `/mcp` to the path for the MCP endpoint of that target. The same list is available as the resource `targets://accessible`.
 
 ---
 

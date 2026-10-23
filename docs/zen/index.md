@@ -22,6 +22,8 @@ The Actian MCP Server for Zen supports the following operations:
 | **Blob and file data** | List and download blob or file data stored in the database. Read-only mode. |
 | **Server management** | Query server capabilities, list DSNs, and release locks. Read-only mode.|
 | **Schema metadata** | View the database schema as a structured resource. |
+| **Several databases from one server** | Serve many databases and personas from one container, each at its own URL, with read-only personas and per-URL grants. See [Multiple Databases](multi-target.md). |
+| **Call log** | One JSON record per tool call — who, which target, which tool, outcome — in the container log. See [Call log](#call-log). |
 
 
 
@@ -91,10 +93,44 @@ Use this format when the database requires authentication. This bypasses the con
 | `query_mode` | `string` | `read-only` | `read-only` or `read-write`. Determines which tools are registered. See [Write support](write-support.md). |
 | `write_confirmation` | `boolean` | `true` | Set to `false` to run the built-in write tools without the human approval prompt. The `mcp:write` scope check still applies. Applies only when `query_mode` is `read-write`. |
 | `oauth` | `object` | — | OAuth configuration block for protected deployments, see [Authentication](authentication/index.md) for more information. |
+| `auth_mode` | `string` | — | `resource-server` makes the server verify tokens issued by your identity provider instead of running its own login. See [Resource-server mode](authentication/index.md#resource-server-mode). |
+| `ssl_certfile`, `ssl_keyfile` | `string` | — | In-container paths of the TLS certificate and key, `/app/server.crt` and `/app/server.key`. Required whenever OAuth is on and `host` is not `localhost`. See [HTTPS and TLS](authentication/index.md#secure-remote-deployments-with-https-and-tls). |
+| `call_log` | `boolean` | `true` | One JSON record per tool call in the container log. See [Call log](#call-log). |
+| `call_log_statements` | `boolean` | `false` | Adds the SQL text of `execute_query` and `execute_write_query` calls to the call log. The server logs a warning at every start while this is on. |
+| `targets` | `object` | — | Serve several databases and personas from one container, each at its own URL. See [Multiple Databases](multi-target.md). |
+| `zen_readonly_personas` | `array` | `[]` | Persona labels (the `instance` of a target entry) whose connections are opened read-only. See [Read-only personas](multi-target.md#read-only-personas). |
+| `allow_unscoped_reads` | `boolean` | `false` | Lets a caller without a per-target grant read. Needed to run several targets without authentication; a test-only setting otherwise. |
+| `targets_dir`, `targets_reload_interval` | `string`, `integer` | `/app/targets.d`, `10` | Directory of additional target files and how often it is checked. See [Adding a database without a restart](multi-target.md#adding-a-database-without-a-restart). |
 | `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md). |
 
 !!! note "OAuth and user impersonation"
-    Actian Zen does not support `SET SESSION AUTHORIZATION`. If you use OAuth, set `user_impersonation: false` in the `oauth` block. The server logs the authenticated user but does not enforce it at the database level.
+    Actian Zen does not support `SET SESSION AUTHORIZATION`. If you use OAuth, set `user_impersonation` to `false` **inside** the `oauth` block; a top-level key of that name is ignored. The server records the authenticated user in the call log but every query runs as the login in the connection string.
+
+## Several Databases from One Server
+
+A `targets` block turns the one-database server into one URL per engine, persona and database, each with its own connection to Zen: `http://<mcp-host>:8000/mcp/{host}/{instance}/{database}/mcp`. Personas listed in `zen_readonly_personas` are opened read-only; with an identity provider, each URL gets its own read and write grants. Configuration, URLs, hot add and remove, and limits are on [Multiple Databases](multi-target.md).
+
+## Call Log
+
+Every tool call writes one JSON line to the container log (`docker logs <container>`):
+
+```json
+{"ts": "2026-10-20T13:18:09.363+00:00", "user": "mcp_test_user", "target": "zen16/admin/DEMODATA",
+ "tool": "execute_write_query", "action": "write", "status": "ok", "rows": 1, "latency_ms": 62.0,
+ "correlation_id": "10dd6af8-5fe9-4e9c-baf8-97b6ab5377cc", "request_id": "3",
+ "detail": {"table": "Person", "operation": "insert"}}
+```
+
+| Field | Meaning |
+|-------|---------|
+| `user` | The authenticated user from the token when OAuth is on, otherwise `null`. Zen cannot run a query as that user, so this records who asked; the query itself runs as the connection-string login. |
+| `target` | `host/instance/database` of the routed URL, or the server and database of `conn_string` on a single-database server. |
+| `action` | `read`, `write` or `admin`, decided by the tool and its arguments, never by parsing SQL. |
+| `status` | `ok`, `error`, or `rejected` when the approval prompt was declined. |
+| `rows` | Rows returned for a read (capped by `max_rows`), rows affected for a write. |
+| `correlation_id` | The MCP session, so the calls of one conversation share it. |
+
+SQL text and row values are never recorded unless `call_log_statements` is `true`. The log is a record of what the server did, not an audit trail: nothing in it is tamper-evident. `"call_log": false` turns it off.
 
 
 ## Start the Server
@@ -136,11 +172,14 @@ After connecting, the MCP client automatically discovers the server's capabiliti
 - :material-lock: **[Authentication](authentication/index.md)**  
   Secure the server with OAuth 2.0 and an external identity provider.
 
+- :material-database-cog: **[Multiple Databases](multi-target.md)**
+  Serve several databases and personas from one container, each at its own URL.
+
+- :material-server-network: **[Deployment Scenarios](deployment.md)**
+  Where the engine, the server and the agents sit, and which settings each layout needs.
+
 - :material-tools: **[Tools](tools/index.md)**
   Learn more about the SQL, ORM, and blob tools exposed by the Zen server.
-
-- :material-pencil: **[Write support](write-support.md)**
-  Enable `query_mode`, and see the scope and approval checks every write passes.
 
 - :material-folder-open: **[Resources](resources/index.md)**
   Explore the resource types available through the server.
