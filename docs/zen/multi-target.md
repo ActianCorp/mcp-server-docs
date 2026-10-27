@@ -26,6 +26,9 @@ http://<mcp-host>:8000/mcp/zen16/admin/DEMODATA/mcp
 
 The first `mcp` in the path is the configurable prefix (`target_path_prefix`, default `mcp`); the last `mcp` is the endpoint. The `list_accessible_targets` tool returns the path of every entry the caller may use, see [Tools](tools/index.md#list_accessible_targets).
 
+!!! tip "Use a name for `host` that survives a move"
+    `host` is the engine address, the first URL segment and part of every per-target scope (`actian:{host}:{instance}:{database}:read`). If it is the machine name, moving the engine to another machine changes every client URL and every grant. Give the engine a stable DNS name instead, a CNAME such as `sales-db.corp`, or a hosts entry in the container (`docker run --add-host sales-db:10.1.2.3 ...`), and put that name in `host`. A move is then a DNS change and a restart of the MCP container. An entry's `alias` is only shown by `list_accessible_targets`; it does not change the URL.
+
 ## Configuration
 
 Three entries: a read-only persona and an admin persona on `DEMODATA`, and an application persona on `DEFAULTDB`, all on the engine `zen16`.
