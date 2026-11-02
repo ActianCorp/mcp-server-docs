@@ -208,7 +208,7 @@ The neutral API has no `ToolCallException`. `org.mcpjava.server.McpException` ca
 !!! warning "The message reaches the client"
     Whatever you put in an error message is shown to the caller, and so is an exception's class name when it has no message. This applies to tools, resources, resource templates and prompts alike. Keep secrets, and data the caller should not see, out of it.
 
-`SchemaExplorerExtension`, in the SDK, shows the pattern in its `extension_class_summary` tool: a blank or unknown class name returns an error result instead of throwing.
+`SchemaExplorerExtension`, in the SDK, shows the pattern in its `extension_get_object` tool: a blank, malformed or unknown LOID returns an error result instead of throwing.
 
 ### Getting the SDK
 
