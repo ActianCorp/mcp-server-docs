@@ -45,6 +45,7 @@ A few rules apply across the table:
 
 - Only a return type declared as `List` is split into one block per element. A `Set`, an array or another collection arrives as one JSON text block. To get plain text blocks from a list of strings, declare `List<String>`.
 - A `List<ToolResponse>` is not merged into one result. Each response arrives as its own JSON text block and the call is not an error result, so return a single `ToolResponse` when you need to control the result.
+- A method declared `Object` is matched by the value it returns only when that value is a `ToolResponse` or a content block, which arrive as in the table. Any other value arrives as one JSON text block, so a returned `String` arrives quoted and a returned list is not split. Declare `String` or `List<String>` to get plain text.
 - Returning `null` produces an error result that names the handler.
 
 #### Structured Output
@@ -58,7 +59,7 @@ A few rules apply across the table:
 | `outputSchemaFrom` alone on a `ToolResponse` | The response exactly as built. You set structured content that matches the schema yourself, for example with `ToolResponse.ofStructured(...)`. |
 | Both attributes on a `ToolResponse` | The schema comes from `outputSchemaFrom`, and the whole response is sent as the structured content. |
 
-With the server's default configuration, structured content also arrives as a text block carrying the same JSON. The exception is a `ToolResponse` sent exactly as built, which carries only the content you set.
+As the server ships, structured content also arrives as a text block carrying the same JSON. An operator can switch this off with `quarkus.mcp.server.tools.structured-content.compatibility-mode=false`. The exception is a `ToolResponse` sent exactly as built, which carries only the content you set.
 
 ### Resource Return Types
 
