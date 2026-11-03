@@ -65,11 +65,11 @@ Executes a read-only SQL query against Actian Zen with automatic dialect transla
     }
     ```
 
-    Data Definition Language is rejected the same way, and is not enabled in any mode:
+    Data Definition Language is rejected the same way:
 
     ```json
     {
-      "error": "DDL not allowed in this mode. Schema changes are blocked in 1.1 (deferred to full mode).",
+      "error": "DDL not allowed in execute_query. Schema changes (CREATE/ALTER/DROP) are not available in read-write mode.",
       "sql_classification": "DDL"
     }
     ```
