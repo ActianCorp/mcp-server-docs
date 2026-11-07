@@ -20,12 +20,15 @@ nav:
           - ingres/authentication/index.md
           - Auth0: ingres/authentication/auth0.md
           - Keycloak: ingres/authentication/keycloak.md
+          - Resource-Server Mode: ingres/authentication/resource-server.md
+      - Multi-Target Deployments: ingres/multi-target.md
       - Write Support: ingres/write-support.md
       - Extensions:
           - ingres/extensions/index.md
           - Examples: ingres/extensions/examples.md
           - API Reference: ingres/extensions/api-reference.md
       - Tools: ingres/tools/index.md
+      - Health Tools: ingres/health-tools.md
       - Resources: ingres/resources/index.md
       - Prompts: ingres/prompts/index.md
   - HCL Informix®:
@@ -64,12 +67,15 @@ nav:
           - analytics-engine/authentication/index.md
           - Auth0: analytics-engine/authentication/auth0.md
           - Keycloak: analytics-engine/authentication/keycloak.md
+          - Resource-Server Mode: analytics-engine/authentication/resource-server.md
+      - Multi-Target Deployments: analytics-engine/multi-target.md
       - Write Support: analytics-engine/write-support.md
       - Extensions:
           - analytics-engine/extensions/index.md
           - Examples: analytics-engine/extensions/examples.md
           - API Reference: analytics-engine/extensions/api-reference.md
       - Tools: analytics-engine/tools/index.md
+      - Vector Search: analytics-engine/vector-search.md
       - Resources: analytics-engine/resources/index.md
       - Prompts: analytics-engine/prompts/index.md
   - NoSQL:

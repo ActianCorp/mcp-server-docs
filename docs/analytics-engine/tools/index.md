@@ -5,7 +5,7 @@ description: Built-in tools available when using the Actian MCP Server with Acti
 
 # Tools
 
-The Actian MCP Server for the Actian Analytics Engine provides four built-in tools for database discovery and query execution.
+The Actian MCP Server for the Actian Analytics Engine provides five built-in tools for database discovery, query execution, and vector similarity search.
 
 
 ## Available Tools
@@ -19,6 +19,23 @@ Use the following tools to interact with the database:
 | [`list_tables`](#list_tables) | Lists all available user tables and views. |
 | [`describe_table`](#describe_table) | Returns column definitions and comments for a specific table. |
 | [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
+| [`vector_search`](#vector_search) | Returns the rows whose `VECTOR` column is most similar to a query vector. Requires Analytics Engine 8.0 or later. |
+
+!!! note "Ingres-only tools"
+    The `list_indexes` tool and the operational health tools are available for Ingres only. The Analytics Engine server does not provide them.
+
+### Tool Annotations
+
+Each tool advertises Model Context Protocol (MCP) tool annotations. Clients can use these hints, for example, to decide whether to ask you before running a call.
+
+| Tool | Annotations |
+|------|-------------|
+| `list_tables`, `describe_table`, `list_functions`, `vector_search` | `readOnlyHint: true`, `idempotentHint: true`, `openWorldHint: false` |
+| `execute_query`, with `query_mode` set to `read-only` | `readOnlyHint: true`, `idempotentHint: true`, `openWorldHint: false` |
+| `execute_query`, with `query_mode` set to `read-write` | `readOnlyHint: false`, `destructiveHint: true`, `idempotentHint: false`, `openWorldHint: false` |
+
+!!! warning "Annotations are hints, not security controls"
+    Annotations describe how a tool behaves. They do not enforce anything, and a client is free to ignore them. What a call can do is decided by the server: `query_mode`, the `mcp:write` scope, write approval, and the database user's own privileges. See [Write Support](../write-support.md).
 
 
 ## execute_query
@@ -156,7 +173,7 @@ The server checks the scope before it asks anyone to approve the statement, so n
 
 ## list_tables
 
-Returns all user tables and views available in the connected database as structured JSON.
+Returns all user tables and views available in the connected database as structured JSON. Each row reports whether the object is a table or a view.
 
 ### Parameters
 
@@ -169,11 +186,13 @@ This tool takes no input parameters.
 ```json
 {
   "success": true,
-  "columns": ["table_name"],
-  "rows": [["<table_name>"]],
+  "columns": ["table_name", "table_type"],
+  "rows": [["<table_name>", "<table_type>"]],
   "row_count": "<num_rows>"
 }
 ```
+
+`table_type` is `table` or `view`. External tables are reported as `table`. Indexes are not listed.
 
 **On Error**
 
@@ -197,19 +216,20 @@ Show me all the tables in my database
 ```json
 {
   "success": true,
-  "columns": ["table_name"],
+  "columns": ["table_name", "table_type"],
   "rows": [
-    ["customers"],
-    ["orders"]
+    ["customers", "table"],
+    ["orders", "table"],
+    ["recent_orders", "view"]
   ],
-  "row_count": 2
+  "row_count": 3
 }
 ```
 
 
 ## describe_table
 
-Returns schema details for a specific table, including column names, data types, lengths, scales, and comments.
+Returns schema details for a specific table, including the owner, column names, data types, lengths, scales, and comments. For a table with a `VECTOR` column, it also reports each vector's dimension, element type, and index.
 
 ### Parameters
 
@@ -228,6 +248,7 @@ Returns schema details for a specific table, including column names, data types,
 {
   "success": true,
   "columns": [
+    "table_owner",
     "column_name",
     "column_datatype",
     "column_length",
@@ -235,11 +256,26 @@ Returns schema details for a specific table, including column names, data types,
     "column_comment"
   ],
   "rows": [
-    ["<column_name>", "<column_datatype>", "<column_length>", "<column_scale>", "<column_comment>"]
+    ["<table_owner>", "<column_name>", "<column_datatype>", "<column_length>", "<column_scale>", "<column_comment>"]
   ],
   "row_count": "<num_rows>"
 }
 ```
+
+When the name is not owner-qualified and tables with that name belong to more than one owner, the response also includes `other_owners`, a list of the other owners, and a `hint` explaining how to describe one of them.
+
+**Vector Columns**
+
+On Analytics Engine 8.0 and later, a table that has at least one `VECTOR` column returns four additional fields in every row:
+
+| Field | Description |
+|-------|-------------|
+| `vector_dimensions` | Number of coordinates in the vector. |
+| `vector_element_type` | Coordinate type, such as `INTEGER`, `FLOAT4`, or `DECIMAL(5,2)`. |
+| `vector_index_name` | Name of the index that covers the column, or `null`. |
+| `vector_index_status` | `indexed`, or `no index; queries scan the table`. |
+
+For the vector column itself, `column_datatype` is `VECTOR`. For the table's other columns, the four fields are `null`. Tables without a `VECTOR` column, and servers earlier than Analytics Engine 8.0, return the six fields shown above. See [Vector Search](../vector-search.md#in-describe_table) for an example.
 
 **On Error**
 
@@ -270,6 +306,7 @@ Show me schema information about the customers table
 {
   "success": true,
   "columns": [
+    "table_owner",
     "column_name",
     "column_datatype",
     "column_length",
@@ -277,15 +314,15 @@ Show me schema information about the customers table
     "column_comment"
   ],
   "rows": [
-    ["customer_id", "integer", "4", "0", "Primary key"],
-    ["customer_name", "varchar", "100", "0", "Customer display name"]
+    ["actian", "customer_id", "integer", "4", "0", "Primary key"],
+    ["actian", "customer_name", "varchar", "100", "0", "Customer display name"]
   ],
   "row_count": 2
 }
 ```
 
 !!! warning
-    If the authenticated database user lacks access to a table, the error response includes a permission message. For example: `"error": "No permission to access table 'hr.salaries'"`.
+    The server refuses any table name that begins with `ii`, the prefix of the system catalog tables, with a permission error. For example: `"error": "No permission to access table 'iitables'"`.
 
 ### Example: Naming the Owner
 
@@ -301,7 +338,10 @@ Describe the customers table owned by actian
 }
 ```
 
-The response has the same shape as the previous example. If no table matches both the name and the owner, `rows` is empty and `row_count` is `0`.
+The response has the same shape as the previous example.
+
+!!! note "A table that does not exist"
+    If no table matches the name, or the name and owner, the response is still `"success": true`, with an empty `rows` list and a `row_count` of `0`.
 
 
 
@@ -358,6 +398,42 @@ Show me all the functions in my database
 ```
 
 
+## vector_search
+
+Returns the rows whose `VECTOR` column is most similar to a query vector, nearest first, with the distance named and the metric, dimension, element type, and index status reported alongside. This tool requires Analytics Engine 8.0 or later. It is read-only and is available in every `query_mode`.
+
+### Parameters
+
+| Field | Type | Required | Description |
+|-------|------|:--------:|-------------|
+| `table` | `string` | ✓ | Table containing the vector column. Accepts a plain or owner-qualified name. |
+| `column` | `string` | ✓ | Unqualified name of the `VECTOR` column to search. |
+| `find_like` | `array of number` | ✓ | Query vector. Its length must equal the column's dimension. |
+| `metric` | `string` | | `EUCLIDEAN_SQUARED` (default), `EUCLIDEAN`, `COSINE`, `DOT`, `MANHATTAN`, or `HAMMING`. |
+| `limit` | `integer` | | Maximum rows to return, from `1` to `200`. Defaults to `10`. |
+| `also_return` | `array of string` | | Other columns to return with each row. Defaults to none. |
+
+### Example
+
+**Request**
+
+```
+Find the three documents closest to this embedding: [0.12, 0.85, 0.31, 0.40]
+```
+
+```json
+{
+  "table": "documents",
+  "column": "embedding",
+  "find_like": [0.12, 0.85, 0.31, 0.40],
+  "limit": 3,
+  "also_return": ["doc_id", "title"]
+}
+```
+
+For the full output schema, the metrics, index requirements, and an example response, see [Vector Search](../vector-search.md).
+
+
 ## Next Steps
 
 <div class="grid cards" markdown>
@@ -367,5 +443,8 @@ Show me all the functions in my database
 
 - :material-message-text: **[Prompts](../prompts/index.md)**  
   Use the built-in prompt templates for common workflows.
+
+- :material-vector-point: **[Vector Search](../vector-search.md)**  
+  Search `VECTOR` columns by similarity.
 
 </div>

@@ -47,6 +47,10 @@ After you sign in, queries run under your own database identity. The privileges 
 
 ![](../assets/connection-url.png)
 
+## Tools
+
+A warehouse offers the same tools as a self-hosted deployment: `execute_query`, `list_tables`, `describe_table`, `list_functions`, and `vector_search`. Every tool tells the client whether it only reads data, so a client can decide which calls to run without asking you first. For details, see [Tools](tools/index.md) and [Vector Search](vector-search.md).
+
 ## Write Operations
 
 Write queries are enabled on a warehouse. Two conditions must be met before a write runs:
@@ -70,6 +74,8 @@ The following are configured and maintained by Actian, and cannot be changed for
 - The OAuth provider used for sign-in
 
 Custom extensions are not supported on a warehouse. To load custom Python extensions, run the server yourself. See [Self-Hosted](self-hosted.md).
+
+Multi-target deployments and resource-server mode are available only when you run the server yourself.
 
 
 ## Related Documentation

@@ -81,7 +81,11 @@ Create a file named `conf.json` in your working directory using the following st
 | `oauth` | `object` | None | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-oauth-block).|
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md).|
 | `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt). Applies only when `query_mode` is `read-write`. |
-| `extensions` | `array` | None | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md).|
+| `extensions` | `array` | None | Extension modules to load, each an object with a required `module`, an optional `config`, and, in a multi-target deployment, an optional `targets` list. For more information, see [Extensions](extensions/index.md).|
+| `connect_timeout` | `number` | `10` | Seconds to wait for a new database connection. `0` waits without limit. |
+| `auth_mode` | `string` | None | Set to `resource-server` to accept access tokens from your identity provider instead of running the OAuth login. See [Resource-Server Mode](authentication/resource-server.md). |
+| `targets` | `object` | None | A registry of Analytics Engine installations and databases for a multi-target deployment. Replaces `driver`, `server`, `database`, `database_user`, and `database_password`. See [Multi-Target Deployments](multi-target.md). |
+| `allow_unscoped_reads` | `boolean` | `false` | Multi-target only. Turns off per-target scope checks. For temporary use only. See [Multi-Target Deployments](multi-target.md#running-without-scope-checks-allow_unscoped_reads). |
 
 
 ## Start the Server
@@ -93,7 +97,7 @@ docker run -d \
     -v $(pwd)/conf.json:/app/conf.json:ro \
     -p 8000:8000 \
     --name=actian-mcp \
-    actian/analytics-engine-mcp-server:1.1.0
+    actian/analytics-engine-mcp-server:1.2.0
 ```
 
 
@@ -124,5 +128,8 @@ Once connected, the MCP client automatically discovers the server capabilities. 
 
 - :material-puzzle: **[Extensions](extensions/index.md)**  
   Add custom tools to the server with a Python extension.
+
+- :material-server-network: **[Multi-Target Deployments](multi-target.md)**  
+  Serve many Analytics Engine databases from one server, with a scope per database.
 
 </div>

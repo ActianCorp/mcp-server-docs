@@ -42,6 +42,8 @@ since this example owns no resources of its own.)
 import json
 
 from actian_mcp_server.extension_api import (
+    READ_ONLY,
+    WRITE,
     get_current_user,
     get_database,
     request_write_confirmation,
@@ -59,7 +61,7 @@ def register(server, config):
     # Distinct from order_ops' 'orders' table so both examples can share one DB.
     sales_table = config.get("sales_table", "sales")
 
-    @server.tool(name="top_customers_by_revenue")
+    @server.tool(name="top_customers_by_revenue", annotations=READ_ONLY)
     async def top_customers_by_revenue(region: str = default_region, limit: int = 5) -> str:
         """Return the highest-revenue customers in a region (read-only)."""
         limit = max(1, min(limit, 100))
@@ -81,7 +83,7 @@ def register(server, config):
             "requested_by": get_current_user(),  # None unless OAuth + user_impersonation
         }, default=str)
 
-    @server.tool(name="tag_vip_customer")
+    @server.tool(name="tag_vip_customer", annotations=WRITE)
     async def tag_vip_customer(customer_id: int) -> str:
         """Tag a customer as VIP (requires read-write mode).
 
@@ -106,7 +108,7 @@ def register(server, config):
                 return json.dumps({"success": False, "error": f"customer {customer_id} not found"})
         return json.dumps({"success": True, "customer_id": customer_id, "vip": True})
 
-    @server.tool(name="record_customer_sale")
+    @server.tool(name="record_customer_sale", annotations=WRITE)
     async def record_customer_sale(customer_id: int, amount: float) -> str:
         """Record a sale across two tables atomically (requires read-write mode).
 

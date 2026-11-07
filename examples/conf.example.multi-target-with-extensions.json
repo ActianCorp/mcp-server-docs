@@ -1,0 +1,88 @@
+{
+    "host": "0.0.0.0",
+    "port": 8000,
+    "query_mode": "read-write",
+    "max_rows": 100,
+    "connect_timeout": 10,
+    "targets": {
+        "defaults": {
+            "driver": "{Ingres}",
+            "max_connections": 10
+        },
+        "list": [
+            {
+                "alias": "server1",
+                "host": "db07.corp",
+                "instance": "VW",
+                "databases": [
+                    "salesmart",
+                    "finance"
+                ],
+                "username": "<db_username_1>",
+                "password": "<db_password_1>"
+            },
+            {
+                "alias": "server2",
+                "host": "db09.corp",
+                "instance": "VW",
+                "databases": [
+                    "hr"
+                ],
+                "username": "<db_username_2>",
+                "password": "<db_password_2>"
+            }
+        ]
+    },
+    "oauth": {
+        "FASTMCP_SERVER_AUTH_CONFIG_URL": "https://<your-tenant>.us.auth0.com/.well-known/openid-configuration",
+        "FASTMCP_SERVER_AUTH_CLIENT_ID": "<client_id>",
+        "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<client_secret>",
+        "FASTMCP_SERVER_AUTH_BASE_URL": "https://<your_mcp_host>:8000",
+        "FASTMCP_SERVER_AUTH_AUDIENCE": "https://<your_mcp_host>:8000/mcp",
+        "user_impersonation": false
+    },
+    "extensions": [
+        {
+            "module": "catalog_insights",
+            "config": {
+                "products_table": "products",
+                "low_stock_threshold": 10
+            },
+            "targets": [
+                "db07.corp/VW/salesmart",
+                "db07.corp/VW/finance"
+            ]
+        },
+        {
+            "module": "order_ops",
+            "config": {
+                "orders_table": "orders",
+                "order_items_table": "order_items",
+                "products_table": "products",
+                "cart_table": "cart"
+            },
+            "targets": [
+                "db07.corp/VW/salesmart"
+            ]
+        },
+        {
+            "module": "revenue_extension",
+            "config": {
+                "default_region": "NA",
+                "revenue_table": "customer_revenue",
+                "customers_table": "customers",
+                "sales_table": "sales"
+            },
+            "targets": [
+                "db09.corp/VW/*"
+            ]
+        },
+        {
+            "module": "catalog_resources",
+            "config": {
+                "products_table": "products",
+                "low_stock_threshold": 10
+            }
+        }
+    ]
+}
