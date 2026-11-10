@@ -39,7 +39,7 @@ When write support is enabled, the server asks a person to approve each write be
 
 ## Client Configuration Examples
 
-You can connect MCP clients such as Claude Desktop, Cursor, fast-agent, and Codex using the connection URL.
+You can connect MCP clients such as Claude Desktop, Cursor, GitHub Copilot, fast-agent, and Codex using the connection URL.
 
 === ":material-brain: Claude Desktop"
 
@@ -100,6 +100,23 @@ You can connect MCP clients such as Claude Desktop, Cursor, fast-agent, and Code
     {
         "mcpServers": {
             "actian-mcp-server": {
+                "url": "http://localhost:<port>/mcp"
+            }
+        }
+    }
+    ```
+
+    For a remote deployment, replace `localhost` and `<port>` with the public hostname and port of the Actian MCP Server.
+
+=== ":material-github: GitHub Copilot"
+
+    GitHub Copilot in Visual Studio Code reads MCP servers from `.vscode/mcp.json` in the workspace, or from your user configuration, which the **MCP: Open User Configuration** command opens. Add the following server entry:
+
+    ```json
+    {
+        "servers": {
+            "actian-mcp-server": {
+                "type": "http",
                 "url": "http://localhost:<port>/mcp"
             }
         }

@@ -134,7 +134,59 @@ curl -s -o /dev/null -w '%{http_code}\n' "$BASE/mcp"
 
 If check 3 returns anything other than `401`, authentication is not active. See the last row of [Troubleshooting](#troubleshooting).
 
-Then call a tool with a real token from your application. On success, the server log contains `Stored database username (strict claim mode): <name>`.
+Then call a tool with a real token from your application; see [Call the Server from a Client](#call-the-server-from-a-client). On success, the server log contains `Stored database username (strict claim mode): <name>`.
+
+---
+
+## Call the Server from a Client
+
+A client in this mode sends the access token it already holds in the `Authorization: Bearer` header. It does not run a login.
+
+### From an Application (Python)
+
+The `fastmcp` Python client sends a token passed as `auth` as a bearer token:
+
+```python
+import asyncio
+from fastmcp import Client
+
+async def main(token: str):
+    async with Client("https://<mcp_server_host>:8000/mcp", auth=token) as client:
+        result = await client.call_tool("list_tables", {})
+        print(result)
+
+asyncio.run(main("<access_token>"))
+```
+
+Pass the token your application obtained in [The Token Flow](#the-token-flow), and obtain a new one before it expires. In a [multi-target deployment](../multi-target.md), use the target URL, `https://<mcp_server_host>:8000/mcp/{host}/{instance}/{database}`.
+
+### From GitHub Copilot (Testing)
+
+To try the deployment from GitHub Copilot in Visual Studio Code, add the token as a header in `.vscode/mcp.json`. The `inputs` entry makes Visual Studio Code ask for the token and hide what you type, instead of storing it in the file:
+
+```json
+{
+    "inputs": [
+        {
+            "type": "promptString",
+            "id": "actian-mcp-token",
+            "description": "Access token for the Actian MCP Server",
+            "password": true
+        }
+    ],
+    "servers": {
+        "actian-mcp-server": {
+            "type": "http",
+            "url": "https://<mcp_server_host>:8000/mcp",
+            "headers": {
+                "Authorization": "Bearer ${input:actian-mcp-token}"
+            }
+        }
+    }
+}
+```
+
+Use this for testing only. The token is a fixed value: when it expires, every request returns `401` until you supply a new token. To get a token for testing, see [Auth0: Resource-Server Mode](auth0.md#resource-server-mode) or [Keycloak: Resource-Server Mode](keycloak.md#resource-server-mode).
 
 ---
 

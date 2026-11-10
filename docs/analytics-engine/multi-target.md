@@ -296,6 +296,29 @@ The `list_accessible_targets` tool returns the databases the caller's token can 
 
 The same data is available as the resource `targets://accessible`, for applications that read it directly, for example to populate a database picker.
 
+### Connect a Client to Each Database
+
+Give each database its own entry in the client's configuration, using the database's full URL. A client opens a separate session for each URL, so one entry cannot reach several databases. For example, in GitHub Copilot's `.vscode/mcp.json`:
+
+```json
+{
+    "servers": {
+        "salesmart": {
+            "type": "http",
+            "url": "https://mcp.example.com:8000/mcp/sales-db.example.com/VW/salesmart"
+        },
+        "hrdb": {
+            "type": "http",
+            "url": "https://mcp.example.com:8000/mcp/hr-db.example.com/VW/hrdb"
+        }
+    }
+}
+```
+
+Use the `url` or `path` values from `list_accessible_targets`. For the configuration format of other clients, see [Connect MCP Clients](../mcp-clients/index.md#client-configuration-examples).
+
+A client connected to the server's `/mcp` URL, with no database in the path, can call `list_accessible_targets`, but the database tools do not work when the registry has more than one server or database. They return `Failed to get database connection or cursor`, and the server log states that the request must name a target. Connect to a database's URL instead.
+
 ---
 
 ## Schema Resources
