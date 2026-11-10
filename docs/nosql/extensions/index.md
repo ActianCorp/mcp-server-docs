@@ -15,17 +15,101 @@ An extension contributes four kinds of thing, each declared by annotating a plai
 
 | Contribution | Annotation | What the method returns |
 |--------------|-----------|-------------------------|
-| Tool | `@Tool`, with arguments marked `@ToolArg` | Any record or POJO. By default the result is serialized as JSON text. To also emit structured content with a generated output schema, either set `structuredContent = true` to derive the schema from the method's return type, or name the class explicitly with `outputSchemaFrom`. If both are set, `outputSchemaFrom` wins. |
-| Resource | `@Resource`, addressed purely by its fixed URI | A record or POJO (serialized to JSON), a `byte[]` for binary content, or a `String` passed through as raw text. |
-| Resource template | `@ResourceTemplate`, with `{placeholder}` segments in the URI bound to `@ResourceTemplateArg` parameters | The same three shapes as a resource. |
-| Prompt | `@Prompt`, with arguments marked `@PromptArg` | A `String`. It reaches the client as a single message attributed to the user role; per-message roles are not available in this release. |
+| Tool | `@Tool`, with arguments marked `@ToolArg` | A `String`, a content block, an `org.mcpjava.server.tools.ToolResponse`, a list of these, or any record or POJO. What the client receives for each is described under [Tool Return Types](#tool-return-types). Setting `structuredContent = true` sends the return value as structured content, with an output schema derived from the method's return type. `outputSchemaFrom` names the schema class explicitly and also turns structured content on. If both are set, the schema comes from `outputSchemaFrom`. |
+| Resource | `@Resource`, addressed purely by its fixed URI | A `String` (one text content), a `byte[]` (one binary blob), any other record, POJO or `Map` (one text content holding its JSON), a `List` of these (one content per element), or an `org.mcpjava.server.resources.ResourceResponse`, which is sent as built. What the client receives for each is described under [Resource Return Types](#resource-return-types). |
+| Resource template | `@ResourceTemplate`, with `{placeholder}` segments in the URI bound to `@ResourceTemplateArg` parameters | The same shapes as a resource. A plain return is delivered at the concrete URI that was requested; a `ResourceResponse` keeps the URI of each content it carries. Returning `null` answers that the resource was not found. |
+| Prompt | `@Prompt`, with arguments marked `@PromptArg` | A `String` (one message attributed to the user role), an `org.mcpjava.server.prompts.PromptMessage` (one message with its own role), or an `org.mcpjava.server.prompts.PromptResponse` (several messages, each with its own role, for example an assistant-primed message ahead of the user's question). What the client receives for each is described under [Prompt Return Types](#prompt-return-types). |
 
 A tool argument does not have to be a scalar. A record, a POJO, a list or set of them, or a map all work, and the input schema is generated from the type's own fields.
 
 !!! warning "An omitted `mimeType()` is blank, not JSON"
     On `@Resource` and `@ResourceTemplate`, leaving `mimeType()` unset registers an empty MIME type rather than defaulting to `application/json`. If your resource returns JSON and clients need that advertised, set it yourself.
 
-Handlers never serialize their own return values — the loader does it from the method's declared return type, so an extension needs no JSON library of its own.
+For records, POJOs, maps and other plain types, a handler never serializes its own return value — the server does it, so an extension needs no JSON library of its own. A handler that returns text, content blocks, a `ToolResponse`, a `ResourceResponse`, a `PromptMessage` or a `PromptResponse` has already decided its own content, and the server usually sends what it built. Some declared types change this, and the return-type tables below spell each one out: a neutral `ResourceContents` (`TextResourceContents` or `BlobResourceContents`), on its own or in a list, and a `ResourceResponse` returned from a method declared `Object` are serialized as JSON text, and a `List<ToolResponse>` is not merged into one result. Declare `ResourceResponse` to send resource contents as built.
+
+### Tool Return Types
+
+The declared return type of a `@Tool` method decides what the client receives.
+
+| Declared return type | What the client receives |
+|----------------------|--------------------------|
+| `String` | One text block holding the string as it is. |
+| `List<String>` | One text block per string. |
+| A content block: `TextContent`, `ImageContent`, `AudioContent`, `EmbeddedResource` or `ResourceLink`, all from `org.mcpjava.server.content` | That block. |
+| `List<ContentBlock>` | One block per element. |
+| `ToolResponse`, built with `ofText`, `ofError`, `ofStructured` or `builder()` | The response exactly as built, including its error flag and structured content. |
+| A boxed primitive such as `Integer` or `Boolean`, or any other type: a record, a POJO, a `Map` | JSON text serialized by the server. An `Integer` 7 arrives as the text `7`. |
+| A `List` of any other type | One JSON text block per element. |
+
+A few rules apply across the table:
+
+- Only a return type declared as `List` is split into one block per element. A `Set`, an array or another collection arrives as one JSON text block. To get plain text blocks from a list of strings, declare `List<String>`.
+- A `List<ToolResponse>` is not merged into one result. Each response arrives as its own JSON text block and the call is not an error result, so return a single `ToolResponse` when you need to control the result.
+- A method declared `Object` is matched by the value it returns only when that value is a `ToolResponse` or a content block, which arrive as in the table. Any other value arrives as one JSON text block, so a returned `String` arrives quoted and a returned list is not split. Declare `String` or `List<String>` to get plain text.
+- Returning `null` produces an error result that names the handler.
+
+#### Structured Output
+
+| Setting | What the client receives |
+|---------|--------------------------|
+| `structuredContent = true` on a record or POJO | The return value as structured content, with an output schema generated from its own shape. |
+| `structuredContent = true` on a `ToolResponse` or a content block | The whole value as structured content, with the output schema `{"type":"object"}`. A response built with `ofError` is therefore not an error result, because its error flag becomes part of the structured data. Leave `structuredContent` unset to send a `ToolResponse` as built. |
+| `outputSchemaFrom` on a record or POJO | The return value as structured content, with the output schema generated from the named class. |
+| `outputSchemaFrom` on a single content block | The block, serialized whole, as the structured content. |
+| `outputSchemaFrom` alone on a `ToolResponse` | The response exactly as built. You set structured content that matches the schema yourself, for example with `ToolResponse.ofStructured(...)`. |
+| Both attributes on a `ToolResponse` | The schema comes from `outputSchemaFrom`, and the whole response is sent as the structured content. |
+
+As the server ships, structured content also arrives as a text block carrying the same JSON. An operator can switch this off with `quarkus.mcp.server.tools.structured-content.compatibility-mode=false`. The exception is a `ToolResponse` sent exactly as built, which carries only the content you set.
+
+### Resource Return Types
+
+The declared return type of a `@Resource` or `@ResourceTemplate` method decides what the client receives. A plain return is delivered under the resource's own URI — for a template, the concrete URI that was requested — and the annotation's `mimeType()`.
+
+| Declared return type | What the client receives |
+|----------------------|--------------------------|
+| `String` | One text content holding the string as it is. |
+| `byte[]` | One blob content. |
+| Any other type: a record, a POJO, a `Map`, a boxed primitive | One text content holding the JSON serialized by the server. |
+| `List<String>`, `List<byte[]>`, or a `List` of any other type | One content per element: a text content for a string, a blob for a `byte[]`, a JSON text content for anything else. |
+| `org.mcpjava.server.resources.ResourceResponse` | The response exactly as built. Every content keeps its own URI and MIME type, a content built without a MIME type is sent without one, and the annotation's `mimeType()` is not filled in. |
+| A single neutral `ResourceContents` (`TextResourceContents` or `BlobResourceContents`), or a `List<ResourceContents>` | JSON text, under the resource's URI and MIME type, not the contents as built. Declare `ResourceResponse` to send contents as built. |
+| `Object` | Matched by the value returned, as in the rows above, except that a returned `ResourceResponse` is serialized as JSON text too. Declare `ResourceResponse` to send it as built. |
+
+A few rules apply across the table:
+
+- Only a return type declared as `List` is split into one content per element. A `Set`, another collection or an array arrives as one JSON text content.
+- Only a return type declared as `ResourceResponse` itself is sent as built. A type of your own that extends or implements it is serialized as JSON text.
+- Metadata set on a `ResourceResponse` goes to the `_meta` of the result, and metadata set on a content goes to the `_meta` of that content. A metadata key needs at least two characters: letters, digits, `_`, `.` and `-`, starting and ending with a letter or digit.
+- A `@ResourceTemplate` method that returns `null`, whatever its declared type, answers the JSON-RPC error `-32002` with the message `Resource not found: <uri>`, naming the requested URI. A client on a stateless protocol version gets `-32602` instead, as it would from a built-in template. This is the way for a lookup template to say that nothing exists at that URI.
+- A static `@Resource` that returns `null`, or any resource or template whose returned list holds a `null` element, fails the read with an error that names the handler.
+
+### Prompt Return Types
+
+The declared return type of a `@Prompt` method decides what the client receives.
+
+| Declared return type | What the client receives |
+|----------------------|--------------------------|
+| `String` | One message with the user role, holding the string as it is. |
+| `org.mcpjava.server.prompts.PromptMessage` | One message with the role it was built with. The neutral API has no `PromptMessage` factory, so obtain one with `PromptResponse.of(role, content).messages().get(0)`. |
+| `org.mcpjava.server.prompts.PromptResponse` | Its messages and roles as built, with its description. The response metadata is not sent. |
+| `Object` | A returned `PromptMessage` or `PromptResponse` is delivered as in the rows above. Any other value, including a returned `String`, gets an error reading `No encoder found for class <X>`; to send a string, declare the method `String`. |
+
+A prompt that returns `null` gets an error that names the handler. Metadata keys on a `PromptResponse` follow the same two-character rule as for resources, and a response with an invalid key fails the call with an error that names the handler.
+
+### Return Types That Stop Startup
+
+The server refuses these when it loads the extension, and startup aborts with a message naming the method:
+
+| Return type | What to do |
+|-------------|------------|
+| `void` or the boxed `Void`, on a tool, resource, resource template or prompt | Return a type from that feature's table above. |
+| A primitive such as `int` or `boolean`, on a tool, resource or resource template | Return the boxed type, for example `Integer`. |
+| Any type other than `String`, `PromptMessage`, `PromptResponse` or `Object`, on a prompt: a primitive, a record or POJO, a boxed number, or any `List` (including `List<PromptMessage>` and `List<String>`) | Return a `String`, a `PromptMessage` or a `PromptResponse`. |
+| Structured output (`structuredContent = true` or `outputSchemaFrom`) on a declared return type, or an `outputSchemaFrom` class, that does not serialize to a JSON object with the server's JSON configuration. For example: a `String`, a number or boxed primitive, a boolean, a character, an enum, an array, any list or other collection (including `List<ContentBlock>` and `List<ToolResponse>`), a `UUID`, a date or time type such as `LocalDate` or `Date`, a `URI`, a `Path`, an `Optional` of a scalar, or a class the server writes as a scalar through `@JsonValue` | Return a record or POJO, or a `ToolResponse` built with structured content, for example `ToolResponse.ofStructured(...)`. |
+
+Records, POJOs, `Map`, `ToolResponse` and content blocks are accepted for structured output. A single content block under `outputSchemaFrom` does not stop startup: it is sent whole as the structured content.
+
+A declared return type whose shape cannot be told in advance, such as `Object`, loads. If such a call then returns structured content that is not a JSON object, the call gets an error result that names the handler instead of sending it.
 
 ## Authoring Overview
 
@@ -97,6 +181,35 @@ The distinction matters, because not every member means something at startup: `c
 
 !!! note "`confirm()` and `log()` work only inside a tool handler"
     Both need a live per-call channel to the client. Calling either from `initialize` or from a resource or prompt handler throws `UnsupportedOperationException`.
+
+### Signalling Errors
+
+**From a tool.** A tool reports a failure in one of two ways: return `ToolResponse.ofError(message)`, or throw a `RuntimeException`. Either way the client gets an error result carrying your message. An exception thrown without a message carries its class name instead.
+
+```java
+import org.mcpjava.server.tools.ToolResponse;
+
+@Tool(
+    name = "region_lookup",
+    description = "Look up one sales region by code.",
+    annotations = @Tool.Annotations(readOnlyHint = true))
+public ToolResponse regionLookup(
+        @ToolArg(description = "Region code: NA, EMEA, APAC") String region) {
+    if (!KNOWN_REGIONS.contains(region)) {
+        return ToolResponse.ofError("Unknown region code: " + region);
+    }
+    return ToolResponse.ofText(model.describeRegion(region));
+}
+```
+
+The neutral API has no `ToolCallException`. `org.mcpjava.server.McpException` carries no error code and gets no special treatment: the server handles it like any other `RuntimeException`.
+
+**From a resource, resource template or prompt.** These handlers report a failure by throwing a `RuntimeException`. The client gets the JSON-RPC error `-32603` carrying the exception's message, or its class name when it has none. A resource template can also answer "resource not found" by returning `null`, which gives the error `-32002` (`-32602` on a stateless protocol version) with the message `Resource not found: <uri>`.
+
+!!! warning "The message reaches the client"
+    Whatever you put in an error message is shown to the caller, and so is an exception's class name when it has no message. This applies to tools, resources, resource templates and prompts alike. Keep secrets, and data the caller should not see, out of it.
+
+`SchemaExplorerExtension`, in the SDK, shows the pattern in its `extension_get_object` tool: a blank, malformed or unknown LOID returns an error result instead of throwing.
 
 ### Getting the SDK
 
@@ -200,9 +313,51 @@ Extension loading is all or nothing. Anything that goes wrong stops the server r
 | Startup aborts, reporting a missing file | `nsql.extensions.jars.<id>.file` names something that is not in the directory. | Check the filename and the mount. |
 | Startup aborts, reporting no `ServiceLoader` provider | The JAR has no `META-INF/services/com.actian.mcp.extension.McpExtension` file. | Add the provider file naming your `McpExtension` implementation. |
 | Startup aborts, reporting a duplicate name or URI | A tool, resource, resource template, or prompt collides with a built-in or with an extension loaded earlier. | Rename it. Prefixing every name and URI with something specific to your extension avoids this. |
+| Startup aborts, naming an extension method's return type | The method is a `@Tool`, `@Resource`, `@ResourceTemplate` or `@Prompt` whose declared return type is refused, for example `void`, a primitive, a prompt returning a record or a list, or a tool asking for structured output (`structuredContent` or `outputSchemaFrom`) from a type that does not serialize to a JSON object. | Change the return type or the attribute as the message suggests. See [Return Types That Stop Startup](#return-types-that-stop-startup). |
+| Startup aborts, reporting that a method is not public | A `@Tool`, `@Resource`, `@ResourceTemplate` or `@Prompt` method is private, protected or package-private, on the extension class or one of its superclasses. The server can only call a public method. | Declare the method `public`, or remove the annotation. |
 | Startup aborts with an exception from your own code | `initialize` threw a `RuntimeException`. | Fix the underlying condition. Throwing from `initialize` is a legitimate way to refuse to start on bad configuration. |
 
 Shutdown is more forgiving: an exception from `destroy` is logged, and the remaining extensions are still torn down.
+
+## Upgrading Extensions from 1.1
+
+Release 1.2 sends an extension method's return value the way the platform sends the return value of a built-in method declared the same way. Most 1.1 extensions load and behave as before, but the cases below changed. Check each extension against these tables before you upgrade.
+
+### Extensions That No Longer Start
+
+Each of these loaded in 1.1. In 1.2, startup aborts with a message naming the method.
+
+| A 1.1 extension declares | In 1.1 | What to do for 1.2 |
+|--------------------------|--------|--------------------|
+| A `@Tool`, `@Resource` or `@ResourceTemplate` method returning a primitive, such as `int` or `boolean` | The value was sent as JSON text, for example `7`. | Declare the boxed type, for example `Integer`. The client receives the same text as before. |
+| A `@Tool`, `@Resource` or `@ResourceTemplate` method returning `void` | The client received the text `null`. | Return a value: a `String`, or a `ToolResponse` for a tool. |
+| A `@Prompt` method returning any type other than `String` or `Object`, for example `Integer`, a record or a `List` | The value's `String.valueOf` form was sent as one user message. | Return a `String` built from the value, or a `PromptMessage` or `PromptResponse`. |
+| A non-public method carrying one of these annotations | The method was skipped without a word and never offered to clients. | Declare it `public`, or remove the annotation. |
+
+### Results That Reach Clients Differently
+
+These extensions still start, but a client receives a different result.
+
+| Declared return type | In 1.1 | In 1.2 |
+|----------------------|--------|--------|
+| A tool returning `String` | One text block holding the string as JSON, so `hello` arrived quoted as `"hello"`. | One text block holding the string as it is: `hello`. |
+| A tool returning `List<String>` | One text block holding a JSON array. | One text block per string. |
+| A tool returning a `List` of any other type | One text block holding a JSON array. | One JSON text block per element. |
+| A resource or resource template returning a `List` | One text content holding a JSON array. | One content per element. |
+| A resource or resource template declared `Object` | Always JSON text, so a returned `String` arrived quoted and a returned `byte[]` as a quoted Base64 string. | Matched by the value returned: a `String` is one text content as it is, a `byte[]` one blob. |
+| A prompt declared `Object` that returns a `String` | One user message holding the string. | The call fails with `No encoder found for class java.lang.String`. Declare the method `String`. |
+
+A client or script that parses a tool's text as JSON, or expects a single block, needs updating for the first three rows. To keep a single JSON text block from a list, declare the method's return type as something other than `List`, for example a record that holds the list.
+
+### Null Results and Exceptions
+
+| What the handler does | In 1.1 | In 1.2 |
+|-----------------------|--------|--------|
+| A tool returns `null` | The client received the text `null`. | An error result that names the handler. |
+| A prompt returns `null` | One user message holding the text `null`. | An error that names the handler. |
+| A static `@Resource` declared other than `String` or `byte[]` returns `null` | One text content holding `null`. | The read fails with an error that names the handler. |
+| A `@ResourceTemplate` returns `null` | An internal error for a `String` or `byte[]` method, otherwise one text content holding `null`. | The JSON-RPC error `-32002` with the message `Resource not found: <uri>`, or `-32602` on a stateless protocol version. |
+| A handler throws an exception that has no message | The client received an error without a message. | The error carries the exception's class name. |
 
 ## Security and Trust Model
 
