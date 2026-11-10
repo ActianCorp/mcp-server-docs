@@ -140,7 +140,9 @@ Then call a tool with a real token from your application; see [Call the Server f
 
 ## Call the Server from a Client
 
-A client in this mode sends the access token it already holds in the `Authorization: Bearer` header. It does not run a login.
+A client in this mode sends the access token it already holds in the `Authorization: Bearer` header. An application runs no login of its own, but a client such as Claude Code can sign the user in itself.
+
+### From an Application (Python)
 
 The `fastmcp` Python client sends a token passed as `auth` as a bearer token:
 
@@ -157,6 +159,36 @@ asyncio.run(main("<access_token>"))
 ```
 
 Pass the token your application obtained in [The Token Flow](#the-token-flow), and obtain a new one before it expires. In a [multi-target deployment](../multi-target.md), use the target URL, `https://<mcp_server_host>:8000/mcp/{host}/{instance}/{database}`.
+
+### From Claude Code (Auth0)
+
+Claude Code can sign users in to a resource-server deployment when you register it as a client in advance. Claude Code then runs the sign-in itself, in the browser, and sends the resulting access token to the MCP Server. The Auth0 application you register is the one that signs the user in, so the setup below applies to Auth0.
+
+1. In Auth0, configure the application as described in [Auth0: Resource-Server Mode](auth0.md#step-2-configure-the-calling-application), and add the Claude Code callback to its **Allowed Callback URLs**:
+
+    ```text
+    http://localhost:32000/callback
+    ```
+
+    The port must match the `--callback-port` value you pass to Claude Code.
+
+2. Make sure the access token carries the MCP Server's audience. One way is to set the tenant's **Default Audience** to the API **Identifier**, so that a sign-in that does not name an audience gets an access token for the MCP API. In the Auth0 Dashboard, the setting is under **Settings** > **General** > **API Authorization Settings**.
+
+    !!! warning "The Default Audience applies to the whole tenant"
+        Auth0 uses the Default Audience for every sign-in that does not request an audience, in every application of the tenant. Check the effect on the other applications in the tenant before you set it, or use a separate tenant.
+
+3. Add the MCP Server to Claude Code:
+
+    ```bash
+    claude mcp add --transport http <server_name> https://<mcp_server_host>:8000/mcp \
+      --callback-port 32000 \
+      --client-id <auth0_client_id> \
+      --client-secret
+    ```
+
+    `--client-secret` makes Claude Code prompt for the application's client secret, so the secret does not appear in your shell history or in the command. For a multi-target deployment, use the database's URL instead: `https://<mcp_server_host>:8000/mcp/{host}/{instance}/{database}`.
+
+The user's token must also carry the username claim and any per-target or write scopes the calls need, as described in [The Username Must Be in the Token](#the-username-must-be-in-the-token) and [Required Scopes](#required-scopes).
 
 ---
 
