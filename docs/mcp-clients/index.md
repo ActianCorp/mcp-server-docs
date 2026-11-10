@@ -13,6 +13,12 @@ Identify the deployment type to determine the connection URL. The standard endpo
 
 - Local deployment: `http://localhost:<port>/mcp`
 - Remote deployment: `http://<hostname>:<port>/mcp`
+- Multi-target deployment (Ingres and Analytics Engine): `https://<hostname>:<port>/mcp/{host}/{instance}/{database}`, one URL for each database
+
+In a multi-target deployment, configure one client entry for each database, using that database's URL. A client connected to `/mcp` can call `list_accessible_targets` to find the URLs, but the database tools fail with `Failed to get database connection or cursor`. For more information, see Multi-Target Deployments for [Ingres](../ingres/multi-target.md#connect-a-client-to-each-database) or [Analytics Engine](../analytics-engine/multi-target.md#connect-a-client-to-each-database).
+
+!!! note "Resource-server mode"
+    In resource-server mode (Ingres and Analytics Engine), the server runs no login. The client sends an access token from your identity provider in the `Authorization: Bearer` header. The browser-login setups on this page, such as Claude Desktop through `mcp-remote` and `MCP_AUTH=oauth` for the Python client, do not apply. For client examples, see Resource-Server Mode for [Ingres](../ingres/authentication/resource-server.md#call-the-server-from-a-client) or [Analytics Engine](../analytics-engine/authentication/resource-server.md#call-the-server-from-a-client).
 
 ## Elicitation Support for Write Approval
 
@@ -205,6 +211,8 @@ Result: {"success": true, "columns": ["name", "email"], "rows": [["Ada", "ada@ex
 
 The tool count and the tool list depend on the deployment. A server with custom extensions loaded, such as `adjust_stock` described below, shows more tools.
 
+In a multi-target deployment, pass a database's URL, for example `https://mcp.example.com:8000/mcp/sales-db.example.com/II/salesmart`. To run one tool on several databases with a single login, use [`multi_target_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/multi_target_client.py), which supports the OAuth browser login only.
+
 In PowerShell, do not pass JSON arguments inline. Windows PowerShell 5.1 and
 PowerShell 7 parse embedded double quotes differently, so a command that works
 in one version can fail in the other. Use a file or standard input instead:
@@ -232,7 +240,7 @@ See [Parameter Naming Differences](#parameter-naming-differences) for the full l
 
 ### Connect Using OAuth Authentication
 
-When the server requires OAuth, set `MCP_AUTH=oauth`. Add `MCP_CA_CERT` if the server presents a self-signed certificate. The command to set an environment variable, and the quoting the shell requires around the JSON argument, differ by platform:
+When the server runs the OAuth login, set `MCP_AUTH=oauth`. Add `MCP_CA_CERT` if the server presents a self-signed certificate. The command to set an environment variable, and the quoting the shell requires around the JSON argument, differ by platform:
 
 === ":material-apple: macOS and Linux"
 
