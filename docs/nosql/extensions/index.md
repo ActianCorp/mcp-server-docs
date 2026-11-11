@@ -84,12 +84,12 @@ com.example.forecasting.RevenueForecastExtension
 
 `ExtensionContext` is the extension's entire view of the server, and it arrives in two places. Any handler method can declare it as a parameter, as `forecastRevenue` does above, and gets one scoped to that call. `initialize` is handed one as its argument, for startup work such as reading configuration.
 
-The distinction matters, because not every member means something at startup: `confirm()` and `log()` need a live call to a client, and `currentUser()` and `currentScopes()` describe whoever made that call.
+The distinction matters, because not every member means something at startup: `confirm()` and `log()` need a live call to a client, `currentUser()` and `currentScopes()` describe whoever made that call, and with targets `newEntityManager()` needs the target the call was routed to.
 
 | Member | What it gives you |
 |--------|-------------------|
 | `config()` | This extension's own settings, from `nsql.extensions.jars.<id>.config.*`. Isolated by design: it exposes no other extension's keys and none of the server's global configuration. Treat it as a flat key/value lookup — profiles, `${...}` expansion, environment variables, and system properties are all deliberately inactive. |
-| `newEntityManager()` | A new `EntityManager` on the same factory the server uses. You close it. Note the package is `javax.persistence`, not `jakarta.persistence` — the Versant JPA provider predates the Jakarta namespace change. |
+| `newEntityManager()` | A new `EntityManager` on the same factory the server uses for the call. With targets, that is the database of the target the call was routed to, and no other. During `initialize()` no target is routed, so with targets it throws `UnsupportedOperationException`: open it inside a tool, resource, resource template, or prompt handler instead. You close it. Note the package is `javax.persistence`, not `jakarta.persistence`, because the NoSQL (Versant) JPA provider predates the Jakarta namespace change. |
 | `currentUser()` | The authenticated principal, or empty when the caller is anonymous or authentication is off server-wide. |
 | `currentScopes()`, `hasScope(scope)` | The caller's OAuth scopes, and a convenience check for one of them. |
 | `confirm(message)` | Asks a person to approve an operation, with a message you compose. Behaves slightly differently for stateless clients; see [Write Gating for Extension Tools](#write-gating-for-extension-tools). |
@@ -120,7 +120,7 @@ annotations = @Tool.Annotations(readOnlyHint = false)  // write tool
 // annotations omitted entirely                        // also a write tool
 ```
 
-That default is deliberate. Omitting the annotation gives you gating rather than a bypass, so forgetting to think about it fails safe. Once classified as a write, the tool is subject to `nsql.writes.enabled` and, when authentication is on, the caller's `mcp:write` scope — both enforced at the tool boundary, before your handler runs. [Write support](../write-support.md) describes both checks, and the same page explains why the tool may not appear in the client's tool list at all.
+That default is deliberate. Omitting the annotation gives you gating rather than a bypass, so forgetting to think about it fails safe. Once classified as a write, the tool is subject to `nsql.writes.enabled` and, when authentication is on, the caller's write scope, which is `mcp:write` without targets and, with targets, the `actian:{target}:write` scope of the target the call reaches (see [Scopes per Target](../authentication/scopes.md#scopes-per-target)). Both are enforced at the tool boundary, before your handler runs. The server also opens the database of the call before the handler of a tool that is not read-only runs, within the limits of [Call Cap and Deadline](../database-availability.md#call-cap-and-deadline). [Write support](../write-support.md) describes both checks, and the same page explains why the tool may not appear in the client's tool list at all.
 
 Confirmation works differently from the built-in tools. It is opt-in: nothing prompts the user unless your handler calls `context.confirm(...)`, and you write the message. What you cannot do is influence the answer — the server enforces it, throwing if the user declines, cancels, leaves it unconfirmed, does not respond in time, or is on a client that cannot show prompts at all. An operator who sets `nsql.writes.confirmation-required=false` silences your prompt along with the built-in ones, since both use the same mechanism.
 
@@ -144,6 +144,7 @@ The approval covers only that exact call: the same tool, the same arguments, and
 | `nsql.extensions.jars.<id>.file` | — | The JAR's filename, relative to the extensions directory. |
 | `nsql.extensions.jars.<id>.sha256` | — | The pinned digest, lowercase hex. Required while `verification.mode` includes `sha256`. |
 | `nsql.extensions.jars.<id>.order` | — | Optional load order. See the rule below. |
+| `nsql.extensions.jars.<id>.targets` | None | With targets, a comma-separated list of the targets the extension is offered at. With no value the extension is offered at every target, including targets added later. See [Limiting an Extension to Some Targets](#limiting-an-extension-to-some-targets). |
 | `nsql.extensions.jars.<id>.config.*` | — | Free-form settings for this JAR alone, readable through `ExtensionContext.config()`. |
 
 ### The Ordering Rule
@@ -151,6 +152,24 @@ The approval covers only that exact call: the same tool, the same arguments, and
 `order` is optional, but it is all or nothing: **number every declared JAR, or number none of them.** Numbers must be unique. Declaring `order` on some JARs and not others, or reusing a value, aborts startup with an error naming the problem.
 
 With no `order` anywhere, JARs load sorted by their declared id. The order matters only for `initialize` at startup and `destroy` at shutdown, so most deployments never need it — use it when one extension's `initialize` must run before another's.
+
+### Limiting an Extension to Some Targets
+
+With [targets](../targets/index.md), an extension is offered at every target unless you limit it. To offer it at some targets only, set `nsql.extensions.jars.<id>.targets` to a comma-separated list of target names:
+
+```properties
+nsql.extensions.jars.forecasting.targets=sales,finance
+```
+
+With this, the tools, resources, resource templates, and prompts of the extension `forecasting` are listed at `/mcp/sales` and `/mcp/finance` and at no other target. At another target, a call, read, or get of one of them is answered as for a name that never existed.
+
+- Each name is trimmed (`sales , hr` means `sales` and `hr`) and matched exactly, case included.
+- A name that matches no configured target does not stop the server. It logs a warning at startup, and again after each reload of the targets that leaves it unmatched, and the extension is offered at a target of that name as soon as one is added. A listed target may also be removed. A mistyped name therefore only warns, so check the names.
+- Startup fails for a value that is empty or blank, an empty element, a name that is not a valid target name, or a name listed twice. The error names the property and the position of the element, and never the value. To mean every target, remove the property: an empty value counts as written.
+- Without targets, the property is ignored with a warning, and the extension is offered at `/mcp`.
+- The limit decides only where the extension is offered. It is not a security boundary: the scopes of a caller decide which targets are reached, and an extension that is listed at a target runs fully trusted (see [Security and Trust Model](#security-and-trust-model)).
+
+The URI of an extension's resource is the one its author wrote, the same at every target, and what a read returns follows the target it is routed to. A stateful client can still learn that a resource of the extension exists at a target outside the limit by subscribing to its URI, as [Subscriptions Reveal Which URIs Exist](../limits.md#subscriptions-reveal-which-uris-exist) describes.
 
 ### Deploying an Extension JAR
 
@@ -180,7 +199,7 @@ docker run \
   -v $(pwd)/application.properties:/home/jboss/config/application.properties:ro \
   -v $(pwd)/extensions:/opt/nsql-mcp/extensions:ro \
   -p 8080:8080 \
-  actian/nsql-mcp-server:1.1.0
+  actian/nsql-mcp-server:1.2.0
 ```
 
 Mounting read-only is recommended: the server only ever reads from this directory. See [Security and Trust Model](#security-and-trust-model) for why write access to it matters.
@@ -192,7 +211,7 @@ Mounting read-only is recommended: the server only ever reads from this director
 
 ## Startup Behavior and Failure Modes
 
-Extension loading is all or nothing. Anything that goes wrong stops the server rather than starting it in a reduced state, so a server that comes up is a server whose extensions all loaded.
+Extension loading is all or nothing. Anything that goes wrong stops the server rather than starting it in a reduced state, so a server that comes up is a server whose extensions all loaded. The one exception is a name in `targets` that matches no configured target, which only logs a warning (see [Limiting an Extension to Some Targets](#limiting-an-extension-to-some-targets)).
 
 | What you see at startup | Cause | What to do |
 |-------------------------|-------|------------|
@@ -200,6 +219,7 @@ Extension loading is all or nothing. Anything that goes wrong stops the server r
 | Startup aborts, reporting a missing file | `nsql.extensions.jars.<id>.file` names something that is not in the directory. | Check the filename and the mount. |
 | Startup aborts, reporting no `ServiceLoader` provider | The JAR has no `META-INF/services/com.actian.mcp.extension.McpExtension` file. | Add the provider file naming your `McpExtension` implementation. |
 | Startup aborts, reporting a duplicate name or URI | A tool, resource, resource template, or prompt collides with a built-in or with an extension loaded earlier. | Rename it. Prefixing every name and URI with something specific to your extension avoids this. |
+| Startup aborts, reporting that `nsql.extensions.jars.<id>.targets` is empty, or has an empty element, an invalid target name, or a repeated name | The list is written but does not name valid targets, each once, separated by commas. | List each target name once, as it is written in the target configuration, or remove the property to offer the extension at every target. |
 | Startup aborts with an exception from your own code | `initialize` threw a `RuntimeException`. | Fix the underlying condition. Throwing from `initialize` is a legitimate way to refuse to start on bad configuration. |
 
 Shutdown is more forgiving: an exception from `destroy` is logged, and the remaining extensions are still torn down.
@@ -208,7 +228,7 @@ Shutdown is more forgiving: an exception from `destroy` is logged, and the remai
 
 An extension is not sandboxed. It runs inside the server's JVM with the full access that implies — the database, the configuration, the network, the filesystem. Deploying one is closer to adding a library to your application than to running third-party code in a container.
 
-The guardrails on this page protect the `@Tool` surface an extension *declares*, and nothing more. An extension holds a live `EntityManager` and can read or write anything through it, at any time, without passing write gating, the `mcp:write` scope, or a confirmation prompt. Those checks constrain how a *client* reaches an extension's tools. They are not a boundary around the extension's own code, and were never intended as one.
+The guardrails on this page protect the `@Tool` surface an extension *declares*, and nothing more. An extension holds a live `EntityManager` and can read or write anything through it, at any time, without passing write gating, the write scope, or a confirmation prompt. Those checks constrain how a *client* reaches an extension's tools. They are not a boundary around the extension's own code, and were never intended as one.
 
 SHA-256 verification is provenance, not containment. It proves the bytes the server loaded are the bytes you reviewed and pinned; it says nothing about what those bytes do, and it does not vet the extension's transitive dependencies.
 
@@ -232,6 +252,6 @@ That makes the extensions directory the real boundary. Keep it operator-owned an
   The built-in tools, and the response shapes an extension's own tools sit alongside.
 
 - :material-lock: **[Authentication](../authentication/index.md)**  
-  Enable OAuth 2.0, so `currentUser()`, `currentScopes()`, and `mcp:write` carry real values.
+  Enable OAuth 2.0, so `currentUser()` and `currentScopes()` carry real values and the write scope applies.
 
 </div>

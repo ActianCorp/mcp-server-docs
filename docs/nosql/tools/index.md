@@ -31,10 +31,18 @@ The Actian MCP Server for Actian NoSQL registers eight tools for exploring the s
 | [`create_objects`](#create_objects) | Write | Create one or more objects of one class. |
 | [`update_objects`](#update_objects) | Write | Apply partial field updates to existing objects. |
 | [`delete_objects`](#delete_objects) | Write | Delete objects by LOID. |
+| [`list_accessible_targets`](#list_accessible_targets) | Read | Lists the targets the caller may use. Plain `/mcp` with targets only. |
+
+!!! note "With targets"
+    These tools are offered at each `/mcp/{target}`, except [`list_accessible_targets`](#list_accessible_targets), which is offered only at plain `/mcp` and is the only tool there. See [What an Agent Sees](../targets/index.md#what-an-agent-sees).
 
 !!! note "The write tools are not always registered"
     [Write support](../write-support.md) explains whether a client receives the three write tools,
     and what each call must clear before it reaches the database.
+
+    Whether the caller may write at the endpoint is one of the conditions
+    (see [Tools Provided at Connect Time](../write-support.md#tools-provided-at-connect-time)).
+    The tool list can therefore differ from one caller to the next, so the server marks it as private to the caller, and a client should not reuse one caller's list for another.
 
     The read tools are not affected by write mode. `execute_query` accepts `SELECT` only, in every
     configuration.
@@ -44,6 +52,8 @@ The Actian MCP Server for Actian NoSQL registers eight tools for exploring the s
 ## execute_query
 
 Runs a read-only JPQL query against the connected Actian NoSQL Database and returns the first page of results with pagination metadata. If `pagination.hasMore` is `true`, use `query_next` with the returned `cursorId` to fetch subsequent pages.
+
+A LOID is valid only at the endpoint that returned it, with targets or without. See [LOIDs Belong to One Endpoint](../limits.md#loids-belong-to-one-endpoint).
 
 !!! note "JPQL limitations"
     The following are **not** supported in this dialect:
@@ -239,6 +249,8 @@ The output is identical to `execute_query`:
 
 Retrieves a single object from the database by its LOID (Logical Object ID). Fetching by LOID is faster than a JPQL query. LOIDs are strings in the format `<classId>.<volumeId>.<objectId>` — for example, `135.0.2146`.
 
+A LOID is valid only at the endpoint that returned it, with targets or without. See [LOIDs Belong to One Endpoint](../limits.md#loids-belong-to-one-endpoint).
+
 ### Parameters
 
 | Field | Type | Required | Description |
@@ -299,6 +311,8 @@ To change the object you just read, pass its `version` back as `expectedVersion`
 ## get_objects_by_loids
 
 Retrieves multiple objects from the database by their LOIDs (Logical Object IDs) in a single call. Fetching by LOID is faster than a JPQL query.
+
+A LOID is valid only at the endpoint that returned it, with targets or without. See [LOIDs Belong to One Endpoint](../limits.md#loids-belong-to-one-endpoint).
 
 ### Parameters
 
@@ -495,7 +509,7 @@ The `type` string tells you whether a field holds a scalar, a reference, or a co
 
 - **Containers** are `java.util.List<X>`, `java.util.Map<K,V>` and `X[]`. Strip the wrapper to get the element type(s), then read each one by the rules below.
 - **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.` — send the value itself. A `long` or `java.math.BigInteger` is the exception: as a **field value** send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form — an unquoted literal with an `L` suffix, never a quoted string. See [Large integer literals](#execute_query).
-- **References** are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object — `"address": "1.0.5"`, not `"address": { "city": "..." }`.
+- **References** are everything else, because any remaining name is a database class. Send the referenced object's LOID string, never a nested object: `"address": "1.0.5"`, not `"address": { "city": "..." }`.
 
 So `java.util.List<Worker>` holds LOID strings, `java.util.List<java.lang.String>` holds plain strings, and `java.util.Map<java.lang.String,Skill>` has scalar keys and LOID-string values.
 
@@ -632,6 +646,8 @@ This tool takes no input parameters.
 
 Creates one or more objects of a single class in one atomic transaction. Either every object in the batch is created, or none is.
 
+A LOID is valid only at the endpoint that returned it, with targets or without. See [LOIDs Belong to One Endpoint](../limits.md#loids-belong-to-one-endpoint).
+
 Available only in write mode, and subject to the checks described in [Write support](../write-support.md).
 
 ### Parameters
@@ -653,7 +669,7 @@ Field values go in the per-object maps of `create_objects` (`objects[]`) and in 
 | Dates | Epoch milliseconds (`1700000000000`) or an ISO 8601 string (`"2026-08-10T09:00:00Z"`). |
 | Arrays of scalars | A JSON array — `"accessLevels": [1, 5, 10]`. The same ±2^53 rule applies per element — `"timestamps": ["9007199254740993", "0"]`. |
 | Enums | The **stored** value, because the schema does not surface enums as enums. An ordinal-mapped enum is an integer field: write the ordinal (`1`). A string-mapped enum is a string field: write the constant name (`"NICHES"`). |
-| Single references | The target object's LOID string — `"address": "135.0.2142"`. |
+| Single references | The referenced object's LOID string, for example `"address": "135.0.2142"`. |
 | Reference collections | An array of LOID strings — `"subordinates": ["135.0.2145", "135.0.2146"]`. An empty array clears the collection. |
 | Maps | An object with exactly the two keys `keys` and `values`, holding equal-length arrays — `"metadata": { "keys": ["role"], "values": ["dev"] }`. No other keys are accepted. Either side may hold LOID strings. |
 | Clearing a nullable field | `null` — `"department": null`. The field is set to `null`, and a later read returns it as an explicit `null`. For collections and maps, an empty array or `{ "keys": [], "values": [] }` sets an empty container instead. |
@@ -733,6 +749,8 @@ Add Ada and Grace to the Engineering department
 
 Applies partial field updates to existing objects in one atomic transaction. Only the fields you supply are changed; every other field is left as it was. A single call may update objects of different classes.
 
+A LOID is valid only at the endpoint that returned it, with targets or without. See [LOIDs Belong to One Endpoint](../limits.md#loids-belong-to-one-endpoint).
+
 Available only in write mode, and subject to the checks described in [Write support](../write-support.md).
 
 ### Parameters
@@ -806,12 +824,7 @@ Move Bob to the Research department
 
 **Response when the object changed in the meantime**
 
-The call fails with an error naming the object, the version you sent, and the version it holds now. Nothing is written:
-
-```text
-Object [0]: 135.0.2146 was modified since it was read (expected version 8273401,
-current 8273402). Re-read the object and retry.
-```
+The call fails with an error naming the object, the version you sent, and the version it holds now. Nothing is written.
 
 Fetch the object again with [`get_object_by_loid`](#get_object_by_loid), take the `version` from that response, and send the update again.
 
@@ -820,6 +833,8 @@ Fetch the object again with [`get_object_by_loid`](#get_object_by_loid), take th
 ## delete_objects
 
 Permanently deletes objects by LOID in one atomic transaction.
+
+A LOID is valid only at the endpoint that returned it, with targets or without. See [LOIDs Belong to One Endpoint](../limits.md#loids-belong-to-one-endpoint).
 
 Available only in write mode, and subject to the checks described in [Write support](../write-support.md).
 
@@ -875,6 +890,55 @@ Delete the two employee records I imported by mistake
 {
   "deletedLoids": ["135.0.2148"],
   "notFoundLoids": ["135.0.9999"]
+}
+```
+
+---
+
+## list_accessible_targets
+
+Lists the targets on this MCP server that the caller may use, each with the path an MCP client connects to. It answers from the configuration and the caller's token, and it does not contact any database.
+
+The tool is offered only at plain `/mcp` when the server runs with targets. It is hidden at `/mcp/{target}` and without targets. At plain `/mcp` it is the only tool, and the server offers no resource, resource template or prompt there. Connect to `/mcp/{target}` to use the other tools. See [What an Agent Sees](../targets/index.md#what-an-agent-sees).
+
+### Parameters
+
+The tool takes no arguments.
+
+### Output Schema
+
+```json
+{
+  "targets": [
+    {
+      "name": "string",   // the target name
+      "path": "string",   // the path to connect to, /mcp/{name}
+      "access": "string"  // "write" or "read"
+    }
+  ]
+}
+```
+
+With authentication on, only the targets the caller may read are listed, and the array is empty when the caller may read none. `access` is `write` when the caller also holds that target's write scope and `nsql.writes.enabled` is `true`, and `read` otherwise.
+
+With authentication off, every target is listed, and `access` is `write` when `nsql.writes.enabled` is `true` and `read` otherwise.
+
+The entries follow the order of the configuration: the `nsql.targets[i]` targets by index, then the directory targets by name. The list is read on every call, so it follows targets that were added or removed at a reload.
+
+### Example
+
+**Input**
+
+The tool takes no arguments.
+
+**Response**
+
+```json
+{
+  "targets": [
+    {"name": "sales", "path": "/mcp/sales", "access": "write"},
+    {"name": "hr", "path": "/mcp/hr", "access": "read"}
+  ]
 }
 ```
 

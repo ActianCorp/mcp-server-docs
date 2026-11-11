@@ -16,18 +16,27 @@ The Actian NoSQL MCP Server supports the following operations:
 | **Discover the Schema** | List all classes and explore their fields and inheritance hierarchy. |
 | **Run JPQL queries** | Execute read-only queries against your database. |
 | **Retrieve objects by ID** | Fetch one or many objects directly by LOID for the fastest retrieval path. |
+| **Serve several databases** | Serve several NoSQL databases from one MCP server through named targets that clients reach at `/mcp/{target}`. See [Targets](targets/index.md). |
 | **Write data** | Create, update, and delete objects, when write support is enabled. |
 | **Extend the server** | Add custom tools, resources, and prompts with a Java extension JAR. |
 
+### Targets
+
+One MCP server can serve several NoSQL databases through named targets. A client works with a target's database at `/mcp/{target}`, while plain `/mcp` offers only `list_accessible_targets`, which lists the targets the caller can reach. Targets defined in a directory can be added, changed, and removed while the server runs. With authentication enabled, each target has its own read and write scopes.
+
+[Targets](targets/index.md) covers targets, names, and what an agent sees, [Changing Targets Without a Restart](targets/without-restart.md) covers the targets directory, and [Scopes](authentication/scopes.md) covers the per-target scopes.
+
 ### Write Support
 
-The server is read-only until writes are turned on. Once they are, tools for creating, updating, and deleting objects join the read-only ones, each running as a single all-or-nothing transaction. Every call then passes [three independent checks](write-support.md#what-each-call-must-clear): writes must be on, the caller's token must carry the `mcp:write` scope when authentication is enabled, and a person must approve the operation in the connected client.
+The server is read-only until writes are turned on. Once they are, tools for creating, updating, and deleting objects join the read-only ones, each running as a single all-or-nothing transaction. Every call then passes [three independent checks](write-support.md#what-each-call-must-clear): writes must be on, the caller's token must carry the write scope of the mode when authentication is enabled (`mcp:write` without targets, the target's own write scope with targets), and a person must approve the operation in the connected client.
 
 [Write support](write-support.md) covers all three, plus [why the write tools may be missing from a client's tool list](write-support.md#missing-write-tools) and how object versions stop one client overwriting another's change.
 
 ### Extensions
 
 An extension is a Java JAR that adds custom tools, resources, resource templates, and prompts to a running server — no fork, and no rebuild of the product. The server loads only the JARs an operator has declared in an allowlist, with each one's SHA-256 digest pinned by default. An extension's write tools pass the same checks the built-in ones do.
+
+With targets, an extension can be offered at some targets only: see [Limiting an Extension to Some Targets](extensions/index.md#limiting-an-extension-to-some-targets).
 
 [Extensions](extensions/index.md) covers authoring, the Extension SDK, deployment, and the trust model.
 
@@ -49,11 +58,38 @@ All configuration is provided through an `application.properties` file mounted i
 
 ### Actian NoSQL Properties
 
-| Property | Required | Description |
-|----------|----------|-------------|
-| `nsql.connectionURL` | Yes | Database connection URL in the format `database@server:port#user:password`. `port`, `user`, and `password` are optional. |
-| `nsql.writes.enabled` | No | Turns on the write tools, which are otherwise unavailable. See [Write support](write-support.md#configuration-reference) for the batch ceiling and the two confirmation settings. |
-| `nsql.extensions.enabled` | No | Turns on loading of declared Java extension JARs. See [Extensions](extensions/index.md#enabling-and-declaring-extensions) for the allowlist, digest pinning, and load order. |
+Set either `nsql.connectionURL` or targets, never both. The server does not start with both, or with neither. See [Choosing a Mode](targets/index.md#choosing-a-mode).
+
+#### Without Targets
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `nsql.connectionURL` | `None` | Required in this mode. Database connection URL in the format `database@host[:port][#user[:password]]`. The port, the user, and the password are optional. The distributed form `database@host|database@host` is not supported. See [Distributed Databases](limits.md#distributed-databases). |
+| `nsql.db.connect-on-startup` | `true` | This mode only: whether the database is opened while the server starts. It has no effect when targets are configured. See [Starting with a Database Down](database-availability.md#starting-with-a-database-down). |
+
+#### With Targets
+
+The `nsql.targets[i]` entries are read once at startup. The files of `nsql.targets.dir` are read again at the reload interval, so a change to them needs no restart.
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `nsql.targets[i].name` | `None` | The name of target `i`, which clients use in the path `/mcp/{name}`. Required for each target. See [Choosing a Mode](targets/index.md#choosing-a-mode). |
+| `nsql.targets[i].connectionURL` | `None` | The connection URL of the database of target `i`, in the format `database@host[:port][#user[:password]]`. Required for each target, and the host is required. See [Target Names and Connection URLs](targets/index.md#target-names-and-connection-urls). |
+| `nsql.targets.dir` | `None` | A directory of `*.properties` files, one target per file. Setting it selects this mode by itself. See [Targets Directory](targets/without-restart.md#targets-directory). |
+| `nsql.targets.reload-interval` | `10s` | How often the directory is read again. `0` reads it once at startup. See [Targets Directory](targets/without-restart.md#targets-directory). |
+
+#### Both Modes
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `nsql.writes.enabled` | `false` | Turns on the write tools, which are otherwise unavailable. See [Write support](write-support.md#configuration-reference) for the batch ceiling and the two confirmation settings. |
+| `nsql.extensions.enabled` | `false` | Turns on loading of declared Java extension JARs. See [Extensions](extensions/index.md#enabling-and-declaring-extensions) for the allowlist, digest pinning, and load order. |
+| `nsql.db.max-calls` | `10` | Most calls in flight per database. `0` means no cap. See [Properties](database-availability.md#properties). |
+| `nsql.db.call-deadline` | `30s` | Longest a read call may take. `0` means no deadline. See [Properties](database-availability.md#properties). |
+| `nsql.db.connect-timeout` | `10s` | Longest the network connect to the NoSQL server may take. See [Properties](database-availability.md#properties). |
+| `nsql.db.idle-timeout` | `10m` | Time without a call after which a database's connection pool is closed. `0` never closes it. See [Properties](database-availability.md#properties). |
+
+For how these limits protect the server when a database is busy, slow, or down, see [Database Availability](database-availability.md).
 
 ### Quarkus Properties
 
@@ -101,6 +137,8 @@ quarkus.log.category."com.actian.nsql".level=DEBUG
 
 See the [Quarkus logging guide](https://quarkus.io/guides/logging) for the full reference.
 
+With targets, console lines carry the target name. If you change `quarkus.log.console.format`, keep `%X{target}` before the message. See [Log Lines](targets/index.md#log-lines).
+
 ## Start the Server
 
 Add settings to `application.properties` and mount it into the container:
@@ -113,10 +151,10 @@ nsql.connectionURL=<connection-url>
 docker run \
   -v $(pwd)/application.properties:/home/jboss/config/application.properties:ro \
   -p 8080:8080 \
-  actian/nsql-mcp-server:1.1.0
+  actian/nsql-mcp-server:1.2.0
 ```
 
-Once the container is running, connect the MCP client to the exposed server endpoint using the host and port from the configuration.
+Once the container is running, connect the MCP client to the exposed MCP server endpoint using the host and port from the configuration.
 
 ---
 
@@ -280,5 +318,11 @@ if __name__ == "__main__":
 
 - :material-puzzle: **[Extensions](extensions/index.md)**  
   Add custom tools, resources, and prompts with a Java extension JAR.
+
+- :material-database: **[Targets](targets/index.md)**  
+  Serve several databases through named targets from one MCP server.
+
+- :material-database-cog: **[Database Availability](database-availability.md)**  
+  Limits on calls and connections, idle connections, and recovery when a database is down.
 
 </div>

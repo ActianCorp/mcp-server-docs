@@ -1,13 +1,13 @@
 ---
 title: Write Support
-description: How to let the Actian MCP Server for NoSQL create, update, and delete objects, and the three checks — the setting, the mcp:write scope, and human confirmation — that authorize every write.
+description: How to let the Actian MCP Server for NoSQL create, update, and delete objects, and the three checks (the setting, the write scope, and human confirmation) that authorize every write.
 ---
 
 # Write Support
 
 The Actian MCP Server for Actian NoSQL is read-only by default. Setting `nsql.writes.enabled` to `true` adds three tools that change data: `create_objects`, `update_objects`, and `delete_objects`. A deployment that never sets it is not affected by anything on this page.
 
-Turning writes on does not give the connected AI agent unrestricted access to the database. Every write clears three independent checks — the server setting, the caller's `mcp:write` scope, and a person confirming the operation — and each of them can stop it. This page covers all three, the properties that tune them, and what to do when the write tools do not appear in the client at all.
+Turning writes on does not give the connected AI agent unrestricted access to the database. Every write clears three independent checks: the server setting, the caller's write scope, and a person confirming the operation. Each of them can stop it. This page covers all three, the properties that tune them, and what to do when the write tools do not appear in the client at all.
 
 For each tool's parameters, batch limits, and result shape, see [Tools](tools/index.md). Tools contributed by an [extension](extensions/index.md) pass the same three checks.
 
@@ -38,26 +38,27 @@ Authorization happens at two separate moments: the server decides which write to
 
 ### Tools Provided at Connect Time
 
-A write tool is registered for a connection only when **both** of these hold:
+A write tool is registered for a connection (for a stateless client, for a request) only when **all three** of these hold:
 
-1. `nsql.writes.enabled` is `true`; and
-2. the client advertised the MCP elicitation capability, so the server has a way to ask a person for confirmation.
+1. `nsql.writes.enabled` is `true`;
+2. the client advertised the MCP elicitation capability, so the server has a way to ask a person for confirmation; and
+3. the caller may write here. With authentication on, that means the `mcp:write` scope without targets, or, with targets, the `actian:{target}:write` scope of the target the request is routed to (see [Scopes per Target](authentication/scopes.md#scopes-per-target)). With authentication off, any caller may write.
 
-The second condition is waived when `nsql.writes.confirmation-required` is `false` — with no prompt to show, there is no reason to withhold the tools from a client that could not show one.
+The second condition is waived when `nsql.writes.confirmation-required` is `false`. With no prompt to show, there is no reason to withhold the tools from a client that could not show one.
 
 A tool the server withholds is unlisted **and** uncallable: calling it anyway fails at the protocol layer with an unknown-tool error, before any server-side logic runs. If the write tools are missing when you expected them, [Missing Write Tools](#missing-write-tools) is the troubleshooting guide.
 
 ### What Each Call Must Clear
 
-Every call that does reach the server passes three independent checks, in the order below — so a caller on a read-only server, or one whose token lacks the scope, is turned away before anybody is asked to confirm anything.
+Every call that does reach the server passes three independent checks, in the order below, so a caller on a read-only server, or one whose token lacks the write scope, is turned away before anybody is asked to confirm anything. The write scope also decides whether the tools are listed, so the check here is the backstop for a call that reaches a tool the list did not hide.
 
 | Check | What it requires | When it applies |
 |-------|------------------|-----------------|
 | `nsql.writes.enabled` | The setting must be `true`. | Always. Re-checked here as a backstop, having already governed registration. |
-| `mcp:write` scope | The access token must carry the `mcp:write` scope. | Only when authentication is enabled (`mcp.auth.enabled=true`). An unauthenticated server does not check scopes. |
+| Write scope | The access token must carry the write scope of the mode: `mcp:write` without targets, or, with targets, `actian:{target}:write` for the target the request is routed to, where `mcp:write` grants nothing. | Only when authentication is enabled (`mcp.auth.enabled=true`). An unauthenticated server does not check scopes. |
 | Human confirmation | A person must confirm the operation in the connected client. | Always, unless you disable it with `nsql.writes.confirmation-required`. |
 
-The sequence below picks up at this second stage, with the tool already registered:
+On the stateful protocol, the sequence below picks up at this second stage, with the tool already registered:
 
 ```mermaid
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
@@ -72,7 +73,7 @@ sequenceDiagram
     alt Writes disabled
         Server-->>Client: Rejected (write operations are disabled)
     else Writes enabled
-        Server->>Server: Check mcp:write scope
+        Server->>Server: Check write scope
         alt Scope missing
             Server-->>Client: Rejected (missing scope)
         else Scope present or authentication disabled
@@ -84,23 +85,27 @@ sequenceDiagram
                 Server->>DB: Run one atomic transaction
                 DB-->>Server: Committed
                 Server-->>Client: Result with the affected LOIDs
-            else Declined, cancelled, no response, or client cannot prompt
+            else Declined, cancelled, or client cannot prompt
                 Client-->>Server: Not confirmed
                 Server-->>Client: Rejected (write not performed)
+            else No answer within the timeout
+                Server-->>Client: Rejected (timed out)
             end
         end
     end
 ```
 
-To grant the `mcp:write` scope in your identity provider, see [Auth0](authentication/auth0/index.md) or [Keycloak](authentication/keycloak/index.md).
+On the stateless 2026-07-28 protocol, the checks are the same, but the confirmation travels in two calls: the first returns the question and writes nothing, and the client repeats the call with the answer. See [Write Confirmation on Each Protocol](protocol-versions.md#write-confirmation-on-each-protocol).
+
+The write scope is `mcp:write` without targets and the target's `actian:{target}:write` with targets; see [Scopes per Target](authentication/scopes.md#scopes-per-target). To grant it in your identity provider, see [Auth0](authentication/auth0/index.md) or [Keycloak](authentication/keycloak/index.md).
 
 !!! note "The server checks the scope; it never asks for it"
-    Nothing on the server requests `mcp:write` — it only reads whatever the presented token carries, so the request has to come from the MCP client. A client that lets you set its scopes can be told to ask for it directly. One that works them out from the server's resource metadata asks for whatever is advertised there, which is a server setting: see [Advertising scopes to MCP clients](authentication/index.md#advertising-scopes-to-mcp-clients).
+    Nothing on the server requests the write scope. It only reads whatever the presented token carries, so the request has to come from the MCP client. A client that lets you set its scopes can be told to ask for it directly. One that works them out from the server's resource metadata asks for whatever is advertised there, which is a server setting: see [Advertising scopes to MCP clients](authentication/scopes.md#advertising-scopes-to-mcp-clients). With targets, the write scope of a target is never requested this way, and it has to reach the token through the identity provider's own grants: see [Advertising with Targets](authentication/scopes.md#advertising-with-targets).
 
 !!! warning "The scope is the only per-caller write control"
-    The server authenticates to Actian NoSQL Database with the credentials carried in its connection URL, so every statement it runs — read or write — runs as that one configured database user. There is no per-user impersonation, and so no database-privilege layer underneath that could narrow what an authorized caller may change. `mcp:write` is all or nothing: a caller who holds it can create, update, or delete objects of any class in the database.
+    The server authenticates to Actian NoSQL Database with the credentials carried in the connection URL of the database the call reaches, so every statement it runs, read or write, runs as that one configured database user. There is no per-user impersonation, and so no database-privilege layer underneath that could narrow what an authorized caller may change. The write scope is all or nothing: a caller who holds it can create, update, or delete objects of any class in that database. With targets, that holds for each target separately, because the write scope of a target covers that target's database only.
 
-    Grant `mcp:write` only to the callers that should be able to modify data, and treat the database user in `nsql.connectionURL` as the true limit of what any caller can reach.
+    Grant the write scope only to the callers that should be able to modify data, and treat the database user in the connection URL as the true limit of what any caller can reach. Without targets that is `nsql.connectionURL`. With targets each target has its own URL; see [Target Names and Connection URLs](targets/index.md#target-names-and-connection-urls).
 
 ## Confirmation Prompts
 
@@ -125,16 +130,6 @@ Nothing is written in any of those cases. The rejection message names the reason
 
 The server waits a fixed window for an answer. The clock starts when the prompt is sent and runs for `nsql.writes.confirmation-timeout-seconds`, 60 by default. Silence is not consent: when the window closes the write is rejected outright, and the tool call returns naming the reason.
 
-```text
-Create not performed: no confirmation was received within the timeout.
-```
-
-The server records the same event:
-
-```text
-WARN  Confirmation not received within 60s; rejecting operation.
-```
-
 Sixty seconds suits someone watching the conversation as it happens. Raise it when approvals go to a person who may be away from the screen. On the stateful protocol the tool call stays open for the whole wait, so the agent making the request is blocked until somebody answers or the timeout closes it. Lower it if you would rather a batch fail fast than sit pending.
 
 For a client on the stateless 2026-07-28 protocol, the same setting is how long the person has to answer; a later answer is refused and the operation must be run again. The tool call does not stay open: the first call returns the question, and the client repeats the call with the answer. See [Protocol Versions](protocol-versions.md#write-confirmation-on-each-protocol).
@@ -145,16 +140,17 @@ Not every MCP client implements elicitation. For which clients can display the p
 
 ## Missing Write Tools
 
-Write tools go missing because one of the two [registration conditions](#tools-provided-at-connect-time) was not met. Withholding them is deliberate: a tool the server could never get confirmed would fail on every call, so a client that cannot confirm simply never sees one. The startup log tells you which condition to look at.
+Write tools go missing because one of the three [registration conditions](#tools-provided-at-connect-time) was not met. Withholding them is deliberate: a tool the server could never get confirmed would fail on every call, so a client that cannot confirm simply never sees one. The startup log tells you which condition to look at.
 
 | What you see | Cause | What to do |
 |--------------|-------|------------|
 | No write tools, and the startup log says `Mode: READ-ONLY` | `nsql.writes.enabled` is `false`. | Set it to `true` and restart the server. |
 | No write tools, but the startup log says `Mode: READ-WRITE` | The connected client did not advertise elicitation. | Connect a client that supports it, or set `nsql.writes.confirmation-required=false`. |
-| A write tool call fails with a protocol error naming the tool, such as `-32602 Invalid tool name` | The tool is not registered for this connection, for one of the two reasons above. The MCP runtime rejects the call as unknown; it never reaches the server's write logic. | Fix the cause of the hiding, then reconnect the client so it re-reads the tool list. |
-| A write tool call is rejected for a missing scope | The access token does not carry `mcp:write`. | Grant the scope in your identity provider. |
+| No write tools, reads work, authentication is on, and the client can show the confirmation | The access token does not carry the write scope of the mode: `mcp:write` without targets, or, with targets, `actian:{target}:write` for the target of the URL, where `mcp:write` grants nothing. | Grant the write scope in your identity provider, then reconnect the client. See [Scopes per Target](authentication/scopes.md#scopes-per-target). |
+| With targets, only `list_accessible_targets` is offered, and no write tools | The client is connected to plain `/mcp`, where no target is routed. | Connect to `/mcp/{target}`. See [What an Agent Sees](targets/index.md#what-an-agent-sees). |
+| A write tool call fails with a protocol error naming the tool, such as `-32602 Invalid tool name` | The tool is not offered to this caller, for one of the reasons above. The MCP runtime rejects the call as unknown; it never reaches the server's write logic. | Fix the cause of the hiding, then reconnect the client so it re-reads the tool list. |
 
-A hidden tool is unlisted **and** uncallable, so the usual sign of trouble is a protocol-level error about an unknown tool rather than a message from the server explaining itself. The server's own refusal, `Write operations are disabled on this server.`, is a backstop for a call that somehow bypasses the tool list; in normal use nobody sees it.
+A hidden tool is unlisted **and** uncallable, so the usual sign of trouble is a protocol-level error about an unknown tool rather than a message from the server explaining itself. The server's own refusal, which includes the check of the write scope at the call, is a backstop for a call that somehow bypasses the tool list; in normal use nobody sees it. It is the scope that controls writes, and hiding the tools only keeps them out of the client's view.
 
 Visibility is decided per connection, from the capabilities the client advertised when it connected. A stateless client has no connection, so for it visibility is decided per request, from the capabilities that request declares. After changing either setting, restart the server and reconnect the client.
 
@@ -208,21 +204,17 @@ nsql.writes.confirmation-required=false
 !!! warning "This removes human oversight of every write"
     With `nsql.writes.confirmation-required` set to `false`, the server creates, updates, and deletes objects as soon as it is asked. Nobody is asked first. Use it only when the client cannot prompt and you accept that the AI agent writes unattended.
 
-    The other two checks still apply. Disabling confirmation does not enable writes, and it does not grant write access to callers that lack the `mcp:write` scope.
+    The other two checks still apply. Disabling confirmation does not enable writes, and it does not grant write access to callers that lack the write scope.
 
     This setting is deployment-wide: it applies to the built-in write tools **and** to any extension tool that asks for confirmation. Both share the same confirmation mechanism, so turning it off silences both.
 
-The setting is visible in the log. At startup the server records the mode it is running in, and it raises that line to a warning when writes are unconfirmed:
-
-```text
-WARN  nsql-mcp-server Mode: READ-WRITE. Write tools are exposed; writes execute without confirmation.
-```
+The setting is visible in the log: at startup the server logs the mode it runs in, as a warning when writes run without confirmation.
 
 ## Optimistic Concurrency
 
 Every object a read returns carries a `version` field: an opaque token that changes whenever the object is modified. It is returned as a string so that large values survive JSON without losing precision — the same reason 64-bit integer fields are, as described under [Response format](tools/index.md). Do not parse it or compare it for ordering — the only thing to do with it is hand it back.
 
-`update_objects` requires it. Each update item carries the target `loid`, the `expectedVersion` you read earlier, and the `fields` to change:
+`update_objects` requires it. Each update item carries the `loid` of the object to change, the `expectedVersion` you read earlier, and the `fields` to change:
 
 ```json
 {
@@ -259,7 +251,7 @@ See [Tools](tools/index.md) for where `version` appears in each read tool's resp
   How a write is confirmed on the stateful and the stateless protocol.
 
 - :material-lock: **[Authentication](authentication/index.md)**  
-  Enable OAuth 2.0 and grant the `mcp:write` scope.
+  Enable OAuth 2.0 and grant the write scope.
 
 - :material-connection: **[MCP clients](../mcp-clients/index.md#elicitation-support-for-write-approval)**  
   Which clients can display the confirmation prompt.
