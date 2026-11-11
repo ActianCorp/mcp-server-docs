@@ -13,9 +13,10 @@ Identify the deployment type to determine the connection URL. The standard endpo
 
 - Local deployment: `http://localhost:<port>/mcp`
 - Remote deployment: `http://<hostname>:<port>/mcp`
-- Multi-target deployment (Ingres and Analytics Engine): `https://<hostname>:<port>/mcp/{host}/{instance}/{database}`, one URL for each database
+- Multi-target deployment of Ingres, Analytics Engine, HCL Informix®, or Zen: `https://<hostname>:<port>/mcp/{host}/{instance}/{database}`, one URL for each database
+- Multi-target deployment of Actian NoSQL: `https://<hostname>:<port>/mcp/{target}`, one URL for each target
 
-In a multi-target deployment, configure one client entry for each database, using that database's URL. A client connected to `/mcp` can call `list_accessible_targets` to find the URLs, but the database tools fail with `Failed to get database connection or cursor`. For more information, see Multi-Target Deployments for [Ingres](../ingres/multi-target.md#connect-a-client-to-each-database) or [Analytics Engine](../analytics-engine/multi-target.md#connect-a-client-to-each-database).
+In a multi-target deployment, configure one client entry for each database, using that database's URL. A client connected to `/mcp` can call `list_accessible_targets` to find the URLs, but it cannot query a database there. For more information, see the multi-target documentation for [Ingres](../ingres/multi-target.md#connect-a-client-to-each-database), [Analytics Engine](../analytics-engine/multi-target.md#connect-a-client-to-each-database), or [Zen](../zen/multi-target.md).
 
 !!! note "Resource-server mode"
     In resource-server mode (Ingres and Analytics Engine), the server runs no login. The client sends an access token from your identity provider in the `Authorization: Bearer` header. The browser-login setups on this page, such as Claude Desktop through `mcp-remote` and `MCP_AUTH=oauth` for the Python client, do not apply, because those clients register themselves with the server. Claude Code can sign in with an Auth0 client that you register in advance. For the steps and for application examples, see Resource-Server Mode for [Ingres](../ingres/authentication/resource-server.md#call-the-server-from-a-client) or [Analytics Engine](../analytics-engine/authentication/resource-server.md#call-the-server-from-a-client).

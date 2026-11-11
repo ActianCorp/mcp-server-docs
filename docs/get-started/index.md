@@ -40,21 +40,36 @@ Each database has unique settings. For more information, see the database config
 - [Analytics Engine Configuration](../analytics-engine/self-hosted.md#configuration)
 - [SaaS deployment](../analytics-engine/saas.md) (no configuration file required)
 
-All database configurations except NoSQL share the following standard MCP server fields:
+### Server Settings
+
+All database configurations except NoSQL share the following server fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `database_user` | String | Yes | Database username |
-| `database_password` | String | Yes | Database password |
 | `host` | String | Yes | Host address the MCP server listens to in the container |
 | `port` | Integer | Yes | Port the MCP server listens to in the container |
 | `ssl_certfile` | String| No | Path to the TLS certificate file. In the container, this is always mapped to `/app/server.crt`|
 | `ssl_keyfile` | String | No | Path to the TLS private key file. In the container, this is always mapped to `/app/server.key` |
 | `log_level` | String | No | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. Defaults to `INFO` |
 | `oauth` | Object | No | OAuth 2.0 configuration settings for authentication. For more information, see [Authentication Guide](../ingres/authentication/index.md)|
+| `auth_mode` | String | No | Set to `resource-server` to accept access tokens issued by your identity provider instead of running the OAuth login. Set it at the top level of `conf.json`, not inside `oauth`. For more information, see [Resource-Server Mode](../ingres/authentication/resource-server.md)|
 | `query_mode` | String | No | Whether data-modifying SQL is permitted. Valid values: `read-only`, `read-write`. Defaults to `read-only`. For more information, see [Write support](../ingres/write-support.md)|
 | `write_confirmation` | Boolean | No | Whether a write requires human approval before it runs. Defaults to `true`. Applies only when `query_mode` is `read-write`. For more information, see [Write support](../ingres/write-support.md#skipping-the-approval-prompt)|
 | `extensions` | Array | No | Extension modules that add your own tools to the server. For more information, see [Extensions](../ingres/extensions/index.md)|
+
+### Single-Database Deployments
+
+To connect to one database, use the database's own connection fields, described on its configuration page:
+
+- Ingres and Analytics Engine: `driver`, `server`, `database`, `database_user`, and `database_password`
+- HCL Informix®: `server`, `servername`, `service`, `database`, `database_user`, and `database_password`
+- Zen: `conn_string`
+
+### Multi-Target Deployments
+
+Ingres, Analytics Engine, HCL Informix®, and Zen can serve several databases from one server. You list the database servers and their databases in a `targets` block in `conf.json`, instead of the single-database fields. Each database is then reached through its own URL, `/mcp/{host}/{instance}/{database}`, and a client connects to that URL. When the block lists more than one database server, the server requires authentication so that it can check a scope for each database.
+
+The fields and their meaning differ by database. For the configuration details, see the multi-target documentation for your database: [Ingres](../ingres/multi-target.md), [Analytics Engine](../analytics-engine/multi-target.md), [Zen](../zen/multi-target.md), or Actian NoSQL.
 
 !!! note "Configuration File Protection"
     The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control.
