@@ -14,7 +14,7 @@ Use the following tools to interact with the database:
 | Tool | Description |
 |------|-------------|
 | [`execute_query`](#execute_query) | Runs a SQL query against the connected database. Reads run at any time; writes run only when the server permits them. |
-| [`list_tables`](#list_tables) | Lists all available user tables and views, and states which of the two each one is. |
+| [`list_tables`](#list_tables) | Lists all available user tables and views, with each one's owner and whether it is a table or a view. |
 | [`describe_table`](#describe_table) | Displays column definitions and comments for a given table. |
 | [`list_indexes`](#list_indexes) | Lists the indexes defined on a given table, with their columns in key order. |
 | [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
@@ -160,7 +160,7 @@ The server checks the scope before it asks anyone to approve the statement, so n
 
 ## list_tables
 
-Returns all user tables and views available in the connected database as structured JSON. Each row states whether the object is a table or a view.
+Returns all user tables and views available in the connected database as structured JSON. Each row states the object's owner and whether it is a table or a view.
 
 Indexes are not listed. Use [`list_indexes`](#list_indexes) to list the indexes on a table.
 
@@ -175,13 +175,13 @@ This tool does not require input parameters.
 ```json
 {
 	"success": true,
-	"columns": ["table_name", "table_type"],
-	"rows": [["<table_name>", "<table_type>"]],
+	"columns": ["table_name", "table_owner", "table_type"],
+	"rows": [["<table_name>", "<table_owner>", "<table_type>"]],
 	"row_count": 1
 }
 ```
 
-`table_type` is `table` or `view`.
+`table_type` is `table` or `view`. `table_owner` is the user that owns the table or view. Use it to qualify the name in [`describe_table`](#describe_table), for example `actian.customers`, when tables owned by different users share a name.
 
 **On Error**
 
@@ -205,11 +205,11 @@ Show me all the tables in my database
 ```json
 {
 	"success": true,
-	"columns": ["table_name", "table_type"],
+	"columns": ["table_name", "table_owner", "table_type"],
 	"rows": [
-		["customers", "table"],
-		["orders", "table"],
-		["open_orders", "view"]
+		["customers", "actian", "table"],
+		["orders", "actian", "table"],
+		["open_orders", "actian", "view"]
 	],
 	"row_count": 3
 }

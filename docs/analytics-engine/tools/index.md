@@ -16,7 +16,7 @@ Use the following tools to interact with the database:
 | Tool | Description |
 |------|-------------|
 | [`execute_query`](#execute_query) | Runs a SQL query against the connected database. Reads run at any time; writes run only when the server permits them. |
-| [`list_tables`](#list_tables) | Lists all available user tables and views. |
+| [`list_tables`](#list_tables) | Lists all available user tables and views, with each one's owner and whether it is a table or a view. |
 | [`describe_table`](#describe_table) | Returns column definitions and comments for a specific table. |
 | [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
 | [`vector_search`](#vector_search) | Returns the rows whose `VECTOR` column is most similar to a query vector. Requires Analytics Engine 8.0 or later. |
@@ -173,7 +173,7 @@ The server checks the scope before it asks anyone to approve the statement, so n
 
 ## list_tables
 
-Returns all user tables and views available in the connected database as structured JSON. Each row reports whether the object is a table or a view.
+Returns all user tables and views available in the connected database as structured JSON. Each row reports the object's owner and whether it is a table or a view.
 
 ### Parameters
 
@@ -186,13 +186,13 @@ This tool takes no input parameters.
 ```json
 {
   "success": true,
-  "columns": ["table_name", "table_type"],
-  "rows": [["<table_name>", "<table_type>"]],
+  "columns": ["table_name", "table_owner", "table_type"],
+  "rows": [["<table_name>", "<table_owner>", "<table_type>"]],
   "row_count": "<num_rows>"
 }
 ```
 
-`table_type` is `table` or `view`. External tables are reported as `table`. Indexes are not listed.
+`table_type` is `table` or `view`. External tables are reported as `table`. Indexes are not listed. `table_owner` is the user that owns the table or view. Use it to qualify the name in [`describe_table`](#describe_table), for example `actian.customers`, when tables owned by different users share a name.
 
 **On Error**
 
@@ -216,11 +216,11 @@ Show me all the tables in my database
 ```json
 {
   "success": true,
-  "columns": ["table_name", "table_type"],
+  "columns": ["table_name", "table_owner", "table_type"],
   "rows": [
-    ["customers", "table"],
-    ["orders", "table"],
-    ["recent_orders", "view"]
+    ["customers", "actian", "table"],
+    ["orders", "actian", "table"],
+    ["recent_orders", "actian", "view"]
   ],
   "row_count": 3
 }
