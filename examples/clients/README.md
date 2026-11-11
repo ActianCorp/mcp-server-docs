@@ -35,8 +35,12 @@ All optional.
 
 | Variable | Purpose |
 |---|---|
-| `MCP_AUTH=oauth` | Do the OAuth browser login, for servers that require it. Without this the client sends no credentials. |
+| `MCP_AUTH=oauth` | Do the OAuth browser login, for a server that runs the OAuth login. It does not work against a server in resource-server mode, which runs no login. Without this the client sends no credentials. |
 | `MCP_CA_CERT=<path>` | Server certificate to trust, needed for a self-signed HTTPS server. |
+
+On a multi-target server, pass a database's URL, such as
+`https://<mcp-server-host>:8000/mcp/<db-host>/<instance>/<database>`. The plain
+`/mcp` URL there can only list the databases, not query them.
 
 Against an OAuth server with a self-signed certificate:
 
