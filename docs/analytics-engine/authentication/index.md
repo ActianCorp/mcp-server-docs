@@ -52,7 +52,7 @@ sequenceDiagram
     end
 ```
 
-## Configuring `oauth` Block
+## Configuring the `oauth` Block
 
 To enable authentication, add an `oauth` object to the `conf.json` file. The server reads the following data during startup:
 
@@ -188,7 +188,7 @@ The server validates that both paths exist at startup, and that `BASE_URL` uses 
 Mount the certificate and key into the container using volume flags:
 
 !!! note "Example"
-    The following example demonstrates how to deploy the Analytics Engine docker.
+    The following example starts the Analytics Engine container with the certificate and key mounted.
 
 ```bash
 docker run -p 8000:8000 \

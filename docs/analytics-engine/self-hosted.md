@@ -78,7 +78,7 @@ Create a file named `conf.json` in your working directory using the following st
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 | `ssl_certfile` | `string` | None | Path to the TLS certificate file. Add `/app/server.crt` in the container. |
 | `ssl_keyfile` | `string` | None | Path to the TLS private key file. Add `/app/server.key` in the container. |
-| `oauth` | `object` | None | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-oauth-block).|
+| `oauth` | `object` | None | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-the-oauth-block).|
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md).|
 | `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt). Applies only when `query_mode` is `read-write`. |
 | `extensions` | `array` | None | Extension modules to load, each an object with a required `module`, an optional `config`, and, in a multi-target deployment, an optional `targets` list. For more information, see [Extensions](extensions/index.md).|
