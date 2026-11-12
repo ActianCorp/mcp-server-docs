@@ -92,6 +92,22 @@ nav:
       - Tools: nosql/tools/index.md
       - Resources: nosql/resources/index.md
       - Prompts: nosql/prompts/index.md
+  - VectorAI DB:
+      - Overview: vectorai-db/index.md
+      - Authentication:
+          - vectorai-db/authentication/index.md
+          - Auth0: vectorai-db/authentication/auth0.md
+          - Keycloak: vectorai-db/authentication/keycloak.md
+      - Write Support: vectorai-db/write-support.md
+      - Multiple Databases: vectorai-db/multi-target.md
+      - Deployment Scenarios: vectorai-db/deployment.md
+      - Extensions:
+          - vectorai-db/extensions/index.md
+          - Examples: vectorai-db/extensions/examples.md
+          - API Reference: vectorai-db/extensions/api-reference.md
+      - Tools: vectorai-db/tools/index.md
+      - Resources: vectorai-db/resources/index.md
+      - Prompts: vectorai-db/prompts/index.md
 
 # Theme Configuration
 theme:

@@ -8,12 +8,12 @@ description: Where the Zen engine, the Actian MCP Server container and the agent
 Three pieces take part: the agent (Claude Desktop, an IDE, a script), the MCP server container, and the Zen engine. Each can sit on a laptop, in a container, or on a cloud machine. Every setting answers one of three questions:
 
 1. **How does the container find Zen?** The connection string, plus a Docker network flag.
-2. **How do agents reach the container?** `host`, `port`, `-p`, and TLS.
+2. **How do agents reach the container?** `host`, `port`, `-p`, and Transport Layer Security (TLS).
 3. **Who may do what?** `query_mode`, [read-only personas](multi-target.md#read-only-personas), [tokens and scopes](authentication/index.md#resource-server-mode).
 
 ## Finding Zen
 
-The container talks to Zen over TCP like any remote Zen client. The only question is what name or address reaches the engine *from inside the container*; that is what `ServerName=` in `conn_string` (or `host` in a target entry) must say.
+The container talks to Zen over Transmission Control Protocol (TCP) like any remote Zen client. The only question is what name or address reaches the engine *from inside the container*; that is what `ServerName=` in `conn_string` (or `host` in a target entry) must say.
 
 | Zen engine is... | `ServerName=` | `docker run` needs | Notes |
 |------------------|---------------|--------------------|-------|
@@ -23,11 +23,11 @@ The container talks to Zen over TCP like any remote Zen client. The only questio
 | On another machine or a cloud VM | `<dns-name-or-ip>:1583` | nothing | Port 1583 must be open from the MCP host to the Zen host. With Zen security on, add `UID=` and `PWD=`. |
 
 !!! warning "Not `localhost`, and not a bare DSN"
-    From inside a container `localhost` is the container itself, and the Zen client for Linux resolves the name to `::1`; both fail with `SQL Connection Manager is not running at the specified port number (10065)`. The DSN bundled in the image is not honored for a remote connect either — the client falls back to `127.0.0.1`. Always give an explicit `ServerName=<name>:1583` in `conn_string`.
+    From inside a container `localhost` is the container itself, and the Zen client for Linux resolves the name to `::1`; both fail with `SQL Connection Manager is not running at the specified port number (10065)`. The client also ignores the Data Source Name (DSN) bundled in the image for a remote connection and falls back to `127.0.0.1`. Always give an explicit `ServerName=<name>:1583` in `conn_string`.
 
 ## Letting Agents In
 
-`host` and `port` in `conf.json` are the address *inside* the container. With `-p`, `host` must be `0.0.0.0`; who may connect is decided by the left side of `-p` and by the firewall, not by `host`.
+`host` and `port` in `conf.json` are the address *inside* the container. With `-p`, `host` must be `0.0.0.0`; the left side of `-p` and the firewall control who may connect, not `host`.
 
 | Agents connect from... | `conf.json` | `docker run` | TLS | Authentication |
 |------------------------|-------------|--------------|-----|----------------|
@@ -94,7 +94,7 @@ docker run -d --name zen-mcp --network zentest -p 8000:8000 \
   actian/zen-mcp-server:1.1.0
 ```
 
-Then the checks in [Verifying a setup](multi-target.md#verifying-a-setup).
+Then run the checks in [Verifying a Setup](multi-target.md#verifying-a-setup).
 
 ### D. A Team Deployment with an Identity Provider
 
@@ -122,7 +122,7 @@ docker run -d --name zen-mcp -p 8000:8000 \
   actian/zen-mcp-server:1.1.0
 ```
 
-Each target entry carries the Zen login for its engine; `conf.json` therefore holds passwords and should be readable by nobody else on the host. Open 1583 from the MCP host to each engine, and 8000 to the agents' network only.
+Each target entry carries the Zen login for its engine; `conf.json` therefore holds passwords, so restrict its file permissions to the owner. Open 1583 from the MCP host to each engine, and 8000 to the agents' network only.
 
 ## When Something Goes Wrong
 
@@ -136,4 +136,4 @@ Each target entry carries the Zen login for its engine; `conf.json` therefore ho
 | `Access denied to a READ-ONLY data source` | The URL's persona is in `zen_readonly_personas`, or the server is `read-only`. | Use a read-write persona, or set `query_mode` to `read-write`. This is the expected result of a read-only check. |
 | `N targets are configured, but per-target scope enforcement ... is not active` at start | Several targets need either authentication or `allow_unscoped_reads: true`. | Add `auth_mode: "resource-server"`, or the escape hatch for a test setup. |
 
-`docker logs <container>` shows the start-up lines, every [call log](index.md#call-log) record, and the refusals above.
+`docker logs <container>` shows the startup lines, every [call log](index.md#call-log) record, and the refusals above.

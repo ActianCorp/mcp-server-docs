@@ -12,7 +12,7 @@ The Actian MCP Server is distributed as Docker container images, with one dedica
 Before you begin, ensure that the following requirements are met:
 
 - **Container runtime**: Docker or Podman is installed on the host machine
-- **Database access**: There is network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, or Analytics Engine)
+- **Database access**: There is network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, Analytics Engine, or VectorAI DB)
 - **AI client**: An MCP-compatible client, such as Claude Desktop, Cursor, GitHub Copilot, or Codex already exists
 
 ## Step 1: Select a Database Image
@@ -26,6 +26,7 @@ Each Actian database uses a specific container image that is preconfigured with 
 | Zen | [`actian/zen-mcp-server`](https://hub.docker.com/r/actian/zen-mcp-server) |
 | NoSQL | [`actian/nsql-mcp-server`](https://hub.docker.com/r/actian/nsql-mcp-server) |
 | Analytics Engine | [`actian/analytics-engine-mcp-server`](https://hub.docker.com/r/actian/analytics-engine-mcp-server) |
+| VectorAI DB | `<VECTORAI_DB_IMAGE>` (placeholder) |
 
 ## Step 2: Create a Configuration File
 
@@ -38,6 +39,7 @@ Each database has unique settings. For more information, see the database config
 - [Zen Configuration](../zen/index.md#configuration)
 - [NoSQL Configuration](../nosql/index.md#configuration)
 - [Analytics Engine Configuration](../analytics-engine/self-hosted.md#configuration)
+- [VectorAI DB Configuration](../vectorai-db/index.md#configuration)
 - [SaaS deployment](../analytics-engine/saas.md) (no configuration file required)
 
 ### Server Settings
@@ -146,6 +148,7 @@ For the complete list of available tools for each database, see database-specifi
 - [Zen tools](../zen/tools/index.md)
 - [NoSQL tools](../nosql/tools/index.md)
 - [Analytics Engine tools](../analytics-engine/tools/index.md)
+- [VectorAI DB tools](../vectorai-db/tools/index.md)
 
 ## Step 6 (Optional): Add Authentication
 
