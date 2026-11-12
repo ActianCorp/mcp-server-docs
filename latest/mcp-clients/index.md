@@ -13,6 +13,13 @@ Identify the deployment type to determine the connection URL. The standard endpo
 
 - Local deployment: `http://localhost:<port>/mcp`
 - Remote deployment: `http://<hostname>:<port>/mcp`
+- Multi-target deployment of Ingres, Analytics Engine, HCL Informix®, or Zen: `https://<hostname>:<port>/mcp/{host}/{instance}/{database}`, one URL for each database
+- Multi-target deployment of Actian NoSQL: `https://<hostname>:<port>/mcp/{target}`, one URL for each target
+
+In a multi-target deployment, configure one client entry for each database, using that database's URL. A client connected to `/mcp` can call `list_accessible_targets` to find the URLs, but it cannot query a database there. For more information, see the multi-target documentation for [Ingres](../ingres/multi-target.md#connect-a-client-to-each-database), [Analytics Engine](../analytics-engine/multi-target.md#connect-a-client-to-each-database), or [Zen](../zen/multi-target.md).
+
+!!! note "Resource-server mode"
+    In resource-server mode (Ingres and Analytics Engine), the server runs no login. The client sends an access token from your identity provider in the `Authorization: Bearer` header. The browser-login setups on this page, such as Claude Desktop through `mcp-remote` and `MCP_AUTH=oauth` for the Python client, do not apply, because those clients register themselves with the server. Claude Code can sign in with an Auth0 client that you register in advance. For the steps and for application examples, see Resource-Server Mode for [Ingres](../ingres/authentication/resource-server.md#call-the-server-from-a-client) or [Analytics Engine](../analytics-engine/authentication/resource-server.md#call-the-server-from-a-client).
 
 ## Elicitation Support for Write Approval
 
@@ -39,7 +46,7 @@ When write support is enabled, the server asks a person to approve each write be
 
 ## Client Configuration Examples
 
-You can connect MCP clients such as Claude Desktop, Cursor, fast-agent, and Codex using the connection URL.
+You can connect MCP clients such as Claude Desktop, Cursor, GitHub Copilot, fast-agent, and Codex using the connection URL.
 
 === ":material-brain: Claude Desktop"
 
@@ -100,6 +107,23 @@ You can connect MCP clients such as Claude Desktop, Cursor, fast-agent, and Code
     {
         "mcpServers": {
             "actian-mcp-server": {
+                "url": "http://localhost:<port>/mcp"
+            }
+        }
+    }
+    ```
+
+    For a remote deployment, replace `localhost` and `<port>` with the public hostname and port of the Actian MCP Server.
+
+=== ":material-github: GitHub Copilot"
+
+    GitHub Copilot in Visual Studio Code reads MCP servers from `.vscode/mcp.json` in the workspace, or from your user configuration, which the **MCP: Open User Configuration** command opens. Add the following server entry:
+
+    ```json
+    {
+        "servers": {
+            "actian-mcp-server": {
+                "type": "http",
                 "url": "http://localhost:<port>/mcp"
             }
         }
@@ -188,6 +212,8 @@ Result: {"success": true, "columns": ["name", "email"], "rows": [["Ada", "ada@ex
 
 The tool count and the tool list depend on the deployment. A server with custom extensions loaded, such as `adjust_stock` described below, shows more tools.
 
+In a multi-target deployment, pass a database's URL, for example `https://mcp.example.com:8000/mcp/sales-db.example.com/II/salesmart`. To run one tool on several databases with a single login, use [`multi_target_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/multi_target_client.py), which supports the OAuth browser login only.
+
 In PowerShell, do not pass JSON arguments inline. Windows PowerShell 5.1 and
 PowerShell 7 parse embedded double quotes differently, so a command that works
 in one version can fail in the other. Use a file or standard input instead:
@@ -215,7 +241,7 @@ See [Parameter Naming Differences](#parameter-naming-differences) for the full l
 
 ### Connect Using OAuth Authentication
 
-When the server requires OAuth, set `MCP_AUTH=oauth`. Add `MCP_CA_CERT` if the server presents a self-signed certificate. The command to set an environment variable, and the quoting the shell requires around the JSON argument, differ by platform:
+When the server runs the OAuth login, set `MCP_AUTH=oauth`. Add `MCP_CA_CERT` if the server presents a self-signed certificate. The command to set an environment variable, and the quoting the shell requires around the JSON argument, differ by platform:
 
 === ":material-apple: macOS and Linux"
 

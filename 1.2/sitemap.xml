@@ -9,11 +9,19 @@
          <lastmod>2026-11-12</lastmod>
     </url>
     <url>
+         <loc>https://docs.actian.com/mcp-server/1.2/analytics-engine/multi-target.html</loc>
+         <lastmod>2026-11-12</lastmod>
+    </url>
+    <url>
          <loc>https://docs.actian.com/mcp-server/1.2/analytics-engine/saas.html</loc>
          <lastmod>2026-11-12</lastmod>
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.2/analytics-engine/self-hosted.html</loc>
+         <lastmod>2026-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.actian.com/mcp-server/1.2/analytics-engine/vector-search.html</loc>
          <lastmod>2026-11-12</lastmod>
     </url>
     <url>
@@ -30,6 +38,10 @@
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.2/analytics-engine/authentication/keycloak.html</loc>
+         <lastmod>2026-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.actian.com/mcp-server/1.2/analytics-engine/authentication/resource-server.html</loc>
          <lastmod>2026-11-12</lastmod>
     </url>
     <url>
@@ -109,6 +121,14 @@
          <lastmod>2026-11-12</lastmod>
     </url>
     <url>
+         <loc>https://docs.actian.com/mcp-server/1.2/ingres/health-tools.html</loc>
+         <lastmod>2026-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.actian.com/mcp-server/1.2/ingres/multi-target.html</loc>
+         <lastmod>2026-11-12</lastmod>
+    </url>
+    <url>
          <loc>https://docs.actian.com/mcp-server/1.2/ingres/write-support.html</loc>
          <lastmod>2026-11-12</lastmod>
     </url>
@@ -122,6 +142,10 @@
     </url>
     <url>
          <loc>https://docs.actian.com/mcp-server/1.2/ingres/authentication/keycloak.html</loc>
+         <lastmod>2026-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.actian.com/mcp-server/1.2/ingres/authentication/resource-server.html</loc>
          <lastmod>2026-11-12</lastmod>
     </url>
     <url>

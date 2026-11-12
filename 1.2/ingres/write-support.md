@@ -37,7 +37,7 @@ Writes require `"query_mode": "read-write"` in `conf.json`. In that mode, every 
 
 | Check | What it requires | When it applies |
 |-------|------------------|-----------------|
-| `mcp:write` scope | The access token must carry the `mcp:write` scope. | Only when OAuth is enabled. A read-only server never requests or requires this scope. |
+| Write scope | The access token must carry the write scope for the database (see [Which Scope Authorizes a Write](#which-scope-authorizes-a-write)). | Only when OAuth is enabled. A read-only server never requests or requires a write scope. |
 | Human approval | A person must approve the statement in the connected client. | Always, unless disabled with `write_confirmation`. |
 
 The scope is checked first, so a caller without it is rejected before anyone is asked to approve anything. A write counts as not approved if the person declines, does not answer before the timeout, or the client cannot display the prompt at all.
@@ -51,7 +51,7 @@ sequenceDiagram
     participant DB as Database
 
     Client->>Server: Write request (INSERT / UPDATE / DELETE / MERGE)
-    Server->>Server: Check mcp:write
+    Server->>Server: Check write scope
     alt Scope missing
         Server-->>Client: Rejected (authorization error)
     else Scope present
@@ -73,6 +73,22 @@ sequenceDiagram
 The approval prompt uses the Model Context Protocol (MCP) elicitation capability, which not every client implements. If the connected client cannot display the prompt, the write is rejected, exactly as if a person had declined it. See [Connecting MCP Clients](../mcp-clients/index.md#elicitation-support-for-write-approval) for which clients support it.
 
 To configure the `mcp:write` scope in the identity provider, see [Auth0](authentication/auth0.md) or [Keycloak](authentication/keycloak.md).
+
+### Which Scope Authorizes a Write
+
+The scope a write needs depends on the URL the client is connected to:
+
+| Connected to | Write scope required |
+| :--- | :--- |
+| The server's `/mcp` URL in a single-database deployment (no `targets` block) | `mcp:write` |
+| A target URL, `/mcp/{host}/{instance}/{database}`, in a [multi-target deployment](multi-target.md) | `actian:{host}:{instance}:{database}:write` for that database. `mcp:write` is not accepted. |
+| The server's `/mcp` URL in a multi-target deployment whose registry has exactly one server with one database | `mcp:write` |
+
+`mcp:write` does not apply to a multi-target deployment with more than one server or more than one database. Clients connect to a target URL, and each write needs that target's `:write` scope.
+
+When `allow_unscoped_reads` is set in a multi-target deployment, writes on target URLs are refused.
+
+To configure per-target scopes, see [Auth0: Per-Target Permissions](authentication/auth0.md#multi-target-deployments-per-target-permissions) or [Keycloak: Per-Target Scopes](authentication/keycloak.md#multi-target-deployments-per-target-scopes).
 
 ## Skipping the Approval Prompt
 

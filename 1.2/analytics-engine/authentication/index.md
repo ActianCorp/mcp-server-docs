@@ -13,6 +13,17 @@ The Actian MCP Server supports OAuth 2.0 and OpenID Connect (OIDC) authenticatio
 
 
 
+## Authentication Modes
+
+The server supports two ways to authenticate callers. A deployment uses one of them.
+
+| Mode | How it works | Use it for |
+| :--- | :--- | :--- |
+| **OAuth login** (default) | The server signs the user in through your identity provider and issues its own token. Configured with the `oauth` block described on this page. | General-purpose MCP clients, such as Claude Desktop, GitHub Copilot, and Visual Studio Code |
+| **[Resource-server mode](resource-server.md)** | The server accepts access tokens issued by your identity provider and runs no login. Set `"auth_mode": "resource-server"`. | Applications that have already signed the user in |
+
+In a [multi-target deployment](../multi-target.md), both modes also check a per-database scope on every request.
+
 ## Working with OAuth
 
 The Actian MCP Server acts as an `OIDC Relying Party` by redirecting unauthenticated AI clients to the identity provider for secure login and token issuance. Once authenticated, the client includes this bearer token in all subsequent requests, allowing the server to validate the session and securely fulfill database queries.
@@ -41,7 +52,7 @@ sequenceDiagram
     end
 ```
 
-## Configuring `oauth` Block
+## Configuring the `oauth` Block
 
 To enable authentication, add an `oauth` object to the `conf.json` file. The server reads the following data during startup:
 
@@ -91,9 +102,21 @@ Impersonation covers extension-authored tools as well as the built-in ones, so a
 | `true` (default) | Verify the `JWT` and run `SET SESSION AUTHORIZATION "<user>"` for each query. Every OAuth user needs a matching database account. |
 | `false` | Verify the `JWT` and reject unauthenticated requests. However, all approved queries will run under the shared service-account connection pool credentials.|
 
+### Service Account Privileges
+
+With `user_impersonation` set to `true`, the database account in `conf.json` (the service account) runs `SET SESSION AUTHORIZATION` on every query, so it must be allowed to do so. It needs the `SECURITY` and `OPERATOR` privileges, or it must be the DBA of the database. For example:
+
+```sql
+ALTER USER <service_account> WITH PRIVILEGES = (SECURITY, OPERATOR);
+```
+
+A missing privilege does not stop the server from starting and does not affect sign-in. The first query fails with an error such as `SET SESSION AUTHORIZATION: You lack the privileges necessary to execute this query`.
+
+The privilege lets the service account act as another user. It does not give that user any table privileges: each query still runs with the privileges of the user named in the token.
+
 ### Extracting Username
 
-When user impersonation is active, the server extracts the database username from the token using the following priority order:
+When user impersonation is active with the default OAuth login, the server extracts the database username from the token using the following priority order. [Resource-server mode](resource-server.md#the-username-must-be-in-the-token) uses stricter rules: it reads the username only from the token, and never from the userinfo endpoint or the `sub` claim.
 
 ```mermaid
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
@@ -165,14 +188,14 @@ The server validates that both paths exist at startup, and that `BASE_URL` uses 
 Mount the certificate and key into the container using volume flags:
 
 !!! note "Example"
-    The following example demonstrates how to deploy the Analytics Engine docker.
+    The following example starts the Analytics Engine container with the certificate and key mounted.
 
 ```bash
 docker run -p 8000:8000 \
   -v /path/to/server.crt:/app/server.crt:ro \
   -v /path/to/server.key:/app/server.key:ro \
   -v /path/to/conf.json:/app/conf.json:ro \
-  actian/analytics-engine-mcp-server:1.1.0
+  actian/analytics-engine-mcp-server:1.2.0
 ```
 
 Reference the container paths in `conf.json`:
@@ -269,5 +292,8 @@ Choose your identity provider for step-by-step setup instructions:
 
 - :material-key: **[Keycloak](keycloak.md)**  
   Open-source, self-hosted identity provider. Ideal for teams that need full control over their authentication infrastructure.
+
+- :material-key-chain: **[Resource-Server Mode](resource-server.md)**  
+  Accept access tokens from your own application's sign-in, with Auth0 or Keycloak.
 
 </div>

@@ -72,6 +72,25 @@ Then list it by module name in `conf.json`. Paths are not used, because the loca
 | Entry shape | An object with a required `module` and an optional `config`. Omit `config` if the extension needs no settings. |
 | Module name | The name of the file or package you mounted, for example `revenue_forecast.py` or `revenue_forecast/`. A package works by its dotted import path, such as `my_package.my_module`. |
 | Order | Extensions load in the order listed. Each module may be listed only once. |
+| `targets` | Optional, [multi-target deployments](../multi-target.md) only. A list of `host/instance/database` selectors; `*` matches one whole segment. The extension is offered only on matching targets. Without `targets`, it is offered on every target. |
+
+### Offering an Extension on Specific Targets
+
+In a [multi-target deployment](../multi-target.md#scope-extensions-to-specific-targets), an extension is offered on every target by default. If it relies on tables that exist only in some databases, list those databases in `targets`:
+
+```json
+{
+  "extensions": [
+    {
+      "module": "revenue_forecast",
+      "config": { "api_url": "https://forecast.example.com", "timeout": 20 },
+      "targets": ["<db_host>/<installation_id>/salesmart", "<db_host>/<installation_id>/finance"]
+    }
+  ]
+}
+```
+
+On other targets, the extension's tools, resources, and prompts are not listed, and calling them fails as if they did not exist. The filter decides where an extension is offered; it does not grant or restrict access, which scopes and database privileges still control.
 
 ## Server Responsibilities
 
@@ -179,7 +198,7 @@ An extension does not run with the server's own privileges. Three controls apply
 
 ### Write Scope Enforcement
 
-The write scope is enforced automatically. When OAuth is enabled, starting a transaction requires the caller's access token to carry the `mcp:write` scope. Without it the transaction raises and nothing is written. Reads need no extra scope. No action is required to enable this behavior. Grant `mcp:write` to the users or roles allowed to write, as described for [Auth0](../authentication/auth0.md) and [Keycloak](../authentication/keycloak.md).
+The write scope is enforced automatically. When OAuth is enabled, starting a transaction requires the caller's access token to carry the write scope: `mcp:write` in a single-database deployment, or the target's `actian:{host}:{instance}:{database}:write` scope when the client is connected to a target URL in a [multi-target deployment](../multi-target.md). Without it the transaction raises and nothing is written. Reads need no extra scope. No action is required to enable this behavior. Grant the write scope to the users or roles allowed to write, as described for [Auth0](../authentication/auth0.md) and [Keycloak](../authentication/keycloak.md).
 
 For finer-grained checks, read the token's scopes with `has_scope()` or `get_current_scopes()`. Both return values only in read-write mode.
 
