@@ -5,17 +5,17 @@ description: Connect MCP clients to Actian Zen for database exploration, SQL que
 
 # Actian MCP Server for VectorAI DB
 
-Connect the MCP-compatible client to Actian Zen using the Actian MCP Server. The server handles automatic Zen dialect translation, allowing you to explore schema metadata, execute SQL queries, and perform ORM operations through a standard interface.
+Connect the MCP-compatible client to Actian VectorAI DB using the Actian MCP Server. The server handles automatic VectorAI DB dialect translation, allowing you to explore schema metadata, execute SQL queries, and perform ORM operations through a standard interface.
 
 Writes are disabled by default. Setting `query_mode` to `read-write` enables them and changes which tools the server registers — see [Write support](write-support.md) and [Tools](tools/index.md).
 
 ## Capabilities
 
-The Actian MCP Server for Zen supports the following operations:
+The Actian MCP Server for VectorAI DB supports the following operations:
 
 | Action | Description |
 |--------|-------------|
-| **Run SQL queries** | Execute `SELECT` with automatic translation to Zen dialect. |
+| **Run SQL queries** | Execute `SELECT` with automatic translation to VectorAI DB dialect. |
 | **List tables and views** | Discover available objects and inspect their structures.|
 | **ORM operations** | Query data using `JOIN`, `WHERE`, `ORDER BY`, and `LIMIT` clauses. |
 | **Write data** | `INSERT`, `UPDATE`, `DELETE`, and `MERGE`, when `query_mode` is `read-write`. A conditional write states how many rows currently match before it is approved. |
@@ -32,7 +32,7 @@ The Actian MCP Server for Zen supports the following operations:
 Before starting the server, ensure the following requirements are met:
 
 - **Container Engine:** Docker installed and running on the host machine.
-- **Actian Zen Instance:** A running instance that the container can reach.
+- **Actian VectorAI DB Instance:** A running instance that the container can reach.
 - **Credentials (Optional):** Required if the Zen database uses authentication.
 - **OIDC provider (Optional):** Required if you are using OAuth authentication.
 
