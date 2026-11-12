@@ -103,7 +103,7 @@ An extension is offered at every target unless its `nsql.extensions.jars.<id>.ta
 !!! note "A LOID belongs to one endpoint"
     A LOID (Logical Object ID) is valid only at the endpoint that returned it. Database IDs repeat across NoSQL servers, so the same LOID sent to another target can name an unrelated object there, and the MCP server does not detect this. `update_objects` needs an `expectedVersion` read at the same target, and `delete_objects` shows each object's class in its confirmation unless confirmation is turned off.
 
-Other behaviour of the endpoints:
+Other behavior of the endpoints:
 
 - A stateful session stays on the target it started on. Presenting its session id at another target's path answers `404`. A stateless client has no session, so this does not apply to it.
 - The legacy server-sent events endpoint `/mcp/sse` is not available when targets are configured, and it answers `404`.

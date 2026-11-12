@@ -84,8 +84,8 @@ The `nsql.targets[i]` entries are read once at startup. The files of `nsql.targe
 |----------|---------|-------------|
 | `nsql.writes.enabled` | `false` | Turns on the write tools, which are otherwise unavailable. See [Write support](write-support.md#configuration-reference) for the batch ceiling and the two confirmation settings. |
 | `nsql.extensions.enabled` | `false` | Turns on loading of declared Java extension JARs. See [Extensions](extensions/index.md#enabling-and-declaring-extensions) for the allowlist, digest pinning, and load order. |
-| `nsql.db.max-calls` | `10` | Most calls in flight per database. `0` means no cap. See [Properties](database-availability.md#properties). |
-| `nsql.db.call-deadline` | `30s` | Longest a read call may take. `0` means no deadline. See [Properties](database-availability.md#properties). |
+| `nsql.db.max-calls` | `10` | Maximum number of concurrent calls per database. `0` means no cap. See [Properties](database-availability.md#properties). |
+| `nsql.db.call-deadline` | `30s` | Maximum duration of a read call. `0` means no deadline. See [Properties](database-availability.md#properties). |
 | `nsql.db.connect-timeout` | `10s` | Longest the network connect to the NoSQL server may take. See [Properties](database-availability.md#properties). |
 | `nsql.db.idle-timeout` | `10m` | Time without a call after which a database's connection pool is closed. `0` never closes it. See [Properties](database-availability.md#properties). |
 

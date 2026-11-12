@@ -23,7 +23,7 @@ By the completion of this guide, you will have obtained the issuer URL needed fo
 4. **Add the scopes:** without targets and in write mode only, create an `mcp:write` client scope under **Client scopes** with **Include in token scope** on, then attach it to the client as **Optional**. With targets, follow [Scopes with Targets](#scopes-with-targets) instead.
 5. **Create users** for those logging in via the Authorization Code flow. (This is not required for Client Credentials.)
 6. **Note the realm issuer URL**: `http://<keycloak-host>:8080/realms/<realm-name>`.
-7. **Set `quarkus.oidc.auth-server-url`**, **`quarkus.oidc.token.audience`** (the Included Custom Audience value) and **`quarkus.oidc.resource-metadata.scopes`** in `application.properties`. In write mode the scopes list is `mcp:write`, which is what makes the client request it.
+7. **Set `quarkus.oidc.auth-server-url`**, **`quarkus.oidc.token.audience`** (the Included Custom Audience value) and **`quarkus.oidc.resource-metadata.scopes`** in `application.properties`. Without targets, the scopes list is `mcp:write` in write mode, which is what makes the client request it. With targets, never list a target scope there; see [Scopes with Targets](#scopes-with-targets).
 8. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../index.md#start-the-server) documentation.
 
 

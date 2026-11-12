@@ -26,7 +26,7 @@ By the completion of this guide, you will have obtained the issuer URL needed fo
 6. **Configure Allowed Callback URLs:** Set the **Allowed Callback URLs** in the application settings to match the MCP client’s redirect URI.
 7. **Grant API access:** Under the **APIs** tab of the application, authorize the API created in step 3.
 8. **Enable compatibility profile:** Under **Settings > Advanced**, enable the **Resource Parameter Compatibility Profile**.
-9. **Update properties:** Set `quarkus.oidc.auth-server-url` in `application.properties` to `https://<your-tenant>.auth0.com/` and `quarkus.oidc.token.audience` to the API Identifier. In write mode, also set `quarkus.oidc.resource-metadata.scopes=mcp:write`.
+9. **Update properties:** Set `quarkus.oidc.auth-server-url` in `application.properties` to `https://<your-tenant>.auth0.com/` and `quarkus.oidc.token.audience` to the API Identifier. In write mode without targets, also set `quarkus.oidc.resource-metadata.scopes=mcp:write`. With targets, never list a target scope there; see [Permissions with Targets](#permissions-with-targets).
 10. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../index.md#start-the-server) documentation.
 
 

@@ -11,7 +11,7 @@ Targets that come from a directory are added, changed, and removed while the ser
 
 | Property | Default | Description |
 |----------|---------|-------------|
-| `nsql.targets.dir` | None | A directory of `*.properties` files, one target per file. Setting it alone is enough to run with targets. It combines with `nsql.targets[i]` but not with `nsql.connectionURL`. The environment form is `NSQL_TARGETS_DIR`. |
+| `nsql.targets.dir` | `None` | A directory of `*.properties` files, one target per file. Setting it alone is enough to run with targets. It combines with `nsql.targets[i]` but not with `nsql.connectionURL`. The environment form is `NSQL_TARGETS_DIR`. |
 | `nsql.targets.reload-interval` | `10s` | How often the directory is read again. `0` reads it once at startup and never again. Otherwise the value is at least `1s` and at most 365 days. It is checked at every startup, also when `nsql.targets.dir` is not set. The environment form is `NSQL_TARGETS_RELOAD_INTERVAL`. |
 
 ```properties
@@ -65,7 +65,7 @@ Write the new content to a file name that starts with `.`, which the server igno
 | The `name` key changes | The old name is removed and the new name is added. | The old name answers like a name that was never configured. The new name behaves like an added file. |
 | A file is renamed and its content stays | Nothing. A target is identified by its `name` key, not by its file name. | Nothing. |
 | A file is deleted | The target is removed. Calls running finish. Open cursors close, and the connection pool closes, once the last running call ends. Pending confirmations and session pins of the target are dropped. | A new request at the name is answered like a name that was never configured: `404` with authentication off, and the `403` [scope challenge](../authentication/scopes.md#what-a-caller-gets) with authentication on. This includes a cursor page, a confirmation retry, and a stateful session on that name. |
-| A removed name is added again | A new target is created. It honours no cursor, confirmation, or session of the old one. | The same as an added file. |
+| A removed name is added again | A new target is created. It honors no cursor, confirmation, or session of the old one. | The same as an added file. |
 
 Directory targets are reached with the same scopes as `nsql.targets[i]` targets. An extension limited to a target by name is offered there as soon as a target of that name exists. See [Limiting an Extension to Some Targets](../extensions/index.md#limiting-an-extension-to-some-targets).
 

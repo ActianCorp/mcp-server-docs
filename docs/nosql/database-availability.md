@@ -9,34 +9,34 @@ How the MCP server behaves when a database is busy, slow, or down, and what to d
 
 ## What Each Database Gets
 
-Each database has its own connection pool to the NoSQL server, its own count of calls in flight, and a deadline for every call. With targets, that holds for each target's database separately. A slow or frozen database fills its own places, not those of another database. The threads that run the calls are shared by every database.
+Each database has its own connection pool to the NoSQL server, its own count of calls in flight, and a deadline for every call. With targets, that holds for each target's database separately. A slow or frozen database fills its own slots, not those of another database. The threads that run the calls are shared by every database.
 
 ## Properties
 
 | Property | Default | Description |
 |----------|---------|-------------|
-| `nsql.db.max-calls` | `10` | Most calls in flight per database, reads and writes together. A call beyond the cap is refused at once and never queued. `0` means no cap. A negative value stops the server at startup. |
-| `nsql.db.call-deadline` | `30s` | Longest a read call may take, opening the database included. A write is covered only while it opens the database. `0` means no deadline. |
+| `nsql.db.max-calls` | `10` | Maximum number of concurrent calls per database, reads and writes together. A call beyond the cap is refused at once and never queued. `0` means no cap. A negative value stops the server at startup. |
+| `nsql.db.call-deadline` | `30s` | Maximum duration of a read call, opening the database included. A write is covered only while it opens the database. `0` means no deadline. |
 | `nsql.db.connect-timeout` | `10s` | Longest the network connect to the NoSQL server may take before the call fails as server unreachable. It covers the connect only, and the call deadline covers the protocol handshake after it. `0` leaves the NoSQL library's own default, which has no timeout. Must be shorter than the call deadline when both are set, so a call deadline of 10 seconds or less needs a shorter connect timeout. At most 2147483647 milliseconds. |
 | `nsql.db.idle-timeout` | `10m` | Time without a call after which a database's connection pool is closed. The next call opens it again. `0` never closes an idle pool. |
 | `nsql.db.connect-on-startup` | `true` | Without targets only: whether the database is opened at startup. See [Starting with a Database Down](#starting-with-a-database-down). |
 
 Durations are written like the defaults, for example `30s` or `10m`. Except for `0`, a duration is at least one millisecond and at most 365 days. A value outside these rules stops the server at startup, and the failure lists every refused property by name.
 
-At startup the server logs the limits in effect. It also logs a warning when `nsql.db.max-calls` times the number of databases is more than `quarkus.thread-pool.max-threads`, because calls to databases that do not answer could then occupy every worker thread. The server starts either way. Equal is not more, and with no cap there is no warning.
+At startup the server logs the limits in effect. It also logs a warning when `nsql.db.max-calls` times the number of databases is more than `quarkus.thread-pool.max-threads`, because calls to databases that do not answer could then occupy every worker thread. The server starts either way. No warning is logged when the two are equal, or when there is no cap.
 
 ## Call Cap and Deadline
 
-Every tool call, resource read, and prompt request at a database takes one place for as long as it runs and gives it back however it ends. The same holds for the tools, resources, resource templates, and prompts of an [extension](extensions/index.md). With targets, plain `/mcp` serves no database and takes no place.
+Every tool call, resource read, and prompt request at a database takes one slot for as long as it runs and releases it however it ends. The same holds for the tools, resources, resource templates, and prompts of an [extension](extensions/index.md). With targets, plain `/mcp` serves no database and takes no slot.
 
-The cap counts calls in flight per database. A call that finds every place taken is refused at once with a message that the database is busy. It is not queued.
+The cap counts calls in flight per database. A call that finds every slot taken is refused at once with a message that the database is busy. It is not queued.
 
 The deadline covers a read, which is a query, a cursor page, a fetch by LOID (Logical Object ID), a schema read, a resource, or a prompt, and it includes opening the database. A read that outlives the deadline is interrupted and answers that the database did not answer in time. A result that arrives after the deadline is not passed on. The database's connection pool is then closed, and the next call opens a new one.
 
 A write is different:
 
 - The deadline covers only opening the database. Once the database is open, the write runs to its end and is never interrupted, including the wait for the person's confirmation.
-- A write on a stateful client keeps its place while the person decides, up to `nsql.writes.confirmation-timeout-seconds`, so other calls to that database can find it full. A write on a stateless client holds nothing between its two calls.
+- A write on a stateful client keeps its slot while the person decides, up to `nsql.writes.confirmation-timeout-seconds`, so other calls to that database can find it full. A write on a stateless client holds nothing between its two calls.
 
 Extensions follow the same split. An extension tool that is not read-only is treated as a write: the MCP server opens the database of the call before the tool's handler runs, and only that opening is under the deadline. While the database is down, such a tool therefore answers that the database is unavailable or did not answer in time, even if its handler never uses the database. Everything else an extension adds (read-only tools, resources, resource templates, and prompts) is treated as a read: the whole handler runs under the deadline and is interrupted if it takes longer.
 
@@ -65,7 +65,7 @@ A call that fails because the database cannot be used says why. The answer names
 
 | Situation | Cause | What to do |
 |-----------|-------|------------|
-| The database is busy | It already has `nsql.db.max-calls` calls in flight. A write on a stateful client that waits for confirmation holds a place too. | Try again later. If it recurs, look for calls that stay open before raising `nsql.db.max-calls`, and keep the shared worker threads in mind. |
+| The database is busy | It already has `nsql.db.max-calls` calls in flight. A write on a stateful client that waits for confirmation holds a slot too. | Try again later. If it recurs, look for calls that stay open before raising `nsql.db.max-calls`, and keep the shared worker threads in mind. |
 | The database does not answer in time | A read, or the opening of the database for a write, took longer than `nsql.db.call-deadline`. The call was interrupted and the connection pool closed. | Check that the NoSQL server responds. The next call opens a new pool. Raise `nsql.db.call-deadline` only if calls that work need longer. |
 | The NoSQL server cannot be reached | The network connect to the host and port of the connection URL failed, or did not finish within `nsql.db.connect-timeout`. | Check that the NoSQL server runs and that the MCP server can reach its host and port. No restart is needed. |
 | The login is refused | The NoSQL server refused the user and password of the connection URL, with a NoSQL error code. | Correct the user and password. A login for a target kept in a directory is changed by replacing its file, see [Changing Targets Without a Restart](targets/without-restart.md). Any other connection URL is read at startup, so restart the server. The login also needs read-write access, see [The Login Needs Read-Write Access](limits.md#the-login-needs-read-write-access). |
