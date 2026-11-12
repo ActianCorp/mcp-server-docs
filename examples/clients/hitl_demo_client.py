@@ -37,8 +37,14 @@ Against an OAuth-protected server, self-signed cert:
     # -> opens your browser to log in; the script continues once the token
     #    exchange completes
 
+On a multi-target server, pass a database's URL. The plain /mcp URL there can
+only list the databases (list_accessible_targets), not query them:
+    python hitl_demo_client.py https://<mcp-server-host>:8000/mcp/<db-host>/<instance>/<database> list_tables
+
 Environment variables (all optional):
-    MCP_AUTH=oauth      Do the OAuth browser login (for servers that require it).
+    MCP_AUTH=oauth      Do the OAuth browser login, for a server that runs the
+                        OAuth login. A server in resource-server mode runs no
+                        login, so this does not work against it.
                         Without this the client sends no credentials.
     MCP_CA_CERT=<path>  Server certificate to trust for TLS (needed only for a
                         self-signed HTTPS server).
@@ -166,7 +172,9 @@ async def main():
             sys.exit(3)
         if "401 Unauthorized" in message or ("HTTPStatusError" in type(e).__name__ and "401" in message):
             print("Authentication failed: server returned 401 Unauthorized.", file=sys.stderr)
-            print("If this server requires auth, set MCP_AUTH=oauth and retry.", file=sys.stderr)
+            print("If this server runs the OAuth login, set MCP_AUTH=oauth and retry.", file=sys.stderr)
+            print("A server in resource-server mode needs a token from your identity provider,", file=sys.stderr)
+            print("which this script does not send.", file=sys.stderr)
             sys.exit(4)
         raise
 

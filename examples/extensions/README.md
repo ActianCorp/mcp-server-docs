@@ -13,7 +13,11 @@ rebuilding the image. They use only the public `actian_mcp_server.extension_api`
 | [`revenue_extension.py`](revenue_extension.py) | **All three patterns in one** reference extension: a read tool (`top_customers_by_revenue`), an approval-gated write (`tag_vip_customer`), and a two-table transaction (`record_customer_sale`). Table names are configurable so it shares the same database as the others. |
 
 All examples share **one database** — provision every table at once with the
-schema file for your engine (see below). The authoring contract is documented in the
+schema file for your engine (see below). On a multi-target Ingres or Analytics Engine
+deployment where these tables exist on only some databases, add a `targets` list to
+the extension's entry in `conf.json` so it is offered only there (see
+[Offering an extension on specific targets](#offering-an-extension-on-specific-targets)).
+The authoring contract is documented in the
 [Extensions guide](https://docs.actian.com/mcp-server/latest/ingres/extensions/index.html).
 
 ## Database compatibility — the code runs unmodified on all four engines
@@ -118,7 +122,7 @@ docker run -d --name my-mcp -p 8000:8000 \
   -v "$PWD/catalog_resources.py:/app/extensions/catalog_resources.py:ro" \
   -v "$PWD/revenue_extension.py:/app/extensions/revenue_extension.py:ro" \
   -v "$PWD/conf.json:/app/conf.json:ro" \
-  <actian-mcp-image-for-your-engine>:1.1.0
+  <actian-mcp-image-for-your-engine>:1.2.0
 ```
 
 All nine extension tools — `place_order`, `cancel_order`, `order_summary`,
@@ -135,3 +139,25 @@ write is attempted, so no order is written in that case. Where the target engine
 supports a `CHECK` constraint on `stock_qty`, that constraint is a second,
 schema-level backstop for a concurrent oversell race the Python check alone
 can't catch — not something this walkthrough triggers.
+
+## Offering an extension on specific targets
+
+The `conf.example.*.json` files here configure a single database. On a multi-target
+Ingres or Analytics Engine deployment, an extension is offered on every database by
+default. When its tables exist on only some databases, add `targets` to its entry:
+
+```json
+{
+    "module": "order_ops",
+    "config": { "orders_table": "orders", "order_items_table": "order_items",
+                "products_table": "products", "cart_table": "cart" },
+    "targets": ["<db-host>/<installation-id>/<database>"]
+}
+```
+
+Each selector is `host/instance/database`, and `*` matches one whole segment. A
+complete example is
+[`../conf.example.multi-target-with-extensions.json`](../conf.example.multi-target-with-extensions.json).
+For details, see
+[Multi-Target Deployments](https://docs.actian.com/mcp-server/latest/ingres/multi-target.html#scope-extensions-to-specific-targets).
+

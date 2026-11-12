@@ -41,7 +41,10 @@ The Actian Analytics Engine MCP Server supports the following operations in both
 | **Inspect table structure** | Retrieve column definitions and types |
 | **Read schema metadata** | Explore database-level metadata |
 | **List functions and procedures** | View available user-defined functions and procedures |
+| **Search vector columns** | Find the rows whose `VECTOR` column is nearest to a query vector, with the distance metric and index use reported. See [Vector Search](vector-search.md) |
 | **Execute write queries** | Run `INSERT`, `UPDATE`, `DELETE`, and `MERGE` statements. Off by default in a self-hosted deployment |
+
+A self-hosted deployment can also serve many databases from one server, with a scope per database ([Multi-Target Deployments](multi-target.md)), and accept access tokens from your own application's sign-in ([Resource-Server Mode](authentication/resource-server.md)).
 
 !!! note "Write support is opt-in"
     In a self-hosted deployment, the server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](write-support.md).
@@ -59,6 +62,9 @@ The Actian Analytics Engine MCP Server supports the following operations in both
 
 - :material-tools: **[Tools](tools/index.md)**  
   Learn more about the Analytics Engine tools used by the MCP Server.
+
+- :material-vector-point: **[Vector Search](vector-search.md)**  
+  Search `VECTOR` columns by similarity.
 
 - :material-folder-open: **[Resources](resources/index.md)**  
   Explore the resource types available through the server.

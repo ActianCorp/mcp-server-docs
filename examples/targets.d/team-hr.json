@@ -1,0 +1,18 @@
+[
+    {
+        "alias": "hr-primary",
+        "host": "db09.corp",
+        "instance": "VW",
+        "databases": ["hr"],
+        "username": "<db_username>",
+        "password": "<db_password>"
+    },
+    {
+        "alias": "hr-reporting",
+        "host": "db10.corp",
+        "instance": "VW",
+        "databases": ["hr_reporting"],
+        "username": "<db_username>",
+        "password": "<db_password>"
+    }
+]

@@ -18,7 +18,11 @@ The Actian MCP Server for Ingres supports the following operations:
 | **Describe table structure** | Retrieve column definitions, types, and comments|
 | **Read schema metadata** | Explore database-level metadata and constraints |
 | **List functions** | View available user-defined functions and procedures|
+| **List indexes** | List a table's indexes, with their columns in key order and their storage structure |
+| **Check database health** | Seven read-only tools that report installation status, checkpoints and journaling, locking, long-running queries, cache, storage, and optimizer statistics. See [Health Tools](health-tools.md) |
 | **Execute write queries** | Run `INSERT`, `UPDATE`, `DELETE`, and `MERGE` statements. Off by default. Requires `query_mode` set to `read-write` |
+| **Serve many databases** | Serve databases on several Ingres installations from one server, with a scope per database. See [Multi-Target Deployments](multi-target.md) |
+| **Accept your application's tokens** | Accept access tokens from your own application's sign-in instead of running a separate OAuth login. See [Resource-Server Mode](authentication/resource-server.md) |
 
 !!! note "Write support is opt-in"
     The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](write-support.md).
@@ -93,10 +97,15 @@ Create a file named `conf.json` in the working directory and define the environm
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
 | `ssl_certfile` | `string` | — | Path to the TLS certificate file. Set `/app/server.crt` in the container |
 | `ssl_keyfile` | `string` | — | Path to the TLS private key file. Set `/app/server.key` in the container |
-| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-oauth-block) |
+| `oauth` | `object` | — | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-the-oauth-block) |
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md) |
 | `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt). Applies only when `query_mode` is `read-write`. |
-| `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md) |
+| `extensions` | `array` | — | Extension modules to load, each an object with a required `module`, an optional `config`, and, in a multi-target deployment, an optional `targets` list. For more information, see [Extensions](extensions/index.md) |
+| `connect_timeout` | `number` | `10` | Seconds to wait for a new database connection. `0` waits without limit. |
+| `auth_mode` | `string` | — | Set to `resource-server` to accept access tokens from your identity provider instead of running the OAuth login. See [Resource-Server Mode](authentication/resource-server.md) |
+| `health` | `object` | — | Thresholds and the query timeout for the health tools. See [Health Tools](health-tools.md#configuring-thresholds) |
+| `targets` | `object` | — | A registry of Ingres installations and databases for a multi-target deployment. Replaces `driver`, `server`, `database`, `database_user`, and `database_password`. See [Multi-Target Deployments](multi-target.md) |
+| `allow_unscoped_reads` | `boolean` | `false` | Multi-target only. Turns off per-target scope checks. For temporary use only. See [Multi-Target Deployments](multi-target.md#running-without-scope-checks-allow_unscoped_reads) |
 
 ---
 
@@ -109,7 +118,7 @@ docker run -d \
     -v $(pwd)/conf.json:/app/conf.json:ro \
     -p 8000:8000 \
     --name=actian-mcp \
-    actian/ingres-mcp-server:1.1.0
+    actian/ingres-mcp-server:1.2.0
 ```
 
 !!! important
@@ -150,5 +159,11 @@ Once connected, the MCP client automatically discovers the server capabilities. 
 
 - :material-puzzle: **[Extensions](extensions/index.md)**  
   Add custom tools to the server with a Python extension.
+
+- :material-server-network: **[Multi-Target Deployments](multi-target.md)**  
+  Serve many Ingres databases from one server, with a scope per database.
+
+- :material-heart-pulse: **[Health Tools](health-tools.md)**  
+  Check checkpoints, locking, storage, and optimizer statistics.
 
 </div>

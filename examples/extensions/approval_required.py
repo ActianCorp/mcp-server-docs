@@ -16,6 +16,7 @@ Expected schema: products(product_id, name, stock_qty) — see order_ops.py.
 import json
 
 from actian_mcp_server.extension_api import (
+    WRITE,
     get_current_user,
     get_database,
     request_write_confirmation,
@@ -25,7 +26,7 @@ from actian_mcp_server.extension_api import (
 def register(server, config):
     products_t = config.get("products_table", "products")
 
-    @server.tool(name="adjust_stock")
+    @server.tool(name="adjust_stock", annotations=WRITE)
     async def adjust_stock(product_id: int, delta: int) -> str:
         """Adjust a product's stock by `delta`, but only after a human approves.
 
