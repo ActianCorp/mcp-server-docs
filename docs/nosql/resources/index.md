@@ -19,6 +19,13 @@ The Actian MCP Server for Actian NoSQL provides built-in resources that enables 
 | [`db://schema/class/{className}`](#dbschemaclassclassname) | Schema details for a specific class |
 | [`db://schema/complete`](#dbschemacomplete) | Complete schema for all classes |
 
+!!! note "With targets"
+    These resources are offered at each `/mcp/{target}`, and plain `/mcp` offers no resource and no resource template. See [What an Agent Sees](../targets/index.md#what-an-agent-sees).
+
+    The URIs carry the target: `db://schema/{target}/classes`, `db://schema/{target}/classes/count`, `db://schema/{target}/complete`, and the template `db://schema/{target}/class/{className}`. The target name must match exactly, including case.
+
+    Each resource is named `<name>@<target>`, for example `list_classes@sales`, and its title starts with the target name. A URI of another target is read as not found at this endpoint, the same as a URI that never existed.
+
 ---
 
 ## db://schema/classes
@@ -124,7 +131,7 @@ The `type` string tells you whether a field holds a scalar, a reference, or a co
 
 - **Containers** are `java.util.List<X>`, `java.util.Map<K,V>` and `X[]`. Strip the wrapper to get the element type(s), then read each one by the rules below.
 - **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.` — send the value itself. A `long` or `java.math.BigInteger` is the exception: as a **field value** send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form — an unquoted literal with an `L` suffix, never a quoted string. See [Large integer literals](../tools/index.md#execute_query).
-- **References** are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object — `"address": "1.0.5"`, not `"address": { "city": "..." }`.
+- **References** are everything else, because any remaining name is a database class. Send the referenced object's LOID string, never a nested object: `"address": "1.0.5"`, not `"address": { "city": "..." }`.
 
 So `java.util.List<Worker>` holds LOID strings, `java.util.List<java.lang.String>` holds plain strings, and `java.util.Map<java.lang.String,Skill>` has scalar keys and LOID-string values.
 

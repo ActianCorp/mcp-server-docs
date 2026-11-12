@@ -82,10 +82,18 @@ nav:
       - Prompts: analytics-engine/prompts/index.md
   - NoSQL:
       - Overview: nosql/index.md
+      - Targets:
+          - nosql/targets/index.md
+          - Changing Targets Without a Restart: nosql/targets/without-restart.md
+      - Database Availability: nosql/database-availability.md
+      - Limits: nosql/limits.md
       - Authentication:
           - nosql/authentication/index.md
-          - Auth0: nosql/authentication/auth0/index.md
-          - Keycloak: nosql/authentication/keycloak/index.md
+          - Scopes: nosql/authentication/scopes.md
+          - Identity Providers:
+              - nosql/authentication/identity-providers/index.md
+              - Auth0: nosql/authentication/auth0/index.md
+              - Keycloak: nosql/authentication/keycloak/index.md
       - Write Support: nosql/write-support.md
       - Protocol Versions: nosql/protocol-versions.md
       - Extensions: nosql/extensions/index.md

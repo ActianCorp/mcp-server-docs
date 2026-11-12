@@ -13,6 +13,9 @@ The Actian MCP Server for Actian NoSQL includes a built-in prompt that converts 
 |--------|-------------|
 | [`ask_question`](#ask_question) | Formats a plain language question into a structured prompt template designed for database experts. |
 
+!!! note "With targets"
+    These prompts are offered at each `/mcp/{target}`, and plain `/mcp` offers none. See [What an Agent Sees](../targets/index.md#what-an-agent-sees).
+
 ## ask_question
 
 Renders a database expert prompt from a plain language question and returns the formatted prompt text ready for use.
