@@ -3661,10 +3661,10 @@
 
 
 <h1 id="actian-mcp-server-for-vectorai-db">Actian MCP Server for VectorAI DB<a class="headerlink" href="#actian-mcp-server-for-vectorai-db" title="Permanent link">&para;</a></h1>
-<p>Connect the MCP-compatible client to Actian Zen using the Actian MCP Server. The server handles automatic Zen dialect translation, allowing you to explore schema metadata, execute SQL queries, and perform ORM operations through a standard interface.</p>
+<p>Connect the MCP-compatible client to Actian VectorAI DB using the Actian MCP Server. The server handles automatic VectorAI DB dialect translation, allowing you to explore schema metadata, execute SQL queries, and perform ORM operations through a standard interface.</p>
 <p>Writes are disabled by default. Setting <code>query_mode</code> to <code>read-write</code> enables them and changes which tools the server registers — see <a href="write-support.html">Write support</a> and <a href="tools/index.html">Tools</a>.</p>
 <h2 id="capabilities">Capabilities<a class="headerlink" href="#capabilities" title="Permanent link">&para;</a></h2>
-<p>The Actian MCP Server for Zen supports the following operations:</p>
+<p>The Actian MCP Server for VectorAI DB supports the following operations:</p>
 <table>
 <thead>
 <tr>
@@ -3675,7 +3675,7 @@
 <tbody>
 <tr>
 <td><strong>Run SQL queries</strong></td>
-<td>Execute <code>SELECT</code> with automatic translation to Zen dialect.</td>
+<td>Execute <code>SELECT</code> with automatic translation to VectorAI DB dialect.</td>
 </tr>
 <tr>
 <td><strong>List tables and views</strong></td>
@@ -3715,7 +3715,7 @@
 <p>Before starting the server, ensure the following requirements are met:</p>
 <ul>
 <li><strong>Container Engine:</strong> Docker installed and running on the host machine.</li>
-<li><strong>Actian Zen Instance:</strong> A running instance that the container can reach.</li>
+<li><strong>Actian VectorAI DB Instance:</strong> A running instance that the container can reach.</li>
 <li><strong>Credentials (Optional):</strong> Required if the Zen database uses authentication.</li>
 <li><strong>OIDC provider (Optional):</strong> Required if you are using OAuth authentication.</li>
 </ul>
@@ -4001,7 +4001,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 12, 2026 07:06:41 UTC">November 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 12, 2026 07:07:26 UTC">November 12, 2026</span>
   </span>
 
     
