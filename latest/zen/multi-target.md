@@ -24,10 +24,10 @@ http://<mcp-host>:8000/mcp/zen16/admin/DEMODATA/mcp
 | `instance` | A persona label. Zen has no installation code, so this is a word you choose; it never reaches the engine and only names the URL. |
 | `databases` | One or more Zen database names (`DBQ`). Each becomes a URL. |
 
-The first `mcp` in the path is the configurable prefix (`target_path_prefix`, default `mcp`); the last `mcp` is the endpoint. The `list_accessible_targets` tool returns the path of every entry the caller may use, see [Tools](tools/index.md#list_accessible_targets).
+The first `mcp` in the path is the configurable prefix (`target_path_prefix`, default `mcp`); the last `mcp` is the endpoint. The `list_accessible_targets` tool returns the path of every entry the caller may use. See [Tools](tools/index.md#list_accessible_targets).
 
 !!! tip "Use a name for `host` that survives a move"
-    `host` is the engine address, the first URL segment and part of every per-target scope (`actian:{host}:{instance}:{database}:read`). If it is the machine name, moving the engine to another machine changes every client URL and every grant. Give the engine a stable DNS name instead, a CNAME such as `sales-db.corp`, or a hosts entry in the container (`docker run --add-host sales-db:10.1.2.3 ...`), and put that name in `host`. A move is then a DNS change and a restart of the MCP container. An entry's `alias` is only shown by `list_accessible_targets`; it does not change the URL.
+    `host` is the engine address, the first URL segment and part of every per-target scope (`actian:{host}:{instance}:{database}:read`). If it is the machine name, moving the engine to another machine changes every client URL and every grant. Give the engine a stable Domain Name System (DNS) name instead, a CNAME such as `sales-db.corp`, or a hosts entry in the container (`docker run --add-host sales-db:10.1.2.3 ...`), and put that name in `host`. A move is then a DNS change and a restart of the MCP container. An entry's `alias` is only shown by `list_accessible_targets`; it does not change the URL.
 
 ## Configuration
 
@@ -72,9 +72,9 @@ Three entries: a read-only persona and an admin persona on `DEMODATA`, and an ap
 |-------|------|---------|-------------|
 | `targets.defaults` | `object` | — | Values shared by every entry. `driver` and `port` as in the connection string (`port` defaults to `1583`). `username` and `password` must be non-empty — Zen ignores them when database security is off, so a placeholder is fine. `max_connections` is required by the framework and not applied to Zen, see [Limits](#limits). |
 | `targets.list` | `array` | — | One object per engine and persona. `host`, `instance` and `databases` are mandatory; any key from `defaults` may be repeated to override it for that entry, for example a `username` and `password` for an engine with Zen security on. |
-| `zen_readonly_personas` | `array` | `[]` | Persona labels whose connections are opened read-only. See [Read-only personas](#read-only-personas). |
+| `zen_readonly_personas` | `array` | `[]` | Persona labels whose connections are opened read-only. See [Read-Only Personas](#read-only-personas). |
 | `allow_unscoped_reads` | `boolean` | `false` | Lets a caller without a per-target grant read. Required to run more than one target **without** authentication; with authentication it disables per-target enforcement and is for test setups only. See [Authentication](authentication/index.md#per-target-scopes). |
-| `targets_dir` | `string` | `/app/targets.d` | Directory of additional target files, see [Adding a database without a restart](#adding-a-database-without-a-restart). The directory must exist when the server starts. |
+| `targets_dir` | `string` | `/app/targets.d` | Directory of additional target files, see [Adding a Database Without a Restart](#adding-a-database-without-a-restart). The directory must exist when the server starts. |
 | `targets_reload_interval` | `integer` | `10` | Seconds between checks of `targets_dir`. `0` loads the directory once at start and never again. |
 | `target_path_prefix` | `string` | `mcp` | First segment of every routed URL. |
 
@@ -82,11 +82,11 @@ Three entries: a read-only persona and an admin persona on `DEMODATA`, and an ap
     The server still opens the connection described by `conn_string` (or `database`) at start, as it did before. The targets add their own connections on top. Point it at any database the engine has.
 
 !!! note "More than one target needs authentication or the escape hatch"
-    Several targets without an identity provider and without `allow_unscoped_reads: true` stop the server at start: `N targets are configured, but per-target scope enforcement ... is not active`. With the hatch, anyone who can reach a URL may use it, exactly as a single-database server without OAuth. For a deployment with real users, configure [resource-server mode](authentication/index.md#resource-server-mode) and leave `allow_unscoped_reads` out.
+    Several targets without an identity provider and without `allow_unscoped_reads: true` stop the server at start: `N targets are configured, but per-target scope enforcement ... is not active`. With the hatch, anyone who can reach a URL may use it, exactly as a single-database server without Open Authorization (OAuth). For a deployment with real users, configure [resource-server mode](authentication/index.md#resource-server-mode) and leave `allow_unscoped_reads` out.
 
-## Read-only Personas
+## Read-Only Personas
 
-A persona listed in `zen_readonly_personas` is opened read-only even when `query_mode` is `read-write`: every connection of that target carries the ODBC attribute `SQL_ATTR_ACCESS_MODE=READ_ONLY` and `OPENMODE=1` in its connection string, and the engine refuses every write with `Access denied to a READ-ONLY data source`. The word `readonly` is not special — `zen_readonly_personas: ["analyst"]` with `"instance": "analyst"` works the same.
+A persona listed in `zen_readonly_personas` is opened read-only even when `query_mode` is `read-write`: every connection of that target carries the Open Database Connectivity (ODBC) attribute `SQL_ATTR_ACCESS_MODE=READ_ONLY` and `OPENMODE=1` in its connection string, and the engine refuses every write with `Access denied to a READ-ONLY data source`. The word `readonly` is not special — `zen_readonly_personas: ["analyst"]` with `"instance": "analyst"` works the same.
 
 What a read-only persona does not do:
 
@@ -101,7 +101,7 @@ Mount a directory at `/app/targets.d` when you start the container (`-v /path/to
 {"host": "zen16", "instance": "hr", "databases": ["DEFAULTDB"]}
 ```
 
-Within `targets_reload_interval` seconds the URL `/mcp/zen16/hr/DEFAULTDB/mcp` answers. Delete the file and the URL returns `404` and its connection to Zen closes. A file may hold one entry or a JSON list of entries; `targets.defaults` applies to them too. A file that is not valid JSON is reported in the log and the registry keeps its previous contents.
+Within `targets_reload_interval` seconds the URL `/mcp/zen16/hr/DEFAULTDB/mcp` answers. Delete the file and the URL returns `404` and its connection to Zen closes. A file may hold one entry or a JSON list of entries; `targets.defaults` applies to them too. The server logs a file that is not valid JSON, and the registry keeps its previous contents.
 
 ## What the Agent Sees
 
@@ -113,7 +113,7 @@ Within `targets_reload_interval` seconds the URL `/mcp/zen16/hr/DEFAULTDB/mcp` a
 ## Limits
 
 - Zen keeps its single-database connection model per target: one connection set per entry, with one ODBC handle per worker thread. The framework's pool settings `max_connections`, `breaker_enabled` and `pool_idle_ttl` are accepted in the configuration but not applied to Zen.
-- Several URLs on one database are several Zen sessions. `DROP TABLE` through `admin/DEMODATA` can fail with Zen status `-1304` while the `readonly` session has the table open, as with any two Zen clients today.
+- Several URLs on one database are several Zen sessions. `DROP TABLE` through `admin/DEMODATA` can fail with Zen status `-1304` while the `readonly` session has the table open, as with any two Zen clients.
 - Zen never sees the person behind the agent: every URL connects as the login in its entry. With authentication on, the token's user name goes to the call log, see [Authentication](authentication/index.md#resource-server-mode).
 
 ## Verifying a Setup
@@ -130,7 +130,7 @@ Within `targets_reload_interval` seconds the URL `/mcp/zen16/hr/DEFAULTDB/mcp` a
 <div class="grid cards" markdown>
 
 - :material-lock: **[Authentication](authentication/index.md#resource-server-mode)**
-  Give each URL its own read and write grants with tokens from your identity provider.
+  Give each URL its own read and write grants with tokens from the identity provider.
 
 - :material-server-network: **[Deployment Scenarios](deployment.md)**
   Where the engine, the server and the agents sit, and which settings each layout needs.
