@@ -5,7 +5,7 @@ description: Built-in prompt templates of the Actian MCP Server for VectorAI DB 
 
 # Prompts
 
-The Actian MCP Server for VectorAI DB includes two built-in prompt templates. They turn a plain request into instructions that steer the model to the right tool and to honest answers (quote what was found, say when nothing scored well).
+The Actian MCP Server for VectorAI DB includes two built-in prompt templates. They turn a plain request into instructions that name the tool to use and say how to report the result: quote what was found, say when nothing scored well.
 
 ## Available prompts
 

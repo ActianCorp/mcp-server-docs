@@ -7,7 +7,7 @@ description: Add your own tools, resources, and prompts to the Actian MCP Server
 
 You can extend the Actian MCP Server with **extensions**: your own Python modules that register extra tools, resources, and prompts on the running server, next to the built-in database tools. Use this for business logic you want an AI agent to call through the same endpoint, such as revenue forecasting, compliance checks, or data enrichment.
 
-An extension *adds* capabilities. It does not manage the database connection. The server is already connected to your database and already exposes the built-in tools. The module provides a `register()` function and reads or writes through the extension API.
+An extension *adds* capabilities. It does not manage the engine connection: the server already talks to the engine and already exposes the built-in tools. The module provides a `register()` function and uses the extension API for the caller's identity, scopes and the approval prompt.
 
 Extensions are supported on Actian VectorAI DB.
 
@@ -18,7 +18,7 @@ An extension is a normal Python module exposing one required function and two op
 ```python
 from actian_mcp_server.extension_api import (
     get_current_user,            # authenticated identity, or None
-    get_database,                # .query() to read, .transaction() to write
+    has_scope,                   # does the caller's token carry a scope
     request_write_confirmation,  # opt-in human approval gate
 )
 
@@ -37,7 +37,7 @@ async def teardown(): ...              # OPTIONAL, release them at shutdown
 Implement `setup(config)` and `teardown()` only if your extension owns something that needs an explicit open and close, such as an HTTP client, a cache, or a connection pool of your own. Either may be `async` or plain.
 
 !!! note "Configuration never contains secrets"
-    The `config` argument holds the `config` block you set in `conf.json` plus a short list of non-secret values (`dbms`, `max_rows`, `transport`). It never contains the database password, the connection string, or OAuth secrets.
+    The `config` argument holds the `config` block you set in `conf.json` plus a short list of non-secret values (`dbms`, `max_rows`, `transport`). It never contains the engine api key, the embedding key or OAuth secrets.
 
 Give your tools schema-friendly signatures: typed parameters, and no `*args` or `**kwargs`.
 
@@ -82,113 +82,79 @@ Then list it by module name in `conf.json`. Paths are not used, because the loca
 | Transport and protocol | The server serves MCP over HTTP. You do not implement any of it. |
 | Logging | Extension loading, tool registration, and approval outcomes go to the server log, and so do your own `logging.getLogger(__name__)` messages. There is no automatic per-call audit log. If you need a record of who called what, log it in your tool. |
 
-## Reading Data
+## Reaching the Engine
 
-Reach the database only through `get_database()`. You never receive a connection, pool, cursor, or credentials.
+The extension API's `get_database()` runs SQL and exists for the SQL plugins. On a VectorAI DB server its `query()` answers `{"success": false, "error": "querying is not supported for dbms 'vectorai'"}` and `transaction()` raises. Do not use it here.
+
+An extension that needs engine data calls the engine's REST API with its own HTTP client; `httpx` is installed in the image. Put the engine URL in the extension's `config` block. When the engine requires an api key, read it from an environment variable: the server does not hand its own key to extensions.
 
 ```python
-from actian_mcp_server.extension_api import get_database
+import os
+import httpx
 
-db = get_database()
-result = await db.query("SELECT * FROM orders WHERE id = ?", [order_id])
-if result["success"]:
-    for row in result["rows"]:
-        ...
+client = None
+
+async def setup(config):
+    global client
+    headers = {}
+    if os.environ.get("MY_EXT_API_KEY"):
+        headers["api-key"] = os.environ["MY_EXT_API_KEY"]
+    client = httpx.AsyncClient(base_url=config["engine_url"], headers=headers, timeout=30)
+
+async def teardown():
+    await client.aclose()
+
+def register(server, config):
+    @server.tool(name="engine_count")
+    async def engine_count(collection: str) -> dict:
+        r = await client.post(f"/collections/{collection}/points/count", json={})
+        r.raise_for_status()
+        return r.json()
 ```
 
-Always bind user input to `?` placeholders rather than building SQL strings.
+Every request runs with that key, whoever the caller is. The key decides what the extension can read or write, and nothing limits it to the collections listed in `conf.json`: that limit lives in the built-in tools, not in the engine.
 
-`query()` runs one read, works in read-only mode, and behaves the same on every supported database. It is asynchronous, so `await` it. For table and column metadata, select from the engine's system catalogs.
+## Asking a Human to Approve a Write
 
-## Writing Data
-
-There is no one-shot write. Every write goes through a transaction opened with `get_database().transaction()`. A single write is a one-statement transaction, and several statements run all or nothing. A transaction pins one connection for its lifetime.
-
-Set `"query_mode": "read-write"` in `conf.json` to allow writes. The default is `read-only`, and in that mode starting a transaction raises and nothing is written. See [Write support](../write-support.md).
-
-The recommended form is the asynchronous context manager. It commits on a clean exit, rolls back if anything raises, and always releases the connection:
+Nothing confirms an extension's write automatically. Call `request_write_confirmation()` and write only if it returns `True`. That lets you confirm once for a batch, add context, or skip confirmation in a trusted automated flow.
 
 ```python
-from actian_mcp_server.extension_api import get_database
+from actian_mcp_server.extension_api import request_write_confirmation
 
-async def record_sale(customer_id: int, amount: float) -> dict:
-    async with get_database().transaction() as tx:
-        await tx.write("INSERT INTO orders (customer_id, amount) VALUES (?, ?)",
-                       [customer_id, amount])
-        await tx.write("UPDATE customer_revenue SET total_revenue = total_revenue + ? "
-                       "WHERE customer_id = ?", [amount, customer_id])
-        rows = await tx.query(
-            "SELECT total_revenue FROM customer_revenue WHERE customer_id = ?",
-            [customer_id])          # reads see the uncommitted changes
-    # reached only if both writes succeeded and the transaction committed
-    return {"success": True, "new_total": rows["rows"][0][0]}
-```
-
-You can also drive it explicitly when you need step-by-step control:
-
-```python
-tx = await get_database().transaction().begin()
-try:
-    await tx.write(...)
-    await tx.commit()
-except Exception:
-    await tx.rollback()
-    raise
-```
-
-### Choosing Between Query and a Transaction
-
-| Need | Use |
-|------|-----|
-| A single read | `get_database().query()`. Lighter, and the only option on a read-only server. |
-| A read that must see your own in-progress writes | `tx.query()` inside the transaction. |
-| Any write, one statement or many | `get_database().transaction()` with `tx.write()`. |
-
-Do not open a transaction only to read.
-
-!!! warning "Statements raise inside a transaction"
-    `db.query()` returns `{"success": false, ...}` on failure, but a transaction's `query()` and `write()` **raise**. That is deliberate: a failed statement aborts the whole transaction. Under `async with` it rolls back for you.
-
-`tx.write()` runs `INSERT`, `UPDATE`, and `DELETE`. Data Definition Language (DDL) and administrative statements such as `SET` are refused, as they are for reads. A transaction left neither committed nor rolled back is rolled back by a watchdog, five minutes by default, so the connection cannot leak. Prefer `async with`, which releases promptly.
-
-### Asking a Human to Approve a Write
-
-Writes are not confirmed automatically. You decide where approval belongs: call `request_write_confirmation()` and write only if it returns `True`. That lets you confirm once for a batch, attach additional context, or skip confirmation in a trusted automated flow.
-
-```python
-from actian_mcp_server.extension_api import get_database, request_write_confirmation
-
-async def tag_vip(customer_id: int) -> dict:
+async def drop_points(collection: str, ids: list) -> dict:
     approved = await request_write_confirmation(
-        description=f"Tag customer {customer_id} as VIP",
-        details={"table": "customers", "customer_id": customer_id},
+        description=f"Delete {len(ids)} points from {collection}",
+        details={"collection": collection, "ids": ids},
     )
     if not approved:
         return {"success": False, "error": "Write rejected by user"}
 
-    async with get_database().transaction() as tx:
-        await tx.write("UPDATE customers SET vip = 1 WHERE customer_id = ?", [customer_id])
-    return {"success": True}
+    r = await client.post(f"/collections/{collection}/points/delete",
+                          json={"points": ids}, params={"wait": "true"})
+    r.raise_for_status()
+    return {"success": True, "deleted": len(ids)}
 ```
 
-It returns `True` only on explicit approval. A decline, a timeout, or a client that cannot show the prompt all return `False`, so "proceed only if `True`" is safe. You can also use it to gate a non-SQL action, such as an external API call that changes something.
+It returns `True` only on explicit approval. A decline, a timeout, or a client that cannot show the prompt all return `False`, so "proceed only if `True`" is safe. It also works for any other action that changes something, such as a call to an external API.
 
 ## Extension Security Controls
 
-Three controls apply to an extension whether or not you write any code for them.
-
 ### Write Scope Enforcement
 
-The write scope is enforced automatically. When OAuth is enabled, starting a transaction requires the caller's access token to carry the `mcp:write` scope. Without it the transaction raises and nothing is written. Reads need no extra scope. No action is required to enable this behavior. Grant `mcp:write` to the users allowed to write, as described for [Auth0](../authentication/auth0.md) and [Keycloak](../authentication/keycloak.md).
+The automatic `mcp:write` check sits in the SQL transaction, so on a VectorAI DB server it never runs for an extension. When OAuth is on, check the scope yourself before a write:
 
-For finer-grained checks, read the token's scopes with `has_scope()` or `get_current_scopes()`. Both return values only in read-write mode.
+```python
+from actian_mcp_server.extension_api import has_scope
+
+if not has_scope("mcp:write"):
+    return {"success": False, "error": "write operations require the 'mcp:write' scope"}
+```
+
+`has_scope()` and `get_current_scopes()` return values only in read-write mode with OAuth enabled. Without OAuth every scope reads as absent, so do not make the check unconditional. Grant `mcp:write` to the users allowed to write, as described for [Auth0](../authentication/auth0.md) and [Keycloak](../authentication/keycloak.md).
 
 ### Execution Identity
 
-VectorAI DB has no SQL and no per-user identity. The `get_database()` helpers of the extension API (`query`, transactions) are built for the SQL plugins and refuse to run on a VectorAI DB server; an extension that needs engine data talks to the engine's REST API with its own HTTP client, carrying the engine api key when authentication is on in the engine. Every such request runs as the server, whoever the caller is.
-
-!!! warning "Your extension is bounded by the server's engine api key"
-    The key the server is configured with decides what your extension can read or write on the engine; nothing is scoped to the end user. `get_current_user()`, `has_scope()` and `request_write_confirmation()` still work, so an extension can log the caller, require `mcp:write` and ask for approval before a write.
+Every engine request an extension makes runs with the key the extension sends, whoever the caller is. `get_current_user()` still names the caller, so an extension can log who asked, and `request_write_confirmation()` asks them before a write.
 
 ### Confirmation Prompt Behavior
 

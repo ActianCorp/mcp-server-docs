@@ -5,7 +5,7 @@ description: Reference for the VectorAI DB tools of the Actian MCP Server - coll
 
 # Tools
 
-The server registers six read tools in every mode and four write tools only when `query_mode` is `read-write` (see [Write support](../write-support.md)). All tools take the `collection` name as their first argument and answer only for collections listed in `conf.json`; any other name returns an error that lists the configured ones.
+The server registers six read tools in every mode and four write tools only when `query_mode` is `read-write` (see [Write support](../write-support.md)). Every tool except `list_collections` takes a `collection` name and answers only for collections listed in `conf.json`; any other name returns an error that lists the configured ones.
 
 ## Available tools
 
@@ -22,7 +22,7 @@ The server registers six read tools in every mode and four write tools only when
 | [`store_batch`](#store_batch) | | yes | Embed several texts and store them as points with one approval. |
 | [`delete_points`](#delete_points) | | yes | Delete points by id. |
 
-Writes require the `mcp:write` scope when OAuth is enabled and an approval prompt at the client. `search`, `store` and `store_batch` need an embedding provider; with `embedding.provider: none` they answer with an error and `search_by_vector` is the way to query.
+Writes require the `mcp:write` scope when OAuth is enabled and an approval prompt at the client. `search`, `store` and `store_batch` need an embedding provider. With `embedding.provider: none` they answer with an error; use `search_by_vector` instead.
 
 ### Common output
 
@@ -87,7 +87,7 @@ This tool takes no input parameters.
 }
 ```
 
-`exists` is `false` for a configured collection not yet created on the engine, and `null` with an `error` field when the engine could not answer for it. `status` is the engine's collection status: `green`, `yellow`, `red`, or `unknowncollectionstatus` for a collection the engine has not loaded yet; see [Engine behaviour worth knowing](../index.md#engine-behaviour-worth-knowing).
+`exists` is `false` for a configured collection not yet created on the engine, and `null` with an `error` field when the engine could not answer for it. `status` is the engine's collection status: `green`, `yellow`, `red`, or `unknowncollectionstatus` for a collection the engine has not loaded yet; see [Engine behaviour](../index.md#engine-behaviour).
 
 ---
 
@@ -320,7 +320,7 @@ The client shows `Store 1 point in documents: Write tools require the user to ap
 
 ## `store_batch`
 
-Read-write mode only. Embeds several texts and upserts them as points in one call, with one approval prompt for the whole batch: the path for "store these N lines". The texts go to the embedding provider in requests of `embedding.batch_size` and to the engine in one request, so all points land or none. Each item takes the same fields as a `store` call.
+Read-write mode only. Embeds several texts and upserts them as points in one call, with one approval prompt for the whole batch. The texts go to the embedding provider in requests of `embedding.batch_size` and to the engine in one request, so all points land or none. Each item takes the same fields as a `store` call.
 
 Before asking for approval, `store_batch` checks every item (text not blank, `id` a UUID string or unsigned integer and used once in the batch, `metadata` an object), that the collection exists on the engine, that no text exceeds `embedding.max_input_tokens` when that is set, and that the embeddings' dimension equals the collection's vector size. A batch longer than `max_batch_size` (default 32) is rejected as well: `store_batch takes at most 32 items per call, got 40; split the batch or raise max_batch_size in conf.json`. Any failure returns an error and nothing is written.
 
@@ -378,7 +378,7 @@ Read-write mode only. Deletes points by id from a configured collection. The ser
 { "success": true, "collection": "<name>", "deleted": 0, "not_found": [9001, 9002], "message": "none of the ids exist, nothing to delete" }
 ```
 
-A collection left with few live points shows `status: "red"` until new points are added (see [Engine behaviour worth knowing](../index.md#engine-behaviour-worth-knowing)).
+A collection left with few live points shows `status: "red"` until new points are added (see [Engine behaviour](../index.md#engine-behaviour)).
 
 ## Next steps
 

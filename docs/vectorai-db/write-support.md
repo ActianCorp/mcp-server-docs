@@ -18,7 +18,7 @@ By default, the Actian MCP Server for VectorAI DB permits only reads: listing, s
 
 Every prompt is sent as `Approve this database write?`, the text above, and a `Details` block in JSON (collection, ids, vector size, and for batches every id and the ids overwritten). The client shows it to the person and returns their answer.
 
-Only collections listed in `conf.json` can be created or written. Dropping a collection is not an MCP tool; it stays an operator action against the engine (`DELETE /collections/<name>` on the REST API). Payload updates without re-embedding are not part of this release. `store_batch` covers "store these N lines" with one approval; loading a whole corpus still belongs in a script against the engine, not in an MCP session, and `max_batch_size` keeps one approval from covering more than 32 items by default.
+Only collections listed in `conf.json` can be created or written. Dropping a collection is not an MCP tool; it stays an operator action against the engine (`DELETE /collections/<name>` on the REST API). Payload updates without re-embedding are not part of this release. `store_batch` stores several texts with one approval, at most `max_batch_size` items (32 by default). Loading a whole corpus belongs in a script against the engine, not in an MCP session.
 
 ## Enabling write mode
 

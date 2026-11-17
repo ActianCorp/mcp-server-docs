@@ -120,13 +120,7 @@ A VectorAI DB server exposes one engine, so there are no per-target grants (`act
 | Valid token with `mcp:write` | writes go through the approval prompt as usual |
 | No token, or a token that fails verification (signature, issuer, audience, expiry) | `401`; the `WWW-Authenticate` header points at the protected-resource metadata |
 
-The server reads scopes from the `scope`, `scp` and `permissions` claims. Matching is exact.
-
-!!! warning "`allow_unscoped_reads` is for test setups"
-    `"allow_unscoped_reads": true` lets any valid token read every target in the registry, and the server logs a warning at every start while it is set. It exists to stand up routing before the identity provider has the scopes; never use it for a deployment with real credentials behind it. Writes still need the `write` grant.
-
-!!! note "Where the scopes come from"
-    Your identity provider must issue the grants. In Keycloak, create client scopes with a hardcoded-claim mapper that writes the `actian:...` values into a claim such as `scp`, and assign them to the calling client; in Auth0, define them as permissions on the API and grant them through a role, which puts them into the `permissions` claim. The MCP server does not advertise or request them: the calling application asks its own provider for them.
+The server reads scopes from the `scope`, `scp` and `permissions` claims. Matching is exact. The identity provider issues `mcp:write`; the calling application asks its own provider for it. The setup steps are in [Auth0](auth0.md) and [Keycloak](keycloak.md).
 
 ## User Impersonation
 
@@ -138,12 +132,12 @@ The server reads scopes from the `scope`, `scp` and `permissions` claims. Matchi
 | `true` (default) | Verify the `JWT` and require a user claim (`username`, `preferred_username` or `email`); a token without one is refused with `401`. The user is recorded in the [call log](../index.md#call-log). |
 | `false` | Verify the `JWT` and accept service or machine tokens that name no user as well. The caller's name, when the token carries one, is still recorded in the call log. |
 
-In both settings reads need a valid token for this server's audience, and writes need the `mcp:write` scope on top, checked before any embedding call, then the approval prompt. Extension-authored tools run under the same identity as the built-in ones: the server's engine api key. See [Extensions](../extensions/index.md#execution-identity).
+In both settings reads need a valid token for this server's audience, and writes need the `mcp:write` scope on top, checked before any embedding call, then the approval prompt. An extension's own engine calls carry the key the extension sends, not the server's. See [Extensions](../extensions/index.md#execution-identity).
 
 
-### Extracting Username
+### Which name goes to the call log
 
-When user impersonation is active, the server extracts the database username from the token using the following priority order:
+When `user_impersonation` is `true`, the server takes the user name from the token in this order:
 
 ```mermaid
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
@@ -237,7 +231,7 @@ Reference the container paths in `conf.json`:
 !!! note "Docker Key Permissions"
     If mounting the key as a volume, the container user must be able to read it:
 
-    - **Best practice**: `Ensure that server.key and conf.json file permissions are set to 600.
+    - **Best practice**: set the permissions of `server.key` and `conf.json` to 600.
 
 
 ### Step 4: Trust the Certificate in the MCP Client
@@ -304,7 +298,7 @@ By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed ce
 !!! danger "Protect your secrets"
     The `conf.json` file contains `CLIENT_SECRET` in plaintext. The following are the security guidelines:
     
-    - **Lock down file permissions**: Run chmod 600 conf.json` to restrict access on the host machine.
+    - **Lock down file permissions**: run `chmod 600 conf.json` on the host.
 
     - **Mandate HTTPS**: Always use `https://` for the `BASE_URL`. Tokens sent over plain HTTP are vulnerable to interception.
 

@@ -5,9 +5,15 @@ description: Connect MCP clients to Actian VectorAI DB for semantic search over 
 
 # Actian MCP Server for VectorAI DB
 
-The Actian MCP Server for VectorAI DB connects AI applications to an Actian VectorAI DB engine through the open [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). It exposes a chosen set of vector collections to MCP clients: an agent can find out which collections exist, run semantic searches over them, page through points and, when writes are enabled and approved, store new text or delete points.
+The Actian MCP Server for VectorAI DB connects AI applications to an Actian VectorAI DB engine through the open [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). An MCP client sees the collections listed in the server's configuration. It can search them, page through them and, when writes are enabled, store or delete points after the user approves each write.
 
 Actian VectorAI DB is the vector engine of Actian Zen AI DB. The MCP Server talks to its REST API (port 6573 by default); no database driver is installed in the container.
+
+!!! note "Four terms"
+    - **Collection**: a named set of vectors on the engine; think of a table.
+    - **Point**: one entry in a collection: an id, a vector and a payload.
+    - **Payload**: the JSON stored with the point. By default the text sits in its `document` field.
+    - **Embedding**: the list of numbers (vector) that a model produces for a text. Search compares the query's vector with the stored ones.
 
 Writes are disabled by default. Setting `query_mode` to `read-write` enables them and changes which tools the server registers — see [Write support](write-support.md) and [Tools](tools/index.md).
 
@@ -39,7 +45,7 @@ A listed collection does not have to exist yet. It is reported as "not created o
 ## Prerequisites
 
 - **Container engine:** Docker installed and running on the host.
-- **Actian VectorAI DB engine:** a running engine that the container can reach over its REST API (default port 6573). The engine inside an Actian Zen AI DB installation works as is. For a stand-alone engine, the public container `actian/vectorai` runs it: `docker run -d -e ACTIAN_VECTORAI_ACCEPT_EULA=YES -p 6573:6573 actian/vectorai:1.0.3`. Without the EULA variable the engine container exits at once. Up to 5000 vectors need no licence.
+- **Actian VectorAI DB engine:** a running engine that the container can reach over its REST API (default port 6573). The engine inside an Actian Zen AI DB installation works as is. For a stand-alone engine, run the public container: `docker run -d -e ACTIAN_VECTORAI_ACCEPT_EULA=YES -p 6573:6573 actian/vectorai:1.0.3`. Without the EULA variable the container exits at once. Up to 5000 vectors need no licence.
 - **Embedding endpoint (for text search and `store`):** any server that speaks the OpenAI embeddings API (the compose file can start one next to the server), or an OpenAI or Gemini API key. Without one, set `embedding.provider` to `none` and use `search_by_vector` with vectors produced elsewhere.
 - **Engine API key (optional):** only when authentication is switched on in the engine. See [Engine API key](#engine-api-key).
 - **OIDC provider (optional):** only when you use OAuth. See [Authentication](authentication/index.md).
@@ -101,9 +107,9 @@ The engine ships with authentication off: it answers every REST request, and the
 
 Switching authentication on is done in the engine, not in the MCP Server. In short, for the `actian/vectorai` container: start it with `ACTIAN_VECTORAI_ADMIN_PASSWORD=<password>` (this creates the built-in `admin` user), log in with `POST /auth/admin/login` to get an admin token, enable authentication with `PATCH /auth/enabled` and body `{"enabled": true}`, then create a key with `POST /auth/api_key` and permission `read` (read-only server) or `read,write`. The setting is persisted by the engine and survives restarts. See the Actian VectorAI DB documentation for the authentication API.
 
-### Which model fills a collection must also search it
+### One embedding model per collection
 
-The engine stores vectors, not the name of the model that produced them. A collection filled with one model and searched with another returns meaningless scores. Keep `embedding.model` (or the per-collection override) the same for the life of a collection, and set `vector_size` on the collection when a collection already exists so a mismatch is reported instead of silently producing bad results. `store` and `store_batch` check the embedding's dimension against the engine's collection before anything is written.
+The engine stores vectors, not the name of the model that produced them. A collection filled with one model and searched with another returns meaningless scores. Keep `embedding.model` (or the per-collection override) the same for the life of a collection. For a collection that already exists, set `vector_size` in `conf.json` so that a mismatch is reported instead of producing bad results. `store` and `store_batch` compare the embedding's dimension with the collection's before anything is written.
 
 ### Configuration reference
 
@@ -204,7 +210,7 @@ The log lines to wait for are the engine check, `VectorAI: <engine version> at <
 
 ## Usage
 
-After the client connects, the server instructions already carry the collection summary: name, description, vector size and distance, point count, and which embedding answers text search (or "no text embedding: use search_by_vector"). Typical workflows:
+The server instructions sent to the client carry the collection summary: name, description, vector size and distance, point count, and which embedding answers text search (or "no text embedding: use search_by_vector"). Typical workflows:
 
 - **Find, then search:** `list_collections`, then `search` on the collection whose description fits the question. Scores are the engine's similarity scores; `score_threshold` cuts off weak matches.
 - **Filter:** restrict a search with the engine's JSON filter on payload fields, for example `{"must": [{"key": "metadata.kind", "match": {"value": "faq"}}]}`. The same filter works in `count_points` and `scroll_points`. The filter is passed to the engine as is; see the Actian VectorAI DB documentation for the syntax.
@@ -212,7 +218,7 @@ After the client connects, the server instructions already carry the collection 
 
 When OAuth is enabled, the token protects the MCP Server; the engine `api-key` is a separate secret that the server presents to the engine on behalf of every caller. The plugin does not impersonate users at the engine.
 
-### Engine behaviour worth knowing
+### Engine behaviour
 
 - A collection shows `points_count: 0` next to a non-zero `vectors_count`, and status `unknowncollectionstatus`, until the engine has loaded it for a search; `count_points` is exact at any time.
 - A collection whose points were mostly deleted reports `status: "red"` (delete ratio above one half) and `"yellow"` above 0.3. This is not an error: searches and writes keep working, and the status returns to `green` as live points are added. An index rebuild in progress also shows `yellow`.
@@ -244,7 +250,7 @@ Query text, payloads, vectors and filter values are never written. `call_log_que
 
 ## Authentication
 
-The server supports the same modes as every other plugin, documented under [Authentication](authentication/index.md). One VectorAI particular: there is no per-user database identity. Every engine request carries the configured api key, so `user_impersonation` only decides what a token must contain. With the default `true` a token must name a user (`username`, `preferred_username` or `email` claim); with `false` a service token with no user claim is accepted as well. In both cases the user a token names appears in the call log. `conf.resource-server.json` in the image's docker folder is a filled-in `resource-server` example with `user_impersonation: false`.
+The server supports the same modes as every other plugin, documented under [Authentication](authentication/index.md). One difference from the SQL plugins: there is no per-user database identity. Every engine request carries the configured api key, so `user_impersonation` only decides what a token must contain. With the default `true` a token must name a user (`username`, `preferred_username` or `email` claim); with `false` a service token with no user claim is accepted as well. In both cases the user a token names appears in the call log. `conf.resource-server.json` in the image's docker folder is a filled-in `resource-server` example with `user_impersonation: false`.
 
 Reads need a valid token for the server's audience. Writes need the `mcp:write` scope on top, checked before any embedding call, then the approval prompt.
 

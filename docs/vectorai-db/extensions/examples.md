@@ -19,7 +19,7 @@ All five share one database. The [examples README](https://github.com/ActianCorp
 
 ## Configuration and Schema Files
 
-The examples query SQL tables through `get_database()`, which is not available on a VectorAI DB server (see [Execution Identity](index.md#execution-identity)), so they do not run against VectorAI DB as written. There is no VectorAI DB configuration template or schema file for them in this release. Use the examples for the shape of `register()`, the tool and resource definitions, the scope check and the approval prompt, and replace the SQL calls with requests to the engine's REST API.
+The examples query SQL tables through `get_database()`, which does not work on a VectorAI DB server (see [Reaching the Engine](index.md#reaching-the-engine)), so they do not run against VectorAI DB as written. There is no VectorAI DB configuration template or schema file for them in this release. Use the examples for the shape of `register()`, the tool and resource definitions, the scope check and the approval prompt, and replace the SQL calls with requests to the engine's REST API.
 
 | Database | Configuration template | Schema file |
 |----------|------------------------|-------------|
