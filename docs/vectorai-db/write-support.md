@@ -1,117 +1,62 @@
 ---
 title: Write Support
-description: Enable data-modifying SQL on the Actian MCP Server with query_mode, and understand the scope check and human approval that authorize every write.
+description: Enable write operations in the Actian MCP Server for VectorAI DB, and what gates each write - the mcp:write scope and the human approval prompt.
 ---
 
-# Write Support
+# Write support
 
-By default, the Actian MCP Server permits only read queries. Set `query_mode` to `read-write` in `conf.json` to also allow Data Manipulation Language (DML) statements, that is `INSERT`, `UPDATE`, `DELETE`, and `MERGE`.
+By default, the Actian MCP Server for VectorAI DB permits only reads: listing, searching, counting and paging. Set `query_mode` to `read-write` in `conf.json` to also register the four write tools: `create_collection`, `store`, `store_batch` and `delete_points`. Extensions can write through the same checks.
 
-Write support remains off until it is enabled. Existing read-only deployments are not affected.
+## What a write is in VectorAI
 
-Extensions can write too, through the same authorization checks described below. See [Extensions](extensions/index.md).
+| Tool | Writes | Approval text shown to the user |
+|------|--------|---------------------------------|
+| `create_collection` | Creates a configured collection on the engine with its configured vector size and distance. A second call on an existing collection succeeds without a prompt. | `Create collection <name> (<size>-dim, <distance>)` |
+| `store` | Embeds one text and upserts it as one point (text under the collection's `text_field`, plus `metadata`). An existing id is overwritten. | `Store 1 point in <name>: <first 120 characters>`, plus `overwrites existing point <id>` when the id exists |
+| `store_batch` | Embeds several texts and upserts them as points in one engine request. Same item rules as `store`; at most `max_batch_size` items (default 32). | `Store <n> points in <name>: <total> chars, metadata keys: <keys>` followed by one line per item (length, metadata, first 60 characters, overwrite marker) |
+| `delete_points` | Deletes the points whose ids exist; the rest are reported as `not_found`. Nothing to delete means no prompt. | `Delete <n> points from <name>`, plus `(<k> of <m> requested ids not found)` |
 
-For which tools accept a write, and how, see [Zen tools](tools/index.md). The `query_mode` setting and the authorization checks described below apply the same way regardless of which tool performs the write.
+Every prompt is sent as `Approve this database write?`, the text above, and a `Details` block in JSON (collection, ids, vector size, and for batches every id and the ids overwritten). The client shows it to the person and returns their answer.
 
-!!! note "How Zen Routes Writes"
-    On Zen, `execute_query` never performs a write, even when `query_mode` is `read-write`. Writes
-    go to `execute_write_query` and to `orm_operation`, and enabling write mode also removes
-    `blob_operation` and `database_manage` from the registered [tools](tools/index.md). Zen also
-    counts the rows a conditional `UPDATE`/`DELETE` matches and shows that number in the approval
-    prompt.
+Only collections listed in `conf.json` can be created or written. Dropping a collection is not an MCP tool; it stays an operator action against the engine (`DELETE /collections/<name>` on the REST API). Payload updates without re-embedding are not part of this release. `store_batch` covers "store these N lines" with one approval; loading a whole corpus still belongs in a script against the engine, not in an MCP session, and `max_batch_size` keeps one approval from covering more than 32 items by default.
 
-## Enabling Write Mode
+## Enabling write mode
 
-Set `query_mode` in the `conf.json` file:
+| Value | Behaviour |
+|-------|-----------|
+| `read-only` (default) | Read tools and the `find_information` prompt only. Write tools are not registered, so clients never see them. |
+| `read-write` | Read tools plus `create_collection`, `store`, `store_batch`, `delete_points` and the `store_information` prompt. |
 
-| Value | Behavior |
-|-------|----------|
-| `read-only` | Default. Only read queries are permitted. |
-| `read-write` | Read queries plus `INSERT`, `UPDATE`, `DELETE`, and `MERGE` are permitted. |
+## Authorizing a write
 
-```json
-{
-  "query_mode": "read-write"
-}
-```
-
-!!! note "Data Definition Language is always blocked"
-    Enabling write mode does not permit Data Definition Language (DDL) or administrative statements. `CREATE`, `ALTER`, `DROP`, and `GRANT` are rejected, and so are `SET`, `ENABLE`, `DISABLE`, and `SELECT ... INTO`. This is not configurable. Use the database's native tools for schema changes.
-
-## Authorizing a Write
-
-Writes require `"query_mode": "read-write"` in `conf.json`. In that mode, every DML statement must pass two independent checks before it reaches the database. Either one can reject it.
+Every write passes two independent checks before it reaches the engine.
 
 | Check | What it requires | When it applies |
 |-------|------------------|-----------------|
-| `mcp:write` scope | The access token must carry the `mcp:write` scope. | Only when OAuth is enabled. A read-only server never requests or requires this scope. |
-| Human approval | A person must approve the statement in the connected client. | Always, unless disabled with `write_confirmation`. |
+| OAuth scope | The access token must carry the `mcp:write` scope. | Only when OAuth is enabled. A read-only server never requests or requires this scope. |
+| Human approval | The MCP client shows the approval text above and a person accepts it. | Always in `read-write`, unless `write_confirmation` is `false`. |
 
-The scope is checked first, so a caller without it is rejected before anyone is asked to approve anything. A write counts as not approved if the person declines, does not answer before the timeout, or the client cannot display the prompt at all.
-
-```mermaid
-%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
-sequenceDiagram
-    participant User as User
-    participant Client as MCP Client
-    participant Server as MCP Server
-    participant DB as Database
-
-    Client->>Server: Write request (INSERT / UPDATE / DELETE / MERGE)
-    Server->>Server: Check mcp:write
-    alt Scope missing
-        Server-->>Client: Rejected (authorization error)
-    else Scope present
-        Server->>Client: Request approval
-        Client->>User: Show statement, table, and database
-        alt User approves
-            User-->>Client: Approve
-            Client-->>Server: Approved
-            Server->>DB: Run statement
-            DB-->>Server: Rows affected
-            Server-->>Client: Success
-        else Not approved
-            Client-->>Server: Not approved
-            Server-->>Client: Rejected (write not approved)
-        end
-    end
-```
-
-The approval prompt uses the Model Context Protocol (MCP) elicitation capability, which not every client implements. If the connected client cannot display the prompt, the write is rejected, exactly as if a person had declined it. See [Connecting MCP Clients](../mcp-clients/index.md#elicitation-support-for-write-approval) for which clients support it.
-
-To configure the `mcp:write` scope in the identity provider, see [Auth0](authentication/auth0.md) or [Keycloak](authentication/keycloak.md).
-
-## Skipping the Approval Prompt
-
-Some clients cannot display the approval prompt. For those deployments, set `write_confirmation` to `false` in `conf.json` to run the server's built-in write tools without asking for approval:
+The scope is checked first, before any text is sent to the embedding provider, so a caller without it is rejected before anyone is asked to approve anything:
 
 ```json
-{
-  "query_mode": "read-write",
-  "write_confirmation": false
-}
+{"success": false, "error": "write operations require the 'mcp:write' scope, which the access token does not carry"}
 ```
 
-!!! warning "This removes human oversight of every write"
-    With `write_confirmation` set to `false`, the server runs `INSERT`, `UPDATE`, `DELETE`, and `MERGE` statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and unattended writes by the AI agent are acceptable.
+A declined prompt, a prompt not answered within 60 seconds, or a client that cannot show prompts all result in `Write rejected by user`; nothing is written. Every outcome leaves one call log record: `status: "ok"` for a write that landed, `"rejected"` for a declined prompt, `"error"` for a missing scope or a validation failure, with the token's user in `user` (see [Call log](index.md#call-log)).
 
-    The `mcp:write` scope check still applies. Disabling the prompt does not grant write access to callers that lack the scope.
+`store` and `store_batch` validate before they ask: the collection must exist on the engine, no text may be empty, ids must be UUID strings or unsigned integers (and unique within a batch), the batch may not exceed `max_batch_size`, a text may not reach `embedding.max_input_tokens` when that is set, and the embedding's dimension must match the collection's vector size. Those failures come back as errors without an approval prompt, so the user is never asked to approve a write that cannot land.
 
-    This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See [Extensions](extensions/index.md#extension-security-controls).
+!!! note "Text leaves the server before the prompt"
+    The dimension check needs the vector, so the text goes to the embedding provider before the approval prompt. With `openai` or `gemini` on a hosted endpoint the text has left the host even when the write is then declined; a sidecar through `embedding.base_url` keeps it on your network; `none` and `dev-hash` send nothing.
 
-The server records what it skipped. At startup it logs a warning banner stating that write confirmation is disabled, and it logs a warning for each write that ran without approval. Those entries name the tool only. They never include the statement text or the row values.
+## Skipping the approval prompt
 
-## Next Steps
+For clients that cannot show an approval prompt, set `write_confirmation` to `false` in `conf.json`. The write tools then run without asking, and the server logs every such write as `WRITE EXECUTED WITHOUT CONFIRMATION`. The `mcp:write` scope check still applies: disabling the prompt does not grant write access to callers that lack the scope.
 
-<div class="grid cards" markdown>
+This removes human oversight of every write. Use it only where the client is itself an automated, trusted pipeline.
 
-- :material-database: **[Zen configuration](index.md#configuration-reference)**  
-  The `query_mode` and `write_confirmation` fields for Actian Zen, which registers a different tool set per mode.
+## Next steps
 
-- :material-shield-check: **[Authentication](authentication/index.md)**  
-  Set up the `mcp:write` scope in Auth0 or Keycloak.
-
-- :material-connection: **[MCP clients](../mcp-clients/index.md#elicitation-support-for-write-approval)**  
-  Which clients can display the write approval prompt.
-
-</div>
+- [Configuration](index.md#configuration): `query_mode`, `write_confirmation`, `collections`, `max_batch_size`.
+- [Authentication](authentication/index.md): granting the `mcp:write` scope in Auth0 and Keycloak.
+- [Tools](tools/index.md): parameters and output of the four write tools.

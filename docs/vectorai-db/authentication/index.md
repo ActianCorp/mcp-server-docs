@@ -52,7 +52,7 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | OAuth client secret |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | External URL of the MCP server, for example `https://<mcp-server-host>:8000`. It must use `https://`. |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | Token audience |
-| `user_impersonation` | No | Boolean. If `true` (the default setting), the server runs each query as the authenticated user using `SET SESSION AUTHORIZATION`. |
+| `user_impersonation` | No | Boolean. VectorAI DB has no per-user identity, so this only decides what a token must contain: with `true` (the default) a token must name a user, with `false` a service token without a user claim is accepted too. See [User Impersonation](#user-impersonation). |
 
 ### Example
 
@@ -104,31 +104,23 @@ The flow above makes the MCP server run the login itself. When the calling appli
 | `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The identity provider's OIDC discovery document, as the **server** reaches it. The server reads `issuer` and `jwks_uri` from it; the issuer written into every token must match exactly. |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | The audience every token must carry. There is no client ID to fall back to in this mode, so it is mandatory. See [Keycloak, Step 3: Add the Audience Mapper](keycloak.md#step-3-add-the-audience-mapper-required). |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | This server's address as the agents see it. Published in the protected-resource metadata; must start with `https://` unless `host` is `localhost`. |
-| `user_impersonation` | Yes, for Zen | Must be `false`, **inside** the `oauth` block. Zen cannot switch the database user per request; every URL connects as the login in its configuration. With `false`, a token without a user claim (a service or machine token) is accepted and the token's user name, when there is one, goes to the [call log](../index.md#call-log). A top-level key of this name is silently ignored and the default `true` stays in effect, which refuses every token without a user claim. |
+| `user_impersonation` | No | Inside the `oauth` block. The engine sees only the server's api key, whoever the caller is. With the default `true` every token must name a user (`username`, `preferred_username` or `email` claim); with `false` a token without a user claim (a service or machine token) is accepted too. Either way the token's user name, when there is one, goes to the [call log](../index.md#call-log). A top-level key of this name is silently ignored. |
 
 The server publishes its protected-resource metadata at `/.well-known/oauth-protected-resource/mcp`, naming the identity provider, and answers `401` to a request without a valid token. It never calls the provider's userinfo endpoint and never falls back to the `sub` claim for a user name.
 
 Each request is checked for the token's signature, issuer, audience and expiry against the provider's published keys. A token that fails gets `401`; the server log says which check failed (`issuer mismatch`, `audience mismatch`).
 
-### Per-Target Scopes
+### Scopes
 
-On a single-database server, writes need the `mcp:write` scope as in the login flow. On a server that [serves several databases](../multi-target.md), each URL is guarded by its own grants inside the token:
-
-```text
-actian:{host}:{instance}:{database}:read
-actian:{host}:{instance}:{database}:write
-```
-
-The three middle parts are those of the target entry, so an entry `{"host": "zen16", "instance": "admin", "databases": ["DEMODATA"]}` is read with `actian:zen16:admin:DEMODATA:read` and written with `actian:zen16:admin:DEMODATA:write`. The server reads grants from the `scope`, `scp` and `permissions` claims. Matching is exact.
+A VectorAI DB server exposes one engine, so there are no per-target grants (`actian:...` scopes do not apply). Reads need a valid token for this server's audience; writes need the `mcp:write` scope on top, as in the login flow:
 
 | Caller | Result |
 |--------|--------|
-| Token with the `read` grant for the URL | reads work; a write is refused before anything reaches Zen: `no scope grants 'write'` |
-| Token with the `write` grant | writes go through the approval prompt as usual; on a [read-only persona](../multi-target.md#read-only-personas) the engine refuses them regardless of the grant |
-| Token without a grant for the URL | `404`, the same answer as for a URL that does not exist, on purpose |
-| No token, or a token that fails verification | `401` |
+| Valid token without `mcp:write` | reads work; every write tool answers `write operations require the 'mcp:write' scope, which the access token does not carry`, before any text is embedded and without an approval prompt |
+| Valid token with `mcp:write` | writes go through the approval prompt as usual |
+| No token, or a token that fails verification (signature, issuer, audience, expiry) | `401`; the `WWW-Authenticate` header points at the protected-resource metadata |
 
-`list_accessible_targets` returns only the URLs the token grants, see [Tools](../tools/index.md#list_accessible_targets).
+The server reads scopes from the `scope`, `scp` and `permissions` claims. Matching is exact.
 
 !!! warning "`allow_unscoped_reads` is for test setups"
     `"allow_unscoped_reads": true` lets any valid token read every target in the registry, and the server logs a warning at every start while it is set. It exists to stand up routing before the identity provider has the scopes; never use it for a deployment with real credentials behind it. Writes still need the `write` grant.
@@ -138,17 +130,15 @@ The three middle parts are those of the target entry, so an entry `{"host": "zen
 
 ## User Impersonation
 
-!!! warning "Not supported on Zen"
-    Zen does not support `SET SESSION AUTHORIZATION`, so user impersonation is unavailable. Set `user_impersonation` to `false` **inside** the `oauth` block; a top-level key is ignored. JWT authentication still works; only per-user database switching is skipped. The rest of this section describes the impersonation behavior that does not apply to Zen.
-
-By default, the `user_impersonation` field is set to `true`. The server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
-
-Impersonation covers extension-authored tools as well as the built-in ones, so an extension is also bounded by the end user's database privileges. See [Extensions](../extensions/index.md#execution-identity).
+!!! note "There is nothing to impersonate on VectorAI DB"
+    The engine authenticates the server, not the person: every engine request carries the configured `vectorai.api_key_secret`, whoever the caller is. The OAuth token therefore protects the MCP Server, and `user_impersonation` only decides what a token must contain. Set it **inside** the `oauth` block; a top-level key is ignored.
 
 |  user_impersonation | Server |
 | :------------------- | :------- |
-| `true` (default) | Verify the `JWT` and run `SET SESSION AUTHORIZATION "<user>"` for each query. Every OAuth user needs a matching database account. |
-| `false` | Verify the `JWT` and reject unauthenticated requests. However, all approved queries will run under the shared service-account connection pool credentials. The caller's name, when the token carries one, is still recorded in the [call log](../index.md#call-log). |
+| `true` (default) | Verify the `JWT` and require a user claim (`username`, `preferred_username` or `email`); a token without one is refused with `401`. The user is recorded in the [call log](../index.md#call-log). |
+| `false` | Verify the `JWT` and accept service or machine tokens that name no user as well. The caller's name, when the token carries one, is still recorded in the call log. |
+
+In both settings reads need a valid token for this server's audience, and writes need the `mcp:write` scope on top, checked before any embedding call, then the approval prompt. Extension-authored tools run under the same identity as the built-in ones: the server's engine api key. See [Extensions](../extensions/index.md#execution-identity).
 
 
 ### Extracting Username
@@ -159,8 +149,8 @@ When user impersonation is active, the server extracts the database username fro
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
 flowchart TD
     A[Incoming Request with JWT] --> B{user_impersonation?}
-    B -- false --> C[Run query as service account]
-    B -- true --> D[Query userinfo endpoint]
+    B -- false --> C[Accept the token; call log user is null when no claim names one]
+    B -- true --> D[Read the JWT claims]
     D --> E{username claim?}
     E -- found --> K[Use username]
     E -- not found --> F{preferred_username?}
@@ -171,14 +161,14 @@ flowchart TD
     G -- not found --> I{sub claim?}
     I -- found --> J["Sanitize sub (auth0|12345 → 12345)"]
     J --> K
-    K --> L["SET SESSION AUTHORIZATION 'username'"]
-    L --> M[Execute query]
+    K --> L["Record username in the call log"]
+    L --> M[Send the request to the engine with the server's api key]
 ```
 
 !!! tip "Provider-Specific Behavior"
-    - **Auth0**: Does not return `username` or `preferred_username` by default. The server usually falls back to the email prefix. Ensure that the database usernames match the email prefixes, for example, create database user `jdoe` for `jdoe@example.com`.
-    - **Keycloak**: Returns `preferred_username` by default when the `profile` scope is present. Create database users that match the Keycloak login names.
-    - **Either provider, when users sign in through an upstream connection**: Auth0 and Keycloak can both broker logins from Google, Microsoft Entra, SAML, or corporate single sign-on. In that case the `sub` claim carries a provider-specific ID such as `google-oauth2|12345`. The server strips the prefix and is left with `12345`, which is unlikely to match a database account. Map a usable `username` in the provider's user profile, or set `user_impersonation` to `false`.  
+    - **Auth0**: Does not return `username` or `preferred_username` by default. The server usually falls back to the email prefix, so the call log shows `jdoe` for `jdoe@example.com`.
+    - **Keycloak**: Returns `preferred_username` by default when the `profile` scope is present; the call log shows the Keycloak login name.
+    - **Either provider, when users sign in through an upstream connection**: Auth0 and Keycloak can both broker logins from Google, Microsoft Entra, SAML, or corporate single sign-on. In that case the `sub` claim carries a provider-specific ID such as `google-oauth2|12345`, and the call log shows `12345`. Map a usable `username` in the provider's user profile if you want readable names in the log. No database account is involved on VectorAI DB.  
 
 ## Secure Remote Deployments with HTTPS and TLS
 
@@ -225,14 +215,15 @@ The server validates that both paths exist at startup, and that `BASE_URL` uses 
 Mount the certificate and key into the container using volume flags:
 
 !!! note "Example"
-    The following example demonstrates how to deploy the Zen docker.
+    The following example demonstrates how to deploy the VectorAI DB container with TLS.
 
 ```bash
 docker run -p 8000:8000 \
+  --add-host=host.docker.internal:host-gateway \
   -v /path/to/server.crt:/app/server.crt:ro \
   -v /path/to/server.key:/app/server.key:ro \
   -v /path/to/conf.json:/app/conf.json:ro \
-  actian/zen-mcp-server:1.1.0
+  actian/vectorai-mcp-server:1.2.0
 ```
 
 Reference the container paths in `conf.json`:

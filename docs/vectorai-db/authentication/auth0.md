@@ -192,10 +192,8 @@ After saving, the application row on the **Application Access** tab shows a gree
 
 ## Step 4: Create Auth0 Users (If Using User Impersonation)
 
-!!! warning "Not applicable to Zen"
-    Zen does not support `SET SESSION AUTHORIZATION`, so user impersonation is unavailable and `user_impersonation` must be `false`. Skip this step. See [User Impersonation](index.md#user-impersonation).
-
-If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database through `SET SESSION AUTHORIZATION`. Each Auth0 user must have a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
+!!! note "No database accounts on VectorAI DB"
+    The engine sees only the server's api key, so no Auth0 user needs a matching database account. Create the Auth0 users your people log in with; with `user_impersonation` set to `true` (the default) every token must name a user, with `false` service tokens are accepted too. See [User Impersonation](index.md#user-impersonation).
 
 ### Step 4.1: Create the User in Auth0
 
@@ -267,7 +265,7 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Application → Settings → **Client Secret** | `a1B2c3D4e5F6g7H8i9J0...` |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Your MCP server's external URL | `https://<mcp-server-host>:8000` |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | API → **Identifier** | `https://<mcp-server-host>:8000/mcp` |
-| `user_impersonation` | Yes | `false` (Zen does not support impersonation) |
+| `user_impersonation` | No | `true` to require a user claim in every token, `false` to accept service tokens too; VectorAI DB has no per-user identity either way |
 
 !!! info "Audience fallback"
     If `FASTMCP_SERVER_AUTH_AUDIENCE` is omitted, the server uses `FASTMCP_SERVER_AUTH_CLIENT_ID` as the audience. This is common for Keycloak setups, but for Auth0 you should always set an explicit audience, the Client ID will not match the API Identifier.

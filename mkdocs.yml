@@ -99,8 +99,6 @@ nav:
           - Auth0: vectorai-db/authentication/auth0.md
           - Keycloak: vectorai-db/authentication/keycloak.md
       - Write Support: vectorai-db/write-support.md
-      - Multiple Databases: vectorai-db/multi-target.md
-      - Deployment Scenarios: vectorai-db/deployment.md
       - Extensions:
           - vectorai-db/extensions/index.md
           - Examples: vectorai-db/extensions/examples.md

@@ -9,7 +9,7 @@ You can extend the Actian MCP Server with **extensions**: your own Python module
 
 An extension *adds* capabilities. It does not manage the database connection. The server is already connected to your database and already exposes the built-in tools. The module provides a `register()` function and reads or writes through the extension API.
 
-Extensions are supported on Actian Zen.
+Extensions are supported on Actian VectorAI DB.
 
 ## Writing the Module
 
@@ -185,10 +185,10 @@ For finer-grained checks, read the token's scopes with `has_scope()` or `get_cur
 
 ### Execution Identity
 
-Zen authenticates through the connection, so your statements run as the configured account.
+VectorAI DB has no SQL and no per-user identity. The `get_database()` helpers of the extension API (`query`, transactions) are built for the SQL plugins and refuse to run on a VectorAI DB server; an extension that needs engine data talks to the engine's REST API with its own HTTP client, carrying the engine api key when authentication is on in the engine. Every such request runs as the server, whoever the caller is.
 
-!!! warning "Your extension is bounded by the configured account's privileges"
-    That account needs the table privileges your extension relies on, and your extension cannot read or write anything the account could not reach directly. When impersonation is required but the user cannot be resolved, the transaction is **rejected** rather than falling back to the service account.
+!!! warning "Your extension is bounded by the server's engine api key"
+    The key the server is configured with decides what your extension can read or write on the engine; nothing is scoped to the end user. `get_current_user()`, `has_scope()` and `request_write_confirmation()` still work, so an extension can log the caller, require `mcp:write` and ask for approval before a write.
 
 ### Confirmation Prompt Behavior
 
@@ -204,7 +204,7 @@ The `write_confirmation` setting does not silence the extension's prompt. If you
 
 | Point | Detail |
 |-------|--------|
-| Tool names | Pick distinct, descriptive names. A collision with a built-in name such as `execute_query` aborts startup. |
+| Tool names | Pick distinct, descriptive names. A collision with a built-in name such as `search` aborts startup. |
 | No hot reload | Extensions load at startup. Restart the server to pick up changes. |
 
 !!! important "Trust model"
@@ -215,7 +215,7 @@ The `write_confirmation` setting does not silence the extension's prompt. If you
 <div class="grid cards" markdown>
 
 - :material-file-code: **[Examples](examples.md)**  
-  Five runnable extensions, with the configuration and schema files for Zen.
+  Five runnable extensions written for the SQL plugins; use them as templates for `register()`, tools, resources and the approval prompt.
 
 - :material-book-open-variant: **[API reference](api-reference.md)**  
   Every function, signature, and return shape.
