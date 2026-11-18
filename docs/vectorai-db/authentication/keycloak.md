@@ -338,16 +338,15 @@ GRANT SELECT ON TABLE products TO jdoe;
 
 ```json
 {
-    "driver": "{Ingres}",
-    "server": "@<db-host>,tcp_ip,<port>",
-    "database": "mydb",
-    "database_user": "<database_user>",
-    "database_password": "<database_password>",
-    "max_connections": 10,
     "host": "0.0.0.0",
     "port": 8000,
     "query_mode": "read-write",
     "write_confirmation": true,
+    "vectorai": { "url": "http://host.docker.internal:6573" },
+    "embedding": { "provider": "openai", "model": "BAAI/bge-m3", "base_url": "http://embedding:80/v1" },
+    "collections": [
+        { "name": "documents", "description": "Product manuals, one chunk per point" }
+    ],
     "ssl_certfile": "/app/server.crt",
     "ssl_keyfile":  "/app/server.key",
     "oauth": {
@@ -362,7 +361,7 @@ GRANT SELECT ON TABLE products TO jdoe;
 ```
 
 !!! note
-    Replace `<db-host>` with the database server address. In the Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
+    `vectorai.url` is the engine as the container reaches it: the Docker host's name or IP (`host.docker.internal` on Docker Desktop), or the engine container's network alias. Never `localhost` or `127.0.0.1`, which refer to the container itself. The `embedding` and `collections` blocks are described on the [overview](../index.md).
 
 For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see [HTTPS / TLS for Remote Deployments](index.md#secure-remote-deployments-with-https-and-tls).
 
