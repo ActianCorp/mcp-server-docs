@@ -61,10 +61,10 @@ Three entries: a read-only persona and an admin persona on `DEMODATA`, and an ap
 
 | URL | Connects to | Writes |
 |-----|-------------|--------|
-| `/mcp/zen16/readonly/DEMODATA/mcp` | zen16, DEMODATA | refused by the engine (read-only persona) |
+| `/mcp/zen16/readonly/DEMODATA/mcp` | zen16, DEMODATA | refused by the server (read-only persona) |
 | `/mcp/zen16/admin/DEMODATA/mcp` | zen16, DEMODATA | allowed (server is `read-write`) |
 | `/mcp/zen16/app/DEFAULTDB/mcp` | zen16, DEFAULTDB | allowed |
-| `/mcp` | nothing | every tool answers "no target bound to this URL" |
+| `/mcp` | nothing | every tool answers "no target bound to this request; on a multi-target server connect to /mcp/{host}/{instance}/{database}/mcp" |
 
 ### Configuration Reference
 
@@ -86,11 +86,11 @@ Three entries: a read-only persona and an admin persona on `DEMODATA`, and an ap
 
 ## Read-Only Personas
 
-A persona listed in `zen_readonly_personas` is opened read-only even when `query_mode` is `read-write`: every connection of that target carries the Open Database Connectivity (ODBC) attribute `SQL_ATTR_ACCESS_MODE=READ_ONLY` and `OPENMODE=1` in its connection string, and the engine refuses every write with `Access denied to a READ-ONLY data source`. The word `readonly` is not special — `zen_readonly_personas: ["analyst"]` with `"instance": "analyst"` works the same.
+A persona listed in `zen_readonly_personas` is opened read-only even when `query_mode` is `read-write`: every connection of that target carries the Open Database Connectivity (ODBC) attribute `SQL_ATTR_ACCESS_MODE=READ_ONLY` and `OPENMODE=1` in its connection string. The server refuses the write tools on that URL before anything reaches Zen: `target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL`. The engine's own `Access denied to a READ-ONLY data source` is the backstop for a statement that reaches the connection anyway. The word `readonly` is not special — `zen_readonly_personas: ["analyst"]` with `"instance": "analyst"` works the same.
 
 What a read-only persona does not do:
 
-- It does not hide the write tools. Under multi-target the server publishes one tool list for all URLs, so `execute_write_query` is listed on the read-only URL as well; the engine refuses it.
+- It does not hide the write tools. Under multi-target the server publishes one tool list for all URLs, so `execute_write_query` is listed on the read-only URL as well; the server refuses it.
 - It does not give rights finer than read or write. For that, use Zen logins: with Zen security on, give each entry its own `username` and `password`, and the engine enforces that user's permissions. A `SELECT` on a table the login may not see fails with a Zen permission error.
 
 ## Adding a Database Without a Restart
@@ -101,12 +101,12 @@ Mount a directory at `/app/targets.d` when you start the container (`-v /path/to
 {"host": "zen16", "instance": "hr", "databases": ["DEFAULTDB"]}
 ```
 
-Within `targets_reload_interval` seconds the URL `/mcp/zen16/hr/DEFAULTDB/mcp` answers. Delete the file and the URL returns `404` and its connection to Zen closes. A file may hold one entry or a JSON list of entries; `targets.defaults` applies to them too. The server logs a file that is not valid JSON, and the registry keeps its previous contents.
+Within `targets_reload_interval` seconds the URL `/mcp/zen16/hr/DEFAULTDB/mcp` answers. Delete the file and the URL stops answering (`404` without an identity provider; with one, the same `403 insufficient_scope` as for a target the caller has no grant for, and `401` without a token) and its connection to Zen closes. A file may hold one entry or a JSON list of entries; `targets.defaults` applies to them too. The server logs a file that is not valid JSON, and the registry keeps its previous contents.
 
 ## What the Agent Sees
 
 - Each URL has its own instructions text (the mode, and a summary of the tables of that database) and its own `resource://database/schema` content. An agent connected to `app/DEFAULTDB` is told about DEFAULTDB, not about DEMODATA.
-- `list_accessible_targets` returns every entry with its `path`, and a full `url` when `FASTMCP_SERVER_AUTH_BASE_URL` is configured. With authentication on, the list contains only the targets the caller's token grants.
+- `list_accessible_targets` returns every entry with its `path`, and a full `url` when `FASTMCP_SERVER_AUTH_BASE_URL` is configured. With authentication on, the list contains only the targets the caller's token grants; call it on the plain `/mcp` URL, since a token without a grant is refused on every target URL.
 - No switching databases inside one session: `database_manage` with `action=switch` is refused on a routed URL. To work with another database, connect to its URL.
 - The [call log](index.md#call-log) carries the target of each call as `host/instance/database`, so calls through different URLs are told apart afterwards.
 
@@ -119,11 +119,11 @@ Within `targets_reload_interval` seconds the URL `/mcp/zen16/hr/DEFAULTDB/mcp` a
 ## Verifying a Setup
 
 1. Connect an agent to each URL and call `list_tables`; the lists must differ between databases.
-2. On the read-only URL ask for an `INSERT`; expect `Access denied to a READ-ONLY data source`.
+2. On the read-only URL ask for an `INSERT`; expect `target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL`.
 3. On the admin URL run the same `INSERT`; expect the approval prompt, then success.
 4. Read `resource://database/schema` on two URLs; the content must follow the URL.
-5. Call a tool on the plain `/mcp` URL; expect "no target bound".
-6. Drop a file into `targets.d`; the new URL must answer without a restart. Remove it; the URL must return `404`.
+5. Call a tool on the plain `/mcp` URL; expect "no target bound to this request".
+6. Drop a file into `targets.d`; the new URL must answer without a restart. Remove it; the URL must stop answering (`404`, or `403` with an identity provider).
 
 ## Next Steps
 

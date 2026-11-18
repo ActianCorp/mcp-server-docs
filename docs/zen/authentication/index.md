@@ -124,9 +124,11 @@ The three middle parts are those of the target entry, so an entry `{"host": "zen
 | Caller | Result |
 |--------|--------|
 | Token with the `read` grant for the URL | reads work; a write is refused before anything reaches Zen: `no scope grants 'write'` |
-| Token with the `write` grant | writes go through the approval prompt as usual; on a [read-only persona](../multi-target.md#read-only-personas) the engine refuses them regardless of the grant |
-| Token without a grant for the URL | `404`, the same answer as for a URL that does not exist, on purpose |
-| No token, or a token that fails verification | `401` |
+| Token with the `write` grant | reads and writes work: a `write` grant implies `read`. Writes go through the approval prompt as usual; on a [read-only persona](../multi-target.md#read-only-personas) the server refuses them regardless of the grant |
+| Token without a grant for the URL | `403` with `error="insufficient_scope"`; the `WWW-Authenticate` header names the `read` grant the URL needs. A URL that names no target at all gets the identical `403`, on purpose, so a caller cannot tell the two apart |
+| No token, or a token that fails verification | `401`, on every URL, whether or not it names a target |
+
+Without an identity provider there is no token to check, and a URL that names no target answers `404`.
 
 `list_accessible_targets` returns only the URLs the token grants, see [Tools](../tools/index.md#list_accessible_targets).
 
@@ -134,7 +136,7 @@ The three middle parts are those of the target entry, so an entry `{"host": "zen
     `"allow_unscoped_reads": true` lets any valid token read every target in the registry, and the server logs a warning at every start while it is set. It exists to stand up routing before the identity provider has the scopes; never use it for a deployment with real credentials behind it. Writes still need the `write` grant.
 
 !!! note "Where the scopes come from"
-    Your identity provider must issue the grants. In Keycloak, create client scopes with a hardcoded-claim mapper that writes the `actian:...` values into a claim such as `scp`, and assign them to the calling client; in Auth0, define them as permissions on the API and grant them through a role, which puts them into the `permissions` claim. The MCP server does not advertise or request them: the calling application asks its own provider for them.
+    Your identity provider must issue the grants. In Keycloak, create one client scope per grant and attach it to the calling client as optional, see [Keycloak, Step 5.3](keycloak.md#step-53-per-target-scopes-resource-server-mode); a hardcoded-claim mapper that writes the `actian:...` values into `scp` works as well. In Auth0, define them as permissions on the API and grant them through a role, which puts them into the `permissions` claim. The MCP server does not advertise or request them: the calling application asks its own provider for them.
 
 ## User Impersonation
 
@@ -232,7 +234,7 @@ docker run -p 8000:8000 \
   -v /path/to/server.crt:/app/server.crt:ro \
   -v /path/to/server.key:/app/server.key:ro \
   -v /path/to/conf.json:/app/conf.json:ro \
-  actian/zen-mcp-server:1.1.0
+  actian/zen-mcp-server:1.2.0
 ```
 
 Reference the container paths in `conf.json`:
