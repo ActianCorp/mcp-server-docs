@@ -38,6 +38,7 @@ nav:
           - Auth0: hcl-informix/authentication/auth0.md
           - Keycloak: hcl-informix/authentication/keycloak.md
       - Write Support: hcl-informix/write-support.md
+      - Multi-Target Deployments: hcl-informix/multi-target.md
       - Extensions:
           - hcl-informix/extensions/index.md
           - Examples: hcl-informix/extensions/examples.md
