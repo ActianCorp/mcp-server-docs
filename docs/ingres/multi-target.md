@@ -317,7 +317,7 @@ Give each database its own entry in the client's configuration, using the databa
 
 Use the `url` or `path` values from `list_accessible_targets`. For the configuration format of other clients, see [Connect MCP Clients](../mcp-clients/index.md#client-configuration-examples).
 
-A client connected to the server's `/mcp` URL, with no database in the path, can call `list_accessible_targets`, but the database tools do not work when the registry has more than one server or database. They return `Failed to get database connection or cursor`, and the server log states that the request must name a target. Connect to a database's URL instead.
+A client connected to the server's `/mcp` URL, with no database in the path, can call `list_accessible_targets`, but the database tools do not work when the registry has more than one server or database. They return `Failed to get database connection or cursor` followed by the reason the request must name a target (the server log records the same text). Connect to a database's URL instead.
 
 ---
 
