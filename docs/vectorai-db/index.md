@@ -238,7 +238,7 @@ Every tool call writes one JSON line to the container log (`docker logs <contain
 
 | Field | Meaning |
 |-------|---------|
-| `user` | The user named by the access token, or `null` without OAuth. The engine itself only sees the server's api key, so this is where a deployment records who asked. |
+| `user` | The user named by the access token; `null` without OAuth or for a token that names no user. The engine itself only sees the server's api key, so this is where a deployment records who asked. |
 | `target` | The engine URL (scheme, host, port). |
 | `action` | `read` for the six read tools, `write` for `store`, `store_batch` and `delete_points`, `admin` for `create_collection`. |
 | `status` | `ok`; `error` for an engine or validation error or a token without `mcp:write`; `rejected` when the approver declined. |
@@ -250,7 +250,7 @@ Query text, payloads, vectors and filter values are never written. `call_log_que
 
 ## Authentication
 
-The server supports the same modes as every other plugin, documented under [Authentication](authentication/index.md). One difference from the SQL plugins: there is no per-user database identity. Every engine request carries the configured api key, so `user_impersonation` only decides what a token must contain. With the default `true` a token must name a user (`username`, `preferred_username` or `email` claim); with `false` a service token with no user claim is accepted as well. In both cases the user a token names appears in the call log. `conf.resource-server.json` in the image's docker folder is a filled-in `resource-server` example with `user_impersonation: false`.
+The server supports the same modes as every other plugin, documented under [Authentication](authentication/index.md). One difference from the SQL plugins: there is no per-user database identity. Every engine request carries the configured api key, so `user_impersonation` only decides where the server looks for the caller's name for the call log and, in resource-server mode, whether a token must name a user: there the default `true` refuses a token without a `username`, `preferred_username` or `email` claim, and `false` accepts service tokens too. [User Impersonation](authentication/index.md#user-impersonation) has the details for each mode. `conf.resource-server.json` in the image's docker folder is a filled-in `resource-server` example with `user_impersonation: false`.
 
 Reads need a valid token for the server's audience. Writes need the `mcp:write` scope on top, checked before any embedding call, then the approval prompt.
 

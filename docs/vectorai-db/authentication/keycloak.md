@@ -275,7 +275,7 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
 ## Step 6: Create Keycloak Users (If Using User Impersonation)
 
 !!! note "No database accounts on VectorAI DB"
-    The engine sees only the server's api key, so no Keycloak user needs a matching database account. Create the Keycloak users your people log in with; with `user_impersonation` set to `true` (the default) every token must name a user, with `false` service tokens are accepted too. See [User Impersonation](index.md#user-impersonation).
+    The engine sees only the server's api key, so no Keycloak user needs a matching database account. Create the Keycloak users your people log in with. Which name the server records for each of them in the call log is described under [User Impersonation](index.md#user-impersonation).
 
 If `user_impersonation` is `true`, each Keycloak user contains a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
 
@@ -329,7 +329,7 @@ GRANT SELECT ON TABLE products TO jdoe;
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Clients > your client > **Credentials**| (your secret) |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL | `https://<mcp-server-host>:8000` |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | Value from **Included Custom Audience** in the audience mapper | `actian-mcp` |
-| `user_impersonation` | No | `true` to require a user claim in every token, `false` to accept service tokens too; VectorAI DB has no per-user identity either way |
+| `user_impersonation` | No | `true` (the default) or `false`. It decides where the server looks for the caller's name for the call log; VectorAI DB has no per-user identity either way. See [User Impersonation](index.md#user-impersonation) |
 
 !!! info "Audience in Keycloak versus Auth0"
     In Auth0, the audience is a separate API Identifier (often a URL). In Keycloak, you define the audience string through the **Included Custom Audience** field in the audience mapper ([Step 3](#step-3-add-the-audience-mapper-required)). A common convention is to set it to the Client ID, for example, `actian-mcp`. If `FASTMCP_SERVER_AUTH_AUDIENCE` is omitted from the configuration, the server falls back to `CLIENT_ID`.

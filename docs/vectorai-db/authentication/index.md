@@ -52,7 +52,7 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | OAuth client secret |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | External URL of the MCP server, for example `https://<mcp-server-host>:8000`. It must use `https://`. |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | Token audience |
-| `user_impersonation` | No | Boolean. VectorAI DB has no per-user identity, so this only decides what a token must contain: with `true` (the default) a token must name a user, with `false` a service token without a user claim is accepted too. See [User Impersonation](#user-impersonation). |
+| `user_impersonation` | No | Boolean, default `true`. VectorAI DB has no per-user identity, so this only decides where the server looks for the caller's name for the call log. In this flow no token is refused for lacking a user claim. See [User Impersonation](#user-impersonation). |
 
 ### Example
 
@@ -125,44 +125,48 @@ The server reads scopes from the `scope`, `scp` and `permissions` claims. Matchi
 ## User Impersonation
 
 !!! note "There is nothing to impersonate on VectorAI DB"
-    The engine authenticates the server, not the person: every engine request carries the configured `vectorai.api_key_secret`, whoever the caller is. The OAuth token therefore protects the MCP Server, and `user_impersonation` only decides what a token must contain. Set it **inside** the `oauth` block; a top-level key is ignored.
+    The engine authenticates the server, not the person: every engine request carries the configured `vectorai.api_key_secret`, whoever the caller is. The OAuth token therefore protects the MCP Server. `user_impersonation` only decides where the server looks for the caller's name for the [call log](../index.md#call-log) and, in resource-server mode, whether a token must name a user. Set it **inside** the `oauth` block; a top-level key is ignored.
 
-|  user_impersonation | Server |
-| :------------------- | :------- |
-| `true` (default) | Verify the `JWT` and require a user claim (`username`, `preferred_username` or `email`); a token without one is refused with `401`. The user is recorded in the [call log](../index.md#call-log). |
-| `false` | Verify the `JWT` and accept service or machine tokens that name no user as well. The caller's name, when the token carries one, is still recorded in the call log. |
+What the setting does depends on who runs the login. A user claim is `username`, `preferred_username` or `email`.
 
-In both settings reads need a valid token for this server's audience, and writes need the `mcp:write` scope on top, checked before any embedding call, then the approval prompt. An extension's own engine calls carry the key the extension sends, not the server's. See [Extensions](../extensions/index.md#execution-identity).
+| `user_impersonation` | Login flow (the server runs the login) | [Resource-server mode](#resource-server-mode) |
+| :------------------- | :------------------------------------- | :-------------------------------------------- |
+| `true` (default) | Every valid token is accepted. The name comes from the identity provider's userinfo endpoint, then from the token, and as the last resort from the token's `sub` claim. | The token itself must carry a user claim; a token without one is refused with `401`. The server does not call the userinfo endpoint and does not use `sub`. |
+| `false` | Every valid token is accepted. The name comes from the token's own user claim; a token without one is logged with `"user": null`. | Service or machine tokens without a user claim are accepted too and logged with `"user": null`; a token with a user claim is logged under that name. |
+
+In every case reads need a valid token for this server's audience, and writes need the `mcp:write` scope on top, checked before any embedding call, then the approval prompt. An extension's own engine calls carry the key the extension sends, not the server's. See [Extensions](../extensions/index.md#execution-identity).
 
 
 ### Which name goes to the call log
 
-When `user_impersonation` is `true`, the server takes the user name from the token in this order:
+The user claims are read in the same order everywhere: `username`, then `preferred_username`, then the part of `email` before the `@` (`jdoe@example.com` gives `jdoe`). The flowchart shows where the server looks for them and what happens when none is there:
 
 ```mermaid
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
 flowchart TD
-    A[Incoming Request with JWT] --> B{user_impersonation?}
-    B -- false --> C[Accept the token; call log user is null when no claim names one]
-    B -- true --> D[Read the JWT claims]
-    D --> E{username claim?}
-    E -- found --> K[Use username]
-    E -- not found --> F{preferred_username?}
-    F -- found --> K
-    F -- not found --> G{email claim?}
-    G -- found --> H["Extract prefix (jdoe@example.com → jdoe)"]
-    H --> K
-    G -- not found --> I{sub claim?}
-    I -- found --> J["Sanitize sub (auth0|12345 → 12345)"]
+    A[Request with a valid JWT] --> B{user_impersonation?}
+    B -- false --> C{User claim in the token?}
+    C -- found --> K[Use that name]
+    C -- not found --> N[Accept the token; call log user is null]
+    B -- true --> M{Who runs the login?}
+    M -->|resource-server mode| R{User claim in the token?}
+    R -- found --> K
+    R -- not found --> X[Refuse the token with 401]
+    M -->|login flow| U{User claim from the userinfo endpoint?}
+    U -- found --> K
+    U -- not found --> T{User claim in the token?}
+    T -- found --> K
+    T -- not found --> J["Sanitize sub (auth0|12345 → 12345)"]
     J --> K
-    K --> L["Record username in the call log"]
-    L --> M[Send the request to the engine with the server's api key]
+    K --> L[Record the name in the call log]
+    L --> E[Send the request to the engine with the server's api key]
+    N --> E
 ```
 
 !!! tip "Provider-Specific Behavior"
-    - **Auth0**: Does not return `username` or `preferred_username` by default. The server usually falls back to the email prefix, so the call log shows `jdoe` for `jdoe@example.com`.
+    - **Auth0**: Does not return `username` or `preferred_username` by default. The server usually takes the email prefix, so the call log shows `jdoe` for `jdoe@example.com`.
     - **Keycloak**: Returns `preferred_username` by default when the `profile` scope is present; the call log shows the Keycloak login name.
-    - **Either provider, when users sign in through an upstream connection**: Auth0 and Keycloak can both broker logins from Google, Microsoft Entra, SAML, or corporate single sign-on. In that case the `sub` claim carries a provider-specific ID such as `google-oauth2|12345`, and the call log shows `12345`. Map a usable `username` in the provider's user profile if you want readable names in the log. No database account is involved on VectorAI DB.  
+    - **Either provider, when users sign in through an upstream connection**: Auth0 and Keycloak can both broker logins from Google, Microsoft Entra, SAML, or corporate single sign-on. Such a user may arrive with no user claim at all, only a `sub` such as `google-oauth2|12345`. In the login flow with `user_impersonation: true` the call log then shows `12345`; in resource-server mode the same token is refused with `401`. Map a usable `username` in the provider's user profile if you want readable names in the log. No database account is involved on VectorAI DB.
 
 ## Secure Remote Deployments with HTTPS and TLS
 
