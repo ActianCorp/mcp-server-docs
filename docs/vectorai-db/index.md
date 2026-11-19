@@ -45,7 +45,7 @@ A listed collection does not have to exist yet. It is reported as "not created o
 ## Prerequisites
 
 - **Container engine:** Docker installed and running on the host.
-- **Actian VectorAI DB engine:** a running engine that the container can reach over its REST API (default port 6573). The engine inside an Actian Zen AI DB installation works as is. For a stand-alone engine, run the public container: `docker run -d -e ACTIAN_VECTORAI_ACCEPT_EULA=YES -p 6573:6573 actian/vectorai:1.0.3`. Without the EULA variable the container exits at once. Up to 5000 vectors need no licence.
+- **Actian VectorAI DB engine:** a running engine that the container can reach over its REST API (default port 6573). The engine inside an Actian Zen AI DB installation works as is. For a stand-alone engine, run the public container: `docker run -d -e ACTIAN_VECTORAI_ACCEPT_EULA=YES -p 6573:6573 actian/vectorai:1.0.3`. Without the EULA variable the container exits at once.
 - **Embedding endpoint (for text search and `store`):** any server that speaks the OpenAI embeddings API (the compose file can start one next to the server), or an OpenAI or Gemini API key. Without one, set `embedding.provider` to `none` and use `search_by_vector` with vectors produced elsewhere.
 - **Engine API key (optional):** only when authentication is switched on in the engine. See [Engine API key](#engine-api-key).
 - **OIDC provider (optional):** only when you use OAuth. See [Authentication](authentication/index.md).
@@ -105,7 +105,7 @@ The key can also come from the environment variable `VECTORAI_EMBEDDING_API_KEY`
 
 The engine ships with authentication off: it answers every REST request, and the server needs no key. When authentication is on, every request must carry a key, and the server sends the value of `vectorai.api_key_secret` (or the environment variable `VECTORAI_API_KEY`) as the `api-key` header on every call, including the startup check and the health resource.
 
-Switching authentication on is done in the engine, not in the MCP Server. In short, for the `actian/vectorai` container: start it with `ACTIAN_VECTORAI_ADMIN_PASSWORD=<password>` (this creates the built-in `admin` user), log in with `POST /auth/admin/login` to get an admin token, enable authentication with `PATCH /auth/enabled` and body `{"enabled": true}`, then create a key with `POST /auth/api_key` and permission `read` (read-only server) or `read,write`. The setting is persisted by the engine and survives restarts. See the Actian VectorAI DB documentation for the authentication API.
+Switching authentication on is done in the engine, not in the MCP Server. In short, for the `actian/vectorai` container: start it with `ACTIAN_VECTORAI_ADMIN_PASSWORD=<password>` (this creates the built-in `admin` user), log in with `POST /auth/admin/login` to get an admin token, enable authentication with `PATCH /auth/enabled` and body `{"enabled": true}`, then create a key with `POST /auth/api_key` and permission `read` (read-only server) or `read,write`. The setting is persisted by the engine and survives restarts. The engine documentation calls these keys access tokens; see [Create access token](https://docs.vectoraidb.actian.com/api-reference/access-tokens/create-access-token) in the Actian VectorAI DB documentation for the full API, including expiry and permissions.
 
 ### One embedding model per collection
 
