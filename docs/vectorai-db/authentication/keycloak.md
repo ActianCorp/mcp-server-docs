@@ -26,7 +26,7 @@ The checklist below is the whole procedure in brief. Use it if you are already f
 
 4. **(Optional)** Add a **sub override mapper** to the `sub` claim containing the username instead of a UUID.
 5. **Create an `mcp:write` client scope** and attach it to the client as **Optional**, if `query_mode` is `read-write`. See [Step 5](#step-5-add-the-write-scope-read-write-deployments-only).
-6. **Create users** in the realm, if using `user_impersonation: true`.
+6. **Create users** in the realm.
 7. **Fill `conf.json`** file with the values from [Step 1](#step-1-create-a-keycloak-realm) to [Step 3](#step-3-add-the-audience-mapper-required).
 8. **Start the server** with `--transport sse`or `http` / `streamable-http`.
 
@@ -179,7 +179,7 @@ Expected output:
 
 ## Step 4 (Optional): Add the Sub Override Mapper
 
-By default, Keycloak sets the `sub` claim to a UUID. You can override it to contain the login name for easier `user_impersonation` mapping.
+By default, Keycloak sets the `sub` claim to a UUID. You can override it to contain the login name, which the call log then shows when a token carries no other user claim.
 
 1. Navigate to **Clients** > your client > **Client scopes** tab.
 2. Select the **`actian-mcp-dedicated`** link.
@@ -212,7 +212,7 @@ After adding the mapper, the token contains the following:
 ```
 
 !!! warning "OIDC spec trade-off"
-    The OIDC spec expects `sub` to be a stable, unique identifier (like a UUID). It is acceptable to override it with a username for internal tools like the MCP Server, but if a user renames their account, database permissions tied to the old name will break.
+    The OIDC spec expects `sub` to be a stable, unique identifier (like a UUID). It is acceptable to override it with a username for internal tools like the MCP Server, but the claim then changes when a user renames their account.
 
 !!! tip "Alternative: use preferred_username"
     Instead of overriding `sub`, you can rely on the `preferred_username` claim (included by default when the `profile` scope is present). The MCP server's username extraction priority uses `preferred_username` before `sub`, so it works automatically without any mapper changes.
@@ -252,10 +252,10 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 
 In Keycloak a client scope is attached to a **client**, not to a user. Any user who authenticates through this client and requests `scope=openid mcp:write` receives it. Keycloak roles do not change that, because the server authorizes writes from the token's `scope` claim rather than from roles.
 
-!!! important "Restrict writes per user in the database, not in Keycloak"
-    Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. Because `user_impersonation` runs each statement as the authenticated user, the effective control is the privileges you grant that user in the database. Grant `INSERT`, `UPDATE`, and `DELETE` only to the accounts that should have them, and leave the others with `SELECT`. A user who obtains `mcp:write` still cannot change a table they hold no write privilege on.
+!!! important "Every user of this client can obtain `mcp:write`"
+    Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. VectorAI DB has no per-user privileges to fall back on either: the engine sees only the server's api key. A user who obtains `mcp:write` can write to every collection the server exposes; the approval prompt is the only other check. See [Write support](../write-support.md#authorizing-a-write).
 
-    This differs from Auth0, where the permission is assigned through a role and users without that role cannot obtain it at all. If you need the scope itself withheld per user, use a separate Keycloak client for read-only callers and attach `mcp:write` only to the client used by writers.
+    This differs from Auth0, where the permission is assigned through a role and users without that role cannot obtain it at all. If you need the scope withheld per user, use a separate Keycloak client for read-only callers and attach `mcp:write` only to the client used by writers.
 
 ### Verification
 
@@ -268,16 +268,11 @@ curl -s https://<keycloak-host>:8443/realms/actian-mcp/.well-known/openid-config
 
 The output contains `mcp:write`. Then, on the client's **Client scopes** tab, confirm `mcp:write` is listed with the **Optional** assigned type.
 
-!!! warning "The database still decides what a user can change"
-    The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Creating the Matching Database User](#creating-the-matching-database-user).
 
-
-## Step 6: Create Keycloak Users (If Using User Impersonation)
+## Step 6: Create Keycloak Users
 
 !!! note "No database accounts on VectorAI DB"
     The engine sees only the server's api key, so no Keycloak user needs a matching database account. Create the Keycloak users your people log in with. Which name the server records for each of them in the call log is described under [User Impersonation](index.md#user-impersonation).
-
-If `user_impersonation` is `true`, each Keycloak user contains a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
 
 1. Navigate to **Users** in the left panel.
 2. Select **Add user**.
@@ -285,7 +280,7 @@ If `user_impersonation` is `true`, each Keycloak user contains a matching databa
 
     | Field | Value | Notes |
     |-------|-------|-------|
-    | **Username** | `jdoe` | Must match with the database account name |
+    | **Username** | `jdoe` | The login name; the call log shows it |
     | **Email** | `jdoe@example.com` | Optional but recommended |
     | **First Name** | `John` | Optional |
     | **Last Name** | `Doe` | Optional |
@@ -294,20 +289,6 @@ If `user_impersonation` is `true`, each Keycloak user contains a matching databa
 4. Select **Create**.
 5. Navigate to the **Credentials** tab > **Set password** > enter a password > toggle **Temporary** to `Off` > **Save**.
 
-### Creating the Matching Database User
-
-```sql
--- Create the user account (no DB password needed — Keycloak handles authentication)
-CREATE USER jdoe;
-
--- Grant access to the database
-GRANT ACCESS ON DATABASE mydb TO jdoe;
-
--- Grant the necessary table permissions (adjust per your schema)
-GRANT SELECT ON TABLE orders TO jdoe;
-GRANT SELECT ON TABLE products TO jdoe;
-```
-
 !!! note "`profile` scope is required"
     Keycloak's userinfo endpoint only returns `preferred_username` when the token includes the `profile` scope. Without it, the endpoint returns only the `sub` claim (a UUID by default).
 
@@ -315,7 +296,7 @@ GRANT SELECT ON TABLE products TO jdoe;
     The MCP server's username extraction priority is - `username` > `preferred_username` > email prefix > sanitized `sub`. Keycloak **does not** produce a `username` claim by default. It only appears if you explicitly configure a User Attribute mapper. In practice, `preferred_username` (second in the priority) is the reliable choice for Keycloak, and it works automatically when the `profile` scope is present.
 
 !!! note "Federated identity (LDAP / Social login)"
-    If Keycloak federates users from an external LDAP or social provider, the `sub` claim may be a UUID that does not match a database account. Ensure that the federated users have `preferred_username` set, or add the sub-override mapper ([Step 4](#step-4-optional-add-the-sub-override-mapper)), or set `user_impersonation: false`.
+    With `user_impersonation: true`, a user whom Keycloak federates from an external LDAP or social provider and who arrives without `preferred_username` or an email is recorded by the `sub` claim, a UUID by default. Ensure that the federated users have `preferred_username` set, or add the sub-override mapper ([Step 4](#step-4-optional-add-the-sub-override-mapper)).
 
 
 ## Step 7: Assemble the Final Configuration
@@ -376,7 +357,7 @@ After starting the MCP server container with OAuth configured:
 2. You are **redirected to the Keycloak login page**.
 3. Log in with a Keycloak user, for example, `jdoe`.
 4. After logging in, Keycloak redirects you back to the MCP server with a valid token.
-5. Check server logs for `Stored database username: jdoe` to confirm user impersonation is active.
+5. Call a tool from the MCP client, for example `list_collections`, and look at the container log: the [call log](../index.md#call-log) record for the call has the caller's name in `user`, or `null` when `user_impersonation` is `false` and the token carries no user claim.
 
 
 ## Troubleshooting
@@ -453,7 +434,7 @@ Keycloak tokens have a configurable lifetime:
 | **Discovery URL format** | `https://<domain>/.well-known/openid-configuration` | `http://<host>/realms/<realm>/.well-known/openid-configuration` |
 | **Self-hosted** | No (SaaS only) | Yes (self-hosted or cloud) |
 | **Token lifetime config** | API Settings > Token Expiration | Realm Settings > Tokens|
-| **`mcp:write` model** | An API permission granted through a role, so it can be withheld from individual users | An optional client scope attached to the client, so any user of that client can request it. Control writes with database privileges instead |
+| **`mcp:write` model** | An API permission granted through a role, so it can be withheld from individual users | An optional client scope attached to the client, so any user of that client can request it. Use a separate client for read-only callers |
 
 
 ## Staging Versus Production

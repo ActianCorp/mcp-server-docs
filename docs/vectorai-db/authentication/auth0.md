@@ -27,7 +27,7 @@ The checklist below is the whole procedure in brief. Use it if you are already f
 
 4. **Enable Authorization Code Grant:** In **Advanced Settings** > **Grant Types**, select **Authorization Code**.
 5. **Set Callback URLs:** Add `<BASE_URL>/auth/callback` to **Allowed Callback URLs**.
-6. **Add the write scope**, if `query_mode` is `read-write`: define the `mcp:write` permission on the API, enable both **RBAC Settings** toggles, then grant it to users through a role. See [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) and [Step 4.3](#step-43-grant-the-write-scope-read-write-deployments-only).
+6. **Add the write scope**, if `query_mode` is `read-write`: define the `mcp:write` permission on the API, enable both **RBAC Settings** toggles, then grant it to users through a role. See [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) and [Step 4.2](#step-42-grant-the-write-scope-read-write-deployments-only).
 7. **Update Configuration:** Add your Auth0 domain and credentials to `conf.json`.
 8. **Start the server:** Launch the server using the `--transport sse` or `http` / `streamable-http` flag.
 
@@ -87,7 +87,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 5. Select **Save**.
 
 !!! note "Defining the permission does not grant it"
-    At this point `mcp:write` exists on the API, but no user holds it yet. Assign it to users through a role in [Step 4.3](#step-43-grant-the-write-scope-read-write-deployments-only).
+    At this point `mcp:write` exists on the API, but no user holds it yet. Assign it to users through a role in [Step 4.2](#step-42-grant-the-write-scope-read-write-deployments-only).
 
 
 ## Step 2: Create an Auth0 Application
@@ -184,13 +184,13 @@ You can authorize from either the application's APIs tab or the API's Applicatio
 After saving, the application row on the **Application Access** tab shows a green checkmark and "1 / 1 permissions granted" under both **User-Delegated Access** and **Client Access**.
 
 !!! important "User-Delegated Access is required for user impersonation"
-    If you plan to use `user_impersonation: true`, the application must be authorized for **User-Delegated Access**. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server will not be able to extract a database username.
+    If you plan to use `user_impersonation: true`, the application must be authorized for **User-Delegated Access**. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server has no user name to record in the call log.
 
 !!! note "This is not the same as granting the scope to a user"
-    Authorizing the application here means it is *allowed to request* `mcp:write` — not that any particular user's token will carry it. With **Enable RBAC** on (required in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only)), whether a specific user's token actually includes `mcp:write` depends on that user holding it through a role, which is a separate, per-user assignment in [Step 4.3](#step-43-grant-the-write-scope-read-write-deployments-only). Both steps are required for read-write deployments.
+    Authorizing the application here means it is *allowed to request* `mcp:write` — not that any particular user's token will carry it. With **Enable RBAC** on (required in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only)), whether a specific user's token actually includes `mcp:write` depends on that user holding it through a role, which is a separate, per-user assignment in [Step 4.2](#step-42-grant-the-write-scope-read-write-deployments-only). Both steps are required for read-write deployments.
 
 
-## Step 4: Create Auth0 Users (If Using User Impersonation)
+## Step 4: Create Auth0 Users
 
 !!! note "No database accounts on VectorAI DB"
     The engine sees only the server's api key, so no Auth0 user needs a matching database account. Create the Auth0 users your people log in with. Which name the server records for each of them in the call log is described under [User Impersonation](index.md#user-impersonation).
@@ -203,40 +203,19 @@ After saving, the application row on the **Application Access** tab shows a gree
 
      | Field | Value | Notes |
      |-------|-------|-------|
-     | **Email** | `jdoe@example.com` | Value before `@` (`jdoe`) becomes the database username |
+     | **Email** | `jdoe@example.com` | The value before `@` (`jdoe`) is the name the call log shows |
      | **Password** | A secure password | Used for Auth0 login |
      | **Connection** | `Username-Password-Authentication` | Default database connection |
 
 4. Select **Create**.
 
-!!! important "Database username = email prefix"
-    The MCP server extracts the database username from the **email prefix** (the value before `@`). For example, `jdoe@example.com` > `jdoe`. Ensure the email prefix exactly matches the database account name.
-
-    **Auth0 default behaviour**: Auth0's userinfo endpoint does not return a `username` or `preferred_username` claim by default. In practice, the server uses the **email prefix** as the database username. Always create database users to match this email prefix.
-
-!!! note "Case sensitivity"
-    If the database is case-sensitive, for example, `jdoe` ≠ `Jdoe`, ensure the email prefix exactly matches the database account name.
-
-### Step 4.2: Create the Matching Database User
-
-Auth0 handles authentication, but the Actian database still needs the user to exist for impersonation to work:
-
-```sql
--- Create the user account (no DB password needed — Auth0 handles authentication)
-CREATE USER jdoe;
-
--- Grant access to the database
-GRANT ACCESS ON DATABASE mydb TO jdoe;
-
--- Grant the necessary table permissions (adjust per your schema)
-GRANT SELECT ON TABLE orders TO jdoe;
-GRANT SELECT ON TABLE products TO jdoe;
-```
+!!! note "Call log name = email prefix"
+    Auth0's userinfo endpoint does not return a `username` or `preferred_username` claim by default, so with `user_impersonation: true` the server records the **email prefix** (the value before `@`): `jdoe@example.com` is logged as `jdoe`.
 
 !!! note "Federated identity caveat"
-    If users sign in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0, the `sub` claim looks like `google-oauth2|12345`. The server removes the provider prefix, leaving `12345`, which is unlikely to match a database account. For SSO setups, set `user_impersonation` to `false` unless you can ensure the Auth0 user profile contains a matching username.
+    With `user_impersonation: true`, a user who signs in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0 and arrives without an email is recorded by the `sub` claim with the provider prefix removed: `google-oauth2|12345` is logged as `12345`. Add a `username` to the Auth0 user profile if you want readable names in the call log.
 
-### Step 4.3: Grant the Write Scope (Read-Write Deployments Only)
+### Step 4.2: Grant the Write Scope (Read-Write Deployments Only)
 
 Skip this step if `query_mode` is `read-only`.
 
@@ -250,8 +229,8 @@ Defining `mcp:write` on the API in [Step 1.1](#step-11-add-the-write-scope-read-
 
 Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see [which users can obtain the scope](keycloak.md#user-eligibility) there.
 
-!!! warning "The database still decides what a user can change"
-    The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Step 4.2](#step-42-create-the-matching-database-user).
+!!! warning "The scope is the only per-user write control"
+    The engine sees only the server's api key and cannot tell users apart, so there are no per-user privileges behind the scope. A user whose token carries `mcp:write` can write to every collection the server exposes; the approval prompt is the only other check. See [Write support](../write-support.md#authorizing-a-write).
 
 
 ## Step 5: Assemble the Final Configuration
@@ -313,9 +292,9 @@ After starting the MCP server container with OAuth configured:
 
 1. Open a browser and navigate to your server's `/mcp` endpoint, for example, `https://<your-server-host>:8000/mcp`.
 2. You should be **redirected to the Auth0 login page**.
-3. Log in with an Auth0 user, for example, the user you created in [Step 4](#step-4-create-auth0-users-if-using-user-impersonation).
+3. Log in with an Auth0 user, for example, the user you created in [Step 4](#step-4-create-auth0-users).
 4. After logging in, Auth0 redirects you back to the MCP server with a valid token.
-5. Check the server logs for `Stored database username: <username>` to confirm user impersonation is active.
+5. Call a tool from the MCP client, for example `list_collections`, and look at the container log: the [call log](../index.md#call-log) record for the call has the caller's name in `user`, or `null` when `user_impersonation` is `false` and the token carries no user claim.
 
 
 ## Troubleshooting
