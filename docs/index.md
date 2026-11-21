@@ -97,8 +97,8 @@ hide:
       </tr>
       <tr>
         <td><a href="./vectorai-db/index.html">Actian VectorAI DB</a></td>
-        <td><code>&lt;VECTORAI_DB_IMAGE&gt;</code> (placeholder)</td>
-        <td>Placeholder: add a one-line description of VectorAI DB</td>
+        <td><a href="https://hub.docker.com/r/actian/vectorai-mcp-server"><code>actian/vectorai-mcp-server</code></a></td>
+        <td>Semantic search and approved writes over vector collections</td>
       </tr>
     </tbody>
   </table>
