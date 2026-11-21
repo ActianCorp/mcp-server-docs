@@ -2984,10 +2984,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -3408,30 +3404,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-6-create-keycloak-users-if-using-user-impersonation" class="md-nav__link">
+  <a href="#step-6-create-keycloak-users" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 6: Create Keycloak Users (If Using User Impersonation)
+        Step 6: Create Keycloak Users
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Step 6: Create Keycloak Users (If Using User Impersonation)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#creating-the-matching-database-user" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Creating the Matching Database User
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -3619,62 +3598,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../multi-target.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Multiple Databases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deployment.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Deployment Scenarios
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     
     
       
@@ -3694,7 +3617,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_4" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -3716,14 +3639,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_11_6" id="__nav_11_6_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_11_4" id="__nav_11_4_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11_6">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4125,30 +4048,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-6-create-keycloak-users-if-using-user-impersonation" class="md-nav__link">
+  <a href="#step-6-create-keycloak-users" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 6: Create Keycloak Users (If Using User Impersonation)
+        Step 6: Create Keycloak Users
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Step 6: Create Keycloak Users (If Using User Impersonation)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#creating-the-matching-database-user" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Creating the Matching Database User
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4400,7 +4306,7 @@
 <p><strong>(Optional)</strong> Add a <strong>sub override mapper</strong> to the <code>sub</code> claim containing the username instead of a UUID.</p>
 </li>
 <li><strong>Create an <code>mcp:write</code> client scope</strong> and attach it to the client as <strong>Optional</strong>, if <code>query_mode</code> is <code>read-write</code>. See <a href="#step-5-add-the-write-scope-read-write-deployments-only">Step 5</a>.</li>
-<li><strong>Create users</strong> in the realm, if using <code>user_impersonation: true</code>.</li>
+<li><strong>Create users</strong> in the realm.</li>
 <li><strong>Fill <code>conf.json</code></strong> file with the values from <a href="#step-1-create-a-keycloak-realm">Step 1</a> to <a href="#step-3-add-the-audience-mapper-required">Step 3</a>.</li>
 <li><strong>Start the server</strong> with <code>--transport sse</code>or <code>http</code> / <code>streamable-http</code>.</li>
 </ol>
@@ -4690,7 +4596,7 @@
 <p>If you still see a UUID instead of <code>actian-mcp</code> in the <code>aud</code> claim, the old token may be cached. Wait for it to expire (default 5 minutes) or go to <strong>Sessions</strong> in the Keycloak Admin Console and sign out of all sessions for the service account to force a fresh token.</p>
 </div>
 <h2 id="step-4-optional-add-the-sub-override-mapper">Step 4 (Optional): Add the Sub Override Mapper<a class="headerlink" href="#step-4-optional-add-the-sub-override-mapper" title="Permanent link">&para;</a></h2>
-<p>By default, Keycloak sets the <code>sub</code> claim to a UUID. You can override it to contain the login name for easier <code>user_impersonation</code> mapping.</p>
+<p>By default, Keycloak sets the <code>sub</code> claim to a UUID. You can override it to contain the login name, which the call log then shows when a token carries no other user claim.</p>
 <ol>
 <li>Navigate to <strong>Clients</strong> &gt; your client &gt; <strong>Client scopes</strong> tab.</li>
 <li>Select the <strong><code>actian-mcp-dedicated</code></strong> link.</li>
@@ -4755,7 +4661,7 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">OIDC spec trade-off</p>
-<p>The OIDC spec expects <code>sub</code> to be a stable, unique identifier (like a UUID). It is acceptable to override it with a username for internal tools like the MCP Server, but if a user renames their account, database permissions tied to the old name will break.</p>
+<p>The OIDC spec expects <code>sub</code> to be a stable, unique identifier (like a UUID). It is acceptable to override it with a username for internal tools like the MCP Server, but the claim then changes when a user renames their account.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Alternative: use preferred_username</p>
@@ -4823,9 +4729,9 @@
 <h3 id="user-eligibility">User Eligibility<a class="headerlink" href="#user-eligibility" title="Permanent link">&para;</a></h3>
 <p>In Keycloak a client scope is attached to a <strong>client</strong>, not to a user. Any user who authenticates through this client and requests <code>scope=openid mcp:write</code> receives it. Keycloak roles do not change that, because the server authorizes writes from the token's <code>scope</code> claim rather than from roles.</p>
 <div class="admonition important">
-<p class="admonition-title">Restrict writes per user in the database, not in Keycloak</p>
-<p>Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. Because <code>user_impersonation</code> runs each statement as the authenticated user, the effective control is the privileges you grant that user in the database. Grant <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> only to the accounts that should have them, and leave the others with <code>SELECT</code>. A user who obtains <code>mcp:write</code> still cannot change a table they hold no write privilege on.</p>
-<p>This differs from Auth0, where the permission is assigned through a role and users without that role cannot obtain it at all. If you need the scope itself withheld per user, use a separate Keycloak client for read-only callers and attach <code>mcp:write</code> only to the client used by writers.</p>
+<p class="admonition-title">Every user of this client can obtain <code>mcp:write</code></p>
+<p>Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. VectorAI DB has no per-user privileges to fall back on either: the engine sees only the server's api key. A user who obtains <code>mcp:write</code> can write to every collection the server exposes; the approval prompt is the only other check. See <a href="../write-support.html#authorizing-a-write">Write support</a>.</p>
+<p>This differs from Auth0, where the permission is assigned through a role and users without that role cannot obtain it at all. If you need the scope withheld per user, use a separate Keycloak client for read-only callers and attach <code>mcp:write</code> only to the client used by writers.</p>
 </div>
 <h3 id="verification_2">Verification<a class="headerlink" href="#verification_2" title="Permanent link">&para;</a></h3>
 <p>Confirm the realm advertises the scope:</p>
@@ -4833,16 +4739,11 @@
 <span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">'"scopes_supported":\[[^]]*\]'</span>
 </code></pre></div>
 <p>The output contains <code>mcp:write</code>. Then, on the client's <strong>Client scopes</strong> tab, confirm <code>mcp:write</code> is listed with the <strong>Optional</strong> assigned type.</p>
-<div class="admonition warning">
-<p class="admonition-title">The database still decides what a user can change</p>
-<p>The <code>mcp:write</code> scope permits write statements in general. It does not grant table privileges. With <code>user_impersonation</code> enabled, each write also runs as that user's own database account, so grant the matching <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> privileges in the database as well. See <a href="#creating-the-matching-database-user">Creating the Matching Database User</a>.</p>
+<h2 id="step-6-create-keycloak-users">Step 6: Create Keycloak Users<a class="headerlink" href="#step-6-create-keycloak-users" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">No database accounts on VectorAI DB</p>
+<p>The engine sees only the server's api key, so no Keycloak user needs a matching database account. Create the Keycloak users your people log in with. Which name the server records for each of them in the call log is described under <a href="index.html#user-impersonation">User Impersonation</a>.</p>
 </div>
-<h2 id="step-6-create-keycloak-users-if-using-user-impersonation">Step 6: Create Keycloak Users (If Using User Impersonation)<a class="headerlink" href="#step-6-create-keycloak-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
-<div class="admonition warning">
-<p class="admonition-title">Not applicable to Zen</p>
-<p>Zen does not support <code>SET SESSION AUTHORIZATION</code>, so user impersonation is unavailable and <code>user_impersonation</code> must be <code>false</code>. Skip this step. See <a href="index.html#user-impersonation">User Impersonation</a>.</p>
-</div>
-<p>If <code>user_impersonation</code> is <code>true</code>, each Keycloak user contains a matching database account. For more information, see <a href="index.html#user-impersonation">User Impersonation</a>.</p>
 <ol>
 <li>Navigate to <strong>Users</strong> in the left panel.</li>
 <li>Select <strong>Add user</strong>.</li>
@@ -4860,7 +4761,7 @@
 <tr>
 <td><strong>Username</strong></td>
 <td><code>jdoe</code></td>
-<td>Must match with the database account name</td>
+<td>The login name; the call log shows it</td>
 </tr>
 <tr>
 <td><strong>Email</strong></td>
@@ -4890,17 +4791,6 @@
 </li>
 <li>Navigate to the <strong>Credentials</strong> tab &gt; <strong>Set password</strong> &gt; enter a password &gt; toggle <strong>Temporary</strong> to <code>Off</code> &gt; <strong>Save</strong>.</li>
 </ol>
-<h3 id="creating-the-matching-database-user">Creating the Matching Database User<a class="headerlink" href="#creating-the-matching-database-user" title="Permanent link">&para;</a></h3>
-<div class="language-sql highlight"><pre><span></span><code><span class="c1">-- Create the user account (no DB password needed — Keycloak handles authentication)</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
-
-<span class="c1">-- Grant access to the database</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">ACCESS</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">mydb</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
-
-<span class="c1">-- Grant the necessary table permissions (adjust per your schema)</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
-</code></pre></div>
 <div class="admonition note">
 <p class="admonition-title"><code>profile</code> scope is required</p>
 <p>Keycloak's userinfo endpoint only returns <code>preferred_username</code> when the token includes the <code>profile</code> scope. Without it, the endpoint returns only the <code>sub</code> claim (a UUID by default).</p>
@@ -4911,7 +4801,7 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Federated identity (LDAP / Social login)</p>
-<p>If Keycloak federates users from an external LDAP or social provider, the <code>sub</code> claim may be a UUID that does not match a database account. Ensure that the federated users have <code>preferred_username</code> set, or add the sub-override mapper (<a href="#step-4-optional-add-the-sub-override-mapper">Step 4</a>), or set <code>user_impersonation: false</code>.</p>
+<p>With <code>user_impersonation: true</code>, a user whom Keycloak federates from an external LDAP or social provider and who arrives without <code>preferred_username</code> or an email is recorded by the <code>sub</code> claim, a UUID by default. Ensure that the federated users have <code>preferred_username</code> set, or add the sub-override mapper (<a href="#step-4-optional-add-the-sub-override-mapper">Step 4</a>).</p>
 </div>
 <h2 id="step-7-assemble-the-final-configuration">Step 7: Assemble the Final Configuration<a class="headerlink" href="#step-7-assemble-the-final-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="mapping-summary">Mapping Summary<a class="headerlink" href="#mapping-summary" title="Permanent link">&para;</a></h3>
@@ -4951,8 +4841,8 @@
 </tr>
 <tr>
 <td><code>user_impersonation</code></td>
-<td>Yes</td>
-<td><code>false</code> (Zen does not support impersonation)</td>
+<td>No</td>
+<td><code>true</code> (the default) or <code>false</code>. It decides where the server looks for the caller's name for the call log; VectorAI DB has no per-user identity either way. See <a href="index.html#user-impersonation">User Impersonation</a></td>
 </tr>
 </tbody>
 </table>
@@ -4962,16 +4852,15 @@
 </div>
 <h3 id="example-confjson">Example <code>conf.json</code><a class="headerlink" href="#example-confjson" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">"driver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{Ingres}"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@&lt;db-host&gt;,tcp_ip,&lt;port&gt;"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mydb"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"database_user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_user&gt;"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"database_password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_password&gt;"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"max_connections"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"query_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"read-write"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"write_confirmation"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"vectorai"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://host.docker.internal:6573"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"embedding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openai"</span><span class="p">,</span><span class="w"> </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BAAI/bge-m3"</span><span class="p">,</span><span class="w"> </span><span class="nt">"base_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://embedding:80/v1"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"collections"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"documents"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Product manuals, one chunk per point"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
 <span class="w">    </span><span class="nt">"ssl_certfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/app/server.crt"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"ssl_keyfile"</span><span class="p">:</span><span class="w">  </span><span class="s2">"/app/server.key"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -4986,7 +4875,7 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <code>&lt;db-host&gt;</code> with the database server address. In the Docker container, use the host's IP address or <code>host.docker.internal</code>(not <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself).</p>
+<p><code>vectorai.url</code> is the engine as the container reaches it: the Docker host's name or IP (<code>host.docker.internal</code> on Docker Desktop), or the engine container's network alias. Never <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself. The <code>embedding</code> and <code>collections</code> blocks are described on the <a href="../index.html">overview</a>.</p>
 </div>
 <p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see <a href="index.html#secure-remote-deployments-with-https-and-tls">HTTPS / TLS for Remote Deployments</a>.</p>
 <p>For security best practices (file permissions, <code>.gitignore</code>, secrets management), see <a href="index.html#security-best-practices">Security Best Practices</a>.</p>
@@ -4997,7 +4886,7 @@
 <li>You are <strong>redirected to the Keycloak login page</strong>.</li>
 <li>Log in with a Keycloak user, for example, <code>jdoe</code>.</li>
 <li>After logging in, Keycloak redirects you back to the MCP server with a valid token.</li>
-<li>Check server logs for <code>Stored database username: jdoe</code> to confirm user impersonation is active.</li>
+<li>Call a tool from the MCP client, for example <code>list_collections</code>, and look at the container log: the <a href="../index.html#call-log">call log</a> record for the call has the caller's name in <code>user</code>, or <code>null</code> when <code>user_impersonation</code> is <code>false</code> and the token carries no user claim.</li>
 </ol>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="verify-oidc-discovery-endpoint">Verify OIDC Discovery Endpoint<a class="headerlink" href="#verify-oidc-discovery-endpoint" title="Permanent link">&para;</a></h3>
@@ -5183,7 +5072,7 @@
 <tr>
 <td><strong><code>mcp:write</code> model</strong></td>
 <td>An API permission granted through a role, so it can be withheld from individual users</td>
-<td>An optional client scope attached to the client, so any user of that client can request it. Control writes with database privileges instead</td>
+<td>An optional client scope attached to the client, so any user of that client can request it. Use a separate client for read-only callers</td>
 </tr>
 </tbody>
 </table>
@@ -5226,7 +5115,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 12, 2026 07:06:41 UTC">November 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 19, 2026 21:08:14 UTC">November 19, 2026</span>
   </span>
 
     

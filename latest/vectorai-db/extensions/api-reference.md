@@ -7,6 +7,9 @@ description: Every function, signature, and return shape available to an Actian 
 
 Everything an extension needs is importable from `actian_mcp_server.extension_api`. The public functions are `get_current_user`, `get_current_scopes`, `has_scope`, `get_database`, and `request_write_confirmation`. The database and transaction objects come from `get_database()` rather than being imported.
 
+!!! note "Not on VectorAI DB"
+    `get_database()`, `DatabaseAccess` and `Transaction` run SQL and do not work on a VectorAI DB server: `query()` returns an error and `transaction()` raises. See [Reaching the Engine](index.md#reaching-the-engine). The other functions work as described.
+
 ## Module Entry Points
 
 Define these symbols in the extension module. For more information, see [Writing the Module](index.md#writing-the-module).

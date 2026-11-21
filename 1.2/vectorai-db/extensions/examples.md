@@ -1,6 +1,6 @@
 ---
 title: Examples
-description: Runnable example extensions for the Actian MCP Server, with the configuration and schema files for Actian Zen.
+description: Example extensions for the Actian MCP Server, written for the SQL plugins; templates for VectorAI DB extensions.
 ---
 
 # Examples
@@ -19,11 +19,11 @@ All five share one database. The [examples README](https://github.com/ActianCorp
 
 ## Configuration and Schema Files
 
-Zen has a configuration template and a schema file.
+The examples query SQL tables through `get_database()`, which does not work on a VectorAI DB server (see [Reaching the Engine](index.md#reaching-the-engine)), so they do not run against VectorAI DB as written. There is no VectorAI DB configuration template or schema file for them in this release. Use the examples for the shape of `register()`, the tool and resource definitions, the scope check and the approval prompt, and replace the SQL calls with requests to the engine's REST API.
 
 | Database | Configuration template | Schema file |
 |----------|------------------------|-------------|
-| Zen | [`conf.example.zen.json`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/conf.example.zen.json) | [`schema.zen.sql`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/schema.zen.sql) |
+| Zen (for reference) | [`conf.example.zen.json`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/conf.example.zen.json) | [`schema.zen.sql`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/extensions/schema.zen.sql) |
 
 The schema file creates seven tables with seed data, and enforces the rule that stock cannot go negative with a trigger. The schema file's header lists the grant statements to run afterwards for the account the server connects as.
 

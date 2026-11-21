@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Built-in tools available when using the Actian MCP Server with Actian Zen.">
+        <meta name="description" content="Reference for the VectorAI DB tools of the Actian MCP Server - collection listing, semantic search, counting, paging, and the gated write tools.">
       
       
       
@@ -2984,10 +2984,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -3201,62 +3197,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../multi-target.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Multiple Databases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deployment.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Deployment Scenarios
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     
     
       
@@ -3276,7 +3216,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_4" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -3298,14 +3238,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_11_6" id="__nav_11_6_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_11_4" id="__nav_11_4_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11_6">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3453,41 +3393,19 @@
   <a href="#available-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Tools
+        Available tools
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tool-annotations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tool Annotations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#execute_query" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        execute_query
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="execute_query">
+    <nav class="md-nav" aria-label="Available tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
+  <a href="#common-output" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parameters
+        Common output
       
     </span>
   </a>
@@ -3495,21 +3413,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#output-schema" class="md-nav__link">
+  <a href="#filters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
+        Filters
       
     </span>
   </a>
@@ -3522,341 +3429,112 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#list_tables" class="md-nav__link">
+  <a href="#list_collections" class="md-nav__link">
     <span class="md-ellipsis">
       
-        list_tables
+        list_collections
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="list_tables">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#describe_table" class="md-nav__link">
+  <a href="#describe_collection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        describe_table
+        describe_collection
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="describe_table">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#orm_operation" class="md-nav__link">
+  <a href="#search" class="md-nav__link">
     <span class="md-ellipsis">
       
-        orm_operation
+        search
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="orm_operation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#execute_write_query" class="md-nav__link">
+  <a href="#search_by_vector" class="md-nav__link">
     <span class="md-ellipsis">
       
-        execute_write_query
+        search_by_vector
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="execute_write_query">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#blob_operation" class="md-nav__link">
+  <a href="#count_points" class="md-nav__link">
     <span class="md-ellipsis">
       
-        blob_operation
+        count_points
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="blob_operation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#database_manage" class="md-nav__link">
+  <a href="#scroll_points" class="md-nav__link">
     <span class="md-ellipsis">
       
-        database_manage
+        scroll_points
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="database_manage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#list_accessible_targets" class="md-nav__link">
+  <a href="#create_collection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        list_accessible_targets
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="list_accessible_targets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        create_collection
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_7" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#store" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Schema
+        store
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#store_batch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        store_batch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete_points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        delete_points
+      
+    </span>
+  </a>
   
 </li>
       
@@ -3864,7 +3542,7 @@
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        Next steps
       
     </span>
   </a>
@@ -3975,41 +3653,19 @@
   <a href="#available-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Tools
+        Available tools
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tool-annotations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tool Annotations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#execute_query" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        execute_query
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="execute_query">
+    <nav class="md-nav" aria-label="Available tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
+  <a href="#common-output" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parameters
+        Common output
       
     </span>
   </a>
@@ -4017,21 +3673,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#output-schema" class="md-nav__link">
+  <a href="#filters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
+        Filters
       
     </span>
   </a>
@@ -4044,341 +3689,112 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#list_tables" class="md-nav__link">
+  <a href="#list_collections" class="md-nav__link">
     <span class="md-ellipsis">
       
-        list_tables
+        list_collections
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="list_tables">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#describe_table" class="md-nav__link">
+  <a href="#describe_collection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        describe_table
+        describe_collection
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="describe_table">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#orm_operation" class="md-nav__link">
+  <a href="#search" class="md-nav__link">
     <span class="md-ellipsis">
       
-        orm_operation
+        search
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="orm_operation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#execute_write_query" class="md-nav__link">
+  <a href="#search_by_vector" class="md-nav__link">
     <span class="md-ellipsis">
       
-        execute_write_query
+        search_by_vector
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="execute_write_query">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#blob_operation" class="md-nav__link">
+  <a href="#count_points" class="md-nav__link">
     <span class="md-ellipsis">
       
-        blob_operation
+        count_points
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="blob_operation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#database_manage" class="md-nav__link">
+  <a href="#scroll_points" class="md-nav__link">
     <span class="md-ellipsis">
       
-        database_manage
+        scroll_points
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="database_manage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#list_accessible_targets" class="md-nav__link">
+  <a href="#create_collection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        list_accessible_targets
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="list_accessible_targets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        create_collection
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#output-schema_7" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#store" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Schema
+        store
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#store_batch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        store_batch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete_points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        delete_points
+      
+    </span>
+  </a>
   
 </li>
       
@@ -4386,7 +3802,7 @@
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        Next steps
       
     </span>
   </a>
@@ -4468,676 +3884,574 @@
 
 
 <h1 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h1>
-<p>The Actian MCP Server for Actian Zen registers a different set of built-in tools per <code>query_mode</code> —
-six in <code>read-only</code>, five in <code>read-write</code> — so the tool list a client discovers differs between the
-two deployments. See <a href="../write-support.html">Write support</a>. A server that
-<a href="../multi-target.html">serves several databases</a> adds <a href="#list_accessible_targets"><code>list_accessible_targets</code></a>.</p>
-<h2 id="available-tools">Available Tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
+<p>The server registers six read tools in every mode and four write tools only when <code>query_mode</code> is <code>read-write</code> (see <a href="../write-support.html">Write support</a>). Every tool except <code>list_collections</code> takes a <code>collection</code> name and answers only for collections listed in <code>conf.json</code>; any other name returns an error that lists the configured ones.</p>
+<h2 id="available-tools">Available tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Tool</th>
-<th style="text-align: center;"><code>read-only</code></th>
-<th style="text-align: center;"><code>read-write</code></th>
+<th>read-only</th>
+<th>read-write</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="#execute_query"><code>execute_query</code></a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Runs <code>SELECT</code> with automatic Zen dialect translation. Never writes in either mode.</td>
+<td><a href="#list_collections"><code>list_collections</code></a></td>
+<td>yes</td>
+<td>yes</td>
+<td>Configured collections with their live state on the engine.</td>
 </tr>
 <tr>
-<td><a href="#list_tables"><code>list_tables</code></a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Lists all user tables from the Zen catalog.</td>
+<td><a href="#describe_collection"><code>describe_collection</code></a></td>
+<td>yes</td>
+<td>yes</td>
+<td>Full detail for one collection: engine config, payload schema, index type.</td>
 </tr>
 <tr>
-<td><a href="#describe_table"><code>describe_table</code></a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Returns column metadata, primary keys, and foreign keys for a table.</td>
+<td><a href="#search"><code>search</code></a></td>
+<td>yes</td>
+<td>yes</td>
+<td>Semantic search from a text query.</td>
 </tr>
 <tr>
-<td><a href="#orm_operation"><code>orm_operation</code></a></td>
-<td style="text-align: center;">✓ select</td>
-<td style="text-align: center;">✓ select, insert, update, delete</td>
-<td>Structured queries via SQLAlchemy with JOINs, WHERE, ORDER BY, GROUP BY, and LIMIT.</td>
+<td><a href="#search_by_vector"><code>search_by_vector</code></a></td>
+<td>yes</td>
+<td>yes</td>
+<td>Nearest-neighbour search from a vector.</td>
 </tr>
 <tr>
-<td><a href="#execute_write_query"><code>execute_write_query</code></a></td>
-<td style="text-align: center;">—</td>
-<td style="text-align: center;">✓</td>
-<td>Runs a single <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, or <code>MERGE</code>.</td>
+<td><a href="#count_points"><code>count_points</code></a></td>
+<td>yes</td>
+<td>yes</td>
+<td>Number of points, optionally filtered.</td>
 </tr>
 <tr>
-<td><a href="#blob_operation"><code>blob_operation</code></a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">—</td>
-<td>Lists and downloads file and blob data.</td>
+<td><a href="#scroll_points"><code>scroll_points</code></a></td>
+<td>yes</td>
+<td>yes</td>
+<td>Page through points in id order.</td>
 </tr>
 <tr>
-<td><a href="#database_manage"><code>database_manage</code></a></td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">—</td>
-<td>Queries server capabilities, lists DSNs, and releases locks.</td>
+<td><a href="#create_collection"><code>create_collection</code></a></td>
+<td></td>
+<td>yes</td>
+<td>Create a configured collection on the engine.</td>
+</tr>
+<tr>
+<td><a href="#store"><code>store</code></a></td>
+<td></td>
+<td>yes</td>
+<td>Embed one text and store it as a point.</td>
+</tr>
+<tr>
+<td><a href="#store_batch"><code>store_batch</code></a></td>
+<td></td>
+<td>yes</td>
+<td>Embed several texts and store them as points with one approval.</td>
+</tr>
+<tr>
+<td><a href="#delete_points"><code>delete_points</code></a></td>
+<td></td>
+<td>yes</td>
+<td>Delete points by id.</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition note">
-<p class="admonition-title">Enabling write mode removes two tools</p>
-<p><code>blob_operation</code> and <code>database_manage</code> are registered in <code>read-only</code> mode only. A <code>read-write</code>
-server does not expose them, and they will not appear in the client's tool list. This is
-intentional.</p>
-</div>
-<p>Writes are authorized by the <code>mcp:write</code> scope and a human approval prompt, both described in
-<a href="../write-support.html">Write support</a>. Data Definition Language, explicit transactions, and
-bulk <code>batch_operation</code> are not available in any mode in this release.</p>
-<h2 id="tool-annotations">Tool Annotations<a class="headerlink" href="#tool-annotations" title="Permanent link">&para;</a></h2>
-<p>Every tool declares what calling it does, so a client can decide whether to ask the human before a call. The annotations follow the mode the tool is registered in:</p>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th><code>read-only</code></th>
-<th><code>read-write</code></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>list_tables</code>, <code>describe_table</code>, <code>execute_query</code></td>
-<td>read-only</td>
-<td>read-only — Zen's <code>execute_query</code> rejects every write in both modes</td>
-</tr>
-<tr>
-<td><code>orm_operation</code></td>
-<td>read-only — insert, update and delete are refused</td>
-<td>destructive write</td>
-</tr>
-<tr>
-<td><code>blob_operation</code></td>
-<td>read-only</td>
-<td>—</td>
-</tr>
-<tr>
-<td><code>database_manage</code></td>
-<td>destructive write — <code>switch</code> and <code>release_locks</code> change server state, so the whole tool is marked</td>
-<td>—</td>
-</tr>
-<tr>
-<td><code>execute_write_query</code></td>
-<td>—</td>
-<td>destructive write</td>
-</tr>
-<tr>
-<td><code>list_accessible_targets</code></td>
-<td>read-only</td>
-<td>read-only</td>
-</tr>
-</tbody>
-</table>
-<p>"Read-only" is <code>readOnlyHint: true</code>, <code>idempotentHint: true</code>, <code>openWorldHint: false</code>. "Destructive write" is <code>readOnlyHint: false</code>, <code>destructiveHint: true</code>, <code>idempotentHint: false</code>, <code>openWorldHint: false</code>. Under multi-target the server publishes one tool list for all URLs, so a read-only persona still lists the write tools; the engine refuses them. Annotations are hints for the client, not a control: the write scope, the approval prompt and the tool handlers do the enforcing.</p>
+<p>Writes require the <code>mcp:write</code> scope when OAuth is enabled and an approval prompt at the client. <code>search</code>, <code>store</code> and <code>store_batch</code> need an embedding provider. With <code>embedding.provider: none</code> they answer with an error; use <code>search_by_vector</code> instead.</p>
+<h3 id="common-output">Common output<a class="headerlink" href="#common-output" title="Permanent link">&para;</a></h3>
+<p>Every tool returns a JSON object with <code>success</code>. On failure:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;message&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>status_code</code> is present when the engine answered with an HTTP error (the message is then prefixed <code>VectorAI:</code>, for example <code>VectorAI: Search failed: Dimension mismatch for vector '': expected 1024, got 2</code>). Other errors are validation errors (<code>limit must be &gt;= 1</code>, <code>text must not be empty</code>, <code>collection 'x' is not configured on this server; configured: ...</code>), embedding errors, or <code>Write rejected by user</code>.</p>
+<h3 id="filters">Filters<a class="headerlink" href="#filters" title="Permanent link">&para;</a></h3>
+<p><code>search</code>, <code>search_by_vector</code>, <code>count_points</code> and <code>scroll_points</code> accept <code>filter</code>, the engine's JSON filter on payload fields, passed through unchanged:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"must"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata.kind"</span><span class="p">,</span><span class="w"> </span><span class="nt">"match"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"faq"</span><span class="p">}}]}</span>
+</code></pre></div>
+<p><code>store</code> writes <code>metadata</code> under the payload key <code>metadata</code>, so fields given at store time are addressed as <code>metadata.&lt;field&gt;</code>. See the Actian VectorAI DB documentation on filtering for the full syntax.</p>
 <hr />
-<h2 id="execute_query">execute_query<a class="headerlink" href="#execute_query" title="Permanent link">&para;</a></h2>
-<p>Executes a read-only SQL query against Actian Zen with automatic dialect translation. It supports complex queries like JOINs, subqueries, aggregations, and UNION.</p>
-<div class="admonition warning">
-<p class="admonition-title">This tool never writes, even in read-write mode</p>
-<p>Unlike the Ingres and Analytics Engine servers, where the same tool performs writes once
-<code>query_mode</code> is <code>read-write</code>, Zen accepts <code>SELECT</code> here in every mode. DML sent to
-<code>execute_query</code> is rejected with a pointer to the tool that performs the write:</p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DML not allowed in execute_query. Use execute_write_query for INSERT/UPDATE/DELETE."</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"alternative"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_write_query"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"sql_classification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DML"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Data Definition Language is rejected the same way:</p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DDL not allowed in execute_query. Schema changes (CREATE/ALTER/DROP) are not available in read-write mode."</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"sql_classification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DDL"</span>
-<span class="p">}</span>
-</code></pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Auto-translations</p>
-<p>The following translations are applied automatically before execution:</p>
-<ul>
-<li><code>LEN()</code> → <code>CHAR_LENGTH()</code> (Zen does not support <code>LEN()</code>)</li>
-<li><code>INFORMATION_SCHEMA</code> queries → <code>dbo.fSQL*()</code> catalog functions</li>
-<li>Constraint names are truncated to 20 characters (Zen limit)</li>
-</ul>
-</div>
-<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th style="text-align: center;">Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>sql</code></td>
-<td><code>string</code></td>
-<td style="text-align: center;">✓</td>
-<td>Read-only SQL query to execute.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="output-schema">Output Schema<a class="headerlink" href="#output-schema" title="Permanent link">&para;</a></h3>
-<p><strong>On Success</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">}],</span>
-<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_query"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>When results are truncated</strong></p>
-<p>Returned when the result set exceeds <code>max_rows</code> (default: <code>1000</code>).</p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">}],</span>
-<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"truncated"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"truncation_note"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Results limited to 1000 rows. Use WHERE to narrow results."</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_query"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>When dialect translation is applied</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"translated"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"translation_note"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Translated LEN() to CHAR_LENGTH() for Zen compatibility"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"original_sql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT LEN(name) FROM customers"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_query"</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"sql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT * FROM Person WHERE Last_Name LIKE 'S%' ORDER BY First_Name"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Response</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">"ID"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="nt">"First_Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Alice"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Last_Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Smith"</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">"ID"</span><span class="p">:</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="nt">"First_Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bob"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Last_Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sanders"</span><span class="p">}</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_query"</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="list_tables">list_tables<a class="headerlink" href="#list_tables" title="Permanent link">&para;</a></h2>
-<p>Returns all user tables in the connected database by querying the Zen <code>dbo.fSQLTables()</code> catalog function. System tables are excluded.</p>
-<h3 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h3>
+<h2 id="list_collections"><code>list_collections</code><a class="headerlink" href="#list_collections" title="Permanent link">&para;</a></h2>
+<p>Returns the collections this server exposes with their live state. Only these collections can be searched or written.</p>
 <p>This tool takes no input parameters.</p>
-<h3 id="output-schema_1">Output Schema<a class="headerlink" href="#output-schema_1" title="Permanent link">&para;</a></h3>
-<p><strong>On Success</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;table_name&gt;"</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;num_tables&gt;"</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
-<p><strong>Response</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Person"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Department"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Billing"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Student"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Class"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Tuition"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Faculty"</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="describe_table">describe_table<a class="headerlink" href="#describe_table" title="Permanent link">&para;</a></h2>
-<p>Returns column metadata for a table, including names, types, precision, scale, nullability, defaults, primary keys, and foreign keys. Internally uses the <code>dbo.fSQLColumns()</code>, <code>dbo.fSQLPrimaryKeys()</code>, and <code>dbo.fSQLForeignKeys()</code> catalog functions.</p>
-<h3 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th style="text-align: center;">Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>table</code></td>
-<td><code>string</code></td>
-<td style="text-align: center;">✓</td>
-<td>Name of the table to describe.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="output-schema_2">Output Schema<a class="headerlink" href="#output-schema_2" title="Permanent link">&para;</a></h3>
-<p><strong>On Success</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"table_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;table_name&gt;"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;column_name&gt;"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;column_type&gt;"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"precision"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;precision&gt;"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;scale&gt;"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;true|false&gt;"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;default_value&gt;"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"primary_key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;true|false&gt;"</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">"primary_keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;primary_key_column&gt;"</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">"foreign_keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Person"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Response</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"table_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Person"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ID"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BIGIDENTITY"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"precision"</span><span class="p">:</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"primary_key"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">"primary_keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ID"</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">"foreign_keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="orm_operation">orm_operation<a class="headerlink" href="#orm_operation" title="Permanent link">&para;</a></h2>
-<p>Performs structured queries via SQLAlchemy with dynamic model creation. Handles the Zen SQL dialect automatically.</p>
-<p>Supports JOINs (up to 3 tables), WHERE conditions, ORDER BY, GROUP BY, HAVING, LIMIT, OFFSET, and aggregate functions (<code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code>).</p>
-<p>In <code>read-write</code> mode this tool also performs single-row writes. Those go through the same
-<code>mcp:write</code> scope check and approval prompt as <a href="#execute_write_query"><code>execute_write_query</code></a>.</p>
-<h3 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h3>
-<p><strong>Required</strong></p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>operation</code></td>
-<td><code>string</code></td>
-<td><code>select</code> in any mode. <code>insert</code>, <code>update</code>, and <code>delete</code> require <code>query_mode</code> set to <code>read-write</code>.</td>
-</tr>
-<tr>
-<td><code>table</code></td>
-<td><code>string</code></td>
-<td>Target table name.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Optional</strong></p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>columns</code></td>
-<td><code>list</code></td>
-<td>All columns</td>
-<td>Columns to return. Supports aggregates like <code>COUNT(*) AS total</code>.</td>
-</tr>
-<tr>
-<td><code>where</code></td>
-<td><code>dict</code></td>
-<td>—</td>
-<td>Filter conditions for <code>select</code>, for example, <code>{"field": "salary", "operator": "&gt;", "value": 50000}</code>. Not accepted for <code>update</code> or <code>delete</code>: those take <code>entity_id</code>; for a conditional UPDATE or DELETE use <code>execute_write_query</code>.</td>
-</tr>
-<tr>
-<td><code>order_by</code></td>
-<td><code>list</code></td>
-<td>—</td>
-<td>Column names to sort by.</td>
-</tr>
-<tr>
-<td><code>limit</code></td>
-<td><code>integer</code></td>
-<td><code>max_rows</code></td>
-<td>Maximum rows to return. Capped at <code>max_rows</code>.</td>
-</tr>
-<tr>
-<td><code>offset</code></td>
-<td><code>integer</code></td>
-<td>—</td>
-<td>Number of rows to skip.</td>
-</tr>
-<tr>
-<td><code>joins</code></td>
-<td><code>list</code></td>
-<td>—</td>
-<td>Join specs: <code>[{"table": "dept", "on": "p.dept_id = dept.id", "type": "LEFT"}]</code>.</td>
-</tr>
-<tr>
-<td><code>group_by</code></td>
-<td><code>list</code></td>
-<td>—</td>
-<td>Columns to group by.</td>
-</tr>
-<tr>
-<td><code>having</code></td>
-<td><code>dict</code></td>
-<td>—</td>
-<td>HAVING conditions for grouped queries.</td>
-</tr>
-<tr>
-<td><code>data</code></td>
-<td><code>dict</code></td>
-<td>—</td>
-<td>Column values for <code>insert</code> and <code>update</code>. Requires <code>read-write</code>.</td>
-</tr>
-<tr>
-<td><code>entity_id</code></td>
-<td><code>integer</code></td>
-<td>—</td>
-<td>Primary-key value the <code>update</code> or <code>delete</code> targets. Requires <code>read-write</code>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="output-schema_3">Output Schema<a class="headerlink" href="#output-schema_3" title="Permanent link">&para;</a></h3>
-<p><strong>On Success</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">}],</span>
-<span class="w">  </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"orm_operation"</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"operation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"select"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Person"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"COUNT(*) AS total"</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">"where"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Last_Name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"operator"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LIKE"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"S%"</span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="execute_write_query">execute_write_query<a class="headerlink" href="#execute_write_query" title="Permanent link">&para;</a></h2>
-<p>Runs a single Data Manipulation Language statement — <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, or <code>MERGE</code>.
-Registered only when <code>query_mode</code> is <code>read-write</code>.</p>
-<p>Every call is checked for the <code>mcp:write</code> scope and then submitted for human approval before it
-reaches the database. See <a href="../write-support.html">Write support</a>.</p>
-<div class="admonition tip">
-<p class="admonition-title">A conditional write is counted before approval</p>
-<p>For an <code>UPDATE</code> or <code>DELETE</code> with a <code>WHERE</code> clause, the server runs <code>SELECT COUNT(*)</code> with the
-same predicate first and states the result in the approval prompt:</p>
-<div class="language-text highlight"><pre><span></span><code>DML (58 row(s) currently match): DELETE FROM Person WHERE Last_Name LIKE 'S%'
-</code></pre></div>
-<p>A <code>WHERE</code> clause looks the same regardless of how many rows it matches, so the count is what
-makes the approval decision meaningful. It is an estimate taken just before execution, and it is
-best effort — a statement the server cannot analyze still reaches the prompt, showing the
-statement text alone.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Statements rejected before anyone is asked to approve them</p>
-<ul>
-<li><code>UPDATE</code> and <code>DELETE</code> without a <code>WHERE</code> clause</li>
-<li>Writes to the Zen system catalog (<code>X$</code> tables)</li>
-<li>Multiple statements in one call</li>
-<li>Data Definition Language — deferred, not permitted in this release</li>
-</ul>
-<p>The server refuses these statements on inspection, so no approval prompt appears. A missing prompt therefore does
-not by itself mean the write was declined.</p>
-</div>
-<h3 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th style="text-align: center;">Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>sql</code></td>
-<td><code>string</code></td>
-<td style="text-align: center;">✓</td>
-<td>The DML statement to execute.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="output-schema_4">Output Schema<a class="headerlink" href="#output-schema_4" title="Permanent link">&para;</a></h3>
-<p><strong>On Success</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"sql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;statement&gt;"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"rows_affected"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_write_query"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>When the caller lacks the write scope</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"write operations require the 'mcp:write' scope, which the access token does not carry"</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example_4">Example<a class="headerlink" href="#example_4" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"sql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UPDATE Person SET Last_Name = 'Sanderson' WHERE ID = 102"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Response</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"sql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UPDATE Person SET Last_Name = 'Sanderson' WHERE ID = 102"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"rows_affected"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_write_query"</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="blob_operation">blob_operation<a class="headerlink" href="#blob_operation" title="Permanent link">&para;</a></h2>
-<p>Lists and downloads file or blob data from tables that store binary content.</p>
-<div class="admonition note">
-<p class="admonition-title">Read-only mode only</p>
-<p>This tool is not registered when <code>query_mode</code> is <code>read-write</code>.</p>
-</div>
-<h3 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">&para;</a></h3>
-<p><strong>Required</strong></p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>action</code></td>
-<td><code>string</code></td>
-<td>One of: <code>list</code>, <code>download</code>.</td>
-</tr>
-<tr>
-<td><code>table_name</code></td>
-<td><code>string</code></td>
-<td>Table that stores blob data.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Optional</strong></p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>file_id</code></td>
-<td><code>integer</code></td>
-<td>—</td>
-<td>Row identifier. Required when <code>action</code> is <code>download</code>.</td>
-</tr>
-<tr>
-<td><code>output_path</code></td>
-<td><code>string</code></td>
-<td>—</td>
-<td>Destination file path. Required when <code>action</code> is <code>download</code>.</td>
-</tr>
-<tr>
-<td><code>id_column</code></td>
-<td><code>string</code></td>
-<td><code>id</code></td>
-<td>Name of the ID column.</td>
-</tr>
-<tr>
-<td><code>blob_column</code></td>
-<td><code>string</code></td>
-<td><code>file_data</code></td>
-<td>Name of the blob column.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="output-schema_5">Output Schema<a class="headerlink" href="#output-schema_5" title="Permanent link">&para;</a></h3>
-<p><strong>For <code>list</code></strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"files"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;row_id&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"filename"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;filename&gt;"</span><span class="p">}],</span>
-<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;num_files&gt;"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>For <code>download</code></strong></p>
+<p><strong>Output schema</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"output_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;destination_path&gt;"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;file_size_bytes&gt;"</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example_5">Example<a class="headerlink" href="#example_5" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"list"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"table_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"documents"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Response</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"files"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"filename"</span><span class="p">:</span><span class="w"> </span><span class="s2">"report.pdf"</span><span class="p">}],</span>
-<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="database_manage">database_manage<a class="headerlink" href="#database_manage" title="Permanent link">&para;</a></h2>
-<p>Provides server management operations: list available databases, list DSNs with details, query server capabilities, and release locks.</p>
-<div class="admonition note">
-<p class="admonition-title">Read-only mode only</p>
-<p>This tool is not registered when <code>query_mode</code> is <code>read-write</code>.</p>
-</div>
-<h3 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th style="text-align: center;">Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>action</code></td>
-<td><code>string</code></td>
-<td style="text-align: center;">✓</td>
-<td>One of: <code>list</code>, <code>list_dsns</code>, <code>capabilities</code>, <code>release_locks</code>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="output-schema_6">Output Schema<a class="headerlink" href="#output-schema_6" title="Permanent link">&para;</a></h3>
-<p><strong>For <code>capabilities</code></strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Actian Zen"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"sql"</span><span class="p">,</span><span class="w"> </span><span class="s2">"blobs"</span><span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>For <code>list_dsns</code></strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"current_dsn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;active_dsn&gt;"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"available_dsns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"&lt;dsn_name&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"driver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;driver_name&gt;"</span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;num_dsns&gt;"</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="example_6">Example<a class="headerlink" href="#example_6" title="Permanent link">&para;</a></h3>
-<p><strong>Request</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"capabilities"</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Response</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Actian Zen"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"sql"</span><span class="p">,</span><span class="w"> </span><span class="s2">"blobs"</span><span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="list_accessible_targets">list_accessible_targets<a class="headerlink" href="#list_accessible_targets" title="Permanent link">&para;</a></h2>
-<p>Returns the databases a client may reach on a server that <a href="../multi-target.html">serves several databases</a>, with the path of each. Registered only when <code>conf.json</code> has a <code>targets</code> block. Target selection happens by the URL a session connects to, never by a tool argument, so this is how a client that knows a database name finds its URL.</p>
-<p>With authentication on, the list contains only the targets the caller's token grants; a token without any grant gets an empty list.</p>
-<h3 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">&para;</a></h3>
-<p>This tool takes no input parameters.</p>
-<h3 id="output-schema_7">Output Schema<a class="headerlink" href="#output-schema_7" title="Permanent link">&para;</a></h3>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"collections"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zen16"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"instance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"alias"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"databases"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DEMODATA"</span><span class="p">,</span><span class="w"> </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/mcp/zen16/admin/DEMODATA"</span><span class="p">,</span><span class="w"> </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.example.com:8000/mcp/zen16/admin/DEMODATA"</span><span class="p">}</span>
-<span class="w">      </span><span class="p">]</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;from conf.json&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"text_field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"embedding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openai"</span><span class="p">,</span><span class="w"> </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BAAI/bge-m3"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"vector_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cosine"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"points_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">186</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"vectors_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">186</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"green"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"payload_fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"document"</span><span class="p">,</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"warning"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;only when conf.json vector_size differs from the engine's&gt;"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;from conf.json&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"text_field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"embedding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"none"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>path</code> is always present; <code>url</code> is <code>null</code> unless <code>FASTMCP_SERVER_AUTH_BASE_URL</code> is configured. Append <code>/mcp</code> to the path for the MCP endpoint of that target. The same list is available as the resource <code>targets://accessible</code>.</p>
+<p><code>exists</code> is <code>false</code> for a configured collection not yet created on the engine, and <code>null</code> with an <code>error</code> field when the engine could not answer for it. <code>status</code> is the engine's collection status: <code>green</code>, <code>yellow</code>, <code>red</code>, or <code>unknowncollectionstatus</code> for a collection the engine has not loaded yet; see <a href="../index.html#engine-behaviour">Engine behaviour</a>.</p>
 <hr />
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
-<div class="grid cards">
+<h2 id="describe_collection"><code>describe_collection</code><a class="headerlink" href="#describe_collection" title="Permanent link">&para;</a></h2>
+<p>Full detail for one configured collection: everything <code>list_collections</code> shows plus the engine's configuration, payload schema and index type, and the values configured in <code>conf.json</code>.</p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>A configured collection name.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output schema</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;from conf.json&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"text_field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"embedding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openai"</span><span class="p">,</span><span class="w"> </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BAAI/bge-m3"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"vector_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cosine"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"points_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">186</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"vectors_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">186</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"green"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"payload_fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"document"</span><span class="p">,</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"engine_config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"&lt;the engine's collection config, as returned by GET /collections/{name}&gt;"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"payload_schema"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"&lt;payload field&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"&lt;the engine's schema entry for the field&gt;"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"index_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;engine index type&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"configured"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"vector_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span><span class="w"> </span><span class="nt">"distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cosine"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>engine_config</code>, <code>payload_schema</code> and <code>index_type</code> are absent when the collection does not exist yet.</p>
+<hr />
+<h2 id="search"><code>search</code><a class="headerlink" href="#search" title="Permanent link">&para;</a></h2>
+<p>Embeds <code>query</code> with the collection's embedding provider and returns the nearest points.</p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>Yes</td>
+<td></td>
+<td>A configured collection name.</td>
+</tr>
+<tr>
+<td><code>query</code></td>
+<td>string</td>
+<td>Yes</td>
+<td></td>
+<td>Natural-language query text.</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>integer</td>
+<td>No</td>
+<td><code>search_limit</code> (10)</td>
+<td>Number of results, at least 1, capped at <code>max_search_limit</code> (100).</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td>object</td>
+<td>No</td>
+<td>—</td>
+<td>Engine JSON filter on payload fields.</td>
+</tr>
+<tr>
+<td><code>score_threshold</code></td>
+<td>number</td>
+<td>No</td>
+<td>—</td>
+<td>Drop results scoring below this value.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output schema</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bc81fbea-12a8-4296-b156-bd6d23ec5764"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6556</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"document"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;text&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"faq"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;text&gt;"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>text</code> is the payload's <code>text_field</code> and is present only when that field exists on the point. <code>count</code> is the number of results returned, <code>limit</code> the effective limit after capping: a request with <code>limit: 100000</code> comes back with <code>"limit": 100</code>.</p>
+<p><strong>Example</strong></p>
+<p>Request:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"documents"</span><span class="p">,</span><span class="w"> </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"how do I enable write mode"</span><span class="p">,</span><span class="w"> </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>Response (abridged):</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"documents"</span><span class="p">,</span><span class="w"> </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7e1c..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.71</span><span class="p">,</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Set query_mode to read-write in conf.json ..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"document"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Set query_mode ..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"write-support.md"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="s2">"..."</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="search_by_vector"><code>search_by_vector</code><a class="headerlink" href="#search_by_vector" title="Permanent link">&para;</a></h2>
+<p>Nearest-neighbour search with a vector the caller already has. The vector must have the collection's dimension; the engine refuses any other size (<code>Dimension mismatch ... expected 1024, got 2</code>). Works with <code>embedding.provider: none</code>.</p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>Yes</td>
+<td></td>
+<td>A configured collection name.</td>
+</tr>
+<tr>
+<td><code>vector</code></td>
+<td>array of numbers</td>
+<td>Yes</td>
+<td></td>
+<td>Query vector, same dimension as the collection; must not be empty.</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>integer</td>
+<td>No</td>
+<td><code>search_limit</code> (10)</td>
+<td>As for <code>search</code>.</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td>object</td>
+<td>No</td>
+<td>—</td>
+<td>As for <code>search</code>.</td>
+</tr>
+<tr>
+<td><code>score_threshold</code></td>
+<td>number</td>
+<td>No</td>
+<td>—</td>
+<td>As for <code>search</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output schema</strong>: same as <code>search</code>.</p>
+<hr />
+<h2 id="count_points"><code>count_points</code><a class="headerlink" href="#count_points" title="Permanent link">&para;</a></h2>
+<p>Number of points in a configured collection, optionally restricted by a filter. Exact at any time (unlike the <code>points_count</code> shown by <code>list_collections</code> before the engine has loaded the collection).</p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>A configured collection name.</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td>object</td>
+<td>No</td>
+<td>Engine JSON filter.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output schema</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">186</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="scroll_points"><code>scroll_points</code><a class="headerlink" href="#scroll_points" title="Permanent link">&para;</a></h2>
+<p>Pages through a collection's points in id order without a query vector. Pass the returned <code>next_page_offset</code> as <code>offset</code> to get the next page; it is <code>null</code> on the last page.</p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>Yes</td>
+<td></td>
+<td>A configured collection name.</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>integer</td>
+<td>No</td>
+<td><code>search_limit</code> (10)</td>
+<td>Page size, capped at <code>max_search_limit</code>.</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>integer or string</td>
+<td>No</td>
+<td>—</td>
+<td>The <code>next_page_offset</code> of the previous page.</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td>object</td>
+<td>No</td>
+<td>—</td>
+<td>Engine JSON filter.</td>
+</tr>
+<tr>
+<td><code>with_vector</code></td>
+<td>boolean</td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Include each point's stored vector in the output. A page with vectors is capped at 10 points.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output schema</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"points"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"document"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;text&gt;"</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;text&gt;"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"vector"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0123</span><span class="p">,</span><span class="w"> </span><span class="mf">-0.0456</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"next_page_offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>score</code> is always <code>null</code> for scrolled points (no query vector). <code>vector</code> is present only when <code>with_vector</code> is <code>true</code>; it has the collection's dimension.</p>
+<hr />
+<h2 id="create_collection"><code>create_collection</code><a class="headerlink" href="#create_collection" title="Permanent link">&para;</a></h2>
+<p>Read-write mode only. Creates a configured collection on the engine with the configured <code>vector_size</code> and <code>distance</code> (<code>Cosine</code> when unset). When <code>vector_size</code> is not in <code>conf.json</code>, the embedding provider's dimension is used; for providers that do not publish it, one probe embedding is made. When the collection already exists the call succeeds without a prompt and without changes.</p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>A configured collection name.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Approval prompt</strong>: <code>Create collection &lt;name&gt; (&lt;size&gt;-dim, &lt;distance&gt;)</code>.</p>
+<p><strong>Output schema</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"vector_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span><span class="w"> </span><span class="nt">"distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cosine"</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection already exists"</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>A collection with <code>embedding.provider: none</code> and no <code>vector_size</code> cannot be created: the error says which key to add to <code>conf.json</code>.</p>
+<hr />
+<h2 id="store"><code>store</code><a class="headerlink" href="#store" title="Permanent link">&para;</a></h2>
+<p>Read-write mode only. Embeds <code>text</code> and upserts it as one point. The payload holds the text under the collection's <code>text_field</code> (default <code>document</code>) plus <code>metadata</code> as given, so later filters can use <code>metadata.&lt;field&gt;</code>. The collection must already exist.</p>
+<p>Before asking for approval, <code>store</code> checks that the text is not empty, that the collection exists on the engine, that the text is within <code>embedding.max_input_tokens</code> when that is set, and that the embedding's dimension equals the collection's vector size. A mismatch is reported as an error naming the two sizes and the <code>conf.json</code> keys to fix. The text reaches the embedding provider before the prompt.</p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>Yes</td>
+<td></td>
+<td>A configured collection name.</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>string</td>
+<td>Yes</td>
+<td></td>
+<td>The text to embed and store; must not be blank.</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>object</td>
+<td>No</td>
+<td>—</td>
+<td>Stored under the payload key <code>metadata</code>.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>string or integer</td>
+<td>No</td>
+<td>new UUID</td>
+<td>UUID string or unsigned integer. An existing id is overwritten.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Approval prompt</strong>: <code>Store 1 point in &lt;name&gt;: &lt;first 120 characters of the text&gt;</code>, plus <code>overwrites existing point &lt;id&gt;</code> when the id already exists. The prompt details carry the id, the text preview, the metadata, the ids overwritten and the vector size.</p>
+<p><strong>Output schema</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bc81fbea-12a8-4296-b156-bd6d23ec5764"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"operation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"operation_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Completed"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>operation</code> is the engine's response to the upsert.</p>
+<p><strong>Example</strong></p>
+<p>Request:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"documents"</span><span class="p">,</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Write tools require the user to approve each change."</span><span class="p">,</span><span class="w"> </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"note"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>The client shows <code>Store 1 point in documents: Write tools require the user to approve each change.</code>; after approval the response above is returned.</p>
+<hr />
+<h2 id="store_batch"><code>store_batch</code><a class="headerlink" href="#store_batch" title="Permanent link">&para;</a></h2>
+<p>Read-write mode only. Embeds several texts and upserts them as points in one call, with one approval prompt for the whole batch. The texts go to the embedding provider in requests of <code>embedding.batch_size</code> and to the engine in one request, so all points land or none. Each item takes the same fields as a <code>store</code> call.</p>
+<p>Before asking for approval, <code>store_batch</code> checks every item (text not blank, <code>id</code> a UUID string or unsigned integer and used once in the batch, <code>metadata</code> an object), that the collection exists on the engine, that no text exceeds <code>embedding.max_input_tokens</code> when that is set, and that the embeddings' dimension equals the collection's vector size. A batch longer than <code>max_batch_size</code> (default 32) is rejected as well: <code>store_batch takes at most 32 items per call, got 40; split the batch or raise max_batch_size in conf.json</code>. Any failure returns an error and nothing is written.</p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>A configured collection name.</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td>array of objects</td>
+<td>Yes</td>
+<td>1 to <code>max_batch_size</code> items, each <code>{"text": string, "metadata"?: object, "id"?: string or integer}</code>. A missing id becomes a new UUID; an existing id is overwritten.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Approval prompt</strong>: a header <code>Store &lt;n&gt; points in &lt;name&gt;: &lt;total&gt; chars, metadata keys: &lt;keys&gt;</code> (or <code>no metadata</code>), with <code>overwrites &lt;k&gt; existing points</code> appended when ids already exist, followed by one numbered line per item: its length, its metadata, the first 60 characters of the text, and <code>overwrites id &lt;id&gt;</code> where applicable. The approver sees every item, because one approval covers the whole batch. The details carry all ids, the ids overwritten, the count, the total characters, the metadata keys and the vector size.</p>
+<p><strong>Output schema</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"stored"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="s2">"bc81fbea-12a8-4296-b156-bd6d23ec5764"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0f3c9d2a-7b1e-4c55-9a0d-5e6f7a8b9c0d"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"operation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"operation_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Completed"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>ids</code> is in item order, so a wrong batch is undone with one <code>delete_points</code> call. Loading a whole corpus still belongs in a script against the engine's REST API, not in an MCP session.</p>
+<hr />
+<h2 id="delete_points"><code>delete_points</code><a class="headerlink" href="#delete_points" title="Permanent link">&para;</a></h2>
+<p>Read-write mode only. Deletes points by id from a configured collection. The server looks the ids up first: <code>deleted</code> counts the ids that existed, the rest come back in <code>not_found</code>. When none of the ids exist nothing is deleted and no approval is asked.</p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>A configured collection name.</td>
+</tr>
+<tr>
+<td><code>ids</code></td>
+<td>array of string or integer</td>
+<td>Yes</td>
+<td>Point ids; must not be empty. A UUID is accepted in any spelling (case, with or without hyphens).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Approval prompt</strong>: <code>Delete &lt;n&gt; points from &lt;name&gt;</code>, with <code>(&lt;k&gt; of &lt;m&gt; requested ids not found)</code> appended when some ids do not exist; the details list the first 20 ids to delete and the ids not found.</p>
+<p><strong>Output schema</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"deleted"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"not_found"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">  </span><span class="nt">"operation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"operation_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Completed"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"deleted"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">"not_found"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">9001</span><span class="p">,</span><span class="w"> </span><span class="mi">9002</span><span class="p">],</span><span class="w"> </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"none of the ids exist, nothing to delete"</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>A collection left with few live points shows <code>status: "red"</code> until new points are added (see <a href="../index.html#engine-behaviour">Engine behaviour</a>).</p>
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 20H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h7a2 2 0 0 1 2 2H4v10l2.14-8h17.07l-2.28 8.5c-.23.87-1.01 1.5-1.93 1.5"/></svg></span> <strong><a href="../resources/index.html">Resources</a></strong><br />
-  Explore the resource types available through the Zen server.</p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2M6 9h12v2H6m8 3H6v-2h8m4-4H6V6h12"/></svg></span> <strong><a href="../prompts/index.html">Prompts</a></strong><br />
-  Use the built-in prompt templates for common workflows.</p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg></span> <strong><a href="../write-support.html">Write support</a></strong><br />
-  Turn on <code>query_mode</code>, and see the scope and approval checks every write passes.</p>
-</li>
+<li><a href="../resources/index.html">Resources</a>: the same collection information as MCP resources.</li>
+<li><a href="../prompts/index.html">Prompts</a>: <code>find_information</code> and <code>store_information</code>.</li>
+<li><a href="../write-support.html">Write support</a>: enabling writes and the approval flow.</li>
 </ul>
-</div>
 
 
 
@@ -5158,7 +4472,7 @@ not by itself mean the write was declined.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 12, 2026 07:06:41 UTC">November 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 17, 2026 20:15:24 UTC">November 17, 2026</span>
   </span>
 
     

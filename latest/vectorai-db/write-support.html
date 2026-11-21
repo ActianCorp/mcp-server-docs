@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Enable data-modifying SQL on the Actian MCP Server with query_mode, and understand the scope check and human approval that authorize every write.">
+        <meta name="description" content="Enable write operations in the Actian MCP Server for VectorAI DB, and what gates each write - the mcp:write scope and the human approval prompt.">
       
       
       
@@ -16,7 +16,7 @@
         <link rel="prev" href="authentication/keycloak.html">
       
       
-        <link rel="next" href="multi-target.html">
+        <link rel="next" href="extensions/index.html">
       
       
         
@@ -2984,10 +2984,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -3236,10 +3232,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#what-a-write-is-in-vectorai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a write is in VectorAI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#enabling-write-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling Write Mode
+        Enabling write mode
       
     </span>
   </a>
@@ -3250,7 +3257,7 @@
   <a href="#authorizing-a-write" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Authorizing a Write
+        Authorizing a write
       
     </span>
   </a>
@@ -3261,7 +3268,7 @@
   <a href="#skipping-the-approval-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Skipping the Approval Prompt
+        Skipping the approval prompt
       
     </span>
   </a>
@@ -3272,7 +3279,7 @@
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        Next steps
       
     </span>
   </a>
@@ -3283,62 +3290,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="multi-target.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Multiple Databases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="deployment.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Deployment Scenarios
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -3369,7 +3320,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_4" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -3391,14 +3342,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_11_6" id="__nav_11_6_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_11_4" id="__nav_11_4_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11_6">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3594,10 +3545,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#what-a-write-is-in-vectorai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a write is in VectorAI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#enabling-write-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling Write Mode
+        Enabling write mode
       
     </span>
   </a>
@@ -3608,7 +3570,7 @@
   <a href="#authorizing-a-write" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Authorizing a Write
+        Authorizing a write
       
     </span>
   </a>
@@ -3619,7 +3581,7 @@
   <a href="#skipping-the-approval-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Skipping the Approval Prompt
+        Skipping the approval prompt
       
     </span>
   </a>
@@ -3630,7 +3592,7 @@
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        Next steps
       
     </span>
   </a>
@@ -3711,49 +3673,63 @@
 
 
 
-<h1 id="write-support">Write Support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
-<p>By default, the Actian MCP Server permits only read queries. Set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also allow Data Manipulation Language (DML) statements, that is <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, and <code>MERGE</code>.</p>
-<p>Write support remains off until it is enabled. Existing read-only deployments are not affected.</p>
-<p>Extensions can write too, through the same authorization checks described below. See <a href="extensions/index.html">Extensions</a>.</p>
-<p>For which tools accept a write, and how, see <a href="tools/index.html">Zen tools</a>. The <code>query_mode</code> setting and the authorization checks described below apply the same way regardless of which tool performs the write.</p>
-<div class="admonition note">
-<p class="admonition-title">How Zen Routes Writes</p>
-<p>On Zen, <code>execute_query</code> never performs a write, even when <code>query_mode</code> is <code>read-write</code>. Writes
-go to <code>execute_write_query</code> and to <code>orm_operation</code>, and enabling write mode also removes
-<code>blob_operation</code> and <code>database_manage</code> from the registered <a href="tools/index.html">tools</a>. Zen also
-counts the rows a conditional <code>UPDATE</code>/<code>DELETE</code> matches and shows that number in the approval
-prompt.</p>
-</div>
-<h2 id="enabling-write-mode">Enabling Write Mode<a class="headerlink" href="#enabling-write-mode" title="Permanent link">&para;</a></h2>
-<p>Set <code>query_mode</code> in the <code>conf.json</code> file:</p>
+<h1 id="write-support">Write support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
+<p>By default, the Actian MCP Server for VectorAI DB permits only reads: listing, searching, counting and paging. Set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also register the four write tools: <code>create_collection</code>, <code>store</code>, <code>store_batch</code> and <code>delete_points</code>. Extensions can write through the same checks.</p>
+<h2 id="what-a-write-is-in-vectorai">What a write is in VectorAI<a class="headerlink" href="#what-a-write-is-in-vectorai" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Value</th>
-<th>Behavior</th>
+<th>Tool</th>
+<th>Writes</th>
+<th>Approval text shown to the user</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>read-only</code></td>
-<td>Default. Only read queries are permitted.</td>
+<td><code>create_collection</code></td>
+<td>Creates a configured collection on the engine with its configured vector size and distance. A second call on an existing collection succeeds without a prompt.</td>
+<td><code>Create collection &lt;name&gt; (&lt;size&gt;-dim, &lt;distance&gt;)</code></td>
 </tr>
 <tr>
-<td><code>read-write</code></td>
-<td>Read queries plus <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, and <code>MERGE</code> are permitted.</td>
+<td><code>store</code></td>
+<td>Embeds one text and upserts it as one point (text under the collection's <code>text_field</code>, plus <code>metadata</code>). An existing id is overwritten.</td>
+<td><code>Store 1 point in &lt;name&gt;: &lt;first 120 characters&gt;</code>, plus <code>overwrites existing point &lt;id&gt;</code> when the id exists</td>
+</tr>
+<tr>
+<td><code>store_batch</code></td>
+<td>Embeds several texts and upserts them as points in one engine request. Same item rules as <code>store</code>; at most <code>max_batch_size</code> items (default 32).</td>
+<td><code>Store &lt;n&gt; points in &lt;name&gt;: &lt;total&gt; chars, metadata keys: &lt;keys&gt;</code> followed by one line per item (length, metadata, first 60 characters, overwrite marker)</td>
+</tr>
+<tr>
+<td><code>delete_points</code></td>
+<td>Deletes the points whose ids exist; the rest are reported as <code>not_found</code>. Nothing to delete means no prompt.</td>
+<td><code>Delete &lt;n&gt; points from &lt;name&gt;</code>, plus <code>(&lt;k&gt; of &lt;m&gt; requested ids not found)</code></td>
 </tr>
 </tbody>
 </table>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"query_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"read-write"</span>
-<span class="p">}</span>
-</code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Data Definition Language is always blocked</p>
-<p>Enabling write mode does not permit Data Definition Language (DDL) or administrative statements. <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, and <code>GRANT</code> are rejected, and so are <code>SET</code>, <code>ENABLE</code>, <code>DISABLE</code>, and <code>SELECT ... INTO</code>. This is not configurable. Use the database's native tools for schema changes.</p>
-</div>
-<h2 id="authorizing-a-write">Authorizing a Write<a class="headerlink" href="#authorizing-a-write" title="Permanent link">&para;</a></h2>
-<p>Writes require <code>"query_mode": "read-write"</code> in <code>conf.json</code>. In that mode, every DML statement must pass two independent checks before it reaches the database. Either one can reject it.</p>
+<p>Every prompt is sent as <code>Approve this database write?</code>, the text above, and a <code>Details</code> block in JSON (collection, ids, vector size, and for batches every id and the ids overwritten). The client shows it to the person and returns their answer.</p>
+<p>Only collections listed in <code>conf.json</code> can be created or written. Dropping a collection is not an MCP tool; it stays an operator action against the engine (<code>DELETE /collections/&lt;name&gt;</code> on the REST API). Payload updates without re-embedding are not part of this release. <code>store_batch</code> stores several texts with one approval, at most <code>max_batch_size</code> items (32 by default). Loading a whole corpus belongs in a script against the engine, not in an MCP session.</p>
+<h2 id="enabling-write-mode">Enabling write mode<a class="headerlink" href="#enabling-write-mode" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>read-only</code> (default)</td>
+<td>Read tools and the <code>find_information</code> prompt only. Write tools are not registered, so clients never see them.</td>
+</tr>
+<tr>
+<td><code>read-write</code></td>
+<td>Read tools plus <code>create_collection</code>, <code>store</code>, <code>store_batch</code>, <code>delete_points</code> and the <code>store_information</code> prompt.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="authorizing-a-write">Authorizing a write<a class="headerlink" href="#authorizing-a-write" title="Permanent link">&para;</a></h2>
+<p>Every write passes two independent checks before it reaches the engine.</p>
 <table>
 <thead>
 <tr>
@@ -3764,76 +3740,35 @@ prompt.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>mcp:write</code> scope</td>
+<td>OAuth scope</td>
 <td>The access token must carry the <code>mcp:write</code> scope.</td>
 <td>Only when OAuth is enabled. A read-only server never requests or requires this scope.</td>
 </tr>
 <tr>
 <td>Human approval</td>
-<td>A person must approve the statement in the connected client.</td>
-<td>Always, unless disabled with <code>write_confirmation</code>.</td>
+<td>The MCP client shows the approval text above and a person accepts it.</td>
+<td>Always in <code>read-write</code>, unless <code>write_confirmation</code> is <code>false</code>.</td>
 </tr>
 </tbody>
 </table>
-<p>The scope is checked first, so a caller without it is rejected before anyone is asked to approve anything. A write counts as not approved if the person declines, does not answer before the timeout, or the client cannot display the prompt at all.</p>
-<pre class="mermaid"><code>%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
-sequenceDiagram
-    participant User as User
-    participant Client as MCP Client
-    participant Server as MCP Server
-    participant DB as Database
-
-    Client-&gt;&gt;Server: Write request (INSERT / UPDATE / DELETE / MERGE)
-    Server-&gt;&gt;Server: Check mcp:write
-    alt Scope missing
-        Server--&gt;&gt;Client: Rejected (authorization error)
-    else Scope present
-        Server-&gt;&gt;Client: Request approval
-        Client-&gt;&gt;User: Show statement, table, and database
-        alt User approves
-            User--&gt;&gt;Client: Approve
-            Client--&gt;&gt;Server: Approved
-            Server-&gt;&gt;DB: Run statement
-            DB--&gt;&gt;Server: Rows affected
-            Server--&gt;&gt;Client: Success
-        else Not approved
-            Client--&gt;&gt;Server: Not approved
-            Server--&gt;&gt;Client: Rejected (write not approved)
-        end
-    end</code></pre>
-<p>The approval prompt uses the Model Context Protocol (MCP) elicitation capability, which not every client implements. If the connected client cannot display the prompt, the write is rejected, exactly as if a person had declined it. See <a href="../mcp-clients/index.html#elicitation-support-for-write-approval">Connecting MCP Clients</a> for which clients support it.</p>
-<p>To configure the <code>mcp:write</code> scope in the identity provider, see <a href="authentication/auth0.html">Auth0</a> or <a href="authentication/keycloak.html">Keycloak</a>.</p>
-<h2 id="skipping-the-approval-prompt">Skipping the Approval Prompt<a class="headerlink" href="#skipping-the-approval-prompt" title="Permanent link">&para;</a></h2>
-<p>Some clients cannot display the approval prompt. For those deployments, set <code>write_confirmation</code> to <code>false</code> in <code>conf.json</code> to run the server's built-in write tools without asking for approval:</p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"query_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"read-write"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"write_confirmation"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-<span class="p">}</span>
+<p>The scope is checked first, before any text is sent to the embedding provider, so a caller without it is rejected before anyone is asked to approve anything:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"write operations require the 'mcp:write' scope, which the access token does not carry"</span><span class="p">}</span>
 </code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">This removes human oversight of every write</p>
-<p>With <code>write_confirmation</code> set to <code>false</code>, the server runs <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, and <code>MERGE</code> statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and unattended writes by the AI agent are acceptable.</p>
-<p>The <code>mcp:write</code> scope check still applies. Disabling the prompt does not grant write access to callers that lack the scope.</p>
-<p>This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See <a href="extensions/index.html#extension-security-controls">Extensions</a>.</p>
+<p>A declined prompt, a prompt not answered within 60 seconds, or a client that cannot show prompts all result in <code>Write rejected by user</code>; nothing is written. Every outcome leaves one call log record: <code>status: "ok"</code> for a write that landed, <code>"rejected"</code> for a declined prompt, <code>"error"</code> for a missing scope or a validation failure, with the token's user in <code>user</code> (see <a href="index.html#call-log">Call log</a>).</p>
+<p><code>store</code> and <code>store_batch</code> validate before they ask: the collection must exist on the engine, no text may be empty, ids must be UUID strings or unsigned integers (and unique within a batch), the batch may not exceed <code>max_batch_size</code>, a text may not reach <code>embedding.max_input_tokens</code> when that is set, and the embedding's dimension must match the collection's vector size. Those failures come back as errors without an approval prompt, so the user is never asked to approve a write that cannot land.</p>
+<div class="admonition note">
+<p class="admonition-title">Text leaves the server before the prompt</p>
+<p>The dimension check needs the vector, so the text goes to the embedding provider before the approval prompt. With <code>openai</code> or <code>gemini</code> on a hosted endpoint the text has left the host even when the write is then declined; a sidecar through <code>embedding.base_url</code> keeps it on your network; <code>none</code> and <code>dev-hash</code> send nothing.</p>
 </div>
-<p>The server records what it skipped. At startup it logs a warning banner stating that write confirmation is disabled, and it logs a warning for each write that ran without approval. Those entries name the tool only. They never include the statement text or the row values.</p>
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
-<div class="grid cards">
+<h2 id="skipping-the-approval-prompt">Skipping the approval prompt<a class="headerlink" href="#skipping-the-approval-prompt" title="Permanent link">&para;</a></h2>
+<p>For clients that cannot show an approval prompt, set <code>write_confirmation</code> to <code>false</code> in <code>conf.json</code>. The write tools then run without asking, and the server logs every such write as <code>WRITE EXECUTED WITHOUT CONFIRMATION</code>. The <code>mcp:write</code> scope check still applies: disabling the prompt does not grant write access to callers that lack the scope.</p>
+<p>This removes human oversight of every write. Use it only where the client is itself an automated, trusted pipeline.</p>
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg></span> <strong><a href="index.html#configuration-reference">Zen configuration</a></strong><br />
-  The <code>query_mode</code> and <code>write_confirmation</code> fields for Actian Zen, which registers a different tool set per mode.</p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong><a href="authentication/index.html">Authentication</a></strong><br />
-  Set up the <code>mcp:write</code> scope in Auth0 or Keycloak.</p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.4 7.5c.8.8.8 2.1 0 2.8l-2.8 2.8-7.8-7.8 2.8-2.8c.8-.8 2.1-.8 2.8 0l1.8 1.8 3-3 1.4 1.4-3 3zm-5.8 5.8-1.4-1.4-2.8 2.8-2.1-2.1 2.8-2.8-1.4-1.4-2.8 2.8-1.5-1.4-2.8 2.8c-.8.8-.8 2.1 0 2.8l1.8 1.8-4 4 1.4 1.4 4-4 1.8 1.8c.8.8 2.1.8 2.8 0l2.8-2.8-1.4-1.4z"/></svg></span> <strong><a href="../mcp-clients/index.html#elicitation-support-for-write-approval">MCP clients</a></strong><br />
-  Which clients can display the write approval prompt.</p>
-</li>
+<li><a href="index.html#configuration">Configuration</a>: <code>query_mode</code>, <code>write_confirmation</code>, <code>collections</code>, <code>max_batch_size</code>.</li>
+<li><a href="authentication/index.html">Authentication</a>: granting the <code>mcp:write</code> scope in Auth0 and Keycloak.</li>
+<li><a href="tools/index.html">Tools</a>: parameters and output of the four write tools.</li>
 </ul>
-</div>
 
 
 
@@ -3854,7 +3789,7 @@ sequenceDiagram
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 12, 2026 07:06:41 UTC">November 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 17, 2026 20:15:24 UTC">November 17, 2026</span>
   </span>
 
     
@@ -3960,13 +3895,13 @@ sequenceDiagram
         
         
           
-          <a href="multi-target.html" class="md-footer__link md-footer__link--next" aria-label="Next: Multiple Databases">
+          <a href="extensions/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Extensions">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Multiple Databases
+                Extensions
               </div>
             </div>
             <div class="md-footer__button md-icon">

@@ -2984,10 +2984,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -3203,62 +3199,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../multi-target.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Multiple Databases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deployment.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Deployment Scenarios
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     
     
       
@@ -3278,7 +3218,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_4" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -3300,14 +3240,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_11_6" id="__nav_11_6_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_11_4" id="__nav_11_4_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11_6">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3554,10 +3494,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#per-target-scopes" class="md-nav__link">
+  <a href="#scopes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Per-Target Scopes
+        Scopes
       
     </span>
   </a>
@@ -3582,10 +3522,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#extracting-username" class="md-nav__link">
+  <a href="#which-name-goes-to-the-call-log" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Extracting Username
+        Which name goes to the call log
       
     </span>
   </a>
@@ -3842,7 +3782,7 @@ sequenceDiagram
 <tr>
 <td style="text-align: left;"><code>user_impersonation</code></td>
 <td style="text-align: left;">No</td>
-<td style="text-align: left;">Boolean. If <code>true</code> (the default setting), the server runs each query as the authenticated user using <code>SET SESSION AUTHORIZATION</code>.</td>
+<td style="text-align: left;">Boolean, default <code>true</code>. VectorAI DB has no per-user identity, so this only decides where the server looks for the caller's name for the call log. In this flow no token is refused for lacking a user claim. See <a href="#user-impersonation">User Impersonation</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -3913,19 +3853,15 @@ sequenceDiagram
 </tr>
 <tr>
 <td style="text-align: left;"><code>user_impersonation</code></td>
-<td style="text-align: left;">Yes, for Zen</td>
-<td style="text-align: left;">Must be <code>false</code>, <strong>inside</strong> the <code>oauth</code> block. Zen cannot switch the database user per request; every URL connects as the login in its configuration. With <code>false</code>, a token without a user claim (a service or machine token) is accepted and the token's user name, when there is one, goes to the <a href="../index.html#call-log">call log</a>. A top-level key of this name is silently ignored and the default <code>true</code> stays in effect, which refuses every token without a user claim.</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Inside the <code>oauth</code> block. The engine sees only the server's api key, whoever the caller is. With the default <code>true</code> every token must name a user (<code>username</code>, <code>preferred_username</code> or <code>email</code> claim); with <code>false</code> a token without a user claim (a service or machine token) is accepted too. Either way the token's user name, when there is one, goes to the <a href="../index.html#call-log">call log</a>. A top-level key of this name is silently ignored.</td>
 </tr>
 </tbody>
 </table>
 <p>The server publishes its protected-resource metadata at <code>/.well-known/oauth-protected-resource/mcp</code>, naming the identity provider, and answers <code>401</code> to a request without a valid token. It never calls the provider's userinfo endpoint and never falls back to the <code>sub</code> claim for a user name.</p>
 <p>Each request is checked for the token's signature, issuer, audience and expiry against the provider's published keys. A token that fails gets <code>401</code>; the server log says which check failed (<code>issuer mismatch</code>, <code>audience mismatch</code>).</p>
-<h3 id="per-target-scopes">Per-Target Scopes<a class="headerlink" href="#per-target-scopes" title="Permanent link">&para;</a></h3>
-<p>On a single-database server, writes need the <code>mcp:write</code> scope as in the login flow. On a server that <a href="../multi-target.html">serves several databases</a>, each URL is guarded by its own grants inside the token:</p>
-<div class="language-text highlight"><pre><span></span><code>actian:{host}:{instance}:{database}:read
-actian:{host}:{instance}:{database}:write
-</code></pre></div>
-<p>The three middle parts are those of the target entry, so an entry <code>{"host": "zen16", "instance": "admin", "databases": ["DEMODATA"]}</code> is read with <code>actian:zen16:admin:DEMODATA:read</code> and written with <code>actian:zen16:admin:DEMODATA:write</code>. The server reads grants from the <code>scope</code>, <code>scp</code> and <code>permissions</code> claims. Matching is exact.</p>
+<h3 id="scopes">Scopes<a class="headerlink" href="#scopes" title="Permanent link">&para;</a></h3>
+<p>A VectorAI DB server exposes one engine, so there are no per-target grants (<code>actian:...</code> scopes do not apply). Reads need a valid token for this server's audience; writes need the <code>mcp:write</code> scope on top, as in the login flow:</p>
 <table>
 <thead>
 <tr>
@@ -3935,82 +3871,75 @@ actian:{host}:{instance}:{database}:write
 </thead>
 <tbody>
 <tr>
-<td>Token with the <code>read</code> grant for the URL</td>
-<td>reads work; a write is refused before anything reaches Zen: <code>no scope grants 'write'</code></td>
+<td>Valid token without <code>mcp:write</code></td>
+<td>reads work; every write tool answers <code>write operations require the 'mcp:write' scope, which the access token does not carry</code>, before any text is embedded and without an approval prompt</td>
 </tr>
 <tr>
-<td>Token with the <code>write</code> grant</td>
-<td>writes go through the approval prompt as usual; on a <a href="../multi-target.html#read-only-personas">read-only persona</a> the engine refuses them regardless of the grant</td>
+<td>Valid token with <code>mcp:write</code></td>
+<td>writes go through the approval prompt as usual</td>
 </tr>
 <tr>
-<td>Token without a grant for the URL</td>
-<td><code>404</code>, the same answer as for a URL that does not exist, on purpose</td>
-</tr>
-<tr>
-<td>No token, or a token that fails verification</td>
-<td><code>401</code></td>
+<td>No token, or a token that fails verification (signature, issuer, audience, expiry)</td>
+<td><code>401</code>; the <code>WWW-Authenticate</code> header points at the protected-resource metadata</td>
 </tr>
 </tbody>
 </table>
-<p><code>list_accessible_targets</code> returns only the URLs the token grants, see <a href="../tools/index.html#list_accessible_targets">Tools</a>.</p>
-<div class="admonition warning">
-<p class="admonition-title"><code>allow_unscoped_reads</code> is for test setups</p>
-<p><code>"allow_unscoped_reads": true</code> lets any valid token read every target in the registry, and the server logs a warning at every start while it is set. It exists to stand up routing before the identity provider has the scopes; never use it for a deployment with real credentials behind it. Writes still need the <code>write</code> grant.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Where the scopes come from</p>
-<p>Your identity provider must issue the grants. In Keycloak, create client scopes with a hardcoded-claim mapper that writes the <code>actian:...</code> values into a claim such as <code>scp</code>, and assign them to the calling client; in Auth0, define them as permissions on the API and grant them through a role, which puts them into the <code>permissions</code> claim. The MCP server does not advertise or request them: the calling application asks its own provider for them.</p>
-</div>
+<p>The server reads scopes from the <code>scope</code>, <code>scp</code> and <code>permissions</code> claims. Matching is exact. The identity provider issues <code>mcp:write</code>; the calling application asks its own provider for it. The setup steps are in <a href="auth0.html">Auth0</a> and <a href="keycloak.html">Keycloak</a>.</p>
 <h2 id="user-impersonation">User Impersonation<a class="headerlink" href="#user-impersonation" title="Permanent link">&para;</a></h2>
-<div class="admonition warning">
-<p class="admonition-title">Not supported on Zen</p>
-<p>Zen does not support <code>SET SESSION AUTHORIZATION</code>, so user impersonation is unavailable. Set <code>user_impersonation</code> to <code>false</code> <strong>inside</strong> the <code>oauth</code> block; a top-level key is ignored. JWT authentication still works; only per-user database switching is skipped. The rest of this section describes the impersonation behavior that does not apply to Zen.</p>
+<div class="admonition note">
+<p class="admonition-title">There is nothing to impersonate on VectorAI DB</p>
+<p>The engine authenticates the server, not the person: every engine request carries the configured <code>vectorai.api_key_secret</code>, whoever the caller is. The OAuth token therefore protects the MCP Server. <code>user_impersonation</code> only decides where the server looks for the caller's name for the <a href="../index.html#call-log">call log</a> and, in resource-server mode, whether a token must name a user. Set it <strong>inside</strong> the <code>oauth</code> block; a top-level key is ignored.</p>
 </div>
-<p>By default, the <code>user_impersonation</code> field is set to <code>true</code>. The server extracts a username from the authenticated user's JWT and runs <code>SET SESSION AUTHORIZATION "&lt;username&gt;"</code> before executing a database query. This ensures users only interact with data their specific database account is permitted to see.</p>
-<p>Impersonation covers extension-authored tools as well as the built-in ones, so an extension is also bounded by the end user's database privileges. See <a href="../extensions/index.html#execution-identity">Extensions</a>.</p>
+<p>What the setting does depends on who runs the login. A user claim is <code>username</code>, <code>preferred_username</code> or <code>email</code>.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">user_impersonation</th>
-<th style="text-align: left;">Server</th>
+<th style="text-align: left;"><code>user_impersonation</code></th>
+<th style="text-align: left;">Login flow (the server runs the login)</th>
+<th style="text-align: left;"><a href="#resource-server-mode">Resource-server mode</a></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>true</code> (default)</td>
-<td style="text-align: left;">Verify the <code>JWT</code> and run <code>SET SESSION AUTHORIZATION "&lt;user&gt;"</code> for each query. Every OAuth user needs a matching database account.</td>
+<td style="text-align: left;">Every valid token is accepted. The name comes from the identity provider's userinfo endpoint, then from the token, and as the last resort from the token's <code>sub</code> claim.</td>
+<td style="text-align: left;">The token itself must carry a user claim; a token without one is refused with <code>401</code>. The server does not call the userinfo endpoint and does not use <code>sub</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>false</code></td>
-<td style="text-align: left;">Verify the <code>JWT</code> and reject unauthenticated requests. However, all approved queries will run under the shared service-account connection pool credentials. The caller's name, when the token carries one, is still recorded in the <a href="../index.html#call-log">call log</a>.</td>
+<td style="text-align: left;">Every valid token is accepted. The name comes from the token's own user claim; a token without one is logged with <code>"user": null</code>.</td>
+<td style="text-align: left;">Service or machine tokens without a user claim are accepted too and logged with <code>"user": null</code>; a token with a user claim is logged under that name.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="extracting-username">Extracting Username<a class="headerlink" href="#extracting-username" title="Permanent link">&para;</a></h3>
-<p>When user impersonation is active, the server extracts the database username from the token using the following priority order:</p>
+<p>In every case reads need a valid token for this server's audience, and writes need the <code>mcp:write</code> scope on top, checked before any embedding call, then the approval prompt. An extension's own engine calls carry the key the extension sends, not the server's. See <a href="../extensions/index.html#execution-identity">Extensions</a>.</p>
+<h3 id="which-name-goes-to-the-call-log">Which name goes to the call log<a class="headerlink" href="#which-name-goes-to-the-call-log" title="Permanent link">&para;</a></h3>
+<p>The user claims are read in the same order everywhere: <code>username</code>, then <code>preferred_username</code>, then the part of <code>email</code> before the <code>@</code> (<code>jdoe@example.com</code> gives <code>jdoe</code>). The flowchart shows where the server looks for them and what happens when none is there:</p>
 <pre class="mermaid"><code>%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
 flowchart TD
-    A[Incoming Request with JWT] --&gt; B{user_impersonation?}
-    B -- false --&gt; C[Run query as service account]
-    B -- true --&gt; D[Query userinfo endpoint]
-    D --&gt; E{username claim?}
-    E -- found --&gt; K[Use username]
-    E -- not found --&gt; F{preferred_username?}
-    F -- found --&gt; K
-    F -- not found --&gt; G{email claim?}
-    G -- found --&gt; H["Extract prefix (jdoe@example.com → jdoe)"]
-    H --&gt; K
-    G -- not found --&gt; I{sub claim?}
-    I -- found --&gt; J["Sanitize sub (auth0|12345 → 12345)"]
+    A[Request with a valid JWT] --&gt; B{user_impersonation?}
+    B -- false --&gt; C{User claim in the token?}
+    C -- found --&gt; K[Use that name]
+    C -- not found --&gt; N[Accept the token; call log user is null]
+    B -- true --&gt; M{Who runs the login?}
+    M --&gt;|resource-server mode| R{User claim in the token?}
+    R -- found --&gt; K
+    R -- not found --&gt; X[Refuse the token with 401]
+    M --&gt;|login flow| U{User claim from the userinfo endpoint?}
+    U -- found --&gt; K
+    U -- not found --&gt; T{User claim in the token?}
+    T -- found --&gt; K
+    T -- not found --&gt; J["Sanitize sub (auth0|12345 → 12345)"]
     J --&gt; K
-    K --&gt; L["SET SESSION AUTHORIZATION 'username'"]
-    L --&gt; M[Execute query]</code></pre>
+    K --&gt; L[Record the name in the call log]
+    L --&gt; E[Send the request to the engine with the server's api key]
+    N --&gt; E</code></pre>
 <div class="admonition tip">
 <p class="admonition-title">Provider-Specific Behavior</p>
 <ul>
-<li><strong>Auth0</strong>: Does not return <code>username</code> or <code>preferred_username</code> by default. The server usually falls back to the email prefix. Ensure that the database usernames match the email prefixes, for example, create database user <code>jdoe</code> for <code>jdoe@example.com</code>.</li>
-<li><strong>Keycloak</strong>: Returns <code>preferred_username</code> by default when the <code>profile</code> scope is present. Create database users that match the Keycloak login names.</li>
-<li><strong>Either provider, when users sign in through an upstream connection</strong>: Auth0 and Keycloak can both broker logins from Google, Microsoft Entra, SAML, or corporate single sign-on. In that case the <code>sub</code> claim carries a provider-specific ID such as <code>google-oauth2|12345</code>. The server strips the prefix and is left with <code>12345</code>, which is unlikely to match a database account. Map a usable <code>username</code> in the provider's user profile, or set <code>user_impersonation</code> to <code>false</code>.  </li>
+<li><strong>Auth0</strong>: Does not return <code>username</code> or <code>preferred_username</code> by default. The server usually takes the email prefix, so the call log shows <code>jdoe</code> for <code>jdoe@example.com</code>.</li>
+<li><strong>Keycloak</strong>: Returns <code>preferred_username</code> by default when the <code>profile</code> scope is present; the call log shows the Keycloak login name.</li>
+<li><strong>Either provider, when users sign in through an upstream connection</strong>: Auth0 and Keycloak can both broker logins from Google, Microsoft Entra, SAML, or corporate single sign-on. Such a user may arrive with no user claim at all, only a <code>sub</code> such as <code>google-oauth2|12345</code>. In the login flow with <code>user_impersonation: true</code> the call log then shows <code>12345</code>; in resource-server mode the same token is refused with <code>401</code>. Map a usable <code>username</code> in the provider's user profile if you want readable names in the log. No database account is involved on VectorAI DB.</li>
 </ul>
 </div>
 <h2 id="secure-remote-deployments-with-https-and-tls">Secure Remote Deployments with HTTPS and TLS<a class="headerlink" href="#secure-remote-deployments-with-https-and-tls" title="Permanent link">&para;</a></h2>
@@ -4047,13 +3976,14 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 <p>Mount the certificate and key into the container using volume flags:</p>
 <div class="admonition note">
 <p class="admonition-title">Example</p>
-<p>The following example demonstrates how to deploy the Zen docker.</p>
+<p>The following example demonstrates how to deploy the VectorAI DB container with TLS.</p>
 </div>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--add-host<span class="o">=</span>host.docker.internal:host-gateway<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span>/path/to/server.crt:/app/server.crt:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span>/path/to/server.key:/app/server.key:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span>/path/to/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>actian/zen-mcp-server:1.1.0
+<span class="w">  </span>actian/vectorai-mcp-server:1.2.0
 </code></pre></div>
 <p>Reference the container paths in <code>conf.json</code>:
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -4065,7 +3995,7 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 <p class="admonition-title">Docker Key Permissions</p>
 <p>If mounting the key as a volume, the container user must be able to read it:</p>
 <ul>
-<li><strong>Best practice</strong>: `Ensure that server.key and conf.json file permissions are set to 600.</li>
+<li><strong>Best practice</strong>: set the permissions of <code>server.key</code> and <code>conf.json</code> to 600.</li>
 </ul>
 </div>
 <h3 id="step-4-trust-the-certificate-in-the-mcp-client">Step 4: Trust the Certificate in the MCP Client<a class="headerlink" href="#step-4-trust-the-certificate-in-the-mcp-client" title="Permanent link">&para;</a></h3>
@@ -4133,7 +4063,7 @@ sudo<span class="w"> </span>update-ca-certificates
 <p>The <code>conf.json</code> file contains <code>CLIENT_SECRET</code> in plaintext. The following are the security guidelines:</p>
 <ul>
 <li>
-<p><strong>Lock down file permissions</strong>: Run chmod 600 conf.json` to restrict access on the host machine.</p>
+<p><strong>Lock down file permissions</strong>: run <code>chmod 600 conf.json</code> on the host.</p>
 </li>
 <li>
 <p><strong>Mandate HTTPS</strong>: Always use <code>https://</code> for the <code>BASE_URL</code>. Tokens sent over plain HTTP are vulnerable to interception.</p>
@@ -4174,7 +4104,7 @@ sudo<span class="w"> </span>update-ca-certificates
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 12, 2026 07:06:41 UTC">November 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 19, 2026 21:04:33 UTC">November 19, 2026</span>
   </span>
 
     

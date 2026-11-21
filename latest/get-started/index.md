@@ -26,7 +26,7 @@ Each Actian database uses a specific container image that is preconfigured with 
 | Zen | [`actian/zen-mcp-server`](https://hub.docker.com/r/actian/zen-mcp-server) |
 | NoSQL | [`actian/nsql-mcp-server`](https://hub.docker.com/r/actian/nsql-mcp-server) |
 | Analytics Engine | [`actian/analytics-engine-mcp-server`](https://hub.docker.com/r/actian/analytics-engine-mcp-server) |
-| VectorAI DB | `<VECTORAI_DB_IMAGE>` (placeholder) |
+| VectorAI DB | [`actian/vectorai-mcp-server`](https://hub.docker.com/r/actian/vectorai-mcp-server) |
 
 ## Step 2: Create a Configuration File
 

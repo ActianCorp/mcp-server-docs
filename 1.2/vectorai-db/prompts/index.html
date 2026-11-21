@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Overview of the prompts available when using the Actian MCP Server with Actian Zen.">
+        <meta name="description" content="Built-in prompt templates of the Actian MCP Server for VectorAI DB - find_information and store_information.">
       
       
       
@@ -2982,10 +2982,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -3199,62 +3195,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../multi-target.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Multiple Databases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deployment.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Deployment Scenarios
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     
     
       
@@ -3274,7 +3214,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_4" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -3296,14 +3236,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_11_6" id="__nav_11_6_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_11_4" id="__nav_11_4_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11_6">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3507,7 +3447,7 @@
   <a href="#available-prompts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Prompts
+        Available prompts
       
     </span>
   </a>
@@ -3515,52 +3455,24 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ask_question" class="md-nav__link">
+  <a href="#find_information" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ask_question
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ask_question">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        find_information
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#output-template" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#store_information" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Template
+        store_information
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -3568,7 +3480,7 @@
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        Next steps
       
     </span>
   </a>
@@ -3623,7 +3535,7 @@
   <a href="#available-prompts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Prompts
+        Available prompts
       
     </span>
   </a>
@@ -3631,52 +3543,24 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ask_question" class="md-nav__link">
+  <a href="#find_information" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ask_question
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ask_question">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        find_information
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#output-template" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#store_information" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Template
+        store_information
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -3684,7 +3568,7 @@
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        Next steps
       
     </span>
   </a>
@@ -3766,68 +3650,144 @@
 
 
 <h1 id="prompts">Prompts<a class="headerlink" href="#prompts" title="Permanent link">&para;</a></h1>
-<p>The Actian MCP Server for Actian Zen includes a built-in prompt template. This feature acts as a bridge, transforming the plain language questions into the specific context needed for a database expert to provide accurate answers.</p>
-<h2 id="available-prompts">Available Prompts<a class="headerlink" href="#available-prompts" title="Permanent link">&para;</a></h2>
+<p>The Actian MCP Server for VectorAI DB includes two built-in prompt templates. They turn a plain request into instructions that name the tool to use and say how to report the result: quote what was found, say when nothing scored well.</p>
+<h2 id="available-prompts">Available prompts<a class="headerlink" href="#available-prompts" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Prompt</th>
+<th>Mode</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="#ask_question"><code>ask_question</code></a></td>
-<td>Formats a user’s question using a specialized Zen database expert template.</td>
+<td><a href="#find_information"><code>find_information</code></a></td>
+<td>read-only, read-write</td>
+<td>Answer a question from the vector collections on this server.</td>
+</tr>
+<tr>
+<td><a href="#store_information"><code>store_information</code></a></td>
+<td>read-write only</td>
+<td>Store a piece of text in a vector collection.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="ask_question">ask_question<a class="headerlink" href="#ask_question" title="Permanent link">&para;</a></h2>
-<p>The <code>ask_question</code> prompt takes a plain language question and wraps it in a template that identifies the AI assistant as a Zen (formerly Actian PSQL) database expert. This ensures the model approaches the query with the correct dialect and structural knowledge.</p>
-<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="find_information"><code>find_information</code><a class="headerlink" href="#find_information" title="Permanent link">&para;</a></h2>
+<p>Wraps a question in instructions to search the collections with the <code>search</code> tool, use a filter only when the user named a payload field, quote the returned texts with their ids and scores, and say so when nothing scores well.</p>
+<p><strong>Arguments</strong></p>
 <table>
 <thead>
 <tr>
 <th>Field</th>
 <th>Type</th>
-<th style="text-align: center;">Required</th>
+<th>Required</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>question</code></td>
-<td><code>string</code></td>
-<td style="text-align: center;">✓</td>
-<td>The question to insert into the prompt template.</td>
+<td>string</td>
+<td>Yes</td>
+<td>The question to answer.</td>
+</tr>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>No</td>
+<td>A configured collection name. When empty, the prompt lists all configured collections and leaves the choice to the model.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="output-template">Output Template<a class="headerlink" href="#output-template" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code>You are a Zen (Actian PSQL) database expert. Answer the following question: &lt;question&gt;
+<p><strong>Output template</strong></p>
+<div class="language-text highlight"><pre><span></span><code>Find information relevant to: '&lt;question&gt;'
+
+Search &lt;the collection '&lt;collection&gt;' | one of: &lt;configured names&gt;&gt; with the `search` tool
+(natural-language query; add a `filter` only when the user named a payload field). Quote the
+returned text fields and give their ids and scores. If nothing scores well, say so instead of
+guessing; `list_collections` shows what exists.
 </code></pre></div>
-<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
-<p><strong>Input</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"question"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What are the top 5 departments by employee count?"</span>
-<span class="p">}</span>
+<p><strong>Usage example</strong></p>
+<p>Input:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"question"</span><span class="p">:</span><span class="w"> </span><span class="s2">"how is a write approved"</span><span class="p">,</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"documents"</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
-<p><strong>Output</strong></p>
-<div class="language-text highlight"><pre><span></span><code>You are a Zen (Actian PSQL) database expert. Answer the following question: What are the top 5 departments by employee count?
+<p>Output:</p>
+<div class="language-text highlight"><pre><span></span><code>Find information relevant to: 'how is a write approved'
+
+Search the collection 'documents' with the `search` tool (natural-language query; add a
+`filter` only when the user named a payload field). Quote the returned text fields and give
+their ids and scores. If nothing scores well, say so instead of guessing; `list_collections`
+shows what exists.
 </code></pre></div>
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
-<div class="grid cards">
+<hr />
+<h2 id="store_information"><code>store_information</code><a class="headerlink" href="#store_information" title="Permanent link">&para;</a></h2>
+<p>Registered only when <code>query_mode</code> is <code>read-write</code>. Wraps a text in instructions to store it with the <code>store</code> tool, to create the collection first if the tool reports it does not exist, to use <code>store_batch</code> for several texts, and not to retry a write the user rejected.</p>
+<p><strong>Arguments</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td>string</td>
+<td>Yes</td>
+<td></td>
+<td>The text to store.</td>
+</tr>
+<tr>
+<td><code>collection</code></td>
+<td>string</td>
+<td>No</td>
+<td>empty</td>
+<td>A configured collection name. When empty, the model chooses among the configured collections.</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>{}</code></td>
+<td>JSON object text passed to the <code>store</code> tool as <code>metadata</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output template</strong></p>
+<div class="language-text highlight"><pre><span></span><code>Store this text in &lt;collection '&lt;collection&gt;' | the right collection among: &lt;configured names&gt;&gt; with the `store` tool:
+
+&lt;text&gt;
+
+Pass metadata &lt;metadata&gt; as the `metadata` argument. If the tool reports the collection does
+not exist yet, call `create_collection` first. Several separate texts go into one `store_batch`
+call, not repeated `store` calls. Each write asks the user for approval; do not retry a rejected
+write.
+</code></pre></div>
+<p><strong>Usage example</strong></p>
+<p>Input:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The config file is read once at start."</span><span class="p">,</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"notes"</span><span class="p">,</span><span class="w"> </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{\"kind\": \"note\"}"</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>Output:</p>
+<div class="language-text highlight"><pre><span></span><code>Store this text in collection 'notes' with the `store` tool:
+
+The config file is read once at start.
+
+Pass metadata {"kind": "note"} as the `metadata` argument. If the tool reports the collection
+does not exist yet, call `create_collection` first. Several separate texts go into one
+`store_batch` call, not repeated `store` calls. Each write asks the user for approval; do not
+retry a rejected write.
+</code></pre></div>
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.71 20.29-1.42 1.42a1 1 0 0 1-1.41 0L7 9.85A3.8 3.8 0 0 1 6 10a4 4 0 0 1-3.78-5.3l2.54 2.54.53-.53 1.42-1.42.53-.53L4.7 2.22A4 4 0 0 1 10 6a3.8 3.8 0 0 1-.15 1l11.86 11.88a1 1 0 0 1 0 1.41M2.29 18.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0l5.47-5.46-2.83-2.83M20 2l-4 2v2l-2.17 2.17 2 2L18 8h2l2-4Z"/></svg></span> <strong><a href="../tools/index.html">Tools</a></strong><br />
-  Learn more about the SQL and schema tools exposed by the Zen server.</p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 20H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h7a2 2 0 0 1 2 2H4v10l2.14-8h17.07l-2.28 8.5c-.23.87-1.01 1.5-1.93 1.5"/></svg></span> <strong><a href="../resources/index.html">Resources</a></strong><br />
-  Explore the resource types available through the Zen server.</p>
-</li>
+<li><a href="../tools/index.html">Tools</a>: <code>search</code>, <code>store</code>, <code>store_batch</code>, <code>create_collection</code>.</li>
+<li><a href="../write-support.html">Write support</a>: the approval each write triggers.</li>
 </ul>
-</div>
 
 
 
@@ -3848,7 +3808,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 12, 2026 07:06:41 UTC">November 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 17, 2026 20:15:24 UTC">November 17, 2026</span>
   </span>
 
     
