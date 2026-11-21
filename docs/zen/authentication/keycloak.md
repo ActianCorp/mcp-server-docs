@@ -272,50 +272,22 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
     The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Creating the Matching Database User](#creating-the-matching-database-user).
 
 
+### Step 5.3: Per-Target Scopes (Resource-Server Mode)
+
+A server that [serves several databases](../multi-target.md) in [resource-server mode](index.md#resource-server-mode) checks a grant per URL, `actian:{host}:{instance}:{database}:read` or `:write`, instead of `mcp:write`. Keycloak issues them the same way:
+
+1. For each grant, create a client scope as in Step 5.1 whose **Name** is the grant itself, for example `actian:zen16:admin:DEMODATA:read`, with **Include in token scope** `On`.
+2. Attach each scope as **Optional** to the client that requests the tokens, as in Step 5.2. In resource-server mode that is the calling application's client: the MCP server runs no login of its own.
+3. Ask for the grants by name in the token request, for example `scope=openid actian:zen16:admin:DEMODATA:read`. They arrive in the token's `scope` claim, where the server reads them. The server also reads `scp` and `permissions`, so a hardcoded-claim mapper that writes the grants into `scp` works too.
+
+A `write` grant implies `read`. A token without the grant for a URL is refused with `403 insufficient_scope`, and the `WWW-Authenticate` header names the grant to request. See [Per-Target Scopes](index.md#per-target-scopes).
+
 ## Step 6: Create Keycloak Users (If Using User Impersonation)
 
 !!! warning "Not applicable to Zen"
     Zen does not support `SET SESSION AUTHORIZATION`, so user impersonation is unavailable and `user_impersonation` must be `false`. Skip this step. See [User Impersonation](index.md#user-impersonation).
 
-If `user_impersonation` is `true`, each Keycloak user contains a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
-
-1. Navigate to **Users** in the left panel.
-2. Select **Add user**.
-3. Fill the form as follows:
-
-    | Field | Value | Notes |
-    |-------|-------|-------|
-    | **Username** | `jdoe` | Must match with the database account name |
-    | **Email** | `jdoe@example.com` | Optional but recommended |
-    | **First Name** | `John` | Optional |
-    | **Last Name** | `Doe` | Optional |
-    | **Enabled** | `On` | A disabled user cannot log in or receive tokens, even with correct credentials. Leave this `On`. If your Keycloak version does not show this field on the Add User form, the account is enabled by default; you can still find and toggle it later from the user's Details tab. |
-
-4. Select **Create**.
-5. Navigate to the **Credentials** tab > **Set password** > enter a password > toggle **Temporary** to `Off` > **Save**.
-
-### Creating the Matching Database User
-
-```sql
--- Create the user account (no DB password needed — Keycloak handles authentication)
-CREATE USER jdoe;
-
--- Grant access to the database
-GRANT ACCESS ON DATABASE mydb TO jdoe;
-
--- Grant the necessary table permissions (adjust per your schema)
-GRANT SELECT ON TABLE orders TO jdoe;
-GRANT SELECT ON TABLE products TO jdoe;
-```
-
-!!! note "`profile` scope is required"
-    Keycloak's userinfo endpoint only returns `preferred_username` when the token includes the `profile` scope. Without it, the endpoint returns only the `sub` claim (a UUID by default).
-
-!!! important "Keycloak does not produce a `username` claim automatically"
-    The MCP server's username extraction priority is - `username` > `preferred_username` > email prefix > sanitized `sub`. Keycloak **does not** produce a `username` claim by default. It only appears if you explicitly configure a User Attribute mapper. In practice, `preferred_username` (second in the priority) is the reliable choice for Keycloak, and it works automatically when the `profile` scope is present.
-
-!!! note "Federated identity (LDAP / Social login)"
-    If Keycloak federates users from an external LDAP or social provider, the `sub` claim may be a UUID that does not match a database account. Ensure that the federated users have `preferred_username` set, or add the sub-override mapper ([Step 4](#step-4-optional-add-the-sub-override-mapper)), or set `user_impersonation: false`.
+Keycloak users are still how people sign in, created as in any realm (**Users** > **Add user**, then **Credentials** > **Set password**). They need no matching Zen account: every URL connects to Zen as the login in its target entry or `conn_string`, and the token's `preferred_username` is recorded in the [call log](../index.md#call-log) only. Keycloak puts `preferred_username` into the token when the `profile` scope is present, which it is by default.
 
 
 ## Step 7: Assemble the Final Configuration
@@ -338,12 +310,7 @@ GRANT SELECT ON TABLE products TO jdoe;
 
 ```json
 {
-    "driver": "{Ingres}",
-    "server": "@<db-host>,tcp_ip,<port>",
-    "database": "mydb",
-    "database_user": "<database_user>",
-    "database_password": "<database_password>",
-    "max_connections": 10,
+    "conn_string": "Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA",
     "host": "0.0.0.0",
     "port": 8000,
     "query_mode": "read-write",
@@ -362,7 +329,7 @@ GRANT SELECT ON TABLE products TO jdoe;
 ```
 
 !!! note
-    Replace `<db-host>` with the database server address. In the Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
+    `ServerName` in `conn_string` is the Zen engine as the container reaches it: the Docker host's name or IP (`host.docker.internal` on Docker Desktop), or the engine container's network alias. Never `localhost` or `127.0.0.1`, which refer to the container itself. A server for [several databases](../multi-target.md) adds a `targets` block; `conn_string` stays required.
 
 For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see [HTTPS / TLS for Remote Deployments](index.md#secure-remote-deployments-with-https-and-tls).
 
