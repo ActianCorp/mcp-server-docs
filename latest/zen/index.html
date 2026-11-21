@@ -3913,10 +3913,9 @@
 <p>A <code>targets</code> block turns the one-database server into one URL per engine, persona and database, each with its own connection to Zen: <code>http://&lt;mcp-host&gt;:8000/mcp/{host}/{instance}/{database}/mcp</code>. Personas listed in <code>zen_readonly_personas</code> are opened read-only; with an identity provider, each URL gets its own read and write grants. Configuration, URLs, hot add and remove, and limits are on <a href="multi-target.html">Multiple Databases</a>.</p>
 <h2 id="call-log">Call Log<a class="headerlink" href="#call-log" title="Permanent link">&para;</a></h2>
 <p>Every tool call writes one JSON line to the container log (<code>docker logs &lt;container&gt;</code>):</p>
-<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"ts"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-10-20T13:18:09.363+00:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mcp_test_user"</span><span class="p">,</span><span class="w"> </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zen16/admin/DEMODATA"</span><span class="p">,</span>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"ts"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-11-12T09:41:07.118+00:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mcp_test_user"</span><span class="p">,</span><span class="w"> </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zen16/admin/DEMODATA"</span><span class="p">,</span>
 <span class="w"> </span><span class="nt">"tool"</span><span class="p">:</span><span class="w"> </span><span class="s2">"execute_write_query"</span><span class="p">,</span><span class="w"> </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"write"</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span><span class="w"> </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"latency_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">62.0</span><span class="p">,</span>
-<span class="w"> </span><span class="nt">"correlation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10dd6af8-5fe9-4e9c-baf8-97b6ab5377cc"</span><span class="p">,</span><span class="w"> </span><span class="nt">"request_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
-<span class="w"> </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Person"</span><span class="p">,</span><span class="w"> </span><span class="nt">"operation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"insert"</span><span class="p">}}</span>
+<span class="w"> </span><span class="nt">"correlation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3f9c1c0b6d2d4a5e9f0e2a7b8c6d5e4f"</span><span class="p">,</span><span class="w"> </span><span class="nt">"request_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">}</span>
 </code></pre></div>
 <table>
 <thead>
@@ -3927,6 +3926,10 @@
 </thead>
 <tbody>
 <tr>
+<td><code>ts</code></td>
+<td>When the record was written, UTC.</td>
+</tr>
+<tr>
 <td><code>user</code></td>
 <td>The authenticated user from the token when OAuth is on, otherwise <code>null</code>. Zen cannot run a query as that user, so this records who asked; the query itself runs as the connection-string login.</td>
 </tr>
@@ -3935,8 +3938,8 @@
 <td><code>host/instance/database</code> of the routed URL, or the server and database of <code>conn_string</code> on a single-database server.</td>
 </tr>
 <tr>
-<td><code>action</code></td>
-<td><code>read</code>, <code>write</code> or <code>admin</code>, decided by the tool and its arguments, never by parsing SQL.</td>
+<td><code>tool</code>, <code>action</code></td>
+<td>The tool, and <code>read</code>, <code>write</code> or <code>admin</code>, decided by the tool and its arguments, never by parsing SQL.</td>
 </tr>
 <tr>
 <td><code>status</code></td>
@@ -3947,8 +3950,16 @@
 <td>Rows returned for a read (capped by <code>max_rows</code>), rows affected for a write.</td>
 </tr>
 <tr>
-<td><code>correlation_id</code></td>
-<td>The MCP session, so the calls of one conversation share it.</td>
+<td><code>latency_ms</code></td>
+<td>How long the call took inside the server.</td>
+</tr>
+<tr>
+<td><code>correlation_id</code>, <code>request_id</code></td>
+<td>The MCP session id, so the calls of one conversation share it, and the request number within that session.</td>
+</tr>
+<tr>
+<td><code>detail</code></td>
+<td>Only on tools whose arguments name a table or an operation, such as <code>orm_operation</code>: <code>{"table": "Person", "operation": "insert"}</code>. The SQL tools have no <code>detail</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -3960,7 +3971,7 @@
 <span class="w">  </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--add-host<span class="o">=</span>host.docker.internal:host-gateway<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>actian/zen-mcp-server:1.1.0
+<span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Container networking</p>
@@ -4031,7 +4042,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 23, 2026 01:09:30 UTC">October 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 15:50:44 UTC">November 18, 2026</span>
   </span>
 
     

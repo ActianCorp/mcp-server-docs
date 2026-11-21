@@ -4664,12 +4664,7 @@
 </div>
 <h3 id="example-confjson">Example <code>conf.json</code><a class="headerlink" href="#example-confjson" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">"driver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{Ingres}"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@&lt;db-host&gt;,tcp_ip,&lt;port&gt;"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mydb"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"database_user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_user&gt;"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"database_password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_password&gt;"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"max_connections"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"conn_string"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"query_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"read-write"</span><span class="p">,</span>
@@ -4688,7 +4683,7 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <code>&lt;db-host&gt;</code> with the database server address. In a Docker container, use the host's IP address or <code>host.docker.internal</code>(not <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself).</p>
+<p><code>ServerName</code> in <code>conn_string</code> is the Zen engine as the container reaches it: the Docker host's name or IP (<code>host.docker.internal</code> on Docker Desktop), or the engine container's network alias. Never <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself. A server for <a href="../multi-target.html">several databases</a> adds a <code>targets</code> block; <code>conn_string</code> stays required.</p>
 </div>
 <p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see <a href="index.html#secure-remote-deployments-with-https-and-tls">HTTPS / TLS for Remote Deployments</a>.</p>
 <p>For security best practices (file permissions, <code>.gitignore</code>, secrets management), see <a href="index.html#security-best-practices">Security Best Practices</a>.</p>
@@ -4891,7 +4886,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 24, 2026 10:11:32 UTC">August 24, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 15:50:44 UTC">November 18, 2026</span>
   </span>
 
     

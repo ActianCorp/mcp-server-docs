@@ -115,20 +115,22 @@ A `targets` block turns the one-database server into one URL per engine, persona
 Every tool call writes one JSON line to the container log (`docker logs <container>`):
 
 ```json
-{"ts": "2026-10-20T13:18:09.363+00:00", "user": "mcp_test_user", "target": "zen16/admin/DEMODATA",
+{"ts": "2026-11-12T09:41:07.118+00:00", "user": "mcp_test_user", "target": "zen16/admin/DEMODATA",
  "tool": "execute_write_query", "action": "write", "status": "ok", "rows": 1, "latency_ms": 62.0,
- "correlation_id": "10dd6af8-5fe9-4e9c-baf8-97b6ab5377cc", "request_id": "3",
- "detail": {"table": "Person", "operation": "insert"}}
+ "correlation_id": "3f9c1c0b6d2d4a5e9f0e2a7b8c6d5e4f", "request_id": "3"}
 ```
 
 | Field | Meaning |
 |-------|---------|
+| `ts` | When the record was written, UTC. |
 | `user` | The authenticated user from the token when OAuth is on, otherwise `null`. Zen cannot run a query as that user, so this records who asked; the query itself runs as the connection-string login. |
 | `target` | `host/instance/database` of the routed URL, or the server and database of `conn_string` on a single-database server. |
-| `action` | `read`, `write` or `admin`, decided by the tool and its arguments, never by parsing SQL. |
+| `tool`, `action` | The tool, and `read`, `write` or `admin`, decided by the tool and its arguments, never by parsing SQL. |
 | `status` | `ok`, `error`, or `rejected` when the approval prompt was declined. |
 | `rows` | Rows returned for a read (capped by `max_rows`), rows affected for a write. |
-| `correlation_id` | The MCP session, so the calls of one conversation share it. |
+| `latency_ms` | How long the call took inside the server. |
+| `correlation_id`, `request_id` | The MCP session id, so the calls of one conversation share it, and the request number within that session. |
+| `detail` | Only on tools whose arguments name a table or an operation, such as `orm_operation`: `{"table": "Person", "operation": "insert"}`. The SQL tools have no `detail`. |
 
 SQL text and row values are never recorded unless `call_log_statements` is `true`. The log is a record of what the server did, not an audit trail: nothing in it is tamper-evident. `"call_log": false` turns it off.
 
@@ -143,7 +145,7 @@ docker run -d \
   -p 8000:8000 \
   --add-host=host.docker.internal:host-gateway \
   -v $(pwd)/conf.json:/app/conf.json:ro \
-  actian/zen-mcp-server:1.1.0
+  actian/zen-mcp-server:1.2.0
 ```
 
 !!! note "Container networking"

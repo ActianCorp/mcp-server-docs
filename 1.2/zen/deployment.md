@@ -65,7 +65,7 @@ The URL an agent uses is `http://<mcp-host>:8000/mcp` for a single-database serv
 docker run -d --name zen-mcp -p 127.0.0.1:8000:8000 \
   --add-host=host.docker.internal:host-gateway \
   -v $(pwd)/conf.json:/app/conf.json:ro \
-  actian/zen-mcp-server:1.1.0
+  actian/zen-mcp-server:1.2.0
 ```
 
 Agent URL: `http://localhost:8000/mcp`. If the log shows error `10065`, the container cannot reach the engine on the laptop; check that Zen listens on 1583 and that the host firewall lets Docker's network through.
@@ -77,7 +77,7 @@ docker network create zentest
 docker run -d --name zen16 --network zentest --network-alias zen16 <zen-engine-image>
 docker run -d --name zen-mcp --network zentest -p 8000:8000 \
   -v $(pwd)/conf.json:/app/conf.json:ro \
-  actian/zen-mcp-server:1.1.0
+  actian/zen-mcp-server:1.2.0
 ```
 
 The only change from A: `--network zentest` instead of `--add-host`, and `ServerName=zen16:1583` in `conn_string`, because the engine now lives in a container named `zen16` on the network `zentest`.
@@ -91,7 +91,7 @@ mkdir targets.d
 docker run -d --name zen-mcp --network zentest -p 8000:8000 \
   -v $(pwd)/conf.json:/app/conf.json:ro \
   -v $(pwd)/targets.d:/app/targets.d \
-  actian/zen-mcp-server:1.1.0
+  actian/zen-mcp-server:1.2.0
 ```
 
 Then run the checks in [Verifying a Setup](multi-target.md#verifying-a-setup).
@@ -119,7 +119,7 @@ docker run -d --name zen-mcp -p 8000:8000 \
   -v /path/to/conf.json:/app/conf.json:ro \
   -v /path/to/server.crt:/app/server.crt:ro \
   -v /path/to/server.key:/app/server.key:ro \
-  actian/zen-mcp-server:1.1.0
+  actian/zen-mcp-server:1.2.0
 ```
 
 Each target entry carries the Zen login for its engine; `conf.json` therefore holds passwords, so restrict its file permissions to the owner. Open 1583 from the MCP host to each engine, and 8000 to the agents' network only.
@@ -132,8 +132,9 @@ Each target entry carries the Zen login for its engine; `conf.json` therefore ho
 | `ssl_certfile and ssl_keyfile are required for OAuth on non-localhost hosts` | Authentication is on and `host` is not `localhost`. | Mount a certificate and key, see [HTTPS and TLS](authentication/index.md#secure-remote-deployments-with-https-and-tls). |
 | `ssl_certfile path does not exist or is empty` | The mount did not land, or the paths in `conf.json` differ from the mount. | Mount at exactly `/app/server.crt` and `/app/server.key`. |
 | `401` and `issuer mismatch` in the log | The token's issuer is not the address in `FASTMCP_SERVER_AUTH_CONFIG_URL`. | The container and the token requests must name the identity provider the same way; a Keycloak started with `KC_HOSTNAME` pins the issuer. |
-| `404` on a target URL that exists | The token has no `actian:...:read` grant for that exact target, or the path has a typo. The server gives the same `404` on purpose. | Grant the scope at the identity provider; compare the path with `list_accessible_targets`. |
-| `Access denied to a READ-ONLY data source` | The URL's persona is in `zen_readonly_personas`, or the server is `read-only`. | Use a read-write persona, or set `query_mode` to `read-write`. This is the expected result of a read-only check. |
+| `403` with `insufficient_scope` on a target URL | The token has no `actian:...:read` grant for that exact target, or the path has a typo: a URL that names no target gets the same `403` on purpose. The `WWW-Authenticate` header names the grant the path needs. | Grant the scope at the identity provider; compare the path with `list_accessible_targets` on the plain `/mcp` URL. |
+| `target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL` | A write on a URL whose persona is in `zen_readonly_personas`; the server refuses it before anything reaches Zen. | Use the read-write persona's URL. This is the expected result of a read-only check. |
+| `Access denied to a READ-ONLY data source` | The engine refused a write: the server is `read-only`, or a statement the server did not classify as a write reached a read-only persona's connection. | Set `query_mode` to `read-write`, or use a read-write persona. |
 | `N targets are configured, but per-target scope enforcement ... is not active` at start | Several targets need either authentication or `allow_unscoped_reads: true`. | Add `auth_mode: "resource-server"`, or the escape hatch for a test setup. |
 
 `docker logs <container>` shows the startup lines, every [call log](index.md#call-log) record, and the refusals above.

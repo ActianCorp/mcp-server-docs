@@ -1905,6 +1905,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-53-per-target-scopes-resource-server-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5.3: Per-Target Scopes (Resource-Server Mode)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1918,23 +1929,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Step 6: Create Keycloak Users (If Using User Impersonation)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#creating-the-matching-database-user" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Creating the Matching Database User
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4119,6 +4113,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-53-per-target-scopes-resource-server-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5.3: Per-Target Scopes (Resource-Server Mode)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4132,23 +4137,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Step 6: Create Keycloak Users (If Using User Impersonation)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#creating-the-matching-database-user" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Creating the Matching Database User
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4837,82 +4825,20 @@
 <p class="admonition-title">The database still decides what a user can change</p>
 <p>The <code>mcp:write</code> scope permits write statements in general. It does not grant table privileges. With <code>user_impersonation</code> enabled, each write also runs as that user's own database account, so grant the matching <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> privileges in the database as well. See <a href="#creating-the-matching-database-user">Creating the Matching Database User</a>.</p>
 </div>
+<h3 id="step-53-per-target-scopes-resource-server-mode">Step 5.3: Per-Target Scopes (Resource-Server Mode)<a class="headerlink" href="#step-53-per-target-scopes-resource-server-mode" title="Permanent link">&para;</a></h3>
+<p>A server that <a href="../multi-target.html">serves several databases</a> in <a href="index.html#resource-server-mode">resource-server mode</a> checks a grant per URL, <code>actian:{host}:{instance}:{database}:read</code> or <code>:write</code>, instead of <code>mcp:write</code>. Keycloak issues them the same way:</p>
+<ol>
+<li>For each grant, create a client scope as in Step 5.1 whose <strong>Name</strong> is the grant itself, for example <code>actian:zen16:admin:DEMODATA:read</code>, with <strong>Include in token scope</strong> <code>On</code>.</li>
+<li>Attach each scope as <strong>Optional</strong> to the client that requests the tokens, as in Step 5.2. In resource-server mode that is the calling application's client: the MCP server runs no login of its own.</li>
+<li>Ask for the grants by name in the token request, for example <code>scope=openid actian:zen16:admin:DEMODATA:read</code>. They arrive in the token's <code>scope</code> claim, where the server reads them. The server also reads <code>scp</code> and <code>permissions</code>, so a hardcoded-claim mapper that writes the grants into <code>scp</code> works too.</li>
+</ol>
+<p>A <code>write</code> grant implies <code>read</code>. A token without the grant for a URL is refused with <code>403 insufficient_scope</code>, and the <code>WWW-Authenticate</code> header names the grant to request. See <a href="index.html#per-target-scopes">Per-Target Scopes</a>.</p>
 <h2 id="step-6-create-keycloak-users-if-using-user-impersonation">Step 6: Create Keycloak Users (If Using User Impersonation)<a class="headerlink" href="#step-6-create-keycloak-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Not applicable to Zen</p>
 <p>Zen does not support <code>SET SESSION AUTHORIZATION</code>, so user impersonation is unavailable and <code>user_impersonation</code> must be <code>false</code>. Skip this step. See <a href="index.html#user-impersonation">User Impersonation</a>.</p>
 </div>
-<p>If <code>user_impersonation</code> is <code>true</code>, each Keycloak user contains a matching database account. For more information, see <a href="index.html#user-impersonation">User Impersonation</a>.</p>
-<ol>
-<li>Navigate to <strong>Users</strong> in the left panel.</li>
-<li>Select <strong>Add user</strong>.</li>
-<li>
-<p>Fill the form as follows:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Value</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Username</strong></td>
-<td><code>jdoe</code></td>
-<td>Must match with the database account name</td>
-</tr>
-<tr>
-<td><strong>Email</strong></td>
-<td><code>jdoe@example.com</code></td>
-<td>Optional but recommended</td>
-</tr>
-<tr>
-<td><strong>First Name</strong></td>
-<td><code>John</code></td>
-<td>Optional</td>
-</tr>
-<tr>
-<td><strong>Last Name</strong></td>
-<td><code>Doe</code></td>
-<td>Optional</td>
-</tr>
-<tr>
-<td><strong>Enabled</strong></td>
-<td><code>On</code></td>
-<td>A disabled user cannot log in or receive tokens, even with correct credentials. Leave this <code>On</code>. If your Keycloak version does not show this field on the Add User form, the account is enabled by default; you can still find and toggle it later from the user's Details tab.</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li>
-<p>Select <strong>Create</strong>.</p>
-</li>
-<li>Navigate to the <strong>Credentials</strong> tab &gt; <strong>Set password</strong> &gt; enter a password &gt; toggle <strong>Temporary</strong> to <code>Off</code> &gt; <strong>Save</strong>.</li>
-</ol>
-<h3 id="creating-the-matching-database-user">Creating the Matching Database User<a class="headerlink" href="#creating-the-matching-database-user" title="Permanent link">&para;</a></h3>
-<div class="language-sql highlight"><pre><span></span><code><span class="c1">-- Create the user account (no DB password needed — Keycloak handles authentication)</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
-
-<span class="c1">-- Grant access to the database</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">ACCESS</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">mydb</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
-
-<span class="c1">-- Grant the necessary table permissions (adjust per your schema)</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">jdoe</span><span class="p">;</span>
-</code></pre></div>
-<div class="admonition note">
-<p class="admonition-title"><code>profile</code> scope is required</p>
-<p>Keycloak's userinfo endpoint only returns <code>preferred_username</code> when the token includes the <code>profile</code> scope. Without it, the endpoint returns only the <code>sub</code> claim (a UUID by default).</p>
-</div>
-<div class="admonition important">
-<p class="admonition-title">Keycloak does not produce a <code>username</code> claim automatically</p>
-<p>The MCP server's username extraction priority is - <code>username</code> &gt; <code>preferred_username</code> &gt; email prefix &gt; sanitized <code>sub</code>. Keycloak <strong>does not</strong> produce a <code>username</code> claim by default. It only appears if you explicitly configure a User Attribute mapper. In practice, <code>preferred_username</code> (second in the priority) is the reliable choice for Keycloak, and it works automatically when the <code>profile</code> scope is present.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Federated identity (LDAP / Social login)</p>
-<p>If Keycloak federates users from an external LDAP or social provider, the <code>sub</code> claim may be a UUID that does not match a database account. Ensure that the federated users have <code>preferred_username</code> set, or add the sub-override mapper (<a href="#step-4-optional-add-the-sub-override-mapper">Step 4</a>), or set <code>user_impersonation: false</code>.</p>
-</div>
+<p>Keycloak users are still how people sign in, created as in any realm (<strong>Users</strong> &gt; <strong>Add user</strong>, then <strong>Credentials</strong> &gt; <strong>Set password</strong>). They need no matching Zen account: every URL connects to Zen as the login in its target entry or <code>conn_string</code>, and the token's <code>preferred_username</code> is recorded in the <a href="../index.html#call-log">call log</a> only. Keycloak puts <code>preferred_username</code> into the token when the <code>profile</code> scope is present, which it is by default.</p>
 <h2 id="step-7-assemble-the-final-configuration">Step 7: Assemble the Final Configuration<a class="headerlink" href="#step-7-assemble-the-final-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="mapping-summary">Mapping Summary<a class="headerlink" href="#mapping-summary" title="Permanent link">&para;</a></h3>
 <table>
@@ -4962,12 +4888,7 @@
 </div>
 <h3 id="example-confjson">Example <code>conf.json</code><a class="headerlink" href="#example-confjson" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">"driver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{Ingres}"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@&lt;db-host&gt;,tcp_ip,&lt;port&gt;"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mydb"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"database_user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_user&gt;"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"database_password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;database_password&gt;"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"max_connections"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"conn_string"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"query_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"read-write"</span><span class="p">,</span>
@@ -4986,7 +4907,7 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <code>&lt;db-host&gt;</code> with the database server address. In the Docker container, use the host's IP address or <code>host.docker.internal</code>(not <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself).</p>
+<p><code>ServerName</code> in <code>conn_string</code> is the Zen engine as the container reaches it: the Docker host's name or IP (<code>host.docker.internal</code> on Docker Desktop), or the engine container's network alias. Never <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself. A server for <a href="../multi-target.html">several databases</a> adds a <code>targets</code> block; <code>conn_string</code> stays required.</p>
 </div>
 <p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see <a href="index.html#secure-remote-deployments-with-https-and-tls">HTTPS / TLS for Remote Deployments</a>.</p>
 <p>For security best practices (file permissions, <code>.gitignore</code>, secrets management), see <a href="index.html#security-best-practices">Security Best Practices</a>.</p>
@@ -5226,7 +5147,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 24, 2026 10:11:32 UTC">August 24, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 15:50:44 UTC">November 18, 2026</span>
   </span>
 
     

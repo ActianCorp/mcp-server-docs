@@ -279,12 +279,7 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
 
 ```json
 {
-    "driver": "{Ingres}",
-    "server": "@<db-host>,tcp_ip,<port>",
-    "database": "mydb",
-    "database_user": "<database_user>",
-    "database_password": "<database_password>",
-    "max_connections": 10,
+    "conn_string": "Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA",
     "host": "0.0.0.0",
     "port": 8000,
     "query_mode": "read-write",
@@ -303,7 +298,7 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
 ```
 
 !!! note
-    Replace `<db-host>` with the database server address. In a Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
+    `ServerName` in `conn_string` is the Zen engine as the container reaches it: the Docker host's name or IP (`host.docker.internal` on Docker Desktop), or the engine container's network alias. Never `localhost` or `127.0.0.1`, which refer to the container itself. A server for [several databases](../multi-target.md) adds a `targets` block; `conn_string` stays required.
 
 For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see [HTTPS / TLS for Remote Deployments](index.md#secure-remote-deployments-with-https-and-tls).
 

@@ -3960,7 +3960,7 @@
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen-mcp<span class="w"> </span>-p<span class="w"> </span><span class="m">127</span>.0.0.1:8000:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--add-host<span class="o">=</span>host.docker.internal:host-gateway<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>actian/zen-mcp-server:1.1.0
+<span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
 <p>Agent URL: <code>http://localhost:8000/mcp</code>. If the log shows error <code>10065</code>, the container cannot reach the engine on the laptop; check that Zen listens on 1583 and that the host firewall lets Docker's network through.</p>
 <h3 id="b-engine-and-server-in-containers">B. Engine and Server in Containers<a class="headerlink" href="#b-engine-and-server-in-containers" title="Permanent link">&para;</a></h3>
@@ -3968,7 +3968,7 @@
 docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen16<span class="w"> </span>--network<span class="w"> </span>zentest<span class="w"> </span>--network-alias<span class="w"> </span>zen16<span class="w"> </span>&lt;zen-engine-image&gt;
 docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen-mcp<span class="w"> </span>--network<span class="w"> </span>zentest<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>actian/zen-mcp-server:1.1.0
+<span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
 <p>The only change from A: <code>--network zentest</code> instead of <code>--add-host</code>, and <code>ServerName=zen16:1583</code> in <code>conn_string</code>, because the engine now lives in a container named <code>zen16</code> on the network <code>zentest</code>.</p>
 <h3 id="c-several-urls-without-authentication">C. Several URLs Without Authentication<a class="headerlink" href="#c-several-urls-without-authentication" title="Permanent link">&para;</a></h3>
@@ -3977,7 +3977,7 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen-mcp<span class="w"> </span>--network<span class="w"> </span>zentest<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/targets.d:/app/targets.d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>actian/zen-mcp-server:1.1.0
+<span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
 <p>Then run the checks in <a href="multi-target.html#verifying-a-setup">Verifying a Setup</a>.</p>
 <h3 id="d-a-team-deployment-with-an-identity-provider">D. A Team Deployment with an Identity Provider<a class="headerlink" href="#d-a-team-deployment-with-an-identity-provider" title="Permanent link">&para;</a></h3>
@@ -3998,7 +3998,7 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <span class="w">  </span>-v<span class="w"> </span>/path/to/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span>/path/to/server.crt:/app/server.crt:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span>/path/to/server.key:/app/server.key:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>actian/zen-mcp-server:1.1.0
+<span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
 <p>Each target entry carries the Zen login for its engine; <code>conf.json</code> therefore holds passwords, so restrict its file permissions to the owner. Open 1583 from the MCP host to each engine, and 8000 to the agents' network only.</p>
 <h2 id="when-something-goes-wrong">When Something Goes Wrong<a class="headerlink" href="#when-something-goes-wrong" title="Permanent link">&para;</a></h2>
@@ -4032,14 +4032,19 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <td>The container and the token requests must name the identity provider the same way; a Keycloak started with <code>KC_HOSTNAME</code> pins the issuer.</td>
 </tr>
 <tr>
-<td><code>404</code> on a target URL that exists</td>
-<td>The token has no <code>actian:...:read</code> grant for that exact target, or the path has a typo. The server gives the same <code>404</code> on purpose.</td>
-<td>Grant the scope at the identity provider; compare the path with <code>list_accessible_targets</code>.</td>
+<td><code>403</code> with <code>insufficient_scope</code> on a target URL</td>
+<td>The token has no <code>actian:...:read</code> grant for that exact target, or the path has a typo: a URL that names no target gets the same <code>403</code> on purpose. The <code>WWW-Authenticate</code> header names the grant the path needs.</td>
+<td>Grant the scope at the identity provider; compare the path with <code>list_accessible_targets</code> on the plain <code>/mcp</code> URL.</td>
+</tr>
+<tr>
+<td><code>target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL</code></td>
+<td>A write on a URL whose persona is in <code>zen_readonly_personas</code>; the server refuses it before anything reaches Zen.</td>
+<td>Use the read-write persona's URL. This is the expected result of a read-only check.</td>
 </tr>
 <tr>
 <td><code>Access denied to a READ-ONLY data source</code></td>
-<td>The URL's persona is in <code>zen_readonly_personas</code>, or the server is <code>read-only</code>.</td>
-<td>Use a read-write persona, or set <code>query_mode</code> to <code>read-write</code>. This is the expected result of a read-only check.</td>
+<td>The engine refused a write: the server is <code>read-only</code>, or a statement the server did not classify as a write reached a read-only persona's connection.</td>
+<td>Set <code>query_mode</code> to <code>read-write</code>, or use a read-write persona.</td>
 </tr>
 <tr>
 <td><code>N targets are configured, but per-target scope enforcement ... is not active</code> at start</td>
@@ -4069,7 +4074,7 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 12, 2026 07:06:41 UTC">November 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 15:50:44 UTC">November 18, 2026</span>
   </span>
 
     

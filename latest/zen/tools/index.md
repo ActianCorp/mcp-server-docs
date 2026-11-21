@@ -518,7 +518,7 @@ Provides server management operations: list available databases, list DSNs with 
 
 Returns the databases a client may reach on a server that [serves several databases](../multi-target.md), with the path of each. Registered only when `conf.json` has a `targets` block. Target selection happens by the URL a session connects to, never by a tool argument, so this is how a client that knows a database name finds its URL.
 
-With authentication on, the list contains only the targets the caller's token grants; a token without any grant gets an empty list.
+With authentication on, the list contains only the targets the caller's token grants. A token without any grant gets an empty list, but only on the plain `/mcp` URL: every target URL answers `403` to it, so call the tool there.
 
 ### Parameters
 

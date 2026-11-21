@@ -3940,18 +3940,19 @@ actian:{host}:{instance}:{database}:write
 </tr>
 <tr>
 <td>Token with the <code>write</code> grant</td>
-<td>writes go through the approval prompt as usual; on a <a href="../multi-target.html#read-only-personas">read-only persona</a> the engine refuses them regardless of the grant</td>
+<td>reads and writes work: a <code>write</code> grant implies <code>read</code>. Writes go through the approval prompt as usual; on a <a href="../multi-target.html#read-only-personas">read-only persona</a> the server refuses them regardless of the grant</td>
 </tr>
 <tr>
 <td>Token without a grant for the URL</td>
-<td><code>404</code>, the same answer as for a URL that does not exist, on purpose</td>
+<td><code>403</code> with <code>error="insufficient_scope"</code>; the <code>WWW-Authenticate</code> header names the <code>read</code> grant the URL needs. A URL that names no target at all gets the identical <code>403</code>, on purpose, so a caller cannot tell the two apart</td>
 </tr>
 <tr>
 <td>No token, or a token that fails verification</td>
-<td><code>401</code></td>
+<td><code>401</code>, on every URL, whether or not it names a target</td>
 </tr>
 </tbody>
 </table>
+<p>Without an identity provider there is no token to check, and a URL that names no target answers <code>404</code>.</p>
 <p><code>list_accessible_targets</code> returns only the URLs the token grants, see <a href="../tools/index.html#list_accessible_targets">Tools</a>.</p>
 <div class="admonition warning">
 <p class="admonition-title"><code>allow_unscoped_reads</code> is for test setups</p>
@@ -3959,7 +3960,7 @@ actian:{host}:{instance}:{database}:write
 </div>
 <div class="admonition note">
 <p class="admonition-title">Where the scopes come from</p>
-<p>Your identity provider must issue the grants. In Keycloak, create client scopes with a hardcoded-claim mapper that writes the <code>actian:...</code> values into a claim such as <code>scp</code>, and assign them to the calling client; in Auth0, define them as permissions on the API and grant them through a role, which puts them into the <code>permissions</code> claim. The MCP server does not advertise or request them: the calling application asks its own provider for them.</p>
+<p>Your identity provider must issue the grants. In Keycloak, create one client scope per grant and attach it to the calling client as optional, see <a href="keycloak.html#step-53-per-target-scopes-resource-server-mode">Keycloak, Step 5.3</a>; a hardcoded-claim mapper that writes the <code>actian:...</code> values into <code>scp</code> works as well. In Auth0, define them as permissions on the API and grant them through a role, which puts them into the <code>permissions</code> claim. The MCP server does not advertise or request them: the calling application asks its own provider for them.</p>
 </div>
 <h2 id="user-impersonation">User Impersonation<a class="headerlink" href="#user-impersonation" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
@@ -4053,7 +4054,7 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 <span class="w">  </span>-v<span class="w"> </span>/path/to/server.crt:/app/server.crt:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span>/path/to/server.key:/app/server.key:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span>/path/to/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>actian/zen-mcp-server:1.1.0
+<span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
 <p>Reference the container paths in <code>conf.json</code>:
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -4174,7 +4175,7 @@ sudo<span class="w"> </span>update-ca-certificates
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 23, 2026 01:09:30 UTC">October 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 15:50:44 UTC">November 18, 2026</span>
   </span>
 
     
