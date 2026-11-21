@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.2">
     
     
       
@@ -1004,6 +1004,8 @@
       
         
       
+        
+      
     
     
     
@@ -1217,6 +1219,34 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../multi-target.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Deployments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
       
@@ -1236,7 +1266,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -1258,14 +1288,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1414,6 +1444,17 @@
     <span class="md-ellipsis">
       
         Available Tools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#list_accessible_targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list_accessible_targets
       
     </span>
   </a>
@@ -3786,6 +3827,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#list_accessible_targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list_accessible_targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#execute_query" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4116,6 +4168,10 @@
 </thead>
 <tbody>
 <tr>
+<td><a href="#list_accessible_targets"><code>list_accessible_targets</code></a></td>
+<td>In a multi-target deployment, lists databases available to the caller and their connection URLs.</td>
+</tr>
+<tr>
 <td><a href="#execute_query"><code>execute_query</code></a></td>
 <td>Runs a SQL query against the connected database. Reads are always allowed; writes run only when the server permits them.</td>
 </tr>
@@ -4133,6 +4189,26 @@
 </tr>
 </tbody>
 </table>
+<h2 id="list_accessible_targets">list_accessible_targets<a class="headerlink" href="#list_accessible_targets" title="Permanent link">&para;</a></h2>
+<p>In a multi-target deployment, <code>list_accessible_targets</code> returns only targets available to the caller. Use a returned target URL to connect before calling the database tools. Credentials are not returned.</p>
+<p>This tool does not require input parameters.</p>
+<p>Example response:</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ifx-db.example.com"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"instance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ol_informix"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"databases"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"warehouse"</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/mcp/ifx-db.example.com/ol_informix/warehouse"</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://mcp.example.com:8000/mcp/ifx-db.example.com/ol_informix/warehouse"</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="execute_query">execute_query<a class="headerlink" href="#execute_query" title="Permanent link">&para;</a></h2>
 <p>Use this tool to run SQL queries. The results are returned as structured JSON.</p>
 <p>By default, the tool accepts only <code>SELECT</code>. When the server runs with <code>query_mode</code> set to <code>read-write</code>, it also accepts the Data Manipulation Language (DML) statements <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>. See <a href="../write-support.html">Write support</a>.</p>
@@ -4227,8 +4303,9 @@
 </code></pre></div>
 <h3 id="write-errors">Write Errors<a class="headerlink" href="#write-errors" title="Permanent link">&para;</a></h3>
 <p>The following errors apply when <code>query_mode</code> is <code>read-write</code>.</p>
-<p><strong>The token lacks the <code>mcp:write</code> scope</strong></p>
-<p>The server checks the scope before it asks you to approve the statement, so no prompt appears.</p>
+<p><strong>The token lacks the required write grant</strong></p>
+<p>On a single-database deployment, the server checks <code>mcp:write</code> before it asks you to approve the statement, so no prompt appears. A multi-target request requires the target's per-target <code>:write</code> grant instead; <code>mcp:write</code> does not authorize writes to a target URL. See <a href="../write-support.html#which-scope-authorizes-a-write">Write support</a>.</p>
+<p>The error object below applies to the single-database <code>mcp:write</code> check. A target URL uses the target-specific grant described above.</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">    </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"write operations require the 'mcp:write' scope, which the access token does not carry"</span>
@@ -4429,7 +4506,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 24, 2026 10:11:32 UTC">August 24, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 18:00:03 UTC">November 18, 2026</span>
   </span>
 
     

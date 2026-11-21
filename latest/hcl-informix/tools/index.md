@@ -13,10 +13,38 @@ Use the following tools to interact with the database:
 
 | Tool | Description |
 |------|-------------|
+| [`list_accessible_targets`](#list_accessible_targets) | In a multi-target deployment, lists databases available to the caller and their connection URLs. |
 | [`execute_query`](#execute_query) | Runs a SQL query against the connected database. Reads are always allowed; writes run only when the server permits them. |
 | [`list_tables`](#list_tables) | Lists available user tables and views. |
 | [`describe_table`](#describe_table) | Displays column definitions, data types, and key information for a table.|
 | [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
+
+
+## list_accessible_targets
+
+In a multi-target deployment, `list_accessible_targets` returns only targets available to the caller. Use a returned target URL to connect before calling the database tools. Credentials are not returned.
+
+This tool does not require input parameters.
+
+Example response:
+
+```json
+{
+	"targets": [
+		{
+			"host": "ifx-db.example.com",
+			"instance": "ol_informix",
+			"databases": [
+				{
+					"name": "warehouse",
+					"path": "/mcp/ifx-db.example.com/ol_informix/warehouse",
+					"url": "https://mcp.example.com:8000/mcp/ifx-db.example.com/ol_informix/warehouse"
+				}
+			]
+		}
+	]
+}
+```
 
 ## execute_query
 
@@ -134,9 +162,11 @@ Before running the statement, the server asks you to approve it in the client. T
 
 The following errors apply when `query_mode` is `read-write`.
 
-**The token lacks the `mcp:write` scope**
+**The token lacks the required write grant**
 
-The server checks the scope before it asks you to approve the statement, so no prompt appears.
+On a single-database deployment, the server checks `mcp:write` before it asks you to approve the statement, so no prompt appears. A multi-target request requires the target's per-target `:write` grant instead; `mcp:write` does not authorize writes to a target URL. See [Write support](../write-support.md#which-scope-authorizes-a-write).
+
+The error object below applies to the single-database `mcp:write` check. A target URL uses the target-specific grant described above.
 
 ```json
 {

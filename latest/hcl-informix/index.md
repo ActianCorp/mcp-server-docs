@@ -20,9 +20,10 @@ The Actian MCP Server for HCL Informix® supports the following operations:
 | **Read schema metadata** | Explore comprehensive database-level metadata. |
 | **List functions and procedures** | View available user-defined routines. |
 | **Execute write queries** | Run `INSERT`, `UPDATE`, and `DELETE` statements. Off by default. Requires `query_mode` set to `read-write`. |
+| **Serve multiple databases** | Route clients to Informix databases through a target registry. See [Multi-Target Deployments](multi-target.md). |
 
 !!! note "Write support is opt-in"
-    The server permits only read queries unless you set `query_mode` to `read-write`. Each write then requires the `mcp:write` scope and human approval. For more information, see [Write support](write-support.md).
+  The server permits only read queries unless you set `query_mode` to `read-write`. In a single-database deployment, each write requires `mcp:write` and human approval. On a multi-target URL, it requires that target's per-target `:write` grant and human approval. For more information, see [Write support](write-support.md).
 
 ---
 
@@ -106,6 +107,10 @@ Create a file named `conf.json` in the working directory and add the database-sp
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md) |
 | `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt). Applies only when `query_mode` is `read-write`. |
 | `extensions` | `array` | — | Extension modules to load, each object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md) |
+| `targets` | `object` | — | Informix server and database registry for a multi-target deployment. See [Multi-Target Deployments](multi-target.md). |
+| `targets_dir` | `string` | — | Directory containing additional target definitions. See [Multi-Target Deployments](multi-target.md#configure-targets). |
+| `targets_reload_interval` | `integer` | `10` in the supplied example | Interval in seconds for checking target definitions. Confirm Informix reload behavior before relying on live updates. |
+| `allow_unscoped_reads` | `boolean` | `true` in the supplied example | Multi-target setting shown in the example. Confirm its Informix effect on per-target read authorization before enabling it. |
 
 ---
 
@@ -137,6 +142,9 @@ Once the container is running, connect the MCP client to the exposed server endp
 
 - :material-lock: **[Authentication](authentication/index.md)**  
   Secure the server with OAuth 2.0 and an external identity provider.
+
+- :material-server-network: **[Multi-Target Deployments](multi-target.md)**
+  Route MCP clients to multiple Informix databases.
 
 - :material-tools: **[Tools](tools/index.md)**  
   Explore the available MCP tools for HCL Informix® database operations.

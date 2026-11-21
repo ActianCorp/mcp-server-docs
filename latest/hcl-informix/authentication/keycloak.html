@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.2">
     
     
       
@@ -1004,6 +1004,8 @@
       
         
       
+        
+      
     
     
     
@@ -1424,6 +1426,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#multi-target-deployments-per-target-scopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Target Deployments: Per-Target Scopes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#step-6-create-keycloak-users-if-using-user-impersonation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1635,6 +1648,34 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../multi-target.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Deployments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
       
@@ -1654,7 +1695,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -1676,14 +1717,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4095,6 +4136,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#multi-target-deployments-per-target-scopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Target Deployments: Per-Target Scopes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#step-6-create-keycloak-users-if-using-user-impersonation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4369,7 +4421,7 @@
 <li>
 <p><strong>(Optional)</strong> Add a <strong>sub override mapper</strong> to the <code>sub</code> claim containing the username instead of a UUID.</p>
 </li>
-<li><strong>Create an <code>mcp:write</code> client scope</strong> and attach it to the client as <strong>Optional</strong>, if <code>query_mode</code> is <code>read-write</code>. See <a href="#step-5-add-the-write-scope-read-write-deployments-only">Step 5</a>.</li>
+<li><strong>Configure write grants</strong>, if <code>query_mode</code> is <code>read-write</code>: use <code>mcp:write</code> for the single-database <code>/mcp</code> endpoint, or create per-target scopes for target URLs. See <a href="#step-5-add-the-write-scope-read-write-deployments-only">Step 5</a> and <a href="#multi-target-deployments-per-target-scopes">Multi-Target Deployments: Per-Target Scopes</a>.</li>
 <li><strong>Create users</strong> in the realm, if using <code>user_impersonation: true</code>.</li>
 <li><strong>Fill <code>conf.json</code></strong> file with the values from <a href="#step-1-create-a-keycloak-realm">Step 1</a> to <a href="#step-3-add-the-audience-mapper-required">Step 3</a>.</li>
 <li><strong>Start the server</strong> with <code>--transport sse</code>or <code>http</code> / <code>streamable-http</code>.</li>
@@ -4732,8 +4784,8 @@
 <p>Instead of overriding <code>sub</code>, you can rely on the <code>preferred_username</code> claim (included by default when the <code>profile</code> scope is present). The MCP server's username extraction priority uses <code>preferred_username</code> before <code>sub</code>, so it works automatically without any mapper changes.</p>
 </div>
 <h2 id="step-5-add-the-write-scope-read-write-deployments-only">Step 5: Add the Write Scope (Read-Write Deployments Only)<a class="headerlink" href="#step-5-add-the-write-scope-read-write-deployments-only" title="Permanent link">&para;</a></h2>
-<p>Skip this step if <code>query_mode</code> is <code>read-only</code>. A read-only server never requests the <code>mcp:write</code> scope.</p>
-<p>When <code>query_mode</code> is <code>read-write</code>, the server requests <code>mcp:write</code> and rejects any write whose token does not carry it. For more information, see <a href="../write-support.html">Write support</a>.</p>
+<p>Skip this step if <code>query_mode</code> is <code>read-only</code>, or if callers use target URLs in a multi-target deployment. Target URLs use per-target scopes instead; see <a href="#multi-target-deployments-per-target-scopes">Multi-Target Deployments: Per-Target Scopes</a>.</p>
+<p>For a single-database deployment using <code>/mcp</code>, when <code>query_mode</code> is <code>read-write</code>, the server requests <code>mcp:write</code> and rejects any write whose token does not carry it. For more information, see <a href="../write-support.html">Write support</a>.</p>
 <h3 id="step-51-create-the-client-scope">Step 5.1: Create the Client Scope<a class="headerlink" href="#step-51-create-the-client-scope" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Navigate to <strong>Client scopes</strong> in the left sidebar and select <strong>Create client scope</strong>.</li>
@@ -4807,6 +4859,17 @@
 <p class="admonition-title">The database still decides what a user can change</p>
 <p>The <code>mcp:write</code> scope permits write statements in general. It does not grant table privileges. With <code>user_impersonation</code> enabled, each write also runs as that user's own database account, so grant the matching <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> privileges in the database as well. See <a href="#creating-the-matching-database-user">Creating the Matching Database User</a>.</p>
 </div>
+<h2 id="multi-target-deployments-per-target-scopes">Multi-Target Deployments: Per-Target Scopes<a class="headerlink" href="#multi-target-deployments-per-target-scopes" title="Permanent link">&para;</a></h2>
+<p>For a deployment with a <code>targets</code> registry, every request to a target URL needs a matching scope in the caller's access token. Target URLs use the format documented in <a href="../multi-target.html#connect-to-a-database">Multi-Target Deployments</a>.</p>
+<div class="language-text highlight"><pre><span></span><code>actian:{host}:{instance}:{database}:{read|write}
+</code></pre></div>
+<p>The host, instance, and database segments must match the target. <code>*</code> matches exactly one complete segment. A <code>write</code> scope also grants read access to that same target. Example scope names:</p>
+<div class="language-text highlight"><pre><span></span><code>actian:ifx-db.example.com:ol_informix:sales:read
+actian:ifx-db.example.com:ol_informix:sales:write
+actian:ifx-db.example.com:ol_informix:*:read
+</code></pre></div>
+<p>Create each per-target scope as a Keycloak client scope with <strong>Include in token scope</strong> enabled, then attach it to the client used for authentication. For the MCP OAuth login flow, attach the target scopes as <strong>Default</strong> so they are included in issued tokens; the login proxy does not request these target-specific names as optional scopes. In resource-server mode, attach the needed scopes to the calling application's client and request them when obtaining its token. Per-target scopes are grants on the client and may be available to any user of that client, so database privileges and client separation remain important controls.</p>
+<p>Do not use <code>mcp:write</code> to authorize writes to a target URL. Create and grant that target's <code>:write</code> scope instead. <code>mcp:write</code> remains the write scope for the single-database <code>/mcp</code> endpoint. See <a href="../write-support.html#which-scope-authorizes-a-write">Write support</a> and <a href="../multi-target.html#authentication-and-scope-behavior">Multi-Target Deployments</a>.</p>
 <h2 id="step-6-create-keycloak-users-if-using-user-impersonation">Step 6: Create Keycloak Users (If Using User Impersonation)<a class="headerlink" href="#step-6-create-keycloak-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
 <p>If <code>user_impersonation</code> is <code>true</code>, each Keycloak user contains a matching database account. For more information, see <a href="index.html#user-impersonation">User Impersonation</a>.</p>
 <ol>
@@ -5192,7 +5255,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 24, 2026 10:11:32 UTC">August 24, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 18:00:03 UTC">November 18, 2026</span>
   </span>
 
     

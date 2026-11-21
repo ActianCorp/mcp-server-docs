@@ -25,7 +25,7 @@ The checklist below is the whole procedure in brief. Use it if you are already f
         If you skip this step, the MCP Server rejects tokens with `audience mismatch`.
 
 4. **(Optional)** Add a **sub override mapper** to the `sub` claim containing the username instead of a UUID.
-5. **Create an `mcp:write` client scope** and attach it to the client as **Optional**, if `query_mode` is `read-write`. See [Step 5](#step-5-add-the-write-scope-read-write-deployments-only).
+5. **Configure write grants**, if `query_mode` is `read-write`: use `mcp:write` for the single-database `/mcp` endpoint, or create per-target scopes for target URLs. See [Step 5](#step-5-add-the-write-scope-read-write-deployments-only) and [Multi-Target Deployments: Per-Target Scopes](#multi-target-deployments-per-target-scopes).
 6. **Create users** in the realm, if using `user_impersonation: true`.
 7. **Fill `conf.json`** file with the values from [Step 1](#step-1-create-a-keycloak-realm) to [Step 3](#step-3-add-the-audience-mapper-required).
 8. **Start the server** with `--transport sse`or `http` / `streamable-http`.
@@ -220,9 +220,9 @@ After adding the mapper, the token contains the following:
 
 ## Step 5: Add the Write Scope (Read-Write Deployments Only)
 
-Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
+Skip this step if `query_mode` is `read-only`, or if callers use target URLs in a multi-target deployment. Target URLs use per-target scopes instead; see [Multi-Target Deployments: Per-Target Scopes](#multi-target-deployments-per-target-scopes).
 
-When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
+For a single-database deployment using `/mcp`, when `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
 
 ### Step 5.1: Create the Client Scope
 
@@ -270,6 +270,26 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
 
 !!! warning "The database still decides what a user can change"
     The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Creating the Matching Database User](#creating-the-matching-database-user).
+
+## Multi-Target Deployments: Per-Target Scopes
+
+For a deployment with a `targets` registry, every request to a target URL needs a matching scope in the caller's access token. Target URLs use the format documented in [Multi-Target Deployments](../multi-target.md#connect-to-a-database).
+
+```text
+actian:{host}:{instance}:{database}:{read|write}
+```
+
+The host, instance, and database segments must match the target. `*` matches exactly one complete segment. A `write` scope also grants read access to that same target. Example scope names:
+
+```text
+actian:ifx-db.example.com:ol_informix:sales:read
+actian:ifx-db.example.com:ol_informix:sales:write
+actian:ifx-db.example.com:ol_informix:*:read
+```
+
+Create each per-target scope as a Keycloak client scope with **Include in token scope** enabled, then attach it to the client used for authentication. For the MCP OAuth login flow, attach the target scopes as **Default** so they are included in issued tokens; the login proxy does not request these target-specific names as optional scopes. In resource-server mode, attach the needed scopes to the calling application's client and request them when obtaining its token. Per-target scopes are grants on the client and may be available to any user of that client, so database privileges and client separation remain important controls.
+
+Do not use `mcp:write` to authorize writes to a target URL. Create and grant that target's `:write` scope instead. `mcp:write` remains the write scope for the single-database `/mcp` endpoint. See [Write support](../write-support.md#which-scope-authorizes-a-write) and [Multi-Target Deployments](../multi-target.md#authentication-and-scope-behavior).
 
 
 ## Step 6: Create Keycloak Users (If Using User Impersonation)
