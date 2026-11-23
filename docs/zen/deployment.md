@@ -5,7 +5,7 @@ description: Where the Zen engine, the Actian MCP Server container and the agent
 
 # Deployment Scenarios
 
-Three pieces take part: the agent (Claude Desktop, an IDE, a script), the MCP server container, and the Zen engine. Each can sit on a laptop, in a container, or on a cloud machine. Every setting answers one of three questions:
+Three pieces take part: the agent (Claude Desktop, an IDE, or a script), the MCP server container, and the Zen engine. Each can run on a laptop, in a container, or on a cloud machine. Every setting answers one of three questions:
 
 1. **How does the container find Zen?** The connection string, plus a Docker network flag.
 2. **How do agents reach the container?** `host`, `port`, `-p`, and Transport Layer Security (TLS).
@@ -13,32 +13,32 @@ Three pieces take part: the agent (Claude Desktop, an IDE, a script), the MCP se
 
 ## Finding Zen
 
-The container talks to Zen over Transmission Control Protocol (TCP) like any remote Zen client. The only question is what name or address reaches the engine *from inside the container*; that is what `ServerName=` in `conn_string` (or `host` in a target entry) must say.
+The container talks to Zen over Transmission Control Protocol (TCP), like any remote Zen client. The only question is which name or address reaches the engine *from inside the container*. Set `ServerName=` in `conn_string` (or `host` in a target entry) to that name or address.
 
 | Zen engine is... | `ServerName=` | `docker run` needs | Notes |
 |------------------|---------------|--------------------|-------|
 | Installed on the same Windows or macOS machine | `host.docker.internal:1583` | `--add-host=host.docker.internal:host-gateway` (Docker Desktop resolves the name anyway) | Zen must listen on 1583, its default. |
-| Installed on the same Linux machine | `host.docker.internal:1583` | `--add-host=host.docker.internal:host-gateway` | Linux Docker has no built-in `host.docker.internal`; the flag creates it. |
+| Installed on the same Linux machine | `host.docker.internal:1583` | `--add-host=host.docker.internal:host-gateway` | Linux Docker has no built-in `host.docker.internal`. The flag creates it. |
 | In another container | `<alias>:1583`, for example `zen16:1583` | `--network <name>` on both containers; start the engine with `--network-alias <alias>` | The engine port needs no `-p`. |
 | On another machine or a cloud VM | `<dns-name-or-ip>:1583` | nothing | Port 1583 must be open from the MCP host to the Zen host. With Zen security on, add `UID=` and `PWD=`. |
 
 !!! warning "Not `localhost`, and not a bare DSN"
-    From inside a container `localhost` is the container itself, and the Zen client for Linux resolves the name to `::1`; both fail with `SQL Connection Manager is not running at the specified port number (10065)`. The client also ignores the Data Source Name (DSN) bundled in the image for a remote connection and falls back to `127.0.0.1`. Always give an explicit `ServerName=<name>:1583` in `conn_string`.
+    Inside a container, `localhost` is the container itself. The Zen client for Linux also resolves the name to `::1`. Both fail with `SQL Connection Manager is not running at the specified port number (10065)`. For a remote connection, the client ignores the Data Source Name (DSN) bundled in the image and falls back to `127.0.0.1`. Always set an explicit `ServerName=<name>:1583` in `conn_string`.
 
 ## Letting Agents In
 
-`host` and `port` in `conf.json` are the address *inside* the container. With `-p`, `host` must be `0.0.0.0`; the left side of `-p` and the firewall control who may connect, not `host`.
+`host` and `port` in `conf.json` are the address *inside* the container. With `-p`, `host` must be `0.0.0.0`. The left side of `-p` and the firewall control who can connect, not `host`.
 
 | Agents connect from... | `conf.json` | `docker run` | TLS | Authentication |
 |------------------------|-------------|--------------|-----|----------------|
 | This machine only | `"host": "0.0.0.0"`, `"port": 8000` | `-p 127.0.0.1:8000:8000` | not needed | not needed |
-| Other machines on a private network | same | `-p 8000:8000` | advised | advised — without it, anyone who can reach the port queries the database as the connection-string login |
-| The internet or a cloud network | same, plus `ssl_certfile` and `ssl_keyfile` | `-p 8000:8000`, the certificate and key mounted at `/app/server.crt` and `/app/server.key` | mandatory | mandatory — [resource-server mode](authentication/index.md#resource-server-mode) |
+| Other machines on a private network | same | `-p 8000:8000` | advised | advised. Without it, anyone who can reach the port queries the database as the connection-string login |
+| The internet or a cloud network | same, plus `ssl_certfile` and `ssl_keyfile` | `-p 8000:8000`, the certificate and key mounted at `/app/server.crt` and `/app/server.key` | mandatory | mandatory: use [resource-server mode](authentication/index.md#resource-server-mode) |
 
 !!! note "The rule the server enforces"
-    With authentication on and `host` other than `localhost` (so also `0.0.0.0`), both TLS files must be present or the server refuses to start: `ssl_certfile and ssl_keyfile are required for OAuth on non-localhost hosts`. The paths in `conf.json` are the in-container paths `/app/server.crt` and `/app/server.key`; see [HTTPS and TLS](authentication/index.md#secure-remote-deployments-with-https-and-tls).
+    With authentication on and `host` other than `localhost` (including `0.0.0.0`), both TLS files must be present. Otherwise the server refuses to start: `ssl_certfile and ssl_keyfile are required for OAuth on non-localhost hosts`. The paths in `conf.json` are the in-container paths `/app/server.crt` and `/app/server.key`. See [HTTPS and TLS](authentication/index.md#secure-remote-deployments-with-https-and-tls).
 
-The URL an agent uses is `http://<mcp-host>:8000/mcp` for a single-database server and `http://<mcp-host>:8000/mcp/{host}/{instance}/{database}/mcp` per target when the server [serves several](multi-target.md). With TLS the scheme is `https`.
+Agents use `http://<mcp-host>:8000/mcp` for a single-database server. When the server [serves several databases](multi-target.md), agents use `http://<mcp-host>:8000/mcp/{host}/{instance}/{database}/mcp` for each target. With TLS, the scheme is `https`.
 
 ## Scenarios
 
@@ -68,7 +68,7 @@ docker run -d --name zen-mcp -p 127.0.0.1:8000:8000 \
   actian/zen-mcp-server:1.2.0
 ```
 
-Agent URL: `http://localhost:8000/mcp`. If the log shows error `10065`, the container cannot reach the engine on the laptop; check that Zen listens on 1583 and that the host firewall lets Docker's network through.
+Agent URL: `http://localhost:8000/mcp`. If the log shows error `10065`, the container cannot reach the engine on the laptop. Check that Zen listens on 1583 and that the host firewall lets Docker's network through.
 
 ### B. Engine and Server in Containers
 
@@ -80,11 +80,11 @@ docker run -d --name zen-mcp --network zentest -p 8000:8000 \
   actian/zen-mcp-server:1.2.0
 ```
 
-The only change from A: `--network zentest` instead of `--add-host`, and `ServerName=zen16:1583` in `conn_string`, because the engine now lives in a container named `zen16` on the network `zentest`.
+Two things change from A. Use `--network zentest` instead of `--add-host`. Set `ServerName=zen16:1583` in `conn_string`, because the engine now runs in a container named `zen16` on the network `zentest`.
 
 ### C. Several URLs Without Authentication
 
-The configuration from [Multiple Databases](multi-target.md#configuration), with `allow_unscoped_reads: true`, and a folder for hot add and remove:
+Use the configuration from [Multiple Databases](multi-target.md#configuration), with `allow_unscoped_reads: true` and a folder for adding and removing targets while the server runs:
 
 ```bash
 mkdir targets.d
@@ -98,7 +98,7 @@ Then run the checks in [Verifying a Setup](multi-target.md#verifying-a-setup).
 
 ### D. A Team Deployment with an Identity Provider
 
-The configuration from C, minus `allow_unscoped_reads`, plus the [resource-server block](authentication/index.md#resource-server-mode) and TLS:
+Use the configuration from C without `allow_unscoped_reads`. Add the [resource-server block](authentication/index.md#resource-server-mode) and TLS:
 
 ```json
 {
@@ -122,19 +122,19 @@ docker run -d --name zen-mcp -p 8000:8000 \
   actian/zen-mcp-server:1.2.0
 ```
 
-Each target entry carries the Zen login for its engine; `conf.json` therefore holds passwords, so restrict its file permissions to the owner. Open 1583 from the MCP host to each engine, and 8000 to the agents' network only.
+Each target entry carries the Zen login for its engine, so `conf.json` holds passwords. Restrict its file permissions to the owner. Open port 1583 from the MCP host to each engine. Open port 8000 to the agents' network only.
 
 ## When Something Goes Wrong
 
 | You see | It means | Do |
 |---------|----------|----|
-| `SQL Connection Manager is not running at the specified port number (10065)` | The container cannot reach Zen at `ServerName`: wrong name, wrong network, firewall, or `localhost` from a Linux container. | Check the [Finding Zen](#finding-zen) table. Never `localhost` from a container. |
-| `ssl_certfile and ssl_keyfile are required for OAuth on non-localhost hosts` | Authentication is on and `host` is not `localhost`. | Mount a certificate and key, see [HTTPS and TLS](authentication/index.md#secure-remote-deployments-with-https-and-tls). |
+| `SQL Connection Manager is not running at the specified port number (10065)` | The container cannot reach Zen at `ServerName`. The cause is a wrong name, a wrong network, a firewall, or `localhost` in a Linux container. | Check the [Finding Zen](#finding-zen) table. Never use `localhost` from a container. |
+| `ssl_certfile and ssl_keyfile are required for OAuth on non-localhost hosts` | Authentication is on and `host` is not `localhost`. | Mount a certificate and key. See [HTTPS and TLS](authentication/index.md#secure-remote-deployments-with-https-and-tls). |
 | `ssl_certfile path does not exist or is empty` | The mount did not land, or the paths in `conf.json` differ from the mount. | Mount at exactly `/app/server.crt` and `/app/server.key`. |
-| `401` and `issuer mismatch` in the log | The token's issuer is not the address in `FASTMCP_SERVER_AUTH_CONFIG_URL`. | The container and the token requests must name the identity provider the same way; a Keycloak started with `KC_HOSTNAME` pins the issuer. |
-| `403` with `insufficient_scope` on a target URL | The token has no `actian:...:read` grant for that exact target, or the path has a typo: a URL that names no target gets the same `403` on purpose. The `WWW-Authenticate` header names the grant the path needs. | Grant the scope at the identity provider; compare the path with `list_accessible_targets` on the plain `/mcp` URL. |
-| `target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL` | A write on a URL whose persona is in `zen_readonly_personas`; the server refuses it before anything reaches Zen. | Use the read-write persona's URL. This is the expected result of a read-only check. |
-| `Access denied to a READ-ONLY data source` | The engine refused a write: the server is `read-only`, or a statement the server did not classify as a write reached a read-only persona's connection. | Set `query_mode` to `read-write`, or use a read-write persona. |
-| `N targets are configured, but per-target scope enforcement ... is not active` at start | Several targets need either authentication or `allow_unscoped_reads: true`. | Add `auth_mode: "resource-server"`, or the escape hatch for a test setup. |
+| `401` and `issuer mismatch` in the log | The token's issuer is not the address in `FASTMCP_SERVER_AUTH_CONFIG_URL`. | The container and the token requests must name the identity provider the same way. A Keycloak started with `KC_HOSTNAME` pins the issuer. |
+| `403` with `insufficient_scope` on a target URL | The token has no `actian:...:read` grant for that exact target, or the path has a typo. A URL that names no target gets the same `403` on purpose. The `WWW-Authenticate` header names the grant that the path needs. | Grant the scope at the identity provider. Compare the path with `list_accessible_targets` on the plain `/mcp` URL. |
+| `target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL` | A write on a URL whose persona is in `zen_readonly_personas`. The server refuses it before anything reaches Zen. | Use the read-write persona's URL. This is the expected result of a read-only check. |
+| `Access denied to a READ-ONLY data source` | The engine refused a write. Either the server is `read-only`, or a statement that the server did not classify as a write reached a read-only persona's connection. | Set `query_mode` to `read-write`, or use a read-write persona. |
+| `N targets are configured, but per-target scope enforcement ... is not active` at start | Several targets need either authentication or `allow_unscoped_reads: true`. | Add `auth_mode: "resource-server"`. For a test setup, use `allow_unscoped_reads` instead. |
 
-`docker logs <container>` shows the startup lines, every [call log](index.md#call-log) record, and the refusals above.
+`docker logs <container>` shows the startup lines, every [call log](index.md#call-log) record, and the refusals listed above.

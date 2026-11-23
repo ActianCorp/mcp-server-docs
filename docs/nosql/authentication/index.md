@@ -77,7 +77,7 @@ Both tenants share the same authentication server URL by default. Override the S
 
 ### Token Audience
 
-The audience (`aud` claim) says which service a token is for; the `mcp:write` scope says whether the token may write. With authentication on, the server accepts a token only when its `aud` claim contains a value set in `quarkus.oidc.token.audience`:
+The audience (`aud` claim) says which service a token is for. The `mcp:write` scope says whether the token may write. With authentication on, the server accepts a token only when its `aud` claim contains a value set in `quarkus.oidc.token.audience`:
 
 - The property takes a comma-separated list of audiences.
 - Matching is exact, so a trailing `/` matters.
@@ -86,7 +86,7 @@ The audience (`aud` claim) says which service a token is for; the `mcp:write` sc
 - The value `any` is refused, because Quarkus treats it as "skip the check".
 - The SSE tenant inherits the value.
 
-What to set depends on your provider:
+What to set depends on the provider:
 
 - **Auth0:** The API Identifier, character for character. See [Step 3: Create an Auth0 API](auth0/index.md#step-3-create-an-auth0-api).
 - **Keycloak:** The Included Custom Audience value of the Audience mapper, for example `nsql-mcp`. See [Step 2.1: Add the Token Audience](keycloak/index.md#step-21-add-the-token-audience).
@@ -95,12 +95,12 @@ With authentication on and no audience set, the server exits at startup with an 
 
 ### Calling Applications
 
-An application that has already signed the user in, for example Actian Agentic, can call this server for that user. It needs a token for the same user whose `aud` claim contains this server's audience:
+An application that has already signed the user in, for example Actian Agentic, can call this server for that user. The application needs a token for the same user. The `aud` claim of that token must contain this server's audience:
 
 - **Keycloak:** The application exchanges the user's token with standard token exchange (RFC 8693). See [Token Exchange for a Calling Application](keycloak/index.md#token-exchange-for-a-calling-application).
 - **Auth0:** The application requests this server's audience when the user signs in. See [Calling Applications](auth0/index.md#calling-applications).
 
-The server accepts any token that carries its audience and cannot tell how the token was obtained, so keep this server's audience off the application's own login tokens. The application requests its own scopes, so `quarkus.oidc.resource-metadata.scopes` does not apply to it.
+The server accepts any token that carries its audience. It cannot tell how the application got the token, so keep this server's audience off the application's own login tokens. The application requests its own scopes, so `quarkus.oidc.resource-metadata.scopes` does not apply to it.
 
 ### Advertising Scopes to MCP Clients
 
@@ -111,9 +111,9 @@ The server never requests scopes of its own. It publishes the list in `quarkus.o
 | Set | Each client requests exactly the scopes you listed. A client that offers a manual scope field ignores it and uses the advertised list. |
 | Unset | `scopes_supported` is absent, so each client chooses on its own. Some request nothing and receive no write access. Others request every scope the identity provider advertises, which usually includes scopes the client cannot obtain. |
 
-Only one scope in that list matters to the server itself. In write mode, the server looks for `mcp:write` in the union of three claims: `scope` (a space-delimited string), `scp` (a space-delimited string or an array) and `permissions` (an array, used by Auth0 role-based access control). A match in any one of them is enough. The server never consumes an ID token, so `openid` is present only for clients that need one. The same applies to `profile` and `email`, which populate user claims that the server does not use.
+Only one scope in that list matters to the server itself. In write mode, the server looks for `mcp:write` in three claims: `scope` (a space-delimited string), `scp` (a space-delimited string or an array), and `permissions` (an array, used by Auth0 role-based access control). A match in any one of them is enough. The server never consumes an ID token, so `openid` is present only for clients that need one. The same applies to `profile` and `email`, which populate user claims that the server does not use.
 
-Auth0 emits the `permissions` claim only when a specific setting is on. See [Enable RBAC](auth0/index.md#enable-rbac) in the Auth0 guide.
+Auth0 adds the `permissions` claim only when a specific setting is on. See [Enable RBAC](auth0/index.md#enable-rbac) in the Auth0 guide.
 
 #### Provider-Specific Settings
 
@@ -151,7 +151,7 @@ quarkus.oidc.token.audience=<your-audience>
 
 ### Trusting a Self-Signed or Internal-CA Identity Provider Certificate
 
-The server calls your IdP over HTTPS to read its discovery document and signing keys. It trusts certificates issued by public certificate authorities, so this applies only when the IdP certificate is self-signed or issued by an internal certificate authority. Give the server the IdP's CA certificate in a named TLS configuration and point both OIDC tenants at it:
+The server calls the IdP over HTTPS to read its discovery document and signing keys. The server trusts certificates from public certificate authorities. This section applies only when the IdP certificate is self-signed or comes from an internal certificate authority. Give the server the IdP's CA certificate in a named TLS configuration, and point both OIDC tenants at it:
 
 ```properties
 quarkus.tls.idp.trust-store.pem.certs=/certs/idp-ca.crt

@@ -86,7 +86,7 @@ The scope a write needs depends on the URL the client is connected to:
 
 `mcp:write` does not apply to a multi-target deployment with more than one server or more than one database. Clients connect to a target URL, and each write needs that target's `:write` scope.
 
-When `allow_unscoped_reads` is set in a multi-target deployment, writes on target URLs are refused.
+When `allow_unscoped_reads` is set in a multi-target deployment, the server refuses writes on target URLs.
 
 To configure per-target scopes, see [Auth0: Per-Target Permissions](authentication/auth0.md#multi-target-deployments-per-target-permissions) or [Keycloak: Per-Target Scopes](authentication/keycloak.md#multi-target-deployments-per-target-scopes).
 

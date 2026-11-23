@@ -22,7 +22,7 @@ Use the following tools to interact with the database:
 
 ## list_accessible_targets
 
-In a multi-target deployment, `list_accessible_targets` returns only targets available to the caller. Use a returned target URL to connect before calling the database tools. Credentials are not returned.
+In a multi-target deployment, `list_accessible_targets` returns only the targets that the caller can reach. Use a returned target URL to connect before you call the database tools. The tool does not return credentials.
 
 This tool does not require input parameters.
 
@@ -164,9 +164,9 @@ The following errors apply when `query_mode` is `read-write`.
 
 **The token lacks the required write grant**
 
-On a single-database deployment, the server checks `mcp:write` before it asks you to approve the statement, so no prompt appears. A multi-target request requires the target's per-target `:write` grant instead; `mcp:write` does not authorize writes to a target URL. See [Write support](../write-support.md#which-scope-authorizes-a-write).
+On a single-database deployment, the server checks `mcp:write` before it asks you to approve the statement, so no prompt appears. A multi-target request needs the target's per-target `:write` grant instead. `mcp:write` does not authorize writes to a target URL. See [Write support](../write-support.md#which-scope-authorizes-a-write).
 
-The error object below applies to the single-database `mcp:write` check. A target URL uses the target-specific grant described above.
+The error object below applies to the single-database `mcp:write` check. A target URL uses the target-specific grant.
 
 ```json
 {

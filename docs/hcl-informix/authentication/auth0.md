@@ -20,19 +20,19 @@ The checklist below is the whole procedure in brief. Use it if you are already f
 
 1. **Create an API:** Navigate to **Applications** > **APIs** > **Create API**. The **Identifier** serves as the `FASTMCP_SERVER_AUTH_AUDIENCE`.
 2. **Create an Application:** Navigate to **Applications** > **Applications** > **Create Application**. Select **Machine to Machine**. Authorize it for the API when prompted. Copy the **Client ID** and **Client Secret**.
-3. **Authorize the Application:** In your API's **Application Access** tab, select `mcp:write` for a single-database deployment, or the required per-target permissions for a multi-target deployment, under both **User-Delegated Access** and **Client Access** for your application.
+3. **Authorize the Application:** In your API's **Application Access** tab, select the permissions your application needs under both **User-Delegated Access** and **Client Access**. Select `mcp:write` for a single-database deployment. Select the per-target permissions for a multi-target deployment.
 
     !!! warning
         If you skip this step, Auth0 returns an `invalid_request` error.
 
 4. **Enable Authorization Code Grant:** In **Advanced Settings** > **Grant Types**, select **Authorization Code**.
 5. **Set Callback URLs:** Add `<BASE_URL>/auth/callback` to **Allowed Callback URLs**.
-6. **Add write permissions**, if `query_mode` is `read-write`: use `mcp:write` for the single-database `/mcp` endpoint, or define and grant per-target permissions for target URLs. See [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) and [Multi-Target Deployments: Per-Target Permissions](#multi-target-deployments-per-target-permissions).
+6. **Add write permissions**, if `query_mode` is `read-write`: use `mcp:write` for the single-database `/mcp` endpoint. For target URLs, define and grant per-target permissions. See [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) and [Multi-Target Deployments: Per-Target Permissions](#multi-target-deployments-per-target-permissions).
 7. **Update Configuration:** Add your Auth0 domain and credentials to `conf.json`.
 8. **Start the server:** Launch the server using the `--transport sse` or `http` / `streamable-http` flag.
 
 !!! tip "Multi-target deployments"
-    If your configuration has a `targets` registry, configure the [per-target permissions](#multi-target-deployments-per-target-permissions). A target URL requires a matching per-target grant for reads and writes; `mcp:write` does not authorize writes to a target URL.
+    If your configuration has a `targets` registry, configure the [per-target permissions](#multi-target-deployments-per-target-permissions). A target URL needs a matching per-target grant for reads and writes. `mcp:write` does not authorize writes to a target URL.
 
 
 ## Prerequisites
@@ -64,11 +64,11 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
      | Setting | Why it is needed |
      |---------|------------------|
      | **Enable RBAC** | Auth0 evaluates role and permission assignments during login. |
-     | **Add Permissions in the Access Token** | Auth0 adds the granted permissions to the access token, in the `permissions` claim, where the server reads them. Available only after you enable RBAC. |
+     | **Add Permissions in the Access Token** | Auth0 adds the granted permissions to the access token, in the `permissions` claim, where the server reads them. This option is available only after you enable RBAC. |
 
 8. Select **Save**.
 
-These settings are needed for the `mcp:write` scope and for per-target scopes in a multi-target deployment. They do not affect a read-only, single-database deployment, so enabling them now means you do not have to return to this page later.
+You need these settings for the `mcp:write` scope and for per-target scopes in a multi-target deployment. They do not affect a read-only, single-database deployment. Enable them now so you do not have to return to this page later.
 
 ### Output of Step 1
 
@@ -78,9 +78,9 @@ These settings are needed for the `mcp:write` scope and for per-target scopes in
 
 ### Step 1.1: Add Write Scope (Read-Write Deployments Only) {#step-11-add-the-write-scope-read-write-deployments-only}
 
-Skip this step if `query_mode` is `read-only`, or if callers use target URLs in a multi-target deployment. Target URLs use per-target permissions instead; see [Multi-Target Deployments: Per-Target Permissions](#multi-target-deployments-per-target-permissions).
+Skip this step if `query_mode` is `read-only`, or if callers use target URLs in a multi-target deployment. Target URLs use per-target permissions instead. See [Multi-Target Deployments: Per-Target Permissions](#multi-target-deployments-per-target-permissions).
 
-For a single-database deployment using `/mcp`, when `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
+For a single-database deployment that uses `/mcp`, when `query_mode` is `read-write`, the server requests `mcp:write`. It rejects any write whose token does not carry that scope. For more information, see [Write support](../write-support.md).
 
 1. Open your API, for example `Actian MCP Server`, and select the **Permissions** tab.
 2. Under **Add a Permission**, enter the following and select **+ Add**:
@@ -177,7 +177,7 @@ All values appear on the **Settings** tab of your application:
     Auth0 requires an explicit grant between an application and an API before it issues tokens. Without this authorization, token requests fail with `invalid_request`.
 
 !!! note "Authorizing means selecting permissions"
-    Authorizing the application means selecting, from a permission checklist, which of the API's permissions the application is allowed to request. This may include `mcp:write` for a single-database deployment and the per-target permissions for target URLs. If your API defines no permissions yet, the checklist is empty and there is nothing to select. This is expected for read-only deployments.
+    Authorizing the application means selecting, from a permission checklist, which of the API's permissions the application is allowed to request. These can include `mcp:write` for a single-database deployment and the per-target permissions for target URLs. If your API defines no permissions yet, the checklist is empty and there is nothing to select. This is expected for read-only deployments.
 
 You can authorize from either the application's APIs tab or the API's Application Access tab:
 
@@ -201,7 +201,7 @@ After saving, the application row on the **Application Access** tab shows a gree
     If you plan to use `user_impersonation: true`, the application must be authorized for **User-Delegated Access**. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server will not be able to extract a database username.
 
 !!! note "This is not the same as granting the scope to a user"
-    Authorizing the application means it is *allowed to request* the selected permissions, not that any particular user's token will carry them. With **Enable RBAC** on, the user's `mcp:write` or per-target permissions must also be granted through a role. Both application authorization and user permission assignment are required for the selected grant to appear in the token.
+    Authorizing the application means it is *allowed to request* the selected permissions. It does not mean that any particular user's token carries them. With **Enable RBAC** on, you must also grant the user's `mcp:write` or per-target permissions through a role. A grant appears in the token only when you authorize the application and assign the permission to the user.
 
 
 ## Step 4: Create Auth0 Users (If Using User Impersonation)
@@ -257,11 +257,9 @@ GRANT SETSESSIONAUTH ON 'mcpuser' TO 'database_user';
 
 Skip this step if `query_mode` is `read-only`.
 
-For a multi-target deployment, do not use `mcp:write` for target URLs. Grant each user's required per-target permissions in the role instead, as described in [Multi-Target Deployments: Per-Target Permissions](#multi-target-deployments-per-target-permissions).
+For a multi-target deployment, do not use `mcp:write` for target URLs. Grant each user's per-target permissions in the role instead, as described in [Multi-Target Deployments: Per-Target Permissions](#multi-target-deployments-per-target-permissions). Skip the numbered `mcp:write` steps below.
 
-If the deployment is multi-target, skip the numbered `mcp:write` steps below and use the per-target permissions section instead.
-
-For a single-database deployment, defining `mcp:write` on the API in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) does not give it to anyone. Auth0 issues the permission only to users who hold it through a role, so grant it to each user who is allowed to write. For target URLs, grant per-target permissions as described below.
+For a single-database deployment, defining `mcp:write` on the API in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) does not give it to anyone. Auth0 issues the permission only to users who hold it through a role. Grant it to each user who is allowed to write. For target URLs, grant per-target permissions as described below.
 
 1. In the Auth0 Dashboard, navigate to **User Management** > **Roles**.
 2. Select **+ Create Role**, name it, for example `MCP Writer`, and select **Create**.
@@ -269,7 +267,7 @@ For a single-database deployment, defining `mcp:write` on the API in [Step 1.1](
 4. Select your API, for example `Actian MCP Server`, select the `mcp:write` permission, and add it.
 5. On the role's **Users** tab, select **Add Users** and assign the users who are allowed to write.
 
-Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects writes to the single-database endpoint. Because the permission is granted per user, a user cannot obtain it by asking for it. Keycloak works differently, so if you also run Keycloak, see [which users can obtain the scope](keycloak.md#user-eligibility) there.
+Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects writes to the single-database endpoint. Because you grant the permission per user, a user cannot get it by asking for it. Keycloak works differently, so if you also run Keycloak, see [which users can obtain the scope](keycloak.md#user-eligibility) there.
 
 !!! warning "The database still decides what a user can change"
     The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Step 4.2](#step-42-create-the-matching-database-user).
@@ -282,7 +280,7 @@ When `conf.json` contains a `targets` registry, every request to a target URL ne
 actian:{host}:{instance}:{database}:{read|write}
 ```
 
-The host, instance, and database segments must match the target. `*` matches exactly one complete segment. A `write` permission also grants read access to that same target. For example:
+The host, instance, and database segments must match the target. `*` matches exactly one complete segment. A `write` permission also grants read access to that same target. Examples:
 
 | Permission | Grants |
 |---|---|
@@ -292,12 +290,12 @@ The host, instance, and database segments must match the target. `*` matches exa
 
 ### Define Permissions {#define-the-permissions}
 
-1. Open the Auth0 API used as `FASTMCP_SERVER_AUTH_AUDIENCE` and add a permission for each grant you intend to issue, such as `actian:ifx-db.example.com:ol_informix:sales:read` and `actian:ifx-db.example.com:ol_informix:sales:write`.
-2. Keep **Enable RBAC** and **Add Permissions in the Access Token** enabled in the API's **RBAC Settings**. Auth0 places granted permissions in the access token's `permissions` claim.
-3. Assign the per-target permissions to user roles for user sign-in. For client-credentials callers, grant them on the application's **Client Access** tab.
-4. Ensure the MCP application is authorized to request the permissions on both **User-Delegated Access** and **Client Access**, as appropriate.
+1. Open the Auth0 API used as `FASTMCP_SERVER_AUTH_AUDIENCE`. Add a permission for each grant you plan to issue, such as `actian:ifx-db.example.com:ol_informix:sales:read` and `actian:ifx-db.example.com:ol_informix:sales:write`.
+2. Keep **Enable RBAC** and **Add Permissions in the Access Token** enabled in the API's **RBAC Settings**. Auth0 puts granted permissions in the access token's `permissions` claim.
+3. For user sign-in, assign the per-target permissions to user roles. For client-credentials callers, grant them on the application's **Client Access** tab.
+4. Authorize the MCP application to request the permissions on **User-Delegated Access**, **Client Access**, or both, as needed.
 
-Auth0 issues a permission only when it is defined on the API and granted to the user or calling application. A missing grant is rejected on the target URL; granting `mcp:write` alone does not authorize a target URL.
+Auth0 issues a permission only when you define it on the API and grant it to the user or calling application. The server rejects a request on a target URL that lacks the grant. Granting `mcp:write` alone does not authorize a target URL.
 
 
 ## Step 5: Assemble Final Configuration {#step-5-assemble-the-final-configuration}

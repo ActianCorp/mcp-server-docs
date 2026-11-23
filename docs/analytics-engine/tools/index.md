@@ -400,7 +400,7 @@ Show me all the functions in my database
 
 ## vector_search
 
-Returns the rows whose `VECTOR` column is most similar to a query vector, nearest first, with the distance named and the metric, dimension, element type, and index status reported alongside. This tool requires Analytics Engine 8.0 or later. It is read-only and is available in every `query_mode`.
+Returns the rows whose `VECTOR` column is most similar to a query vector, nearest first. Each result names the distance and reports the metric, dimension, element type, and index status. This tool requires Analytics Engine 8.0 or later. It is read-only and is available in every `query_mode`.
 
 ### Parameters
 

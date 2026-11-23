@@ -72,11 +72,11 @@ Then list it by module name in `conf.json`. Paths are not used, because the loca
 | Entry shape | An object with a required `module` and an optional `config`. Omit `config` if the extension needs no settings. |
 | Module name | The name of the file or package you mounted, for example `revenue_forecast.py` or `revenue_forecast/`. A package works by its dotted import path, such as `my_package.my_module`. |
 | Order | Extensions load in the order listed. Each module may be listed only once. |
-| `targets` | Optional, [multi-target deployments](../multi-target.md) only. A list of `host/instance/database` selectors; `*` matches one whole segment. The extension is offered only on matching targets. Without `targets`, it is offered on every target. |
+| `targets` | Optional, [multi-target deployments](../multi-target.md) only. A list of `host/instance/database` selectors. `*` matches one whole segment. The server offers the extension only on matching targets. Without `targets`, it offers the extension on every target. |
 
 ### Offering an Extension on Specific Targets
 
-In a [multi-target deployment](../multi-target.md#scope-extensions-to-specific-targets), an extension is offered on every target by default. If it relies on tables that exist only in some databases, list those databases in `targets`:
+In a [multi-target deployment](../multi-target.md#scope-extensions-to-specific-targets), the server offers an extension on every target by default. If the extension relies on tables that exist only in some databases, list those databases in `targets`:
 
 ```json
 {
@@ -90,7 +90,7 @@ In a [multi-target deployment](../multi-target.md#scope-extensions-to-specific-t
 }
 ```
 
-On other targets, the extension's tools, resources, and prompts are not listed, and calling them fails as if they did not exist. The filter decides where an extension is offered; it does not grant or restrict access, which scopes and database privileges still control.
+On other targets, the extension's tools, resources, and prompts are not listed. Calling them fails as if they did not exist. The filter decides where the server offers an extension. It does not grant or restrict access. Scopes and database privileges still control access.
 
 ## Server Responsibilities
 
@@ -198,7 +198,7 @@ An extension does not run with the server's own privileges. Three controls apply
 
 ### Write Scope Enforcement
 
-Write authorization is enforced automatically. When OAuth is enabled, starting a transaction on a single-database deployment requires `mcp:write`; on a multi-target URL it requires the matching `actian:{host}:{instance}:{database}:write` grant. Without the required grant, the transaction raises and nothing is written. Grant the appropriate permission or scope through [Auth0](../authentication/auth0.md) or [Keycloak](../authentication/keycloak.md).
+The server enforces write authorization automatically. When OAuth is enabled, starting a transaction on a single-database deployment requires `mcp:write`. On a multi-target URL, it requires the matching `actian:{host}:{instance}:{database}:write` grant. Without the required grant, the transaction raises and nothing is written. Grant the permission or scope through [Auth0](../authentication/auth0.md) or [Keycloak](../authentication/keycloak.md).
 
 For finer-grained checks, read the token's scopes with `has_scope()` or `get_current_scopes()`. Both return values only in read-write mode.
 

@@ -82,7 +82,7 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 
 ## Resource-Server Mode
 
-The flow above makes the MCP server run the login itself. When the calling application has already signed the user in with your identity provider, the server can instead verify the tokens that provider issued and never run a login of its own. This is resource-server mode: set `auth_mode` at the top level of `conf.json`, and an `oauth` block without a client ID or secret.
+In the flow above, the MCP server runs the login itself. In resource-server mode, the calling application signs the user in with your identity provider. The server then verifies the tokens that the provider issued and runs no login of its own. To use this mode, set `auth_mode` at the top level of `conf.json`. Add an `oauth` block without a client ID or secret.
 
 ```json
 {
@@ -100,48 +100,48 @@ The flow above makes the MCP server run the login itself. When the calling appli
 
 | Field | Required | Description |
 | :---- | :------- | :---------- |
-| `auth_mode` | Yes | `resource-server`. A top-level key, next to `host` and `port`. Without it, an `oauth` block with a client ID runs the login flow described above. |
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The identity provider's OIDC discovery document, as the server reaches it. The server reads `issuer` and `jwks_uri` from it; the issuer written into every token must match exactly. |
-| `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | The audience every token must carry. There is no client ID to fall back to in this mode, so it is mandatory. See [Keycloak, Step 3: Add the Audience Mapper](keycloak.md#step-3-add-the-audience-mapper-required). |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | This server's address as the agents see it. Published in the protected-resource metadata; must start with `https://` unless `host` is `localhost`. |
-| `user_impersonation` | Yes, for Zen | Must be `false`, inside the `oauth` block. Zen cannot switch the database user per request; every URL connects as the login in its configuration. With `false`, a token without a user claim (a service or machine token) is accepted and the token's user name, when there is one, goes to the [call log](../index.md#call-log). A top-level key of this name is silently ignored and the default `true` stays in effect, which refuses every token without a user claim. |
+| `auth_mode` | Yes | `resource-server`. This is a top-level key, next to `host` and `port`. Without it, an `oauth` block with a client ID runs the login flow described above. |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The identity provider's OIDC discovery document, as the server reaches it. The server reads `issuer` and `jwks_uri` from it. The issuer in every token must match exactly. |
+| `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | The audience that every token must carry. This mode has no client ID to fall back to, so the audience is mandatory. See [Keycloak, Step 3: Add the Audience Mapper](keycloak.md#step-3-add-the-audience-mapper-required). |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | This server's address as the agents see it. The server publishes it in the protected-resource metadata. It must start with `https://` unless `host` is `localhost`. |
+| `user_impersonation` | Yes, for Zen | Must be `false`, inside the `oauth` block. Zen cannot switch the database user per request. Every URL connects as the login in its configuration. With `false`, the server accepts a token without a user claim (a service or machine token). If the token has a user name, the server writes it to the [call log](../index.md#call-log). The server silently ignores a top-level key of this name, and the default `true` stays in effect. That default refuses every token without a user claim. |
 
-The server publishes its protected-resource metadata at `/.well-known/oauth-protected-resource/mcp`, naming the identity provider, and answers `401` to a request without a valid token. It never calls the provider's userinfo endpoint and never falls back to the `sub` claim for a user name.
+The server publishes its protected-resource metadata at `/.well-known/oauth-protected-resource/mcp`, which names the identity provider. It answers `401` to a request without a valid token. It never calls the provider's userinfo endpoint. It never falls back to the `sub` claim for a user name.
 
-Each request is checked for the token's signature, issuer, audience and expiry against the provider's published keys. A token that fails gets `401`; the server log says which check failed (`issuer mismatch`, `audience mismatch`).
+For each request, the server checks the token's signature, issuer, audience, and expiry against the provider's published keys. A token that fails a check gets `401`. The server log names the failed check (`issuer mismatch`, `audience mismatch`).
 
 ### Per-Target Scopes
 
-On a single-database server, writes need the `mcp:write` scope as in the login flow. On a server that [serves several databases](../multi-target.md), each URL is guarded by its own grants inside the token:
+On a single-database server, writes need the `mcp:write` scope, as in the login flow. On a server that [serves several databases](../multi-target.md), grants inside the token guard each URL:
 
 ```text
 actian:{host}:{instance}:{database}:read
 actian:{host}:{instance}:{database}:write
 ```
 
-The three middle parts are those of the target entry, so an entry `{"host": "zen16", "instance": "admin", "databases": ["DEMODATA"]}` is read with `actian:zen16:admin:DEMODATA:read` and written with `actian:zen16:admin:DEMODATA:write`. The server reads grants from the `scope`, `scp` and `permissions` claims. Matching is exact.
+The three middle parts come from the target entry. For the entry `{"host": "zen16", "instance": "admin", "databases": ["DEMODATA"]}`, the read grant is `actian:zen16:admin:DEMODATA:read` and the write grant is `actian:zen16:admin:DEMODATA:write`. The server reads grants from the `scope`, `scp`, and `permissions` claims. Matching is exact.
 
 | Caller | Result |
 |--------|--------|
-| Token with the `read` grant for the URL | reads work; a write is refused before anything reaches Zen: `no scope grants 'write'` |
-| Token with the `write` grant | reads and writes work: a `write` grant implies `read`. Writes go through the approval prompt as usual; on a [read-only persona](../multi-target.md#read-only-personas) the server refuses them regardless of the grant |
-| Token without a grant for the URL | `403` with `error="insufficient_scope"`; the `WWW-Authenticate` header names the `read` grant the URL needs. A URL that names no target at all gets the identical `403`, on purpose, so a caller cannot tell the two apart |
-| No token, or a token that fails verification | `401`, on every URL, whether or not it names a target |
+| Token with the `read` grant for the URL | Reads work. The server refuses a write before anything reaches Zen: `no scope grants 'write'` |
+| Token with the `write` grant | Reads and writes work, because a `write` grant implies `read`. Writes go through the approval prompt as usual. On a [read-only persona](../multi-target.md#read-only-personas), the server refuses writes regardless of the grant |
+| Token without a grant for the URL | `403` with `error="insufficient_scope"`. The `WWW-Authenticate` header names the `read` grant that the URL needs. A URL that names no target gets the identical `403`, on purpose, so a caller cannot tell the two apart |
+| No token, or a token that fails verification | `401` on every URL, whether or not it names a target |
 
-Without an identity provider there is no token to check, and a URL that names no target answers `404`.
+Without an identity provider, there is no token to check. A URL that names no target answers `404`.
 
-`list_accessible_targets` returns only the URLs the token grants, see [Tools](../tools/index.md#list_accessible_targets).
+`list_accessible_targets` returns only the URLs that the token grants. See [Tools](../tools/index.md#list_accessible_targets).
 
 !!! warning "`allow_unscoped_reads` is for test setups"
-    `"allow_unscoped_reads": true` lets any valid token read every target in the registry, and the server logs a warning at every start while it is set. It exists to stand up routing before the identity provider has the scopes; never use it for a deployment with real credentials behind it. Writes still need the `write` grant.
+    `"allow_unscoped_reads": true` lets any valid token read every target in the registry. While it is set, the server logs a warning at every start. Use it only to set up routing before the identity provider has the scopes. Never use it for a deployment with real credentials behind it. Writes still need the `write` grant.
 
 !!! note "Where the scopes come from"
-    Your identity provider must issue the grants. In Keycloak, create one client scope per grant and attach it to the calling client as optional, see [Keycloak, Step 5.3](keycloak.md#step-53-per-target-scopes-resource-server-mode); a hardcoded-claim mapper that writes the `actian:...` values into `scp` works as well. In Auth0, define them as permissions on the API and grant them through a role, which puts them into the `permissions` claim. The MCP server does not advertise or request them: the calling application asks its own provider for them.
+    Your identity provider must issue the grants. In Keycloak, create one client scope per grant and attach it to the calling client as optional. See [Keycloak, Step 5.3](keycloak.md#step-53-per-target-scopes-resource-server-mode). A hardcoded-claim mapper that writes the `actian:...` values into `scp` also works. In Auth0, define the grants as permissions on the API and grant them through a role. Auth0 then puts them into the `permissions` claim. The MCP server does not advertise or request the grants. The calling application asks its own provider for them.
 
 ## User Impersonation
 
 !!! warning "Not supported on Zen"
-    Zen does not support `SET SESSION AUTHORIZATION`, so user impersonation is unavailable. Set `user_impersonation` to `false` inside the `oauth` block; a top-level key is ignored. JWT authentication still works; only per-user database switching is skipped. The rest of this section describes the impersonation behavior that does not apply to Zen.
+    Zen does not support `SET SESSION AUTHORIZATION`, so user impersonation is unavailable. Set `user_impersonation` to `false` inside the `oauth` block. The server ignores a top-level key. JWT authentication still works; only per-user database switching is skipped. The rest of this section describes the impersonation behavior that does not apply to Zen.
 
 By default, the `user_impersonation` field is set to `true`. The server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
 
@@ -150,7 +150,7 @@ Impersonation covers extension-authored tools as well as the built-in ones, so a
 |  user_impersonation | Server |
 | :------------------- | :------- |
 | `true` (default) | Verify the `JWT` and run `SET SESSION AUTHORIZATION "<user>"` for each query. Every OAuth user needs a matching database account. |
-| `false` | Verify the `JWT` and reject unauthenticated requests. However, all approved queries will run under the shared service-account connection pool credentials. The caller's name, when the token carries one, is still recorded in the [call log](../index.md#call-log). |
+| `false` | Verify the `JWT` and reject unauthenticated requests. However, all approved queries will run under the shared service-account connection pool credentials. If the token carries the caller's name, the server still records it in the [call log](../index.md#call-log). |
 
 
 ### Extracting Username

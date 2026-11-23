@@ -5,10 +5,10 @@ description: Every function, signature, and return shape available to an Actian 
 
 # API Reference
 
-Everything an extension needs is importable from `actian_mcp_server.extension_api`. The public functions are `get_current_user`, `get_current_scopes`, `has_scope`, `get_database`, and `request_write_confirmation`. The database and transaction objects come from `get_database()` rather than being imported.
+Everything an extension needs is importable from `actian_mcp_server.extension_api`. The public functions are `get_current_user`, `get_current_scopes`, `has_scope`, `get_database`, and `request_write_confirmation`. The database and transaction objects come from `get_database()`. You do not import them.
 
 !!! note "Not on VectorAI DB"
-    `get_database()`, `DatabaseAccess` and `Transaction` run SQL and do not work on a VectorAI DB server: `query()` returns an error and `transaction()` raises. See [Reaching the Engine](index.md#reaching-the-engine). The other functions work as described.
+    `get_database()`, `DatabaseAccess`, and `Transaction` run SQL and do not work on a VectorAI DB server: `query()` returns an error and `transaction()` raises. See [Reaching the Engine](index.md#reaching-the-engine). The other functions work as described.
 
 ## Module Entry Points
 
@@ -39,7 +39,7 @@ The `get_database()` function returns this object.
 | Method | Signature | Behavior |
 |--------|-----------|----------|
 | `query` | `await db.query(sql: str, params=None) -> dict` | Runs one `SELECT`. Non-`SELECT` statements are refused. Returns a result dictionary. Works in read-only mode. |
-| `transaction` | `db.transaction(timeout: int = 300) -> Transaction` | Returns a transaction that has not started yet, the only way to write. `timeout` is the stale-transaction watchdog in seconds. Requires read-write mode. |
+| `transaction` | `db.transaction(timeout: int = 300) -> Transaction` | Returns a transaction that has not started yet. This is the only way to write. `timeout` is the stale-transaction watchdog in seconds. Requires read-write mode. |
 
 There is no `db.write()`. Every write goes through a transaction. Bind `params` as a list against `?` placeholders, and always parameterize user input.
 

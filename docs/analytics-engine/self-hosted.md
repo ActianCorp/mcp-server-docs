@@ -81,9 +81,9 @@ Create a file named `conf.json` in your working directory using the following st
 | `oauth` | `object` | None | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-the-oauth-block).|
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md).|
 | `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt). Applies only when `query_mode` is `read-write`. |
-| `extensions` | `array` | None | Extension modules to load, each an object with a required `module`, an optional `config`, and, in a multi-target deployment, an optional `targets` list. For more information, see [Extensions](extensions/index.md).|
+| `extensions` | `array` | None | Extension modules to load, each an object with a required `module`, an optional `config`, and an optional `targets` list (multi-target deployments only). For more information, see [Extensions](extensions/index.md).|
 | `connect_timeout` | `number` | `10` | Seconds to wait for a new database connection. `0` waits without limit. |
-| `auth_mode` | `string` | None | Set to `resource-server` to accept access tokens from your identity provider instead of running the OAuth login. See [Resource-Server Mode](authentication/resource-server.md). |
+| `auth_mode` | `string` | None | Set to `resource-server` to accept access tokens from the identity provider instead of running the OAuth login. See [Resource-Server Mode](authentication/resource-server.md). |
 | `targets` | `object` | None | A registry of Analytics Engine installations and databases for a multi-target deployment. Replaces `driver`, `server`, `database`, `database_user`, and `database_password`. See [Multi-Target Deployments](multi-target.md). |
 | `allow_unscoped_reads` | `boolean` | `false` | Multi-target only. Turns off per-target scope checks. For temporary use only. See [Multi-Target Deployments](multi-target.md#running-without-scope-checks-allow_unscoped_reads). |
 
