@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="New features and changes in Actian MCP Server 1.2.0, including multi-target deployments, resource-server mode, Ingres health tools, Analytics Engine vector search, and the VectorAI DB plugin.">
+        <meta name="description" content="New features and changes in Actian MCP Server 1.2.0, including the new Actian MCP Server for VectorAI DB, multi-target deployments, resource-server mode, Ingres health tools, Analytics Engine vector search, and updates for HCL Informix, Zen, and NoSQL.">
       
       
       
@@ -395,6 +395,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#actian-vectorai-db-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actian VectorAI DB Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#multi-target-deployments" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -439,10 +450,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#actian-vectorai-db-support" class="md-nav__link">
+  <a href="#hcl-informix-updates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Actian VectorAI DB Support
+        HCL Informix Updates
       
     </span>
   </a>
@@ -3587,6 +3598,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#actian-vectorai-db-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actian VectorAI DB Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#multi-target-deployments" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3631,10 +3653,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#actian-vectorai-db-support" class="md-nav__link">
+  <a href="#hcl-informix-updates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Actian VectorAI DB Support
+        HCL Informix Updates
       
     </span>
   </a>
@@ -3722,33 +3744,51 @@
 <h1 id="whats-new-in-actian-mcp-server-120">What's New in Actian MCP Server 1.2.0<a class="headerlink" href="#whats-new-in-actian-mcp-server-120" title="Permanent link">&para;</a></h1>
 <p>Actian MCP Server 1.2.0 adds the following features and changes:</p>
 <ul>
+<li><a href="#actian-vectorai-db-support">Actian VectorAI DB Support</a> (new)</li>
 <li><a href="#multi-target-deployments">Multi-Target Deployments</a></li>
 <li><a href="#resource-server-mode">Resource-Server Mode</a></li>
 <li><a href="#ingres-health-tools">Ingres Health Tools</a></li>
 <li><a href="#analytics-engine-vector-search">Analytics Engine Vector Search</a></li>
-<li><a href="#actian-vectorai-db-support">Actian VectorAI DB Support</a></li>
+<li><a href="#hcl-informix-updates">HCL Informix Updates</a></li>
 <li><a href="#zen-updates">Zen Updates</a></li>
 <li><a href="#nosql-updates">NoSQL Updates</a></li>
 <li><a href="#tool-annotations-and-tool-changes">Tool Annotations and Tool Changes</a></li>
 </ul>
+<h2 id="actian-vectorai-db-support">Actian VectorAI DB Support<a class="headerlink" href="#actian-vectorai-db-support" title="Permanent link">&para;</a></h2>
+<p>Actian MCP Server 1.2.0 introduces the Actian MCP Server for VectorAI DB. An AI agent can run semantic search over the vector collections listed in <code>conf.json</code>. The server does not show collections that are not listed.</p>
+<ul>
+<li><strong>Tools</strong>: six read tools search, count, and page through collections. <code>search</code> embeds a query text, and <code>search_by_vector</code> takes a vector from the caller.</li>
+<li><strong>Writes</strong>: writes are off by default. With <code>query_mode</code> set to <code>read-write</code>, four write tools create collections and store or delete points. Each write needs approval from the person at the MCP client.</li>
+<li><strong>Embeddings</strong>: the server embeds text with any server that offers the OpenAI embeddings API, with OpenAI, or with Gemini. With the <code>none</code> provider, the caller supplies the vectors.</li>
+<li><strong>Resources and prompts</strong>: health, the collection list, and each collection's details are MCP resources. The <code>find_information</code> and <code>store_information</code> prompts guide an agent.</li>
+<li><strong>Security</strong>: the server supports OAuth with Auth0 or Keycloak, and resource-server mode. When authentication is on in the engine, the server sends an engine access token from <code>vectorai.api_key_secret</code>.</li>
+<li><strong>Operations</strong>: a call log writes one record per tool call. Custom extensions add tools and resources.</li>
+</ul>
+<p>For more information, see <a href="../vectorai-db/index.html">Actian VectorAI DB</a>.</p>
 <h2 id="multi-target-deployments">Multi-Target Deployments<a class="headerlink" href="#multi-target-deployments" title="Permanent link">&para;</a></h2>
 <p>One container can now serve many databases instead of running one container for each database. You list the databases in a <code>targets</code> block in <code>conf.json</code>. Each database gets its own URL, and OAuth scopes control access to each database separately. You can add or remove targets without restarting the server by using <code>targets.d</code> files. A deployment without a <code>targets</code> block works as before.</p>
+<ul>
+<li>Each database in a target entry can have its own user name and password.</li>
+<li>A caller whose token has no grant for a database gets <code>403 Forbidden</code> with <code>insufficient_scope</code>, naming the scope that is missing.</li>
+<li>A request that does not name a database tells the client which URL to use.</li>
+</ul>
 <p>Multi-target deployments work with Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Zen also supports read-only personas.</p>
 <p>For more information, see <a href="../ingres/multi-target.html">Ingres</a>, <a href="../analytics-engine/multi-target.html">Analytics Engine</a>, <a href="../hcl-informix/multi-target.html">HCL Informix</a>, and <a href="../zen/multi-target.html">Zen</a>.</p>
 <h2 id="resource-server-mode">Resource-Server Mode<a class="headerlink" href="#resource-server-mode" title="Permanent link">&para;</a></h2>
 <p>An application that has already signed the user in can now call the MCP Server with an access token from the identity provider (IdP). The user does not need a second OAuth login. The server checks each token against the IdP's published signing keys and runs the call as the user named in the token. The Auth0 and Keycloak guides describe the IdP setup, including the scopes for each target, and how a calling application gets a token.</p>
-<p>For more information, see <a href="../ingres/authentication/resource-server.html">Ingres</a>, <a href="../analytics-engine/authentication/resource-server.html">Analytics Engine</a>, and <a href="../zen/authentication/index.html#resource-server-mode">Zen</a>.</p>
+<p>For more information, see <a href="../ingres/authentication/resource-server.html">Ingres</a>, <a href="../analytics-engine/authentication/resource-server.html">Analytics Engine</a>, <a href="../zen/authentication/index.html#resource-server-mode">Zen</a>, and <a href="../vectorai-db/authentication/index.html#resource-server-mode">VectorAI DB</a>. HCL Informix enforces per-target grants in resource-server mode. An Informix setup guide is not yet available; see <a href="../hcl-informix/authentication/index.html">HCL Informix Authentication</a>.</p>
 <h2 id="ingres-health-tools">Ingres Health Tools<a class="headerlink" href="#ingres-health-tools" title="Permanent link">&para;</a></h2>
 <p>Seven built-in, read-only tools report the health of the Ingres installation and the connected database. An AI assistant can use them to answer questions about checkpoints, locks, and optimizer statistics without catalog queries.</p>
 <p>For more information, see <a href="../ingres/health-tools.html">Health Tools</a>.</p>
 <h2 id="analytics-engine-vector-search">Analytics Engine Vector Search<a class="headerlink" href="#analytics-engine-vector-search" title="Permanent link">&para;</a></h2>
 <p>The server now shows an AI agent which columns are <code>VECTOR</code> columns. The <code>vector_search</code> tool returns the rows nearest to a query vector. <code>VECTOR</code> columns require Analytics Engine 8.0 or later.</p>
 <p>For more information, see <a href="../analytics-engine/vector-search.html">Vector Search</a>.</p>
-<h2 id="actian-vectorai-db-support">Actian VectorAI DB Support<a class="headerlink" href="#actian-vectorai-db-support" title="Permanent link">&para;</a></h2>
-<p>A new Actian MCP Server for VectorAI DB provides semantic search over vector collections. Writes are optional, and each write needs approval. The server includes tools, prompts, and resources. It supports OAuth with Auth0 or Keycloak, and custom extensions.</p>
-<p>For more information, see <a href="../vectorai-db/index.html">Actian VectorAI DB</a>.</p>
+<h2 id="hcl-informix-updates">HCL Informix Updates<a class="headerlink" href="#hcl-informix-updates" title="Permanent link">&para;</a></h2>
+<p>HCL Informix now supports multi-target deployments. Each database in the registry gets its own URL and its own schema resource, and <code>list_accessible_targets</code> lists the databases a caller can reach. The server keeps its ODBC connection settings in step with <code>targets.d</code> files, so you can add a database without a restart. When a query fails, the server log no longer records the SQL text.</p>
+<p>For more information, see <a href="../hcl-informix/multi-target.html">Multi-Target Deployments</a> and <a href="../hcl-informix/resources/index.html">Resources</a>.</p>
 <h2 id="zen-updates">Zen Updates<a class="headerlink" href="#zen-updates" title="Permanent link">&para;</a></h2>
 <p>Zen now supports several databases from one server and resource-server mode. It also adds a call log, the <code>list_accessible_targets</code> tool, tool annotations for each mode, and a Deployment Scenarios page.</p>
+<p>In <code>orm_operation</code>, an update or delete no longer accepts <code>where</code>: use <code>entity_id</code> for a single row, or <code>execute_write_query</code> for a conditional <code>UPDATE</code> or <code>DELETE</code>.</p>
 <p>For more information, see <a href="../zen/index.html">Zen</a> and <a href="../zen/deployment.html">Deployment Scenarios</a>.</p>
 <h2 id="nosql-updates">NoSQL Updates<a class="headerlink" href="#nosql-updates" title="Permanent link">&para;</a></h2>
 <ul>
@@ -3762,7 +3802,6 @@
 <li>Each tool declares MCP tool annotations. Clients can use them to decide whether to run a tool without asking first.</li>
 <li>For Ingres, <code>list_indexes</code> lists the indexes on a table.</li>
 <li>For Ingres, <code>list_tables</code> shows each table's owner, and <code>describe_table</code> accepts an owner-qualified name.</li>
-<li>A multi-target error now includes the reason.</li>
 </ul>
 <p>For more information, see <a href="../ingres/tools/index.html#tool-annotations">Ingres Tools</a>.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
@@ -3798,7 +3837,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 16:33:56 UTC">November 23, 2026</span>
   </span>
 
     
