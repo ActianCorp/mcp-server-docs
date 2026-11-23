@@ -34,7 +34,7 @@ pipeline {
     }
 
     environment {
-        DOC_VERSION=1.0
+        DOC_VERSION=1.2
         DOCNAME="${JOB_NAME}"
         DOC_NAME_VERSION="mcp-server-${DOC_VERSION}.doc"
 
@@ -62,10 +62,10 @@ pipeline {
                     echo "JOB_BASE_NAME:             [" + JOB_BASE_NAME + "]"
                     echo "JOB_NAME:                  [" + JOB_NAME + "]"
                     echo "BUILD_NUMBER:              [" + BUILD_NUMBER + "]"
-                    echo "BRANCH_NAME:              [" + BRANCH_NAME + "]"
-                    echo "DEVOPS_BUILD:             [" + DEVOPS_BUILD + "]"
-                    echo "GIT_COMMIT:               [" + GIT_COMMIT + "]"
-                    echo "REPO_COMMIT_URL_ANCHOR:   [" + REPO_COMMIT_URL_ANCHOR + "]"
+                    echo "BRANCH_NAME:               [" + BRANCH_NAME + "]"
+                    echo "DEVOPS_BUILD:              [" + DEVOPS_BUILD + "]"
+                    echo "GIT_COMMIT:                [" + GIT_COMMIT + "]"
+                    echo "REPO_COMMIT_URL_ANCHOR:    [" + REPO_COMMIT_URL_ANCHOR + "]"
                 }
                 sh "set | sort > _${JOB_BASE_NAME}_init_env-${BUILD_NUMBER}.log"
             }
@@ -110,8 +110,8 @@ pipeline {
             steps {
                 unstash 'output.zip'
                 fileOperations([fileUnZipOperation(filePath: 'output.zip', targetLocation: '.')])
-                bat "move D:\\Sites\\mcp-server D:\\backups\\mcp-server-${DOC_VERSION}-${BUILD_NUMBER}.backup"
-                bat "move ${WORKSPACE}\\site D:\\Sites\\mcp-server"
+                bat "move D:\\Sites\\mcp-server\\${DOC_VERSION} D:\\backups\\mcp-server-${DOC_VERSION}-${BUILD_NUMBER}.backup"
+                bat "move ${WORKSPACE}\\site D:\\Sites\\mcp-server\\${DOC_VERSION}"
             }
         }
     }
