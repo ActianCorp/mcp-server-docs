@@ -4477,7 +4477,7 @@ intentional.</p>
 <a href="../write-support.html">Write support</a>. Data Definition Language, explicit transactions, and
 bulk <code>batch_operation</code> are not available in any mode in this release.</p>
 <h2 id="tool-annotations">Tool Annotations<a class="headerlink" href="#tool-annotations" title="Permanent link">&para;</a></h2>
-<p>Every tool declares what calling it does, so a client can decide whether to ask the human before a call. The annotations follow the mode the tool is registered in:</p>
+<p>Every tool declares what a call does, so a client can decide whether to ask the human before a call. The annotations follow the mode that the tool is registered in:</p>
 <table>
 <thead>
 <tr>
@@ -4490,11 +4490,11 @@ bulk <code>batch_operation</code> are not available in any mode in this release.
 <tr>
 <td><code>list_tables</code>, <code>describe_table</code>, <code>execute_query</code></td>
 <td>read-only</td>
-<td>read-only — Zen's <code>execute_query</code> rejects every write in both modes</td>
+<td>read-only. Zen's <code>execute_query</code> rejects every write in both modes</td>
 </tr>
 <tr>
 <td><code>orm_operation</code></td>
-<td>read-only — insert, update and delete are refused</td>
+<td>read-only. Insert, update, and delete are refused</td>
 <td>destructive write</td>
 </tr>
 <tr>
@@ -4504,7 +4504,7 @@ bulk <code>batch_operation</code> are not available in any mode in this release.
 </tr>
 <tr>
 <td><code>database_manage</code></td>
-<td>destructive write — <code>switch</code> and <code>release_locks</code> change server state, so the whole tool is marked</td>
+<td>destructive write. <code>switch</code> and <code>release_locks</code> change server state, so the whole tool is marked</td>
 <td>—</td>
 </tr>
 <tr>
@@ -4519,7 +4519,7 @@ bulk <code>batch_operation</code> are not available in any mode in this release.
 </tr>
 </tbody>
 </table>
-<p>"Read-only" is <code>readOnlyHint: true</code>, <code>idempotentHint: true</code>, <code>openWorldHint: false</code>. "Destructive write" is <code>readOnlyHint: false</code>, <code>destructiveHint: true</code>, <code>idempotentHint: false</code>, <code>openWorldHint: false</code>. Under multi-target the server publishes one tool list for all URLs, so a read-only persona still lists the write tools; the engine refuses them. Annotations are hints for the client, not a control: the write scope, the approval prompt and the tool handlers do the enforcing.</p>
+<p>"Read-only" is <code>readOnlyHint: true</code>, <code>idempotentHint: true</code>, <code>openWorldHint: false</code>. "Destructive write" is <code>readOnlyHint: false</code>, <code>destructiveHint: true</code>, <code>idempotentHint: false</code>, <code>openWorldHint: false</code>. In a multi-target deployment, the server publishes one tool list for all URLs, so a read-only persona still lists the write tools. The engine refuses them. Annotations are hints for the client, not a control. The write scope, the approval prompt, and the tool handlers do the enforcing.</p>
 <hr />
 <h2 id="execute_query">execute_query<a class="headerlink" href="#execute_query" title="Permanent link">&para;</a></h2>
 <p>Executes a read-only SQL query against Actian Zen with automatic dialect translation. It supports complex queries like JOINs, subqueries, aggregations, and UNION.</p>
@@ -4747,7 +4747,7 @@ bulk <code>batch_operation</code> are not available in any mode in this release.
 <td><code>where</code></td>
 <td><code>dict</code></td>
 <td>—</td>
-<td>Filter conditions for <code>select</code>, for example, <code>{"field": "salary", "operator": "&gt;", "value": 50000}</code>. Not accepted for <code>update</code> or <code>delete</code>: those take <code>entity_id</code>; for a conditional UPDATE or DELETE use <code>execute_write_query</code>.</td>
+<td>Filter conditions for <code>select</code>, for example, <code>{"field": "salary", "operator": "&gt;", "value": 50000}</code>. Not accepted for <code>update</code> or <code>delete</code>. Those take <code>entity_id</code>. For a conditional UPDATE or DELETE, use <code>execute_write_query</code>.</td>
 </tr>
 <tr>
 <td><code>order_by</code></td>
@@ -5041,8 +5041,8 @@ not by itself mean the write was declined.</p>
 </code></pre></div>
 <hr />
 <h2 id="list_accessible_targets">list_accessible_targets<a class="headerlink" href="#list_accessible_targets" title="Permanent link">&para;</a></h2>
-<p>Returns the databases a client may reach on a server that <a href="../multi-target.html">serves several databases</a>, with the path of each. Registered only when <code>conf.json</code> has a <code>targets</code> block. Target selection happens by the URL a session connects to, never by a tool argument, so this is how a client that knows a database name finds its URL.</p>
-<p>With authentication on, the list contains only the targets the caller's token grants. A token without any grant gets an empty list, but only on the plain <code>/mcp</code> URL: every target URL answers <code>403</code> to it, so call the tool there.</p>
+<p>Returns the databases that a client can reach on a server that <a href="../multi-target.html">serves several databases</a>, with the path of each. The server registers this tool only when <code>conf.json</code> has a <code>targets</code> block. The URL that a session connects to selects the target, never a tool argument. A client that knows a database name uses this tool to find its URL.</p>
+<p>With authentication on, the list contains only the targets that the caller's token grants. A token without any grant gets an empty list, but only on the plain <code>/mcp</code> URL. Every target URL answers <code>403</code> to such a token, so call the tool on the plain <code>/mcp</code> URL.</p>
 <h3 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">&para;</a></h3>
 <p>This tool takes no input parameters.</p>
 <h3 id="output-schema_7">Output Schema<a class="headerlink" href="#output-schema_7" title="Permanent link">&para;</a></h3>
@@ -5059,7 +5059,7 @@ not by itself mean the write was declined.</p>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>path</code> is always present; <code>url</code> is <code>null</code> unless <code>FASTMCP_SERVER_AUTH_BASE_URL</code> is configured. Append <code>/mcp</code> to the path for the MCP endpoint of that target. The same list is available as the resource <code>targets://accessible</code>.</p>
+<p><code>path</code> is always present. <code>url</code> is <code>null</code> unless <code>FASTMCP_SERVER_AUTH_BASE_URL</code> is configured. Append <code>/mcp</code> to the path to get the MCP endpoint of that target. The resource <code>targets://accessible</code> returns the same list.</p>
 <hr />
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
@@ -5098,7 +5098,7 @@ not by itself mean the write was declined.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 15:50:44 UTC">November 18, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

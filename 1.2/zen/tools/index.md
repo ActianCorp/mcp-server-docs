@@ -33,18 +33,18 @@ bulk `batch_operation` are not available in any mode in this release.
 
 ## Tool Annotations
 
-Every tool declares what calling it does, so a client can decide whether to ask the human before a call. The annotations follow the mode the tool is registered in:
+Every tool declares what a call does, so a client can decide whether to ask the human before a call. The annotations follow the mode that the tool is registered in:
 
 | Tool | `read-only` | `read-write` |
 |------|-------------|--------------|
-| `list_tables`, `describe_table`, `execute_query` | read-only | read-only — Zen's `execute_query` rejects every write in both modes |
-| `orm_operation` | read-only — insert, update and delete are refused | destructive write |
+| `list_tables`, `describe_table`, `execute_query` | read-only | read-only. Zen's `execute_query` rejects every write in both modes |
+| `orm_operation` | read-only. Insert, update, and delete are refused | destructive write |
 | `blob_operation` | read-only | — |
-| `database_manage` | destructive write — `switch` and `release_locks` change server state, so the whole tool is marked | — |
+| `database_manage` | destructive write. `switch` and `release_locks` change server state, so the whole tool is marked | — |
 | `execute_write_query` | — | destructive write |
 | `list_accessible_targets` | read-only | read-only |
 
-"Read-only" is `readOnlyHint: true`, `idempotentHint: true`, `openWorldHint: false`. "Destructive write" is `readOnlyHint: false`, `destructiveHint: true`, `idempotentHint: false`, `openWorldHint: false`. Under multi-target the server publishes one tool list for all URLs, so a read-only persona still lists the write tools; the engine refuses them. Annotations are hints for the client, not a control: the write scope, the approval prompt and the tool handlers do the enforcing.
+"Read-only" is `readOnlyHint: true`, `idempotentHint: true`, `openWorldHint: false`. "Destructive write" is `readOnlyHint: false`, `destructiveHint: true`, `idempotentHint: false`, `openWorldHint: false`. In a multi-target deployment, the server publishes one tool list for all URLs, so a read-only persona still lists the write tools. The engine refuses them. Annotations are hints for the client, not a control. The write scope, the approval prompt, and the tool handlers do the enforcing.
 
 ---
 
@@ -272,7 +272,7 @@ In `read-write` mode this tool also performs single-row writes. Those go through
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `columns` | `list` | All columns | Columns to return. Supports aggregates like `COUNT(*) AS total`. |
-| `where` | `dict` | — | Filter conditions for `select`, for example, `{"field": "salary", "operator": ">", "value": 50000}`. Not accepted for `update` or `delete`: those take `entity_id`; for a conditional UPDATE or DELETE use `execute_write_query`. |
+| `where` | `dict` | — | Filter conditions for `select`, for example, `{"field": "salary", "operator": ">", "value": 50000}`. Not accepted for `update` or `delete`. Those take `entity_id`. For a conditional UPDATE or DELETE, use `execute_write_query`. |
 | `order_by` | `list` | — | Column names to sort by. |
 | `limit` | `integer` | `max_rows` | Maximum rows to return. Capped at `max_rows`. |
 | `offset` | `integer` | — | Number of rows to skip. |
@@ -516,9 +516,9 @@ Provides server management operations: list available databases, list DSNs with 
 
 ## list_accessible_targets
 
-Returns the databases a client may reach on a server that [serves several databases](../multi-target.md), with the path of each. Registered only when `conf.json` has a `targets` block. Target selection happens by the URL a session connects to, never by a tool argument, so this is how a client that knows a database name finds its URL.
+Returns the databases that a client can reach on a server that [serves several databases](../multi-target.md), with the path of each. The server registers this tool only when `conf.json` has a `targets` block. The URL that a session connects to selects the target, never a tool argument. A client that knows a database name uses this tool to find its URL.
 
-With authentication on, the list contains only the targets the caller's token grants. A token without any grant gets an empty list, but only on the plain `/mcp` URL: every target URL answers `403` to it, so call the tool there.
+With authentication on, the list contains only the targets that the caller's token grants. A token without any grant gets an empty list, but only on the plain `/mcp` URL. Every target URL answers `403` to such a token, so call the tool on the plain `/mcp` URL.
 
 ### Parameters
 
@@ -541,7 +541,7 @@ This tool takes no input parameters.
 }
 ```
 
-`path` is always present; `url` is `null` unless `FASTMCP_SERVER_AUTH_BASE_URL` is configured. Append `/mcp` to the path for the MCP endpoint of that target. The same list is available as the resource `targets://accessible`.
+`path` is always present. `url` is `null` unless `FASTMCP_SERVER_AUTH_BASE_URL` is configured. Append `/mcp` to the path to get the MCP endpoint of that target. The resource `targets://accessible` returns the same list.
 
 ---
 

@@ -19,8 +19,8 @@ The server supports two ways to authenticate callers. A deployment uses one of t
 
 | Mode | How it works | Use it for |
 | :--- | :--- | :--- |
-| **OAuth login** (default) | The server signs the user in through your identity provider and issues its own token. Configured with the `oauth` block described on this page. | General-purpose MCP clients, such as Claude Desktop, GitHub Copilot, and Visual Studio Code |
-| **[Resource-server mode](resource-server.md)** | The server accepts access tokens issued by your identity provider and runs no login. Set `"auth_mode": "resource-server"`. | Applications that have already signed the user in |
+| **OAuth login** (default) | The server signs the user in through the identity provider and issues its own token. You configure it with the `oauth` block described on this page. | General-purpose MCP clients, such as Claude Desktop, GitHub Copilot, and Visual Studio Code |
+| **[Resource-server mode](resource-server.md)** | The server accepts access tokens issued by the identity provider and runs no login. Set `"auth_mode": "resource-server"`. | Applications that have already signed the user in |
 
 In a [multi-target deployment](../multi-target.md), both modes also check a per-database scope on every request.
 
@@ -104,7 +104,7 @@ Impersonation covers extension-authored tools as well as the built-in ones, so a
 
 ### Service Account Privileges
 
-With `user_impersonation` set to `true`, the database account in `conf.json` (the service account) runs `SET SESSION AUTHORIZATION` on every query, so it must be allowed to do so. It needs the `SECURITY` and `OPERATOR` privileges, or it must be the DBA of the database. For example:
+With `user_impersonation` set to `true`, the database account in `conf.json` (the service account) runs `SET SESSION AUTHORIZATION` on every query, so it must be allowed to do so. It needs the `SECURITY` and `OPERATOR` privileges, or it must be the database administrator (DBA). For example:
 
 ```sql
 ALTER USER <service_account> WITH PRIVILEGES = (SECURITY, OPERATOR);
@@ -112,11 +112,11 @@ ALTER USER <service_account> WITH PRIVILEGES = (SECURITY, OPERATOR);
 
 A missing privilege does not stop the server from starting and does not affect sign-in. The first query fails with an error such as `SET SESSION AUTHORIZATION: You lack the privileges necessary to execute this query`.
 
-The privilege lets the service account act as another user. It does not give that user any table privileges: each query still runs with the privileges of the user named in the token.
+The privilege lets the service account act as another user. It does not give that user any table privileges. Each query still runs with the privileges of the user named in the token.
 
 ### Extracting Username
 
-When user impersonation is active with the default OAuth login, the server extracts the database username from the token using the following priority order. [Resource-server mode](resource-server.md#the-username-must-be-in-the-token) uses stricter rules: it reads the username only from the token, and never from the userinfo endpoint or the `sub` claim.
+When user impersonation is active with the default OAuth login, the server extracts the database username from the token in the following priority order. [Resource-server mode](resource-server.md#the-username-must-be-in-the-token) uses stricter rules. It reads the username only from the token, and never from the userinfo endpoint or the `sub` claim.
 
 ```mermaid
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%

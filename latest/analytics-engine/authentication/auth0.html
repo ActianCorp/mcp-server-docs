@@ -4570,7 +4570,7 @@
 <p><strong>Enable Authorization Code Grant:</strong> In <strong>Advanced Settings</strong> &gt; <strong>Grant Types</strong>, select <strong>Authorization Code</strong>.</p>
 </li>
 <li><strong>Set Callback URLs:</strong> Add <code>&lt;BASE_URL&gt;/auth/callback</code> to <strong>Allowed Callback URLs</strong>.</li>
-<li><strong>Add the write scope</strong>, if <code>query_mode</code> is <code>read-write</code> and the deployment does not serve more than one server or database: define the <code>mcp:write</code> permission on the API, then grant it to users through a role. For a multi-target deployment, grant per-target permissions instead; see <a href="#multi-target-deployments-per-target-permissions">Multi-Target Deployments: Per-Target Permissions</a>. See <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a> and <a href="#step-43-grant-the-write-scope-read-write-deployments-only">Step 4.3</a>.</li>
+<li><strong>Add the write scope</strong>, if <code>query_mode</code> is <code>read-write</code> and the deployment serves one server and one database. Define the <code>mcp:write</code> permission on the API, then grant it to users through a role. See <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a> and <a href="#step-43-grant-the-write-scope-read-write-deployments-only">Step 4.3</a>. For a multi-target deployment, grant per-target permissions instead. See <a href="#multi-target-deployments-per-target-permissions">Multi-Target Deployments: Per-Target Permissions</a>.</li>
 <li><strong>Update Configuration:</strong> Add your Auth0 domain and credentials to <code>conf.json</code>.</li>
 <li><strong>Restart the container:</strong> Restart it so it loads the updated <code>conf.json</code>. The container image already serves HTTP, so no transport flag is needed. See <a href="../../get-started/index.html#step-3-start-the-container">Getting Started: Step 3</a>.</li>
 </ol>
@@ -4703,7 +4703,7 @@
 <p>The <strong>Application</strong> represents the MCP server's OAuth client. It holds <code>client_id</code> and <code>client_secret</code> used during the OAuth handshake.</p>
 <div class="admonition note">
 <p class="admonition-title">Why Regular Web Application?</p>
-<p>The MCP server runs the browser sign-in for its users and holds a client secret, which is the Regular Web Application pattern. MCP clients such as Visual Studio Code and Claude Desktop sign in through the MCP server and never talk to Auth0 directly. Do not use <strong>Single Page Application</strong> or <strong>Native</strong>, which cannot hold a client secret, or <strong>Machine to Machine</strong>, which Auth0 intends for client-credentials callers without a browser sign-in.</p>
+<p>The MCP server runs the browser sign-in for its users and holds a client secret. That is the Regular Web Application pattern. MCP clients such as Visual Studio Code and Claude Desktop sign in through the MCP server and never talk to Auth0 directly. Do not use <strong>Single Page Application</strong> or <strong>Native</strong>, because they cannot hold a client secret. Do not use <strong>Machine to Machine</strong>, which Auth0 intends for client-credentials callers that have no browser sign-in.</p>
 </div>
 <ol>
 <li>In the Auth0 Dashboard, navigate to <strong>Applications</strong> &gt; <strong>Applications</strong>.</li>
@@ -4768,7 +4768,7 @@
 </div>
 <p>Select <strong>Save Changes</strong>.</p>
 <h3 id="configure-grant-types">Configure Grant Types<a class="headerlink" href="#configure-grant-types" title="Permanent link">&para;</a></h3>
-<p>Regular Web Applications have <strong>Authorization Code</strong> enabled by default, but always verify, since some tenants or configurations differ.</p>
+<p>Regular Web Applications have <strong>Authorization Code</strong> enabled by default. Always confirm it, because some tenants or configurations differ.</p>
 <ol>
 <li>On the <strong>Settings</strong> tab, select <strong>Show Advanced Settings</strong>.</li>
 <li>Select the <strong>Grant Types</strong> tab.</li>
@@ -4843,7 +4843,7 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">This is not the same as granting the scope to a user</p>
-<p>Authorizing the application here means it is <em>allowed to request</em> <code>mcp:write</code>, not that any particular user's token will carry it. With <strong>Enable RBAC</strong> on (enabled in <a href="#step-1-create-an-auth0-api">Step 1</a>), whether a specific user's token actually includes <code>mcp:write</code> depends on that user holding it through a role, which is a separate, per-user assignment in <a href="#step-43-grant-the-write-scope-read-write-deployments-only">Step 4.3</a>. Both steps are required for read-write deployments.</p>
+<p>Authorizing the application here means it is <em>allowed to request</em> <code>mcp:write</code>. It does not mean that a user's token carries it. With <strong>Enable RBAC</strong> on (enabled in <a href="#step-1-create-an-auth0-api">Step 1</a>), a user's token includes <code>mcp:write</code> only if the user holds it through a role. You assign roles per user in <a href="#step-43-grant-the-write-scope-read-write-deployments-only">Step 4.3</a>. Both steps are required for read-write deployments.</p>
 </div>
 <h2 id="step-4-create-auth0-users-if-using-user-impersonation">Step 4: Create Auth0 Users (If Using User Impersonation)<a class="headerlink" href="#step-4-create-auth0-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
 <p>If <code>user_impersonation</code> is <code>true</code>, the authenticated user's identity is forwarded to the database through <code>SET SESSION AUTHORIZATION</code>. Each Auth0 user must have a matching database account. For more information, see <a href="index.html#user-impersonation">User Impersonation</a>.</p>
@@ -5016,7 +5016,7 @@
 </ol>
 <h2 id="multi-target-deployments-per-target-permissions">Multi-Target Deployments: Per-Target Permissions<a class="headerlink" href="#multi-target-deployments-per-target-permissions" title="Permanent link">&para;</a></h2>
 <p>Skip this section if your <code>conf.json</code> has no <code>targets</code> block. A single-database deployment uses only the <code>mcp:write</code> scope from <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>.</p>
-<p>In a multi-target deployment, one server fronts several databases, and each one is reached at its own URL, <code>https://&lt;mcp-server-host&gt;:8000/mcp/{host}/{instance}/{database}</code>. Every request to a target URL, read or write, must be covered by a per-target scope in the caller's access token. For the deployment model and the <code>targets</code> block, see <a href="../multi-target.html">Multi-Target Deployments</a>.</p>
+<p>In a multi-target deployment, one server fronts several databases. You reach each database at its own URL, <code>https://&lt;mcp-server-host&gt;:8000/mcp/{host}/{instance}/{database}</code>. A per-target scope in the caller's access token must cover every request to a target URL, read or write. For the deployment model and the <code>targets</code> block, see <a href="../multi-target.html">Multi-Target Deployments</a>.</p>
 <h3 id="scope-grammar">Scope Grammar<a class="headerlink" href="#scope-grammar" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code>actian:{host}:{instance}:{database}:{read|write}
 </code></pre></div>
@@ -5078,11 +5078,11 @@
 </tbody>
 </table>
 <div class="admonition warning">
-<p class="admonition-title">Treat host wildcards as break-glass grants</p>
-<p>A scope with <code>*</code> in the <code>{host}</code> segment, such as <code>actian:*:*:*:write</code>, reaches every target. Keep it out of default roles. The server writes a <code>WARNING</code> log line every time such a scope authorizes a request, naming the scope and the target, so its use is visible in audit review.</p>
+<p class="admonition-title">Treat host wildcards as emergency-only grants</p>
+<p>A scope with <code>*</code> in the <code>{host}</code> segment, such as <code>actian:*:*:*:write</code>, reaches every target. Keep it out of default roles. Each time such a scope authorizes a request, the server writes a <code>WARNING</code> log line that names the scope and the target. This makes its use visible in audit reviews.</p>
 </div>
 <h3 id="which-scope-authorizes-a-write">Which Scope Authorizes a Write<a class="headerlink" href="#which-scope-authorizes-a-write" title="Permanent link">&para;</a></h3>
-<p>The single-target <code>mcp:write</code> scope and the per-target scopes are mutually exclusive. They are never combined, and which model applies is not a per-request choice:</p>
+<p>The single-target <code>mcp:write</code> scope and the per-target scopes are mutually exclusive. They are never combined, and you do not choose the model for each request:</p>
 <table>
 <thead>
 <tr>
@@ -5111,10 +5111,10 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Writes are refused when scope checking is off</p>
-<p>If <code>allow_unscoped_reads</code> is set to <code>true</code> (intended only for testing routing before OAuth is in place), reads on target URLs are allowed without a grant, but writes on target URLs are refused. The server does not fall back to <code>mcp:write</code> for them.</p>
+<p>If you set <code>allow_unscoped_reads</code> to <code>true</code>, reads on target URLs are allowed without a grant, but writes on target URLs are refused. Use this setting only to test routing before OAuth is in place. The server does not fall back to <code>mcp:write</code> for those writes.</p>
 </div>
 <h3 id="step-1-define-the-per-target-permissions-on-the-api">Step 1: Define Per-Target Permissions on API<a class="headerlink" href="#step-1-define-the-per-target-permissions-on-the-api" title="Permanent link">&para;</a></h3>
-<p>Auth0 permissions are plain strings, so each scope you intend to grant becomes one permission. Define the specific combinations your roles need, including any wildcard forms, not every possible combination.</p>
+<p>Auth0 permissions are plain strings, so each scope you grant becomes one permission. Define only the combinations that your roles need, including any wildcard forms.</p>
 <ol>
 <li>Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>your API</strong>, for example <code>Actian MCP Server</code>, and select the <strong>Permissions</strong> tab.</li>
 <li>
@@ -5147,14 +5147,14 @@
 </li>
 </ol>
 <h3 id="step-2-confirm-rbac-on-the-api">Step 2: Confirm RBAC on API<a class="headerlink" href="#step-2-confirm-rbac-on-the-api" title="Permanent link">&para;</a></h3>
-<p>RBAC is required for a multi-target deployment, not optional. The set of possible per-target scopes is unbounded, so the server cannot advertise them for MCP clients to request. Auth0 delivers the grants instead, in the access token's <code>permissions</code> claim, which the server reads together with <code>scope</code> and <code>scp</code>.</p>
+<p>RBAC is required for a multi-target deployment. The number of possible per-target scopes is unlimited, so the server cannot list them for MCP clients to request. Auth0 delivers the grants instead, in the access token's <code>permissions</code> claim. The server reads that claim together with <code>scope</code> and <code>scp</code>.</p>
 <ol>
 <li>On your API, select the <strong>Settings</strong> tab and scroll to <strong>RBAC Settings</strong>.</li>
 <li>Confirm that both <strong>Enable RBAC</strong> and <strong>Add Permissions in the Access Token</strong> are enabled, as described in <a href="#step-1-create-an-auth0-api">Step 1</a>. If they are not, enable them and select <strong>Save</strong>.</li>
 </ol>
 <div class="admonition warning">
 <p class="admonition-title">Requesting a scope does not grant it</p>
-<p>Auth0 silently drops a requested scope that is not a permission granted to the caller. The token is still issued, the scope is simply absent, and nothing reports an error. A per-target scope reaches the token only when it is defined on the API (Step 1) and granted (Step 3 or Step 4).</p>
+<p>Auth0 silently drops a requested scope that is not a permission granted to the caller. The token is still issued without the scope, and Auth0 reports no error. A per-target scope reaches the token only when it is defined on the API (Step 1) and granted (Step 3 or Step 4).</p>
 </div>
 <h3 id="step-3-grant-permissions-to-users-through-roles">Step 3: Grant Permissions to Users Through Roles<a class="headerlink" href="#step-3-grant-permissions-to-users-through-roles" title="Permanent link">&para;</a></h3>
 <ol>
@@ -5173,11 +5173,11 @@
 </ol>
 <div class="admonition warning">
 <p class="admonition-title">Client Access and User-Delegated Access look identical</p>
-<p>The two tabs show the same permission checklist. <strong>User-Delegated Access</strong> controls what the application may request on behalf of a signed-in user. <strong>Client Access</strong> controls what a client credentials token carries. Selecting permissions on the wrong tab leaves them out of the token without any error.</p>
+<p>The two tabs show the same permission checklist. <strong>User-Delegated Access</strong> controls what the application may request on behalf of a signed-in user. <strong>Client Access</strong> controls what a client credentials token carries. Selecting permissions on the wrong tab leaves them out of the token, and Auth0 reports no error.</p>
 </div>
-<p>Client credentials tokens carry no user identity, so callers of this kind are used with <code>user_impersonation</code> set to <code>false</code>, in <a href="#resource-server-mode">Resource-Server Mode</a>.</p>
+<p>Client credentials tokens carry no user identity. Set <code>user_impersonation</code> to <code>false</code> for these callers, in <a href="#resource-server-mode">Resource-Server Mode</a>.</p>
 <h3 id="what-a-caller-without-a-grant-sees">What a Caller Without a Grant Sees<a class="headerlink" href="#what-a-caller-without-a-grant-sees" title="Permanent link">&para;</a></h3>
-<p>A request to a target URL that the token has no read grant for is refused with HTTP <code>403</code> and the error <code>insufficient_scope</code>. The <code>WWW-Authenticate</code> response header names the scope that would be required, for example:</p>
+<p>The server refuses a request to a target URL that the token has no read grant for. It returns HTTP <code>403</code> and the error <code>insufficient_scope</code>. The <code>WWW-Authenticate</code> response header names the required scope, for example:</p>
 <div class="language-text highlight"><pre><span></span><code>WWW-Authenticate: Bearer error="insufficient_scope",
     error_description="Required scope: actian:db07.example.com:&lt;installation_id&gt;:sales:read",
     scope="actian:db07.example.com:&lt;installation_id&gt;:sales:read", ...
@@ -5185,7 +5185,7 @@
 <p>A request for a target that does not exist receives the identical response, so the response never reveals which targets are configured. Check the target URL as well as the grants.</p>
 <div class="admonition note">
 <p class="admonition-title">Behind the OAuth login proxy, sign in again after granting</p>
-<p>Some MCP clients react to this response by starting a new login that asks for the missing scope (step-up). With the server's OAuth login proxy, which this guide sets up, that new login cannot obtain the scope: the browser shows an authorization error such as <code>Client was not registered with scope ...</code>. This is expected. Grant the permission or role in Auth0 (<a href="#step-3-grant-permissions-to-users-through-roles">Step 3</a>), then sign in again.</p>
+<p>Some MCP clients react to this response by starting a new login that asks for the missing scope (step-up). The server's OAuth login proxy, which this guide sets up, cannot obtain the scope in that new login. The browser shows an authorization error such as <code>Client was not registered with scope ...</code>. This is expected. Grant the permission or role in Auth0 (<a href="#step-3-grant-permissions-to-users-through-roles">Step 3</a>), then sign in again.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Discover what a token can reach</p>
@@ -5196,7 +5196,7 @@
 <p>Removing a permission or role in Auth0 does not invalidate tokens that were already issued. Access ends when the token expires. See <a href="#token-expiration">Token Expiration</a>.</p>
 </div>
 <h2 id="resource-server-mode">Resource-Server Mode<a class="headerlink" href="#resource-server-mode" title="Permanent link">&para;</a></h2>
-<p>Use resource-server mode when your own application already signs users in through Auth0 and calls the MCP server with the user's Auth0 access token. The MCP server runs no login of its own and holds no client ID or secret. It only verifies each token against your Auth0 tenant's published signing keys and runs each call as the user named in the token.</p>
+<p>Use resource-server mode when your own application already signs users in through Auth0 and calls the MCP server with the user's Auth0 access token. The MCP server runs no login of its own and holds no client ID or secret. It only verifies each token against the Auth0 tenant's published signing keys and runs each call as the user named in the token.</p>
 <p>Generic MCP clients, such as Visual Studio Code or Claude Desktop, keep using the login proxy described in the rest of this guide. One deployment runs one mode. For the mode itself, independent of the identity provider, see <a href="resource-server.html">Resource-Server Mode</a>.</p>
 <table>
 <thead>
@@ -5235,7 +5235,7 @@
 <p>The calling application is an Auth0 application of its own. For an application that signs users in through a browser and holds a client secret, create it as a <strong>Regular Web Applications</strong> type, as in <a href="#step-2-create-an-auth0-application">Step 2: Create an Auth0 Application</a>.</p>
 <ol>
 <li>Authorize your calling application for the API, as in <a href="#step-3-authorize-the-application-for-the-api">Step 3: Authorize the Application for the API</a>. Use <strong>User-Delegated Access</strong> for user logins, and <strong>Client Access</strong> for client credentials callers.</li>
-<li>Have the application request the API <strong>Identifier</strong> as its <code>audience</code> when it obtains a token, for example on its <code>/authorize</code> request. Auth0 then issues an access token whose <code>aud</code> claim contains the identifier.</li>
+<li>Have the application request the API <strong>Identifier</strong> as its <code>audience</code> when it gets a token, for example on its <code>/authorize</code> request. Auth0 then issues an access token whose <code>aud</code> claim contains the identifier.</li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">No token exchange step on Auth0</p>
@@ -5256,7 +5256,7 @@
 <li><code>preferred_username</code></li>
 <li><code>email</code> (the part before <code>@</code>)</li>
 </ol>
-<p>In this mode there is no userinfo lookup and no fallback to <code>sub</code>. A token that carries none of the three claims is rejected with <code>401</code>, and the reason is written to the server log, not to the response. Auth0 does not put these claims on an access token by default, so add them with a Post-Login Action.</p>
+<p>In this mode there is no userinfo lookup and no fallback to <code>sub</code>. The server rejects a token that carries none of the three claims with <code>401</code>. It writes the reason to the server log, not to the response. Auth0 does not put these claims on an access token by default, so add them with a Post-Login Action.</p>
 <ol>
 <li>Navigate to <strong>Actions</strong> &gt; <strong>Library</strong> &gt; <strong>Build Custom</strong>.</li>
 <li>Enter a <strong>Name</strong>, for example <code>mcp-username-claim</code>, select the <strong>Login / Post Login</strong> trigger, and select <strong>Create</strong>.</li>
@@ -5359,7 +5359,7 @@
 <span class="w">  </span>actian/analytics-engine-mcp-server:1.2.0
 </code></pre></div>
 <h3 id="step-6-verify-the-deployment">Step 6: Verify Deployment<a class="headerlink" href="#step-6-verify-the-deployment" title="Permanent link">&para;</a></h3>
-<p>Decode a user's access token. Obtain an access token through your application's login, store it in <code>TOKEN</code>, and decode its payload:</p>
+<p>Decode a user's access token. Get an access token through the application's login, store it in <code>TOKEN</code>, then decode its payload:</p>
 <div class="language-bash highlight"><pre><span></span><code>python3<span class="w"> </span>-c<span class="w"> </span><span class="s1">'import sys, json, base64; p = sys.argv[1].split(".")[1]; p += "=" * (-len(p) % 4); print(json.dumps(json.loads(base64.urlsafe_b64decode(p)), indent=2))'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TOKEN</span><span class="s2">"</span>
 </code></pre></div>
 <p>Check the following claims:</p>
@@ -5430,7 +5430,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
 </tr>
 <tr>
 <td><code>401</code>, with <code>issuer mismatch</code> in the server log</td>
-<td>The signature is valid, but the token's <code>iss</code> differs from the issuer in the discovery document. This happens when the same tenant is reached under a different custom domain.</td>
+<td>The signature is valid, but the token's <code>iss</code> differs from the issuer in the discovery document. This happens when you reach the same tenant under a different custom domain.</td>
 <td>Point <code>FASTMCP_SERVER_AUTH_CONFIG_URL</code> at the domain that matches the <code>iss</code> in your tokens.</td>
 </tr>
 <tr>
@@ -5441,7 +5441,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
 <tr>
 <td><code>401</code>, with an ERROR naming <code>username</code>, <code>preferred_username</code>, and <code>email</code> in the server log</td>
 <td><code>user_impersonation</code> is <code>true</code> and the token carries none of these claims.</td>
-<td>Add the Post-Login Action in <a href="#step-4-add-the-username-to-the-access-token-with-an-action">Step 4</a> and make sure it is in the <strong>Post-Login</strong> trigger. Use a bare claim name.</td>
+<td>Add the Post-Login Action in <a href="#step-4-add-the-username-to-the-access-token-with-an-action">Step 4</a> and confirm that it is in the <strong>Post-Login</strong> trigger. Use a bare claim name.</td>
 </tr>
 <tr>
 <td><code>401</code> for a client credentials token</td>
@@ -5465,7 +5465,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
 </tr>
 <tr>
 <td>A request without a token does not return <code>401</code>, or <code>/mcp/authorize</code> returns a login page</td>
-<td><code>auth_mode</code> is not at the top level of <code>conf.json</code>, for example because it is inside the <code>oauth</code> block. The server runs the login proxy, or, when the <code>oauth</code> block has no client ID, without authentication. The log then says <code>server will run without authentication</code>.</td>
+<td><code>auth_mode</code> is not at the top level of <code>conf.json</code>, for example because it is inside the <code>oauth</code> block. The server runs the login proxy. When the <code>oauth</code> block has no client ID, it runs without authentication instead, and the log says <code>server will run without authentication</code>.</td>
 <td>Move <code>auth_mode</code> to the top level, restart, and confirm that a request without a token returns <code>401</code>.</td>
 </tr>
 </tbody>
@@ -5655,7 +5655,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

@@ -4284,11 +4284,11 @@
 
 
 <h1 id="configuring-keycloak">Configuring Keycloak<a class="headerlink" href="#configuring-keycloak" title="Permanent link">&para;</a></h1>
-<p>This guide describes the creation and configuration of a Keycloak Realm, Client, and Audience Mapper. It enables the Actian MCP Server to authenticate users through OAuth 2.0 and OpenID Connect (OIDC). </p>
-<p>This guide shows how to obtain the values required to populate the <code>oauth</code> block in the <code>conf.json</code> file. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see  <a href="index.html">Authentication Overview</a>.</p>
+<p>This guide shows how to create and configure a Keycloak Realm, Client, and Audience Mapper. With them, the Actian MCP Server can authenticate users through OAuth 2.0 and OpenID Connect (OIDC).</p>
+<p>This guide also shows how to get the values for the <code>oauth</code> block in <code>conf.json</code>. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see <a href="index.html">Authentication Overview</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Generic OIDC provider</p>
-<p>FastMCP uses a generic OIDC provider. While there is no dedicated Keycloak class, the server uses the <code>OIDCProxy</code> provider, which is compatible with any OIDC-compliant identity provider.</p>
+<p>FastMCP uses a generic OIDC provider. It has no dedicated Keycloak class, so the server uses the <code>OIDCProxy</code> provider, which works with any OIDC-compliant identity provider.</p>
 </div>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <p>The checklist below is the whole procedure in brief. Use it if you are already familiar with the Keycloak Admin Console. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.</p>
@@ -4296,38 +4296,38 @@
 <li><strong>Create a realm</strong> (or use an existing one).</li>
 <li><strong>Create a client</strong> with <em>Client authentication</em> enabled and record the <strong>Client ID</strong> and <strong>Client Secret</strong>.</li>
 <li>
-<p><strong>Add an audience mapper</strong> using the <strong>Included Custom Audience</strong> field to show the audience string in the token's <code>aud</code> claim. </p>
+<p><strong>Add an audience mapper</strong> using the <strong>Included Custom Audience</strong> field to add the audience string to the token's <code>aud</code> claim. </p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>If you skip this step, the MCP Server rejects tokens with <code>audience mismatch</code>.</p>
 </div>
 </li>
 <li>
-<p><strong>(Optional)</strong> Add a sub override mapper to the <code>sub</code> claim containing the username instead of a UUID.</p>
+<p><strong>(Optional)</strong> Add a sub override mapper so that the <code>sub</code> claim contains the username instead of a UUID.</p>
 </li>
 <li><strong>Create an <code>mcp:write</code> client scope</strong> and attach it to the client as <strong>Optional</strong>, if <code>query_mode</code> is <code>read-write</code>. See <a href="#step-5-add-the-write-scope-read-write-deployments-only">Step 5</a>.</li>
 <li><strong>Create users</strong> in the realm.</li>
-<li><strong>Fill <code>conf.json</code></strong> file with the values from <a href="#step-1-create-a-keycloak-realm">Step 1</a> to <a href="#step-3-add-the-audience-mapper-required">Step 3</a>.</li>
-<li><strong>Start the server</strong> with <code>--transport sse</code>or <code>http</code> / <code>streamable-http</code>.</li>
+<li><strong>Fill <code>conf.json</code></strong> with the values from <a href="#step-1-create-a-keycloak-realm">Step 1</a> to <a href="#step-3-add-the-audience-mapper-required">Step 3</a>.</li>
+<li><strong>Start the server</strong> with <code>--transport sse</code> or <code>http</code> / <code>streamable-http</code>.</li>
 </ol>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>A running Keycloak instance (version 22 or higher) is accessible by the MCP server.</li>
-<li>Admin access is granted to the Keycloak Admin Console.</li>
+<li>A running Keycloak instance (version 22 or higher) that the MCP server can reach.</li>
+<li>Admin access to the Keycloak Admin Console.</li>
 <li>The Actian MCP Server is installed and ready for deployment.</li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Keycloak version</p>
-<p>This guide is optimized for Quarkus-based Keycloak (v22+). If you are using a WildFly-based version (v17 or older), the UI and URL structures will differ significantly.</p>
+<p>This guide targets Quarkus-based Keycloak (v22+). A WildFly-based version (v17 or older) has a significantly different UI and URL structure.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Default admin credentials</p>
-<p>If your Keycloak instance uses the default <code>admin</code> / <code>admin</code> credentials, change it through <strong>Users</strong> &gt; <strong>admin</strong> &gt; <strong>Credentials</strong> in the <code>master</code> realm.</p>
+<p>If the Keycloak instance uses the default <code>admin</code> / <code>admin</code> credentials, change them through <strong>Users</strong> &gt; <strong>admin</strong> &gt; <strong>Credentials</strong> in the <code>master</code> realm.</p>
 </div>
 <h2 id="step-1-create-a-keycloak-realm">Step 1: Create a Keycloak Realm<a class="headerlink" href="#step-1-create-a-keycloak-realm" title="Permanent link">&para;</a></h2>
 <p>A Realm is an isolated container for managing users, credentials, and roles.</p>
 <ol>
-<li>Log in to the Keycloak Admin Console <code>http://&lt;keycloak-host&gt;:8080/admin</code>.</li>
+<li>Sign in to the Keycloak Admin Console at <code>http://&lt;keycloak-host&gt;:8080/admin</code>.</li>
 <li>In the top-left drop-down (displaying <code>master</code>), select <strong>Create Realm</strong>.</li>
 <li>
 <p>Fill the form as follows:</p>
@@ -4429,7 +4429,7 @@
 <tr>
 <td><strong>Standard flow</strong></td>
 <td>Checked</td>
-<td>Required for browser login</td>
+<td>Required for browser sign-in</td>
 </tr>
 <tr>
 <td><strong>Direct access grants</strong></td>
@@ -4440,7 +4440,7 @@
 </table>
 <div class="admonition warning">
 <p class="admonition-title">Disable direct access grants in production</p>
-<p>The <code>password</code> grant (direct access grants) is insecure for production use and only intended for local debugging with <code>curl</code>.</p>
+<p>The <code>password</code> grant (direct access grants) is not secure enough for production. Use it only for local debugging with <code>curl</code>.</p>
 </div>
 </li>
 <li>
@@ -4512,13 +4512,13 @@
 <p class="admonition-title">This step is critical</p>
 <p>Without the Audience Mapper, Keycloak does not include the Client ID in the token's <code>aud</code> (audience) claim, and the MCP server rejects tokens with an <code>audience mismatch</code> error.</p>
 </div>
-<p>By default, Keycloak tokens only include internal audiences like <code>account</code>. The MCP server validates that the token's <code>aud</code> claim matches the configured <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> value. You must inform Keycloak to include the audience string in the token.</p>
+<p>By default, Keycloak tokens include only internal audiences such as <code>account</code>. The MCP server checks that the token's <code>aud</code> claim matches the configured <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> value. You must configure Keycloak to include the audience string in the token.</p>
 <div class="admonition warning">
 <p class="admonition-title">Included Client Audience versus Included Custom Audience</p>
 <p>The Audience mapper uses two audience fields:</p>
 <ul>
-<li><strong>Included Client Audience</strong> - Resolves the selected client name to its internal UUID, for example, <code>16f502e4-483e-4b0d-adbd-4d20e6e33e73</code>. It does not match the audience string that MCP server expects and causes <code>audience mismatch</code> errors.</li>
-<li><strong>Included Custom Audience</strong> - Inserts the literal string, for example, <code>actian-mcp</code>. This is required by the MCP server and the recommended option.</li>
+<li><strong>Included Client Audience</strong> - Resolves the selected client name to its internal UUID, for example, <code>16f502e4-483e-4b0d-adbd-4d20e6e33e73</code>. It does not match the audience string that the MCP server expects and causes <code>audience mismatch</code> errors.</li>
+<li><strong>Included Custom Audience</strong> - Inserts the literal string, for example, <code>actian-mcp</code>. The MCP server requires it, and it is the recommended option.</li>
 </ul>
 </div>
 <ol>
@@ -4530,7 +4530,7 @@
 <p>Select <strong>Audience</strong> (not <strong>Audience Resolve</strong>) from the list.</p>
 <div class="admonition note">
 <p class="admonition-title">Audience versus Audience Resolve</p>
-<p>"Audience Resolve" is a different mapper that resolves audiences dynamically. It does not hardcode your audience into <code>aud</code>. Therefore, you are required to select <strong>Audience</strong> mapper.</p>
+<p>"Audience Resolve" is a different mapper that resolves audiences dynamically. It does not hardcode the audience into <code>aud</code>. Select the <strong>Audience</strong> mapper.</p>
 </div>
 </li>
 <li>
@@ -4593,7 +4593,7 @@
 </code></pre></div></p>
 <div class="admonition note">
 <p class="admonition-title">Token caching</p>
-<p>If you still see a UUID instead of <code>actian-mcp</code> in the <code>aud</code> claim, the old token may be cached. Wait for it to expire (default 5 minutes) or go to <strong>Sessions</strong> in the Keycloak Admin Console and sign out of all sessions for the service account to force a fresh token.</p>
+<p>If you still see a UUID instead of <code>actian-mcp</code> in the <code>aud</code> claim, the token may be an old cached one. Wait for it to expire (default 5 minutes). Or go to <strong>Sessions</strong> in the Keycloak Admin Console and sign out all sessions for the service account to force a new token.</p>
 </div>
 <h2 id="step-4-optional-add-the-sub-override-mapper">Step 4 (Optional): Add Sub Override Mapper<a class="headerlink" href="#step-4-optional-add-the-sub-override-mapper" title="Permanent link">&para;</a></h2>
 <p>By default, Keycloak sets the <code>sub</code> claim to a UUID. You can override it to contain the login name, which the call log then shows when a token carries no other user claim.</p>
@@ -4661,11 +4661,11 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">OIDC spec trade-off</p>
-<p>The OIDC spec expects <code>sub</code> to be a stable, unique identifier (like a UUID). It is acceptable to override it with a username for internal tools like the MCP Server, but the claim then changes when a user renames their account.</p>
+<p>The OIDC specification expects <code>sub</code> to be a stable, unique identifier (such as a UUID). You can override it with a username for internal tools such as the MCP Server, but then the claim changes when a user renames the account.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Alternative: use preferred_username</p>
-<p>Instead of overriding <code>sub</code>, you can rely on the <code>preferred_username</code> claim (included by default when the <code>profile</code> scope is present). The MCP server's username extraction priority uses <code>preferred_username</code> before <code>sub</code>, so it works automatically without any mapper changes.</p>
+<p>Instead of overriding <code>sub</code>, you can rely on the <code>preferred_username</code> claim (included by default when the <code>profile</code> scope is present). The MCP server checks <code>preferred_username</code> before <code>sub</code> when it looks for a username, so this works without any mapper changes.</p>
 </div>
 <h2 id="step-5-add-the-write-scope-read-write-deployments-only">Step 5: Add Write Scope (Read-Write Deployments Only)<a class="headerlink" href="#step-5-add-the-write-scope-read-write-deployments-only" title="Permanent link">&para;</a></h2>
 <p>Skip this step if <code>query_mode</code> is <code>read-only</code>. A read-only server never requests the <code>mcp:write</code> scope.</p>
@@ -4724,17 +4724,17 @@
 </ol>
 <div class="admonition warning">
 <p class="admonition-title">Add it as Optional, not Default</p>
-<p>An optional scope is issued only when the caller asks for it, which is what the MCP server does when <code>query_mode</code> is <code>read-write</code>. If you add <code>mcp:write</code> as a default scope instead, every token issued to this client carries write access whether it was requested or not, and the scope no longer distinguishes read-only callers from write-capable ones.</p>
+<p>Keycloak issues an optional scope only when the caller asks for it. The MCP server asks for it when <code>query_mode</code> is <code>read-write</code>. If you add <code>mcp:write</code> as a default scope instead, every token that Keycloak issues to this client carries write access, whether or not the caller requested it. The scope then no longer distinguishes read-only callers from write-capable ones.</p>
 </div>
 <h3 id="user-eligibility">User Eligibility<a class="headerlink" href="#user-eligibility" title="Permanent link">&para;</a></h3>
-<p>In Keycloak a client scope is attached to a client, not to a user. Any user who authenticates through this client and requests <code>scope=openid mcp:write</code> receives it. Keycloak roles do not change that, because the server authorizes writes from the token's <code>scope</code> claim rather than from roles.</p>
+<p>In Keycloak, a client scope is attached to a client, not to a user. Any user who signs in through this client and requests <code>scope=openid mcp:write</code> receives it. Keycloak roles do not change that, because the server authorizes writes from the token's <code>scope</code> claim, not from roles.</p>
 <div class="admonition important">
 <p class="admonition-title">Every user of this client can obtain <code>mcp:write</code></p>
-<p>Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. VectorAI DB has no per-user privileges to fall back on either: the engine sees only the server's API key. A user who obtains <code>mcp:write</code> can write to every collection the server exposes; the approval prompt is the only other check. See <a href="../write-support.html#authorizing-a-write">Write support</a>.</p>
-<p>This differs from Auth0, where the permission is assigned through a role and users without that role cannot obtain it at all. If you need the scope withheld per user, use a separate Keycloak client for read-only callers and attach <code>mcp:write</code> only to the client used by writers.</p>
+<p>Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who can write. VectorAI DB has no per-user privileges to fall back on either, because the engine sees only the server's API key. A user who gets <code>mcp:write</code> can write to every collection that the server exposes. The approval prompt is the only other check. See <a href="../write-support.html#authorizing-a-write">Write support</a>.</p>
+<p>In Auth0, by contrast, you assign the permission through a role, and users without that role cannot get it at all. To withhold the scope per user, use a separate Keycloak client for read-only callers and attach <code>mcp:write</code> only to the client that writers use.</p>
 </div>
 <h3 id="verification_2">Verification<a class="headerlink" href="#verification_2" title="Permanent link">&para;</a></h3>
-<p>Confirm the realm advertises the scope:</p>
+<p>Confirm that the realm advertises the scope:</p>
 <div class="language-bash highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>https://&lt;keycloak-host&gt;:8443/realms/actian-mcp/.well-known/openid-configuration<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">'"scopes_supported":\[[^]]*\]'</span>
 </code></pre></div>
@@ -4742,7 +4742,7 @@
 <h2 id="step-6-create-keycloak-users">Step 6: Create Keycloak Users<a class="headerlink" href="#step-6-create-keycloak-users" title="Permanent link">&para;</a></h2>
 <div class="admonition note">
 <p class="admonition-title">No database accounts on VectorAI DB</p>
-<p>The engine sees only the server's API key, so no Keycloak user needs a matching database account. Create the Keycloak users your people log in with. Which name the server records for each of them in the call log is described under <a href="index.html#user-impersonation">User Impersonation</a>.</p>
+<p>The engine sees only the server's API key, so no Keycloak user needs a matching database account. Create the Keycloak users that your people sign in with. <a href="index.html#user-impersonation">User Impersonation</a> describes which name the server records for each of them in the call log.</p>
 </div>
 <ol>
 <li>Navigate to <strong>Users</strong> in the left panel.</li>
@@ -4781,7 +4781,7 @@
 <tr>
 <td><strong>Enabled</strong></td>
 <td><code>On</code></td>
-<td>A disabled user cannot log in or receive tokens, even with correct credentials. Leave this <code>On</code>. If your Keycloak version does not show this field on the Add User form, the account is enabled by default; you can still find and toggle it later from the user's Details tab.</td>
+<td>A disabled user cannot sign in or receive tokens, even with correct credentials. Leave this <code>On</code>. If the Keycloak version does not show this field on the Add User form, the account is enabled by default. You can still find it and toggle it later on the user's Details tab.</td>
 </tr>
 </tbody>
 </table>
@@ -4793,15 +4793,15 @@
 </ol>
 <div class="admonition note">
 <p class="admonition-title"><code>profile</code> scope is required</p>
-<p>Keycloak's userinfo endpoint only returns <code>preferred_username</code> when the token includes the <code>profile</code> scope. Without it, the endpoint returns only the <code>sub</code> claim (a UUID by default).</p>
+<p>Keycloak's userinfo endpoint returns <code>preferred_username</code> only when the token includes the <code>profile</code> scope. Without it, the endpoint returns only the <code>sub</code> claim (a UUID by default).</p>
 </div>
 <div class="admonition important">
 <p class="admonition-title">Keycloak does not produce a <code>username</code> claim automatically</p>
-<p>The MCP server's username extraction priority is - <code>username</code> &gt; <code>preferred_username</code> &gt; email prefix &gt; sanitized <code>sub</code>. Keycloak does not produce a <code>username</code> claim by default. It only appears if you explicitly configure a User Attribute mapper. In practice, <code>preferred_username</code> (second in the priority) is the reliable choice for Keycloak, and it works automatically when the <code>profile</code> scope is present.</p>
+<p>The MCP server looks for a username in this order: <code>username</code>, <code>preferred_username</code>, email prefix, sanitized <code>sub</code>. Keycloak does not produce a <code>username</code> claim by default. The claim appears only if you configure a User Attribute mapper. In practice, <code>preferred_username</code> (second in the order) is the reliable choice for Keycloak. It works automatically when the <code>profile</code> scope is present.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Federated identity (LDAP / Social login)</p>
-<p>With <code>user_impersonation: true</code>, a user whom Keycloak federates from an external LDAP or social provider and who arrives without <code>preferred_username</code> or an email is recorded by the <code>sub</code> claim, a UUID by default. Ensure that the federated users have <code>preferred_username</code> set, or add the sub-override mapper (<a href="#step-4-optional-add-the-sub-override-mapper">Step 4</a>).</p>
+<p>With <code>user_impersonation: true</code>, the server records a user by the <code>sub</code> claim (a UUID by default) when Keycloak federates that user from an external Lightweight Directory Access Protocol (LDAP) or social provider and the user arrives without <code>preferred_username</code> or an email. Set <code>preferred_username</code> for the federated users, or add the sub-override mapper (<a href="#step-4-optional-add-the-sub-override-mapper">Step 4</a>).</p>
 </div>
 <h2 id="step-7-assemble-the-final-configuration">Step 7: Assemble Final Configuration<a class="headerlink" href="#step-7-assemble-the-final-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="mapping-summary">Mapping Summary<a class="headerlink" href="#mapping-summary" title="Permanent link">&para;</a></h3>
@@ -4842,13 +4842,13 @@
 <tr>
 <td><code>user_impersonation</code></td>
 <td>No</td>
-<td><code>true</code> (the default) or <code>false</code>. It decides where the server looks for the caller's name for the call log; VectorAI DB has no per-user identity either way. See <a href="index.html#user-impersonation">User Impersonation</a></td>
+<td><code>true</code> (the default) or <code>false</code>. It decides where the server looks for the caller's name for the call log. VectorAI DB has no per-user identity either way. See <a href="index.html#user-impersonation">User Impersonation</a></td>
 </tr>
 </tbody>
 </table>
 <div class="admonition info">
 <p class="admonition-title">Audience in Keycloak versus Auth0</p>
-<p>In Auth0, the audience is a separate API Identifier (often a URL). In Keycloak, you define the audience string through the <strong>Included Custom Audience</strong> field in the audience mapper (<a href="#step-3-add-the-audience-mapper-required">Step 3</a>). A common convention is to set it to the Client ID, for example, <code>actian-mcp</code>. If <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> is omitted from the configuration, the server falls back to <code>CLIENT_ID</code>.</p>
+<p>In Auth0, the audience is a separate API Identifier (often a URL). In Keycloak, you define the audience string through the <strong>Included Custom Audience</strong> field in the audience mapper (<a href="#step-3-add-the-audience-mapper-required">Step 3</a>). A common convention is to set it to the Client ID, for example, <code>actian-mcp</code>. If you omit <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> from the configuration, the server uses <code>CLIENT_ID</code>.</p>
 </div>
 <h3 id="example-confjson">Example <code>conf.json</code><a class="headerlink" href="#example-confjson" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -4875,17 +4875,17 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code>vectorai.url</code> is the engine as the container reaches it: the Docker host's name or IP (<code>host.docker.internal</code> on Docker Desktop), or the engine container's network alias. Never <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself. The <code>embedding</code> and <code>collections</code> blocks are described on the <a href="../index.html">overview</a>.</p>
+<p><code>vectorai.url</code> is the engine's address as the container sees it: the Docker host's name or IP (<code>host.docker.internal</code> on Docker Desktop), or the engine container's network alias. Do not use <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself. The <code>embedding</code> and <code>collections</code> blocks are described on the <a href="../index.html">overview</a>.</p>
 </div>
-<p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see <a href="index.html#secure-remote-deployments-with-https-and-tls">HTTPS / TLS for Remote Deployments</a>.</p>
+<p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certificates), see <a href="index.html#secure-remote-deployments-with-https-and-tls">HTTPS / TLS for Remote Deployments</a>.</p>
 <p>For security best practices (file permissions, <code>.gitignore</code>, secrets management), see <a href="index.html#security-best-practices">Security Best Practices</a>.</p>
 <h2 id="verify-end-to-end">Verify Setup End-to-End<a class="headerlink" href="#verify-end-to-end" title="Permanent link">&para;</a></h2>
 <p>After starting the MCP server container with OAuth configured:</p>
 <ol>
-<li>Open a browser and navigate to the server's <code>/mcp</code> endpoint, for example, <code>https://&lt;mcp-server-host&gt;:8000/mcp</code>.</li>
-<li>You are redirected to the Keycloak login page.</li>
-<li>Log in with a Keycloak user, for example, <code>jdoe</code>.</li>
-<li>After logging in, Keycloak redirects you back to the MCP server with a valid token.</li>
+<li>Open a browser and go to the server's <code>/mcp</code> endpoint, for example, <code>https://&lt;mcp-server-host&gt;:8000/mcp</code>.</li>
+<li>The browser redirects you to the Keycloak sign-in page.</li>
+<li>Sign in with a Keycloak user, for example, <code>jdoe</code>.</li>
+<li>After you sign in, Keycloak redirects you back to the MCP server with a valid token.</li>
 <li>Call a tool from the MCP client, for example <code>list_collections</code>, and look at the container log: the <a href="../index.html#call-log">call log</a> record for the call has the caller's name in <code>user</code>, or <code>null</code> when <code>user_impersonation</code> is <code>false</code> and the token carries no user claim.</li>
 </ol>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
@@ -4933,7 +4933,7 @@
 <tr>
 <td><code>invalid_grant</code></td>
 <td>Wrong username/password, or user disabled.</td>
-<td>Check user exists and is enabled.</td>
+<td>Check that the user exists and is enabled.</td>
 </tr>
 <tr>
 <td><code>KeyError</code> on startup (for example, <code>CLIENT_SECRET</code>)</td>
@@ -4943,7 +4943,7 @@
 <tr>
 <td><code>Could not extract username</code></td>
 <td>No usable username claim in token.</td>
-<td>Add sub-override mapper (<a href="#step-4-optional-add-the-sub-override-mapper">Step 4</a>). Ensure <code>preferred_username</code> is present or set <code>user_impersonation: false</code>.</td>
+<td>Add sub-override mapper (<a href="#step-4-optional-add-the-sub-override-mapper">Step 4</a>). Confirm that <code>preferred_username</code> is present, or set <code>user_impersonation: false</code>.</td>
 </tr>
 <tr>
 <td><code>unauthorized</code> / 401 on every request</td>
@@ -4953,7 +4953,7 @@
 <tr>
 <td><code>Client not enabled</code> / <code>Realm not found</code></td>
 <td>Realm or client is disabled.</td>
-<td>Ensure both  Realm and client are enabled in the Admin console.</td>
+<td>Confirm that both the realm and the client are enabled in the Admin Console.</td>
 </tr>
 <tr>
 <td><code>ValueError: Issuer URL must be HTTPS</code></td>
@@ -4967,8 +4967,8 @@
 </tr>
 <tr>
 <td><code>ssl.SSLError: PEM lib</code></td>
-<td>Missing certificate/key environment variables before Docker starts.</td>
-<td>Mount certificate/key as volumes when starting the container (see <a href="index.html#step-3-deploy-the-docker">Docker deployment</a>).</td>
+<td>Missing certificate and key environment variables before Docker starts.</td>
+<td>Mount the certificate and key as volumes when you start the container (see <a href="index.html#step-3-deploy-the-docker">Docker deployment</a>).</td>
 </tr>
 <tr>
 <td><code>ERR_TLS_CERT_ALTNAME_INVALID</code></td>
@@ -4983,7 +4983,7 @@
 <tr>
 <td>Token validation behaves unexpectedly</td>
 <td>OIDC endpoint is unreachable at startup.</td>
-<td>The server falls back to default verification without <code>TokenCapturingJWTVerifier</code> - <code>user_impersonation</code> does not work even though the server appears to be running. Restart after the endpoint is accessible.</td>
+<td>The server falls back to default verification without <code>TokenCapturingJWTVerifier</code>. <code>user_impersonation</code> then does not work, even though the server appears to be running. Restart the server after the endpoint is reachable.</td>
 </tr>
 </tbody>
 </table>
@@ -4992,7 +4992,7 @@
 <ol>
 <li>Navigate to <strong>Realm Settings</strong> &gt; <strong>Tokens</strong> tab.</li>
 <li>
-<p>Do the following key settings:</p>
+<p>Review these key settings:</p>
 <table>
 <thead>
 <tr>
@@ -5115,7 +5115,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

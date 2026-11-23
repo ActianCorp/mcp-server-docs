@@ -3662,11 +3662,11 @@
 
 
 <h1 id="extensions">Extensions<a class="headerlink" href="#extensions" title="Permanent link">&para;</a></h1>
-<p>You can extend the Actian MCP Server with extensions: your own Python modules that register extra tools, resources, and prompts on the running server, next to the built-in database tools. Use this for business logic you want an AI agent to call through the same endpoint, such as revenue forecasting, compliance checks, or data enrichment.</p>
-<p>An extension <em>adds</em> capabilities. It does not manage the engine connection: the server already talks to the engine and already exposes the built-in tools. The module provides a <code>register()</code> function and uses the extension API for the caller's identity, scopes and the approval prompt.</p>
+<p>Extensions are your own Python modules. They register extra tools, resources, and prompts on the running server, next to the built-in database tools. Use an extension for business logic that you want an AI agent to call through the same endpoint, such as revenue forecasting, compliance checks, or data enrichment.</p>
+<p>An extension <em>adds</em> capabilities. It does not manage the engine connection: the server already talks to the engine and already exposes the built-in tools. The module provides a <code>register()</code> function and uses the extension API for the caller's identity, scopes, and the approval prompt.</p>
 <p>Extensions are supported on Actian VectorAI DB.</p>
 <h2 id="writing-the-module">Writing Module<a class="headerlink" href="#writing-the-module" title="Permanent link">&para;</a></h2>
-<p>An extension is a normal Python module exposing one required function and two optional hooks:</p>
+<p>An extension is a normal Python module that has one required function and two optional hooks:</p>
 <div class="language-python highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">actian_mcp_server.extension_api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_current_user</span><span class="p">,</span>            <span class="c1"># authenticated identity, or None</span>
     <span class="n">has_scope</span><span class="p">,</span>                   <span class="c1"># does the caller's token carry a scope</span>
@@ -3682,11 +3682,11 @@
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">):</span> <span class="o">...</span>           <span class="c1"># OPTIONAL, open resources at startup</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">teardown</span><span class="p">():</span> <span class="o">...</span>              <span class="c1"># OPTIONAL, release them at shutdown</span>
 </code></pre></div>
-<p><code>register(server, config)</code> is called once at startup. Register your tools, resources, and prompts there exactly as you would on any FastMCP server.</p>
-<p>Implement <code>setup(config)</code> and <code>teardown()</code> only if your extension owns something that needs an explicit open and close, such as an HTTP client, a cache, or a connection pool of your own. Either may be <code>async</code> or plain.</p>
+<p>The server calls <code>register(server, config)</code> once at startup. Register your tools, resources, and prompts there, as you would on any FastMCP server.</p>
+<p>Implement <code>setup(config)</code> and <code>teardown()</code> only if your extension owns something that you must open and close explicitly, such as an HTTP client, a cache, or a connection pool of your own. Either can be <code>async</code> or plain.</p>
 <div class="admonition note">
 <p class="admonition-title">Configuration never contains secrets</p>
-<p>The <code>config</code> argument holds the <code>config</code> block you set in <code>conf.json</code> plus a short list of non-secret values (<code>dbms</code>, <code>max_rows</code>, <code>transport</code>). It never contains the engine API key, the embedding key or OAuth secrets.</p>
+<p>The <code>config</code> argument holds the <code>config</code> block you set in <code>conf.json</code>, plus a short list of non-secret values (<code>dbms</code>, <code>max_rows</code>, <code>transport</code>). It never contains the engine API key, the embedding key, or OAuth secrets.</p>
 </div>
 <p>Give your tools schema-friendly signatures: typed parameters, and no <code>*args</code> or <code>**kwargs</code>.</p>
 <h2 id="mounting-and-registering-the-module">Mounting and Registering Module<a class="headerlink" href="#mounting-and-registering-the-module" title="Permanent link">&para;</a></h2>
@@ -3697,7 +3697,7 @@
 <span class="w">    </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>&lt;actian-mcp-image&gt;
 </code></pre></div>
-<p>Then list it by module name in <code>conf.json</code>. Paths are not used, because the location is fixed:</p>
+<p>Then list it by module name in <code>conf.json</code>. Do not use paths, because the location is fixed:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"extensions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"module"</span><span class="p">:</span><span class="w"> </span><span class="s2">"simple_extension"</span><span class="w"> </span><span class="p">},</span>
@@ -3726,7 +3726,7 @@
 </tr>
 <tr>
 <td>Order</td>
-<td>Extensions load in the order listed. Each module may be listed only once.</td>
+<td>Extensions load in the order listed. Each module can be listed only once.</td>
 </tr>
 </tbody>
 </table>
@@ -3753,13 +3753,13 @@
 </tr>
 <tr>
 <td>Logging</td>
-<td>Extension loading, tool registration, and approval outcomes go to the server log, and so do your own <code>logging.getLogger(__name__)</code> messages. There is no automatic per-call audit log. If you need a record of who called what, log it in your tool.</td>
+<td>The server log records extension loading, tool registration, and approval outcomes, and your own <code>logging.getLogger(__name__)</code> messages. There is no automatic per-call audit log. To record who called what, log it in your tool.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="reaching-the-engine">Reaching Engine<a class="headerlink" href="#reaching-the-engine" title="Permanent link">&para;</a></h2>
-<p>The extension API's <code>get_database()</code> runs SQL and exists for the SQL plugins. On a VectorAI DB server its <code>query()</code> answers <code>{"success": false, "error": "querying is not supported for dbms 'vectorai'"}</code> and <code>transaction()</code> raises. Do not use it here.</p>
-<p>An extension that needs engine data calls the engine's REST API with its own HTTP client; <code>httpx</code> is installed in the image. Put the engine URL in the extension's <code>config</code> block. When the engine requires an API key, read it from an environment variable: the server does not hand its own key to extensions.</p>
+<p>The extension API's <code>get_database()</code> runs SQL and exists for the SQL plugins. On a VectorAI DB server, its <code>query()</code> returns <code>{"success": false, "error": "querying is not supported for dbms 'vectorai'"}</code> and <code>transaction()</code> raises. Do not use it here.</p>
+<p>An extension that needs engine data calls the engine's REST API with its own HTTP client. <code>httpx</code> is installed in the image. Put the engine URL in the extension's <code>config</code> block. If the engine requires an API key, read it from an environment variable. The server does not give its own key to extensions.</p>
 <div class="language-python highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
 
@@ -3782,9 +3782,9 @@
         <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 </code></pre></div>
-<p>Every request runs with that key, whoever the caller is. The key decides what the extension can read or write, and nothing limits it to the collections listed in <code>conf.json</code>: that limit lives in the built-in tools, not in the engine.</p>
+<p>Every request runs with that key, whoever the caller is. The key decides what the extension can read or write. Nothing limits the extension to the collections listed in <code>conf.json</code>, because that limit lives in the built-in tools, not in the engine.</p>
 <h2 id="asking-a-human-to-approve-a-write">Requesting Write Approval<a class="headerlink" href="#asking-a-human-to-approve-a-write" title="Permanent link">&para;</a></h2>
-<p>Nothing confirms an extension's write automatically. Call <code>request_write_confirmation()</code> and write only if it returns <code>True</code>. That lets you confirm once for a batch, add context, or skip confirmation in a trusted automated flow.</p>
+<p>The server does not confirm an extension's write automatically. Call <code>request_write_confirmation()</code> and write only if it returns <code>True</code>. That lets you confirm once for a batch, add context, or skip confirmation in a trusted automated flow.</p>
 <div class="language-python highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">actian_mcp_server.extension_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">request_write_confirmation</span>
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">drop_points</span><span class="p">(</span><span class="n">collection</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -3809,19 +3809,19 @@
 <span class="k">if</span> <span class="ow">not</span> <span class="n">has_scope</span><span class="p">(</span><span class="s2">"mcp:write"</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">"success"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"error"</span><span class="p">:</span> <span class="s2">"write operations require the 'mcp:write' scope"</span><span class="p">}</span>
 </code></pre></div>
-<p><code>has_scope()</code> and <code>get_current_scopes()</code> return values only in read-write mode with OAuth enabled. Without OAuth every scope reads as absent, so do not make the check unconditional. Grant <code>mcp:write</code> to the users allowed to write, as described for <a href="../authentication/auth0.html">Auth0</a> and <a href="../authentication/keycloak.html">Keycloak</a>.</p>
+<p><code>has_scope()</code> and <code>get_current_scopes()</code> return values only in read-write mode with OAuth enabled. Without OAuth, every scope reads as absent, so do not make the check unconditional. Grant <code>mcp:write</code> to the users allowed to write, as described for <a href="../authentication/auth0.html">Auth0</a> and <a href="../authentication/keycloak.html">Keycloak</a>.</p>
 <h3 id="execution-identity">Execution Identity<a class="headerlink" href="#execution-identity" title="Permanent link">&para;</a></h3>
-<p>Every engine request an extension makes runs with the key the extension sends, whoever the caller is. <code>get_current_user()</code> still names the caller, so an extension can log who asked, and <code>request_write_confirmation()</code> asks them before a write.</p>
+<p>Every engine request an extension makes runs with the key the extension sends, whoever the caller is. <code>get_current_user()</code> still names the caller, so an extension can log who asked. <code>request_write_confirmation()</code> asks the caller before a write.</p>
 <h3 id="confirmation-prompt-behavior">Confirmation Prompt Behavior<a class="headerlink" href="#confirmation-prompt-behavior" title="Permanent link">&para;</a></h3>
 <p>The <code>write_confirmation</code> setting does not silence the extension's prompt. If your extension calls <code>request_write_confirmation()</code>, the prompt always appears. The <code>write_confirmation</code> setting in <code>conf.json</code> applies only to the server's built-in write tools. This works both ways:</p>
 <ul>
 <li>You cannot use that setting to skip an approval step your extension asked for.</li>
-<li>Turning it on for a client that cannot display prompts does not silently approve your extension's writes. The server rejects those writes and nothing is written.</li>
+<li>Turning it on for a client that cannot display prompts does not silently approve your extension's writes. The server rejects those writes, and nothing is written.</li>
 </ul>
 <h2 id="rules-and-caveats">Rules and Caveats<a class="headerlink" href="#rules-and-caveats" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">A bad extension stops the server from starting</p>
-<p>This behavior is deliberate. A misconfigured extension never leaves the server running in a quietly degraded state with fewer tools than you configured. Startup aborts if a module cannot be imported, does not define <code>register()</code>, raises during <code>register()</code>, or registers a tool whose name matches a built-in tool or an earlier extension. Any tools that extension already registered are rolled back first.</p>
+<p>This behavior is deliberate. A misconfigured extension never leaves the server running in a quietly degraded state with fewer tools than you configured. Startup aborts in any of these cases: a module cannot be imported, does not define <code>register()</code>, raises during <code>register()</code>, or registers a tool whose name matches a built-in tool or an earlier extension. The server first rolls back any tools that the extension already registered.</p>
 </div>
 <table>
 <thead>
@@ -3843,14 +3843,14 @@
 </table>
 <div class="admonition important">
 <p class="admonition-title">Trust model</p>
-<p>Extensions run in the same process with full Python access. Load only extensions you trust, the same way you would treat installing a Python package. Hiding the connection details is encapsulation, not a sandbox.</p>
+<p>Extensions run in the same process with full Python access. Load only extensions you trust, as you would when you install a Python package. Hiding the connection details is encapsulation, not a sandbox.</p>
 </div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m.12 13.5 3.74 3.74 1.42-1.41-2.33-2.33 2.33-2.33-1.42-1.41zm11.16 0-3.74-3.74-1.42 1.41 2.33 2.33-2.33 2.33 1.42 1.41z"/></svg></span> <strong><a href="examples.html">Examples</a></strong><br />
-  Five runnable extensions written for the SQL plugins; use them as templates for <code>register()</code>, tools, resources and the approval prompt.</p>
+  Five runnable extensions written for the SQL plugins. Use them as templates for <code>register()</code>, tools, resources, and the approval prompt.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg></span> <strong><a href="api-reference.html">API reference</a></strong><br />
@@ -3882,7 +3882,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

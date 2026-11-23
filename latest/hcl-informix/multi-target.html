@@ -3686,9 +3686,9 @@
 
 
 <h1 id="multi-target-deployments">Multi-Target Deployments<a class="headerlink" href="#multi-target-deployments" title="Permanent link">&para;</a></h1>
-<p>A multi-target deployment lets one Actian MCP Server for HCL Informix serve databases on one or more Informix installations. Each database has its own URL, so a client selects the database by connecting to that URL. A configuration without a <code>targets</code> block continues to use the single-database settings described in <a href="index.html#configuration">HCL Informix configuration</a>.</p>
+<p>A multi-target deployment lets one Actian MCP Server for HCL Informix serve databases on one or more Informix installations. Each database has its own URL. A client selects a database by connecting to that URL. A configuration without a <code>targets</code> block keeps using the single-database settings described in <a href="index.html#configuration">HCL Informix configuration</a>.</p>
 <h2 id="configure-targets">Configure Targets<a class="headerlink" href="#configure-targets" title="Permanent link">&para;</a></h2>
-<p>Add a <code>targets</code> block to <code>conf.json</code>. Shared connection settings go in <code>defaults</code>; each entry in <code>list</code> describes an Informix installation and its databases.</p>
+<p>Add a <code>targets</code> block to <code>conf.json</code>. Shared connection settings go in <code>defaults</code>. Each entry in <code>list</code> describes an Informix installation and its databases.</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"dbms"</span><span class="p">:</span><span class="w"> </span><span class="s2">"informix"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"transport"</span><span class="p">:</span><span class="w"> </span><span class="s2">"streamable-http"</span><span class="p">,</span>
@@ -3726,7 +3726,7 @@
 <span class="w">  </span><span class="nt">"targets_reload_interval"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Do not include the single-database <code>servername</code>, <code>service</code>, <code>dsn</code>, <code>server</code>, <code>database</code>, <code>database_user</code>, or <code>database_password</code> settings alongside a target registry. Keep credentials in a protected configuration or secret store.</p>
+<p>Do not use the single-database <code>servername</code>, <code>service</code>, <code>dsn</code>, <code>server</code>, <code>database</code>, <code>database_user</code>, or <code>database_password</code> settings together with a target registry. Keep credentials in a protected configuration or secret store.</p>
 <h3 id="target-fields">Target Fields<a class="headerlink" href="#target-fields" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3766,16 +3766,16 @@
 </tr>
 <tr>
 <td style="text-align: left;"><code>targets_dir</code></td>
-<td style="text-align: left;">Directory configured for additional target files; the example uses <code>/app/targets.d</code>.</td>
+<td style="text-align: left;">Directory for additional target files. The example uses <code>/app/targets.d</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>targets_reload_interval</code></td>
-<td style="text-align: left;">Target reload interval in seconds; the example uses <code>10</code>.</td>
+<td style="text-align: left;">Target reload interval in seconds. The example uses <code>10</code>.</td>
 </tr>
 </tbody>
 </table>
-<p>The <code>connection_options</code> object carries Informix connection options such as <code>CLIENT_LOCALE</code> and <code>DB_LOCALE</code>. Use the values appropriate for the database and client environment.</p>
-<p>The supplied configuration includes <code>targets_dir</code> and <code>targets_reload_interval</code>; confirm whether Informix reloads additions and removals without a restart and how it handles invalid target files.</p>
+<p>The <code>connection_options</code> object holds Informix connection options such as <code>CLIENT_LOCALE</code> and <code>DB_LOCALE</code>. Use the values that fit the database and client environment.</p>
+<p>The supplied configuration includes <code>targets_dir</code> and <code>targets_reload_interval</code>. Confirm whether Informix reloads additions and removals without a restart. Also confirm how it handles invalid target files.</p>
 <h2 id="connect-to-a-database">Connect to a Database<a class="headerlink" href="#connect-to-a-database" title="Permanent link">&para;</a></h2>
 <p>Connect the MCP client to the URL for the database:</p>
 <div class="language-text highlight"><pre><span></span><code>https://&lt;mcp_server_host&gt;:&lt;port&gt;/mcp/{host}/{instance}/{database}
@@ -3783,12 +3783,13 @@
 <p>For example:</p>
 <div class="language-text highlight"><pre><span></span><code>https://mcp.example.com:8000/mcp/ifx-db.example.com/ol_informix/warehouse
 </code></pre></div>
-<p>The URL selects the database for the session. A client connected to <code>/mcp</code> without a target can call <code>list_accessible_targets</code> to discover target URLs, but should connect to a target URL to use database tools. For client configuration examples, see <a href="../mcp-clients/index.html#client-configuration-examples">Connect MCP Clients</a>.</p>
+<p>The URL selects the database for the session. A client connected to <code>/mcp</code> without a target can call <code>list_accessible_targets</code> to find target URLs. To use database tools, connect to a target URL. For client configuration examples, see <a href="../mcp-clients/index.html#client-configuration-examples">Connect MCP Clients</a>.</p>
 <h2 id="authentication-and-scope-behavior">Authentication and Scope Behavior<a class="headerlink" href="#authentication-and-scope-behavior" title="Permanent link">&para;</a></h2>
 <p>Target URL requests use a per-target grant in the caller's access token:</p>
 <div class="language-text highlight"><pre><span></span><code>actian:{host}:{instance}:{database}:{read|write}
 </code></pre></div>
-<p>Target requests use the matching <code>:read</code> or <code>:write</code> grant; <code>*</code> matches one whole segment, and <code>:write</code> also permits reads on that target. The target's <code>:write</code> grant is required for writes to its URL. The <code>mcp:write</code> scope is for the unqualified <code>/mcp</code> URL in a single-database deployment. The supplied example sets <code>allow_unscoped_reads</code> to <code>true</code>; confirm whether it bypasses Informix read-scope checks before relying on it. For general OAuth setup, see <a href="authentication/index.html">Authentication</a>, <a href="write-support.html#which-scope-authorizes-a-write">Write support</a>, <a href="authentication/auth0.html#multi-target-deployments-per-target-permissions">Auth0</a>, and <a href="authentication/keycloak.html#multi-target-deployments-per-target-scopes">Keycloak</a>.</p>
+<p>Target requests use the matching <code>:read</code> or <code>:write</code> grant. <code>*</code> matches one whole segment. A <code>:write</code> grant also permits reads on that target. Writes to a target URL require that target's <code>:write</code> grant. The <code>mcp:write</code> scope applies only to the unqualified <code>/mcp</code> URL in a single-database deployment.</p>
+<p>The supplied example sets <code>allow_unscoped_reads</code> to <code>true</code>. Confirm whether it bypasses Informix read-scope checks before you rely on it. For general OAuth setup, see <a href="authentication/index.html">Authentication</a>, <a href="write-support.html#which-scope-authorizes-a-write">Write support</a>, <a href="authentication/auth0.html#multi-target-deployments-per-target-permissions">Auth0</a>, and <a href="authentication/keycloak.html#multi-target-deployments-per-target-scopes">Keycloak</a>.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -3826,7 +3827,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

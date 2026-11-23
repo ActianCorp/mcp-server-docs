@@ -4233,7 +4233,7 @@
 <p class="admonition-title">Manual client registration</p>
 <p>This guide focuses on manually created clients. Dynamic Client Registration (DCR) is not covered in this documentation.</p>
 </div>
-<p>This guide shows how to obtain the issuer URL needed for <code>quarkus.oidc.auth-server-url</code>, as well as the audience value for <code>quarkus.oidc.token.audience</code> and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.</p>
+<p>This guide shows how to get these values: the issuer URL for <code>quarkus.oidc.auth-server-url</code>, the audience value for <code>quarkus.oidc.token.audience</code>, and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.</p>
 <div class="admonition note">
 <p class="admonition-title">Keycloak version</p>
 <p>This guide applies to <strong>Keycloak 22 and later</strong> (Quarkus-based). Versions older than version 17 (WildFly-based) use a different admin interface and URL structure. <a href="#token-exchange-for-a-calling-application">Token Exchange for a Calling Application</a> requires Keycloak 26.2 or later, the first version with standard token exchange.</p>
@@ -4761,10 +4761,10 @@
 <span class="na">quarkus.oidc.resource-metadata.scopes</span><span class="o">=</span><span class="s">openid,profile,email</span>
 </code></pre></div>
 <h2 id="token-exchange-for-a-calling-application">Token Exchange for a Calling Application<a class="headerlink" href="#token-exchange-for-a-calling-application" title="Permanent link">&para;</a></h2>
-<p>Use this section for an application that has already signed the user in and calls this server for that user. For the concept, see <a href="../index.html#calling-applications">Calling Applications</a>. The recipe uses Keycloak 26.2 standard token exchange (RFC 8693).</p>
+<p>Use this section for an application that has already signed the user in and calls this server for that user. For the concept, see <a href="../index.html#calling-applications">Calling Applications</a>. The steps use Keycloak 26.2 standard token exchange (RFC 8693).</p>
 <ol>
 <li><strong>Create a client for the audience.</strong> Create a client whose Client ID equals the audience value, <code>nsql-mcp</code>, with every flow off: <strong>Client authentication</strong> <code>Off</code>, and <strong>Standard flow</strong>, <strong>Direct access grants</strong> and <strong>Service accounts roles</strong> unchecked. The client exists only so that the <code>audience</code> parameter of the exchange request can name it.</li>
-<li><strong>Configure the calling application's client.</strong> For the calling application's client (example Client ID <code>actian-agentic</code>), set <strong>Client authentication</strong> to <code>On</code>, because only confidential clients may exchange tokens, and check <strong>Standard Token Exchange</strong>.</li>
+<li><strong>Configure the calling application's client.</strong> For the calling application's client (example Client ID <code>actian-agentic</code>), set <strong>Client authentication</strong> to <code>On</code>, because only confidential clients may exchange tokens, and select <strong>Standard Token Exchange</strong>.</li>
 <li>
 <p><strong>Attach the scopes as Optional.</strong> On the calling client's <strong>Client scopes</strong> tab, add <code>nsql-mcp-audience</code> and <code>mcp:write</code> as <strong>Optional</strong>.</p>
 <div class="admonition warning">
@@ -4775,7 +4775,7 @@
 </div>
 </li>
 <li>
-<p><strong>Send the exchange request.</strong> The calling application posts the user's existing access token to the realm's token endpoint, <code>&lt;issuer-url&gt;/protocol/openid-connect/token</code>, authenticating with its client ID and secret and sending these form parameters:</p>
+<p><strong>Send the exchange request.</strong> The calling application sends the user's existing access token to the realm's token endpoint, <code>&lt;issuer-url&gt;/protocol/openid-connect/token</code>. It authenticates with its client ID and secret and sends these form parameters:</p>
 <table>
 <thead>
 <tr>
@@ -4808,7 +4808,7 @@
 </table>
 </li>
 <li>
-<p><strong>Check the result.</strong> In the returned token, <code>aud</code> is exactly <code>nsql-mcp</code> (the original audience, for example <code>account</code>, is dropped), <code>azp</code> is the calling client, and the user is the same (<code>preferred_username</code>). Omit <code>mcp:write</code> from <code>scope</code> to get a read-only token.</p>
+<p><strong>Check the result.</strong> In the returned token, <code>aud</code> is exactly <code>nsql-mcp</code>. The original audience, for example <code>account</code>, is dropped. The <code>azp</code> claim is the calling client, and the user is the same (<code>preferred_username</code>). To get a read-only token, omit <code>mcp:write</code> from <code>scope</code>.</p>
 </li>
 </ol>
 <p>The server validates the audience, not how the token was obtained.</p>
@@ -4870,7 +4870,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

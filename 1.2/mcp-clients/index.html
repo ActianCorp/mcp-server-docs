@@ -3856,7 +3856,7 @@
 <p>In a multi-target deployment, configure one client entry for each database, using that database's URL. A client connected to <code>/mcp</code> can call <code>list_accessible_targets</code> to find the URLs, but it cannot query a database there. For more information, see the multi-target documentation for <a href="../ingres/multi-target.html#connect-a-client-to-each-database">Ingres</a>, <a href="../analytics-engine/multi-target.html#connect-a-client-to-each-database">Analytics Engine</a>, or <a href="../zen/multi-target.html">Zen</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Resource-server mode</p>
-<p>In resource-server mode (Ingres and Analytics Engine), the server runs no login. The client sends an access token from your identity provider in the <code>Authorization: Bearer</code> header. The browser-login setups on this page, such as Claude Desktop through <code>mcp-remote</code> and <code>MCP_AUTH=oauth</code> for the Python client, do not apply, because those clients register themselves with the server. Claude Code can sign in with an Auth0 client that you register in advance. For the steps and for application examples, see Resource-Server Mode for <a href="../ingres/authentication/resource-server.html#call-the-server-from-a-client">Ingres</a> or <a href="../analytics-engine/authentication/resource-server.html#call-the-server-from-a-client">Analytics Engine</a>.</p>
+<p>In resource-server mode (Ingres and Analytics Engine), the server runs no login. The client sends an access token from the identity provider in the <code>Authorization: Bearer</code> header. The browser-login setups on this page, such as Claude Desktop through <code>mcp-remote</code> and <code>MCP_AUTH=oauth</code> for the Python client, do not apply, because those clients register themselves with the server. Claude Code can sign in with an Auth0 client that you register in advance. For the steps and for application examples, see Resource-Server Mode for <a href="../ingres/authentication/resource-server.html#call-the-server-from-a-client">Ingres</a> or <a href="../analytics-engine/authentication/resource-server.html#call-the-server-from-a-client">Analytics Engine</a>.</p>
 </div>
 <h2 id="elicitation-support-for-write-approval">Elicitation Support for Write Approval<a class="headerlink" href="#elicitation-support-for-write-approval" title="Permanent link">&para;</a></h2>
 <p>This section applies only when write support is enabled on the server. On a read-only server, every client in the following table behaves the same way.</p>
@@ -3965,7 +3965,7 @@
 <p>For a remote deployment, replace <code>localhost</code> and <code>&lt;port&gt;</code> with the public hostname and port of the Actian MCP Server.</p>
 </div>
 <div class="tabbed-block">
-<p>GitHub Copilot in Visual Studio Code reads MCP servers from <code>.vscode/mcp.json</code> in the workspace, or from your user configuration, which the <strong>MCP: Open User Configuration</strong> command opens. Add the following server entry:</p>
+<p>GitHub Copilot in Visual Studio Code reads MCP servers from <code>.vscode/mcp.json</code> in the workspace, or from the user configuration, which the <strong>MCP: Open User Configuration</strong> command opens. Add the following server entry:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">    </span><span class="nt">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">"actian-mcp-server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -4170,7 +4170,7 @@ information about configuring a persistent token store, see the
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 11, 2026 18:12:44 UTC">November 11, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

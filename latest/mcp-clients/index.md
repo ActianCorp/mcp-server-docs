@@ -19,7 +19,7 @@ Identify the deployment type to determine the connection URL. The standard endpo
 In a multi-target deployment, configure one client entry for each database, using that database's URL. A client connected to `/mcp` can call `list_accessible_targets` to find the URLs, but it cannot query a database there. For more information, see the multi-target documentation for [Ingres](../ingres/multi-target.md#connect-a-client-to-each-database), [Analytics Engine](../analytics-engine/multi-target.md#connect-a-client-to-each-database), or [Zen](../zen/multi-target.md).
 
 !!! note "Resource-server mode"
-    In resource-server mode (Ingres and Analytics Engine), the server runs no login. The client sends an access token from your identity provider in the `Authorization: Bearer` header. The browser-login setups on this page, such as Claude Desktop through `mcp-remote` and `MCP_AUTH=oauth` for the Python client, do not apply, because those clients register themselves with the server. Claude Code can sign in with an Auth0 client that you register in advance. For the steps and for application examples, see Resource-Server Mode for [Ingres](../ingres/authentication/resource-server.md#call-the-server-from-a-client) or [Analytics Engine](../analytics-engine/authentication/resource-server.md#call-the-server-from-a-client).
+    In resource-server mode (Ingres and Analytics Engine), the server runs no login. The client sends an access token from the identity provider in the `Authorization: Bearer` header. The browser-login setups on this page, such as Claude Desktop through `mcp-remote` and `MCP_AUTH=oauth` for the Python client, do not apply, because those clients register themselves with the server. Claude Code can sign in with an Auth0 client that you register in advance. For the steps and for application examples, see Resource-Server Mode for [Ingres](../ingres/authentication/resource-server.md#call-the-server-from-a-client) or [Analytics Engine](../analytics-engine/authentication/resource-server.md#call-the-server-from-a-client).
 
 ## Elicitation Support for Write Approval
 
@@ -117,7 +117,7 @@ You can connect MCP clients such as Claude Desktop, Cursor, GitHub Copilot, fast
 
 === ":material-github: GitHub Copilot"
 
-    GitHub Copilot in Visual Studio Code reads MCP servers from `.vscode/mcp.json` in the workspace, or from your user configuration, which the **MCP: Open User Configuration** command opens. Add the following server entry:
+    GitHub Copilot in Visual Studio Code reads MCP servers from `.vscode/mcp.json` in the workspace, or from the user configuration, which the **MCP: Open User Configuration** command opens. Add the following server entry:
 
     ```json
     {

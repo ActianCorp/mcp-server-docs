@@ -3884,7 +3884,7 @@
 <td><code>auth_mode</code></td>
 <td>String</td>
 <td>No</td>
-<td>Set to <code>resource-server</code> to accept access tokens issued by your identity provider instead of running the OAuth login. Set it at the top level of <code>conf.json</code>, not inside <code>oauth</code>. For more information, see <a href="../ingres/authentication/resource-server.html">Resource-Server Mode</a></td>
+<td>Set to <code>resource-server</code> to accept access tokens issued by the identity provider instead of running the OAuth login. Set it at the top level of <code>conf.json</code>, not inside <code>oauth</code>. For more information, see <a href="../ingres/authentication/resource-server.html">Resource-Server Mode</a></td>
 </tr>
 <tr>
 <td><code>query_mode</code></td>
@@ -3914,7 +3914,7 @@
 <li>Zen: <code>conn_string</code></li>
 </ul>
 <h3 id="multi-target-deployments">Multi-Target Deployments<a class="headerlink" href="#multi-target-deployments" title="Permanent link">&para;</a></h3>
-<p>Ingres, Analytics Engine, HCL Informix®, and Zen can serve several databases from one server. You list the database servers and their databases in a <code>targets</code> block in <code>conf.json</code>, instead of the single-database fields. Each database is then reached through its own URL, <code>/mcp/{host}/{instance}/{database}</code>, and a client connects to that URL. When the block lists more than one database server, the server requires authentication so that it can check a scope for each database.</p>
+<p>Ingres, Analytics Engine, HCL Informix®, and Zen can serve several databases from one server. You list the database servers and their databases in a <code>targets</code> block in <code>conf.json</code>, instead of the single-database fields. Each database has its own URL, <code>/mcp/{host}/{instance}/{database}</code>, and a client connects to that URL. When the block lists more than one database server, the server requires authentication to check a scope for each database.</p>
 <p>The fields and their meaning differ by database. For the configuration details, see the multi-target documentation for your database: <a href="../ingres/multi-target.html">Ingres</a>, <a href="../analytics-engine/multi-target.html">Analytics Engine</a>, <a href="../zen/multi-target.html">Zen</a>, or Actian NoSQL.</p>
 <div class="admonition note">
 <p class="admonition-title">Configuration File Protection</p>
@@ -4012,7 +4012,7 @@ Prompt the AI with a standard database request, such as:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

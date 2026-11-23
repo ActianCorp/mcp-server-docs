@@ -3752,14 +3752,14 @@
 
 
 <h1 id="deployment-scenarios">Deployment Scenarios<a class="headerlink" href="#deployment-scenarios" title="Permanent link">&para;</a></h1>
-<p>Three pieces take part: the agent (Claude Desktop, an IDE, a script), the MCP server container, and the Zen engine. Each can sit on a laptop, in a container, or on a cloud machine. Every setting answers one of three questions:</p>
+<p>Three pieces take part: the agent (Claude Desktop, an IDE, or a script), the MCP server container, and the Zen engine. Each can run on a laptop, in a container, or on a cloud machine. Every setting answers one of three questions:</p>
 <ol>
 <li><strong>How does the container find Zen?</strong> The connection string, plus a Docker network flag.</li>
 <li><strong>How do agents reach the container?</strong> <code>host</code>, <code>port</code>, <code>-p</code>, and Transport Layer Security (TLS).</li>
 <li><strong>Who may do what?</strong> <code>query_mode</code>, <a href="multi-target.html#read-only-personas">read-only personas</a>, <a href="authentication/index.html#resource-server-mode">tokens and scopes</a>.</li>
 </ol>
 <h2 id="finding-zen">Finding Zen<a class="headerlink" href="#finding-zen" title="Permanent link">&para;</a></h2>
-<p>The container talks to Zen over Transmission Control Protocol (TCP) like any remote Zen client. The only question is what name or address reaches the engine <em>from inside the container</em>; that is what <code>ServerName=</code> in <code>conn_string</code> (or <code>host</code> in a target entry) must say.</p>
+<p>The container talks to Zen over Transmission Control Protocol (TCP), like any remote Zen client. The only question is which name or address reaches the engine <em>from inside the container</em>. Set <code>ServerName=</code> in <code>conn_string</code> (or <code>host</code> in a target entry) to that name or address.</p>
 <table>
 <thead>
 <tr>
@@ -3780,7 +3780,7 @@
 <td>Installed on the same Linux machine</td>
 <td><code>host.docker.internal:1583</code></td>
 <td><code>--add-host=host.docker.internal:host-gateway</code></td>
-<td>Linux Docker has no built-in <code>host.docker.internal</code>; the flag creates it.</td>
+<td>Linux Docker has no built-in <code>host.docker.internal</code>. The flag creates it.</td>
 </tr>
 <tr>
 <td>In another container</td>
@@ -3798,10 +3798,10 @@
 </table>
 <div class="admonition warning">
 <p class="admonition-title">Not <code>localhost</code>, and not a bare DSN</p>
-<p>From inside a container <code>localhost</code> is the container itself, and the Zen client for Linux resolves the name to <code>::1</code>; both fail with <code>SQL Connection Manager is not running at the specified port number (10065)</code>. The client also ignores the Data Source Name (DSN) bundled in the image for a remote connection and falls back to <code>127.0.0.1</code>. Always give an explicit <code>ServerName=&lt;name&gt;:1583</code> in <code>conn_string</code>.</p>
+<p>Inside a container, <code>localhost</code> is the container itself. The Zen client for Linux also resolves the name to <code>::1</code>. Both fail with <code>SQL Connection Manager is not running at the specified port number (10065)</code>. For a remote connection, the client ignores the Data Source Name (DSN) bundled in the image and falls back to <code>127.0.0.1</code>. Always set an explicit <code>ServerName=&lt;name&gt;:1583</code> in <code>conn_string</code>.</p>
 </div>
 <h2 id="letting-agents-in">Letting Agents In<a class="headerlink" href="#letting-agents-in" title="Permanent link">&para;</a></h2>
-<p><code>host</code> and <code>port</code> in <code>conf.json</code> are the address <em>inside</em> the container. With <code>-p</code>, <code>host</code> must be <code>0.0.0.0</code>; the left side of <code>-p</code> and the firewall control who may connect, not <code>host</code>.</p>
+<p><code>host</code> and <code>port</code> in <code>conf.json</code> are the address <em>inside</em> the container. With <code>-p</code>, <code>host</code> must be <code>0.0.0.0</code>. The left side of <code>-p</code> and the firewall control who can connect, not <code>host</code>.</p>
 <table>
 <thead>
 <tr>
@@ -3825,22 +3825,22 @@
 <td>same</td>
 <td><code>-p 8000:8000</code></td>
 <td>advised</td>
-<td>advised — without it, anyone who can reach the port queries the database as the connection-string login</td>
+<td>advised. Without it, anyone who can reach the port queries the database as the connection-string login</td>
 </tr>
 <tr>
 <td>The internet or a cloud network</td>
 <td>same, plus <code>ssl_certfile</code> and <code>ssl_keyfile</code></td>
 <td><code>-p 8000:8000</code>, the certificate and key mounted at <code>/app/server.crt</code> and <code>/app/server.key</code></td>
 <td>mandatory</td>
-<td>mandatory — <a href="authentication/index.html#resource-server-mode">resource-server mode</a></td>
+<td>mandatory: use <a href="authentication/index.html#resource-server-mode">resource-server mode</a></td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">The rule the server enforces</p>
-<p>With authentication on and <code>host</code> other than <code>localhost</code> (so also <code>0.0.0.0</code>), both TLS files must be present or the server refuses to start: <code>ssl_certfile and ssl_keyfile are required for OAuth on non-localhost hosts</code>. The paths in <code>conf.json</code> are the in-container paths <code>/app/server.crt</code> and <code>/app/server.key</code>; see <a href="authentication/index.html#secure-remote-deployments-with-https-and-tls">HTTPS and TLS</a>.</p>
+<p>With authentication on and <code>host</code> other than <code>localhost</code> (including <code>0.0.0.0</code>), both TLS files must be present. Otherwise the server refuses to start: <code>ssl_certfile and ssl_keyfile are required for OAuth on non-localhost hosts</code>. The paths in <code>conf.json</code> are the in-container paths <code>/app/server.crt</code> and <code>/app/server.key</code>. See <a href="authentication/index.html#secure-remote-deployments-with-https-and-tls">HTTPS and TLS</a>.</p>
 </div>
-<p>The URL an agent uses is <code>http://&lt;mcp-host&gt;:8000/mcp</code> for a single-database server and <code>http://&lt;mcp-host&gt;:8000/mcp/{host}/{instance}/{database}/mcp</code> per target when the server <a href="multi-target.html">serves several</a>. With TLS the scheme is <code>https</code>.</p>
+<p>Agents use <code>http://&lt;mcp-host&gt;:8000/mcp</code> for a single-database server. When the server <a href="multi-target.html">serves several databases</a>, agents use <code>http://&lt;mcp-host&gt;:8000/mcp/{host}/{instance}/{database}/mcp</code> for each target. With TLS, the scheme is <code>https</code>.</p>
 <h2 id="scenarios">Scenarios<a class="headerlink" href="#scenarios" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3902,7 +3902,7 @@
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
-<p>Agent URL: <code>http://localhost:8000/mcp</code>. If the log shows error <code>10065</code>, the container cannot reach the engine on the laptop; check that Zen listens on 1583 and that the host firewall lets Docker's network through.</p>
+<p>Agent URL: <code>http://localhost:8000/mcp</code>. If the log shows error <code>10065</code>, the container cannot reach the engine on the laptop. Check that Zen listens on 1583 and that the host firewall lets Docker's network through.</p>
 <h3 id="b-engine-and-server-in-containers">B. Engine and Server in Containers<a class="headerlink" href="#b-engine-and-server-in-containers" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>network<span class="w"> </span>create<span class="w"> </span>zentest
 docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen16<span class="w"> </span>--network<span class="w"> </span>zentest<span class="w"> </span>--network-alias<span class="w"> </span>zen16<span class="w"> </span>&lt;zen-engine-image&gt;
@@ -3910,9 +3910,9 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
-<p>The only change from A: <code>--network zentest</code> instead of <code>--add-host</code>, and <code>ServerName=zen16:1583</code> in <code>conn_string</code>, because the engine now lives in a container named <code>zen16</code> on the network <code>zentest</code>.</p>
+<p>Two things change from A. Use <code>--network zentest</code> instead of <code>--add-host</code>. Set <code>ServerName=zen16:1583</code> in <code>conn_string</code>, because the engine now runs in a container named <code>zen16</code> on the network <code>zentest</code>.</p>
 <h3 id="c-several-urls-without-authentication">C. Several URLs Without Authentication<a class="headerlink" href="#c-several-urls-without-authentication" title="Permanent link">&para;</a></h3>
-<p>The configuration from <a href="multi-target.html#configuration">Multiple Databases</a>, with <code>allow_unscoped_reads: true</code>, and a folder for hot add and remove:</p>
+<p>Use the configuration from <a href="multi-target.html#configuration">Multiple Databases</a>, with <code>allow_unscoped_reads: true</code> and a folder for adding and removing targets while the server runs:</p>
 <div class="language-bash highlight"><pre><span></span><code>mkdir<span class="w"> </span>targets.d
 docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen-mcp<span class="w"> </span>--network<span class="w"> </span>zentest<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
@@ -3921,7 +3921,7 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 </code></pre></div>
 <p>Then run the checks in <a href="multi-target.html#verifying-a-setup">Verifying a Setup</a>.</p>
 <h3 id="d-a-team-deployment-with-an-identity-provider">D. A Team Deployment with an Identity Provider<a class="headerlink" href="#d-a-team-deployment-with-an-identity-provider" title="Permanent link">&para;</a></h3>
-<p>The configuration from C, minus <code>allow_unscoped_reads</code>, plus the <a href="authentication/index.html#resource-server-mode">resource-server block</a> and TLS:</p>
+<p>Use the configuration from C without <code>allow_unscoped_reads</code>. Add the <a href="authentication/index.html#resource-server-mode">resource-server block</a> and TLS:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"auth_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource-server"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"oauth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3940,7 +3940,7 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <span class="w">  </span>-v<span class="w"> </span>/path/to/server.key:/app/server.key:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
-<p>Each target entry carries the Zen login for its engine; <code>conf.json</code> therefore holds passwords, so restrict its file permissions to the owner. Open 1583 from the MCP host to each engine, and 8000 to the agents' network only.</p>
+<p>Each target entry carries the Zen login for its engine, so <code>conf.json</code> holds passwords. Restrict its file permissions to the owner. Open port 1583 from the MCP host to each engine. Open port 8000 to the agents' network only.</p>
 <h2 id="when-something-goes-wrong">When Something Goes Wrong<a class="headerlink" href="#when-something-goes-wrong" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3953,13 +3953,13 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <tbody>
 <tr>
 <td><code>SQL Connection Manager is not running at the specified port number (10065)</code></td>
-<td>The container cannot reach Zen at <code>ServerName</code>: wrong name, wrong network, firewall, or <code>localhost</code> from a Linux container.</td>
-<td>Check the <a href="#finding-zen">Finding Zen</a> table. Never <code>localhost</code> from a container.</td>
+<td>The container cannot reach Zen at <code>ServerName</code>. The cause is a wrong name, a wrong network, a firewall, or <code>localhost</code> in a Linux container.</td>
+<td>Check the <a href="#finding-zen">Finding Zen</a> table. Never use <code>localhost</code> from a container.</td>
 </tr>
 <tr>
 <td><code>ssl_certfile and ssl_keyfile are required for OAuth on non-localhost hosts</code></td>
 <td>Authentication is on and <code>host</code> is not <code>localhost</code>.</td>
-<td>Mount a certificate and key, see <a href="authentication/index.html#secure-remote-deployments-with-https-and-tls">HTTPS and TLS</a>.</td>
+<td>Mount a certificate and key. See <a href="authentication/index.html#secure-remote-deployments-with-https-and-tls">HTTPS and TLS</a>.</td>
 </tr>
 <tr>
 <td><code>ssl_certfile path does not exist or is empty</code></td>
@@ -3969,31 +3969,31 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <tr>
 <td><code>401</code> and <code>issuer mismatch</code> in the log</td>
 <td>The token's issuer is not the address in <code>FASTMCP_SERVER_AUTH_CONFIG_URL</code>.</td>
-<td>The container and the token requests must name the identity provider the same way; a Keycloak started with <code>KC_HOSTNAME</code> pins the issuer.</td>
+<td>The container and the token requests must name the identity provider the same way. A Keycloak started with <code>KC_HOSTNAME</code> pins the issuer.</td>
 </tr>
 <tr>
 <td><code>403</code> with <code>insufficient_scope</code> on a target URL</td>
-<td>The token has no <code>actian:...:read</code> grant for that exact target, or the path has a typo: a URL that names no target gets the same <code>403</code> on purpose. The <code>WWW-Authenticate</code> header names the grant the path needs.</td>
-<td>Grant the scope at the identity provider; compare the path with <code>list_accessible_targets</code> on the plain <code>/mcp</code> URL.</td>
+<td>The token has no <code>actian:...:read</code> grant for that exact target, or the path has a typo. A URL that names no target gets the same <code>403</code> on purpose. The <code>WWW-Authenticate</code> header names the grant that the path needs.</td>
+<td>Grant the scope at the identity provider. Compare the path with <code>list_accessible_targets</code> on the plain <code>/mcp</code> URL.</td>
 </tr>
 <tr>
 <td><code>target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL</code></td>
-<td>A write on a URL whose persona is in <code>zen_readonly_personas</code>; the server refuses it before anything reaches Zen.</td>
+<td>A write on a URL whose persona is in <code>zen_readonly_personas</code>. The server refuses it before anything reaches Zen.</td>
 <td>Use the read-write persona's URL. This is the expected result of a read-only check.</td>
 </tr>
 <tr>
 <td><code>Access denied to a READ-ONLY data source</code></td>
-<td>The engine refused a write: the server is <code>read-only</code>, or a statement the server did not classify as a write reached a read-only persona's connection.</td>
+<td>The engine refused a write. Either the server is <code>read-only</code>, or a statement that the server did not classify as a write reached a read-only persona's connection.</td>
 <td>Set <code>query_mode</code> to <code>read-write</code>, or use a read-write persona.</td>
 </tr>
 <tr>
 <td><code>N targets are configured, but per-target scope enforcement ... is not active</code> at start</td>
 <td>Several targets need either authentication or <code>allow_unscoped_reads: true</code>.</td>
-<td>Add <code>auth_mode: "resource-server"</code>, or the escape hatch for a test setup.</td>
+<td>Add <code>auth_mode: "resource-server"</code>. For a test setup, use <code>allow_unscoped_reads</code> instead.</td>
 </tr>
 </tbody>
 </table>
-<p><code>docker logs &lt;container&gt;</code> shows the startup lines, every <a href="index.html#call-log">call log</a> record, and the refusals above.</p>
+<p><code>docker logs &lt;container&gt;</code> shows the startup lines, every <a href="index.html#call-log">call log</a> record, and the refusals listed above.</p>
 
 
 
@@ -4014,7 +4014,7 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

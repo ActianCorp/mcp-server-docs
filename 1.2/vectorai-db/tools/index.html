@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="The server registers six read tools in every mode and four write tools only when query_mode is read-write (see Write support). Every tool except list_collections takes a collection name and answers only for collections listed in conf.json; any other name returns an error that lists the configured ones.">
+        <meta name="description" content="The server registers six read tools in every mode and four write tools only when query_mode is read-write (see Write support). Every tool except list_collections takes a collection name. A tool answers only for collections listed in conf.json. Any other name returns an error that lists the configured ones.">
       
       
       
@@ -3884,7 +3884,7 @@
 
 
 <h1 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h1>
-<p>The server registers six read tools in every mode and four write tools only when <code>query_mode</code> is <code>read-write</code> (see <a href="../write-support.html">Write support</a>). Every tool except <code>list_collections</code> takes a <code>collection</code> name and answers only for collections listed in <code>conf.json</code>; any other name returns an error that lists the configured ones.</p>
+<p>The server registers six read tools in every mode and four write tools only when <code>query_mode</code> is <code>read-write</code> (see <a href="../write-support.html">Write support</a>). Every tool except <code>list_collections</code> takes a <code>collection</code> name. A tool answers only for collections listed in <code>conf.json</code>. Any other name returns an error that lists the configured ones.</p>
 <h2 id="available-tools">Available Tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3918,7 +3918,7 @@
 <td><a href="#search_by_vector"><code>search_by_vector</code></a></td>
 <td>yes</td>
 <td>yes</td>
-<td>Nearest-neighbour search from a vector.</td>
+<td>Nearest-neighbor search from a vector.</td>
 </tr>
 <tr>
 <td><a href="#count_points"><code>count_points</code></a></td>
@@ -3958,7 +3958,7 @@
 </tr>
 </tbody>
 </table>
-<p>Writes require the <code>mcp:write</code> scope when OAuth is enabled and an approval prompt at the client. <code>search</code>, <code>store</code> and <code>store_batch</code> need an embedding provider. With <code>embedding.provider: none</code> they answer with an error; use <code>search_by_vector</code> instead.</p>
+<p>Writes need the <code>mcp:write</code> scope when OAuth is enabled, and an approval prompt at the client. <code>search</code>, <code>store</code>, and <code>store_batch</code> need an embedding provider. With <code>embedding.provider: none</code>, they return an error. Use <code>search_by_vector</code> instead.</p>
 <h3 id="common-output">Common Output<a class="headerlink" href="#common-output" title="Permanent link">&para;</a></h3>
 <p>Every tool returns a JSON object with <code>success</code>. On failure:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -3967,12 +3967,12 @@
 <span class="w">  </span><span class="nt">"status_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>status_code</code> is present when the engine answered with an HTTP error (the message is then prefixed <code>VectorAI:</code>, for example <code>VectorAI: Search failed: Dimension mismatch for vector '': expected 1024, got 2</code>). Other errors are validation errors (<code>limit must be &gt;= 1</code>, <code>text must not be empty</code>, <code>collection 'x' is not configured on this server; configured: ...</code>), embedding errors, or <code>Write rejected by user</code>.</p>
+<p><code>status_code</code> is present when the engine returns an HTTP error. The message then starts with <code>VectorAI:</code>, for example <code>VectorAI: Search failed: Dimension mismatch for vector '': expected 1024, got 2</code>. Other errors are validation errors (<code>limit must be &gt;= 1</code>, <code>text must not be empty</code>, <code>collection 'x' is not configured on this server; configured: ...</code>), embedding errors, or <code>Write rejected by user</code>.</p>
 <h3 id="filters">Filters<a class="headerlink" href="#filters" title="Permanent link">&para;</a></h3>
-<p><code>search</code>, <code>search_by_vector</code>, <code>count_points</code> and <code>scroll_points</code> accept <code>filter</code>, the engine's JSON filter on payload fields, passed through unchanged:</p>
+<p><code>search</code>, <code>search_by_vector</code>, <code>count_points</code>, and <code>scroll_points</code> accept <code>filter</code>. This is the engine's JSON filter on payload fields. The server passes it through unchanged:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"must"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata.kind"</span><span class="p">,</span><span class="w"> </span><span class="nt">"match"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"faq"</span><span class="p">}}]}</span>
 </code></pre></div>
-<p><code>store</code> writes <code>metadata</code> under the payload key <code>metadata</code>, so fields given at store time are addressed as <code>metadata.&lt;field&gt;</code>. See the Actian VectorAI DB documentation on filtering for the full syntax.</p>
+<p><code>store</code> writes <code>metadata</code> under the payload key <code>metadata</code>, so you address fields given at store time as <code>metadata.&lt;field&gt;</code>. See the Actian VectorAI DB documentation on filtering for the full syntax.</p>
 <hr />
 <h2 id="list_collections"><code>list_collections</code><a class="headerlink" href="#list_collections" title="Permanent link">&para;</a></h2>
 <p>Returns the collections this server exposes with their live state. Only these collections can be searched or written.</p>
@@ -4005,10 +4005,10 @@
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>exists</code> is <code>false</code> for a configured collection not yet created on the engine, and <code>null</code> with an <code>error</code> field when the engine could not answer for it. <code>status</code> is the engine's collection status: <code>green</code>, <code>yellow</code>, <code>red</code>, or <code>unknowncollectionstatus</code> for a collection the engine has not loaded yet; see <a href="../index.html#engine-behaviour">Engine behaviour</a>.</p>
+<p><code>exists</code> is <code>false</code> for a configured collection that is not yet created on the engine. It is <code>null</code>, with an <code>error</code> field, when the engine could not answer for it. <code>status</code> is the engine's collection status: <code>green</code>, <code>yellow</code>, <code>red</code>, or <code>unknowncollectionstatus</code> (a collection the engine has not loaded yet). See <a href="../index.html#engine-behaviour">Engine behaviour</a>.</p>
 <hr />
 <h2 id="describe_collection"><code>describe_collection</code><a class="headerlink" href="#describe_collection" title="Permanent link">&para;</a></h2>
-<p>Full detail for one configured collection: everything <code>list_collections</code> shows plus the engine's configuration, payload schema and index type, and the values configured in <code>conf.json</code>.</p>
+<p>Returns full detail for one configured collection. This includes everything <code>list_collections</code> shows, plus the engine's configuration, payload schema, and index type, and the values configured in <code>conf.json</code>.</p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -4117,7 +4117,7 @@
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>text</code> is the payload's <code>text_field</code> and is present only when that field exists on the point. <code>count</code> is the number of results returned, <code>limit</code> the effective limit after capping: a request with <code>limit: 100000</code> comes back with <code>"limit": 100</code>.</p>
+<p><code>text</code> holds the payload's <code>text_field</code>. It is present only when that field exists on the point. <code>count</code> is the number of results returned. <code>limit</code> is the effective limit after capping. For example, a request with <code>limit: 100000</code> comes back with <code>"limit": 100</code>.</p>
 <p><strong>Example</strong></p>
 <p>Request:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"documents"</span><span class="p">,</span><span class="w"> </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"how do I enable write mode"</span><span class="p">,</span><span class="w"> </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">}</span>
@@ -4128,7 +4128,7 @@
 </code></pre></div>
 <hr />
 <h2 id="search_by_vector"><code>search_by_vector</code><a class="headerlink" href="#search_by_vector" title="Permanent link">&para;</a></h2>
-<p>Nearest-neighbour search with a vector the caller already has. The vector must have the collection's dimension; the engine refuses any other size (<code>Dimension mismatch ... expected 1024, got 2</code>). Works with <code>embedding.provider: none</code>.</p>
+<p>Runs a nearest-neighbor search with a vector that the caller already has. The vector must have the collection's dimension. The engine refuses any other size (<code>Dimension mismatch ... expected 1024, got 2</code>). This tool works with <code>embedding.provider: none</code>.</p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -4153,7 +4153,7 @@
 <td>array of numbers</td>
 <td>Yes</td>
 <td></td>
-<td>Query vector, same dimension as the collection; must not be empty.</td>
+<td>Query vector. It must have the collection's dimension and must not be empty.</td>
 </tr>
 <tr>
 <td><code>limit</code></td>
@@ -4181,7 +4181,7 @@
 <p><strong>Output schema</strong>: same as <code>search</code>.</p>
 <hr />
 <h2 id="count_points"><code>count_points</code><a class="headerlink" href="#count_points" title="Permanent link">&para;</a></h2>
-<p>Number of points in a configured collection, optionally restricted by a filter. Exact at any time (unlike the <code>points_count</code> shown by <code>list_collections</code> before the engine has loaded the collection).</p>
+<p>Returns the number of points in a configured collection, optionally restricted by a filter. The count is always exact, unlike the <code>points_count</code> that <code>list_collections</code> shows before the engine has loaded the collection.</p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -4212,7 +4212,7 @@
 </code></pre></div>
 <hr />
 <h2 id="scroll_points"><code>scroll_points</code><a class="headerlink" href="#scroll_points" title="Permanent link">&para;</a></h2>
-<p>Pages through a collection's points in id order without a query vector. Pass the returned <code>next_page_offset</code> as <code>offset</code> to get the next page; it is <code>null</code> on the last page.</p>
+<p>Pages through a collection's points in id order without a query vector. To get the next page, pass the returned <code>next_page_offset</code> as <code>offset</code>. On the last page, <code>next_page_offset</code> is <code>null</code>.</p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -4274,10 +4274,10 @@
 <span class="w">  </span><span class="nt">"next_page_offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>score</code> is always <code>null</code> for scrolled points (no query vector). <code>vector</code> is present only when <code>with_vector</code> is <code>true</code>; it has the collection's dimension.</p>
+<p><code>score</code> is always <code>null</code> for scrolled points because there is no query vector. <code>vector</code> is present only when <code>with_vector</code> is <code>true</code>. It has the collection's dimension.</p>
 <hr />
 <h2 id="create_collection"><code>create_collection</code><a class="headerlink" href="#create_collection" title="Permanent link">&para;</a></h2>
-<p>Read-write mode only. Creates a configured collection on the engine with the configured <code>vector_size</code> and <code>distance</code> (<code>Cosine</code> when unset). When <code>vector_size</code> is not in <code>conf.json</code>, the embedding provider's dimension is used; for providers that do not publish it, one probe embedding is made. When the collection already exists the call succeeds without a prompt and without changes.</p>
+<p>Read-write mode only. Creates a configured collection on the engine with the configured <code>vector_size</code> and <code>distance</code> (<code>Cosine</code> when unset). If <code>conf.json</code> has no <code>vector_size</code>, the server uses the embedding provider's dimension. For providers that do not publish it, the server makes one probe embedding. If the collection already exists, the call succeeds without a prompt and without changes.</p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -4303,11 +4303,11 @@
 </code></pre></div>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;name&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection already exists"</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
-<p>A collection with <code>embedding.provider: none</code> and no <code>vector_size</code> cannot be created: the error says which key to add to <code>conf.json</code>.</p>
+<p>You cannot create a collection with <code>embedding.provider: none</code> and no <code>vector_size</code>. The error says which key to add to <code>conf.json</code>.</p>
 <hr />
 <h2 id="store"><code>store</code><a class="headerlink" href="#store" title="Permanent link">&para;</a></h2>
 <p>Read-write mode only. Embeds <code>text</code> and upserts it as one point. The payload holds the text under the collection's <code>text_field</code> (default <code>document</code>) plus <code>metadata</code> as given, so later filters can use <code>metadata.&lt;field&gt;</code>. The collection must already exist.</p>
-<p>Before asking for approval, <code>store</code> checks that the text is not empty, that the collection exists on the engine, that the text is within <code>embedding.max_input_tokens</code> when that is set, and that the embedding's dimension equals the collection's vector size. A mismatch is reported as an error naming the two sizes and the <code>conf.json</code> keys to fix. The text reaches the embedding provider before the prompt.</p>
+<p>Before it asks for approval, <code>store</code> checks four things. The text is not empty. The collection exists on the engine. The text is within <code>embedding.max_input_tokens</code>, when that is set. The embedding's dimension equals the collection's vector size. A mismatch returns an error that names the two sizes and the <code>conf.json</code> keys to fix. The text reaches the embedding provider before the prompt.</p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -4350,7 +4350,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Approval prompt</strong>: <code>Store 1 point in &lt;name&gt;: &lt;first 120 characters of the text&gt;</code>, plus <code>overwrites existing point &lt;id&gt;</code> when the id already exists. The prompt details carry the id, the text preview, the metadata, the ids overwritten and the vector size.</p>
+<p><strong>Approval prompt</strong>: <code>Store 1 point in &lt;name&gt;: &lt;first 120 characters of the text&gt;</code>, plus <code>overwrites existing point &lt;id&gt;</code> when the id already exists. The prompt details include the id, the text preview, the metadata, the ids overwritten, and the vector size.</p>
 <p><strong>Output schema</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
@@ -4364,11 +4364,11 @@
 <p>Request:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"documents"</span><span class="p">,</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Write tools require the user to approve each change."</span><span class="p">,</span><span class="w"> </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"note"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
-<p>The client shows <code>Store 1 point in documents: Write tools require the user to approve each change.</code>; after approval the response above is returned.</p>
+<p>The client shows <code>Store 1 point in documents: Write tools require the user to approve each change.</code>; after approval, the tool returns the response above.</p>
 <hr />
 <h2 id="store_batch"><code>store_batch</code><a class="headerlink" href="#store_batch" title="Permanent link">&para;</a></h2>
-<p>Read-write mode only. Embeds several texts and upserts them as points in one call, with one approval prompt for the whole batch. The texts go to the embedding provider in requests of <code>embedding.batch_size</code> and to the engine in one request, so all points land or none. Each item takes the same fields as a <code>store</code> call.</p>
-<p>Before asking for approval, <code>store_batch</code> checks every item (text not blank, <code>id</code> a UUID string or unsigned integer and used once in the batch, <code>metadata</code> an object), that the collection exists on the engine, that no text exceeds <code>embedding.max_input_tokens</code> when that is set, and that the embeddings' dimension equals the collection's vector size. A batch longer than <code>max_batch_size</code> (default 32) is rejected as well: <code>store_batch takes at most 32 items per call, got 40; split the batch or raise max_batch_size in conf.json</code>. Any failure returns an error and nothing is written.</p>
+<p>Read-write mode only. Embeds several texts and upserts them as points in one call, with one approval prompt for the whole batch. The texts go to the embedding provider in requests of <code>embedding.batch_size</code> and to the engine in one request, so either all points land or none do. Each item takes the same fields as a <code>store</code> call.</p>
+<p>Before it asks for approval, <code>store_batch</code> checks every item. The text must not be blank, <code>id</code> must be a UUID string or unsigned integer that is used once in the batch, and <code>metadata</code> must be an object. The server also checks that the collection exists on the engine, that no text exceeds <code>embedding.max_input_tokens</code> when that is set, and that the embeddings' dimension equals the collection's vector size. It rejects a batch longer than <code>max_batch_size</code> (default 32): <code>store_batch takes at most 32 items per call, got 40; split the batch or raise max_batch_size in conf.json</code>. Any failure returns an error, and nothing is written.</p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -4394,7 +4394,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Approval prompt</strong>: a header <code>Store &lt;n&gt; points in &lt;name&gt;: &lt;total&gt; chars, metadata keys: &lt;keys&gt;</code> (or <code>no metadata</code>), with <code>overwrites &lt;k&gt; existing points</code> appended when ids already exist, followed by one numbered line per item: its length, its metadata, the first 60 characters of the text, and <code>overwrites id &lt;id&gt;</code> where applicable. The approver sees every item, because one approval covers the whole batch. The details carry all ids, the ids overwritten, the count, the total characters, the metadata keys and the vector size.</p>
+<p><strong>Approval prompt</strong>: a header <code>Store &lt;n&gt; points in &lt;name&gt;: &lt;total&gt; chars, metadata keys: &lt;keys&gt;</code> (or <code>no metadata</code>), with <code>overwrites &lt;k&gt; existing points</code> appended when ids already exist. One numbered line per item follows: its length, its metadata, the first 60 characters of the text, and <code>overwrites id &lt;id&gt;</code> where applicable. The approver sees every item because one approval covers the whole batch. The details include all ids, the ids overwritten, the count, the total characters, the metadata keys, and the vector size.</p>
 <p><strong>Output schema</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
@@ -4404,10 +4404,10 @@
 <span class="w">  </span><span class="nt">"operation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"operation_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Completed"</span><span class="w"> </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>ids</code> is in item order, so a wrong batch is undone with one <code>delete_points</code> call. Loading a whole corpus still belongs in a script against the engine's REST API, not in an MCP session.</p>
+<p><code>ids</code> is in item order, so you can undo a wrong batch with one <code>delete_points</code> call. Loading a whole corpus still belongs in a script against the engine's REST API, not in an MCP session.</p>
 <hr />
 <h2 id="delete_points"><code>delete_points</code><a class="headerlink" href="#delete_points" title="Permanent link">&para;</a></h2>
-<p>Read-write mode only. Deletes points by id from a configured collection. The server looks the ids up first: <code>deleted</code> counts the ids that existed, the rest come back in <code>not_found</code>. When none of the ids exist nothing is deleted and no approval is asked.</p>
+<p>Read-write mode only. Deletes points by id from a configured collection. The server looks up the ids first. <code>deleted</code> counts the ids that existed. The rest come back in <code>not_found</code>. If none of the ids exist, nothing is deleted and the server asks for no approval.</p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -4429,11 +4429,11 @@
 <td><code>ids</code></td>
 <td>array of string or integer</td>
 <td>Yes</td>
-<td>Point ids; must not be empty. A UUID is accepted in any spelling (case, with or without hyphens).</td>
+<td>Point ids. Must not be empty. The tool accepts a UUID in any spelling (any case, with or without hyphens).</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Approval prompt</strong>: <code>Delete &lt;n&gt; points from &lt;name&gt;</code>, with <code>(&lt;k&gt; of &lt;m&gt; requested ids not found)</code> appended when some ids do not exist; the details list the first 20 ids to delete and the ids not found.</p>
+<p><strong>Approval prompt</strong>: <code>Delete &lt;n&gt; points from &lt;name&gt;</code>, with <code>(&lt;k&gt; of &lt;m&gt; requested ids not found)</code> appended when some ids do not exist. The details list the first 20 ids to delete and the ids not found.</p>
 <p><strong>Output schema</strong></p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
@@ -4472,7 +4472,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

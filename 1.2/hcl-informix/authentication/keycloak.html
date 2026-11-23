@@ -4361,7 +4361,7 @@
 <li>
 <p><strong>(Optional)</strong> Add a <strong>sub override mapper</strong> to the <code>sub</code> claim containing the username instead of a UUID.</p>
 </li>
-<li><strong>Configure write grants</strong>, if <code>query_mode</code> is <code>read-write</code>: use <code>mcp:write</code> for the single-database <code>/mcp</code> endpoint, or create per-target scopes for target URLs. See <a href="#step-5-add-the-write-scope-read-write-deployments-only">Step 5</a> and <a href="#multi-target-deployments-per-target-scopes">Multi-Target Deployments: Per-Target Scopes</a>.</li>
+<li><strong>Configure write grants</strong>, if <code>query_mode</code> is <code>read-write</code>: use <code>mcp:write</code> for the single-database <code>/mcp</code> endpoint. For target URLs, create per-target scopes. See <a href="#step-5-add-the-write-scope-read-write-deployments-only">Step 5</a> and <a href="#multi-target-deployments-per-target-scopes">Multi-Target Deployments: Per-Target Scopes</a>.</li>
 <li><strong>Create users</strong> in the realm, if using <code>user_impersonation: true</code>.</li>
 <li><strong>Fill <code>conf.json</code></strong> file with the values from <a href="#step-1-create-a-keycloak-realm">Step 1</a> to <a href="#step-3-add-the-audience-mapper-required">Step 3</a>.</li>
 <li><strong>Start the server</strong> with <code>--transport sse</code>or <code>http</code> / <code>streamable-http</code>.</li>
@@ -4724,8 +4724,8 @@
 <p>Instead of overriding <code>sub</code>, you can rely on the <code>preferred_username</code> claim (included by default when the <code>profile</code> scope is present). The MCP server's username extraction priority uses <code>preferred_username</code> before <code>sub</code>, so it works automatically without any mapper changes.</p>
 </div>
 <h2 id="step-5-add-the-write-scope-read-write-deployments-only">Step 5: Add Write Scope (Read-Write Deployments Only)<a class="headerlink" href="#step-5-add-the-write-scope-read-write-deployments-only" title="Permanent link">&para;</a></h2>
-<p>Skip this step if <code>query_mode</code> is <code>read-only</code>, or if callers use target URLs in a multi-target deployment. Target URLs use per-target scopes instead; see <a href="#multi-target-deployments-per-target-scopes">Multi-Target Deployments: Per-Target Scopes</a>.</p>
-<p>For a single-database deployment using <code>/mcp</code>, when <code>query_mode</code> is <code>read-write</code>, the server requests <code>mcp:write</code> and rejects any write whose token does not carry it. For more information, see <a href="../write-support.html">Write support</a>.</p>
+<p>Skip this step if <code>query_mode</code> is <code>read-only</code>, or if callers use target URLs in a multi-target deployment. Target URLs use per-target scopes instead. See <a href="#multi-target-deployments-per-target-scopes">Multi-Target Deployments: Per-Target Scopes</a>.</p>
+<p>For a single-database deployment that uses <code>/mcp</code>, when <code>query_mode</code> is <code>read-write</code>, the server requests <code>mcp:write</code>. It rejects any write whose token does not carry that scope. For more information, see <a href="../write-support.html">Write support</a>.</p>
 <h3 id="step-51-create-the-client-scope">Step 5.1: Create Client Scope<a class="headerlink" href="#step-51-create-the-client-scope" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Navigate to <strong>Client scopes</strong> in the left sidebar and select <strong>Create client scope</strong>.</li>
@@ -4803,13 +4803,16 @@
 <p>For a deployment with a <code>targets</code> registry, every request to a target URL needs a matching scope in the caller's access token. Target URLs use the format documented in <a href="../multi-target.html#connect-to-a-database">Multi-Target Deployments</a>.</p>
 <div class="language-text highlight"><pre><span></span><code>actian:{host}:{instance}:{database}:{read|write}
 </code></pre></div>
-<p>The host, instance, and database segments must match the target. <code>*</code> matches exactly one complete segment. A <code>write</code> scope also grants read access to that same target. Example scope names:</p>
+<p>The host, instance, and database segments must match the target. <code>*</code> matches exactly one complete segment. A <code>write</code> scope also grants read access to that same target. Examples of scope names:</p>
 <div class="language-text highlight"><pre><span></span><code>actian:ifx-db.example.com:ol_informix:sales:read
 actian:ifx-db.example.com:ol_informix:sales:write
 actian:ifx-db.example.com:ol_informix:*:read
 </code></pre></div>
-<p>Create each per-target scope as a Keycloak client scope with <strong>Include in token scope</strong> enabled, then attach it to the client used for authentication. For the MCP OAuth login flow, attach the target scopes as <strong>Default</strong> so they are included in issued tokens; the login proxy does not request these target-specific names as optional scopes. In resource-server mode, attach the needed scopes to the calling application's client and request them when obtaining its token. Per-target scopes are grants on the client and may be available to any user of that client, so database privileges and client separation remain important controls.</p>
-<p>Do not use <code>mcp:write</code> to authorize writes to a target URL. Create and grant that target's <code>:write</code> scope instead. <code>mcp:write</code> remains the write scope for the single-database <code>/mcp</code> endpoint. See <a href="../write-support.html#which-scope-authorizes-a-write">Write support</a> and <a href="../multi-target.html#authentication-and-scope-behavior">Multi-Target Deployments</a>.</p>
+<p>Create each per-target scope as a Keycloak client scope with <strong>Include in token scope</strong> enabled. Then attach it to the client used for authentication.</p>
+<p>For the MCP OAuth login flow, attach the target scopes as <strong>Default</strong> so Keycloak includes them in issued tokens. The login proxy does not request these target-specific names as optional scopes.</p>
+<p>In resource-server mode, attach the needed scopes to the calling application's client. Request them when you get its token.</p>
+<p>Per-target scopes are grants on the client. Any user of that client may have them. Database privileges and client separation therefore remain important controls.</p>
+<p>Do not use <code>mcp:write</code> to authorize writes to a target URL. Create and grant that target's <code>:write</code> scope instead. <code>mcp:write</code> is still the write scope for the single-database <code>/mcp</code> endpoint. See <a href="../write-support.html#which-scope-authorizes-a-write">Write support</a> and <a href="../multi-target.html#authentication-and-scope-behavior">Multi-Target Deployments</a>.</p>
 <h2 id="step-6-create-keycloak-users-if-using-user-impersonation">Step 6: Create Keycloak Users (If Using User Impersonation)<a class="headerlink" href="#step-6-create-keycloak-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
 <p>If <code>user_impersonation</code> is <code>true</code>, each Keycloak user contains a matching database account. For more information, see <a href="index.html#user-impersonation">User Impersonation</a>.</p>
 <ol>
@@ -5195,7 +5198,7 @@ actian:ifx-db.example.com:ol_informix:*:read
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:21:48 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

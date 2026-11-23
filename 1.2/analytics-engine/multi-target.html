@@ -4164,10 +4164,10 @@
 </code></pre></div>
 </li>
 <li>
-<p>The server connects only to databases in the registry. A URL that names anything else is never dialled.</p>
+<p>The server connects only to databases in the registry. A URL that names anything else is never contacted.</p>
 </li>
 </ol>
-<p>The URL selects the database. No tool takes a database or target argument; a client chooses a database by connecting to its URL.</p>
+<p>The URL selects the database. No tool takes a database or target argument. A client chooses a database by connecting to its URL.</p>
 <hr />
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <ul>
@@ -4177,7 +4177,7 @@
 </ul>
 <hr />
 <h2 id="configure-the-target-registry">Configure Target Registry<a class="headerlink" href="#configure-the-target-registry" title="Permanent link">&para;</a></h2>
-<p>Add a <code>targets</code> block to <code>conf.json</code>. Values in <code>defaults</code> apply to every entry; each entry in <code>list</code> describes one Analytics Engine installation and the databases it serves.</p>
+<p>Add a <code>targets</code> block to <code>conf.json</code>. Values in <code>defaults</code> apply to every entry. Each entry in <code>list</code> describes one Analytics Engine installation and the databases it serves.</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
@@ -4238,7 +4238,7 @@
 <tr>
 <td style="text-align: left;"><code>host</code></td>
 <td style="text-align: left;">Yes</td>
-<td style="text-align: left;">The database server's host name. It is the first segment of the target's URL and of its scopes, and the address the server connects to. Use a stable DNS name; see <a href="#choosing-the-host-name">Choosing the Host Name</a>.</td>
+<td style="text-align: left;">The database server's host name. It is the first segment of the target's URL and of its scopes, and the address the server connects to. Use a stable DNS name. See <a href="#choosing-the-host-name">Choosing the Host Name</a>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>instance</code></td>
@@ -4292,8 +4292,8 @@
 <li>Objects are not allowed in <code>defaults.databases</code>.</li>
 </ul>
 <h3 id="choosing-the-host-name">Choosing Host Name<a class="headerlink" href="#choosing-the-host-name" title="Permanent link">&para;</a></h3>
-<p>The <code>host</code> value appears in client URLs and in every scope your identity provider grants. If the database later moves to another machine and <code>host</code> is that machine's name, every URL and grant changes with it.</p>
-<p>Give each installation a stable DNS name, such as a CNAME <code>sales-db.example.com</code>, and use that name in <code>host</code>. A move is then a DNS change plus a restart of the MCP Server container. Where you cannot add a DNS record, a hosts entry in the container works the same way:</p>
+<p>The <code>host</code> value appears in client URLs and in every scope the identity provider grants. If the database later moves to another machine and <code>host</code> is that machine's name, every URL and grant changes with it.</p>
+<p>Give each installation a stable DNS name, such as a CNAME <code>sales-db.example.com</code>, and use that name in <code>host</code>. A move is then a DNS change plus a restart of the MCP Server container. If you cannot add a DNS record, add a hosts entry in the container:</p>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--add-host<span class="w"> </span>sales-db.example.com:10.1.2.3<span class="w"> </span>...
 </code></pre></div>
 <hr />
@@ -4379,11 +4379,11 @@
 <ul>
 <li><code>*</code> matches exactly one segment.</li>
 <li>A <code>write</code> scope also grants <code>read</code>.</li>
-<li>There are no deny scopes. What a token can reach is readable from its scopes.</li>
+<li>There are no deny scopes. The scopes in a token show everything it can reach.</li>
 <li>The server logs a warning each time a scope with a wildcard host is used.</li>
 </ul>
-<p>A write on a target URL needs that target's <code>write</code> scope, the server in <code>read-write</code> mode, and, unless disabled, human approval. The <code>mcp:write</code> scope does not authorize writes on a target URL, and does not apply to a deployment with more than one server or database. For details, see <a href="write-support.html">Write Support</a>.</p>
-<p>How to deliver these scopes depends on your identity provider:</p>
+<p>A write on a target URL needs three things: that target's <code>write</code> scope, the server in <code>read-write</code> mode, and human approval (unless disabled). The <code>mcp:write</code> scope does not authorize writes on a target URL. It also does not apply to a deployment with more than one server or database. For details, see <a href="write-support.html">Write Support</a>.</p>
+<p>How you deliver these scopes depends on the identity provider:</p>
 <ul>
 <li><a href="authentication/auth0.html#multi-target-deployments-per-target-permissions">Auth0: Per-Target Permissions</a></li>
 <li><a href="authentication/keycloak.html#multi-target-deployments-per-target-scopes">Keycloak: Per-Target Scopes</a></li>
@@ -4411,10 +4411,10 @@
 </tr>
 </tbody>
 </table>
-<p>The server answers an unknown target and an ungranted one identically, so the responses cannot be used to discover which databases exist. The server log records the actual reason.</p>
+<p>The server answers an unknown target and an ungranted one identically, so callers cannot use the responses to find out which databases exist. The server log records the actual reason.</p>
 <div class="admonition note">
 <p class="admonition-title">Granting a missing scope</p>
-<p>With the server's OAuth login, an MCP client may try to sign in again to obtain the missing scope. That attempt fails with an authorization error that names the missing scope. Grant the scope in your identity provider and sign in again.</p>
+<p>With the server's OAuth login, an MCP client might try to sign in again to get the missing scope. That attempt fails with an authorization error that names the missing scope. Grant the scope in the identity provider and sign in again.</p>
 </div>
 <p>Revoking a scope takes effect when the caller's current token expires. Tokens are verified locally against the identity provider's published keys. Use shorter token lifetimes if this matters.</p>
 <h3 id="running-without-scope-checks-allow_unscoped_reads">Running Without Scope Checks: <code>allow_unscoped_reads</code><a class="headerlink" href="#running-without-scope-checks-allow_unscoped_reads" title="Permanent link">&para;</a></h3>
@@ -4423,7 +4423,7 @@
 <p>This setting turns off per-target scope checks. Any authenticated caller can then read every database in the registry, and a registry with more than one target can start without per-target scopes. Writes on target URLs are refused while it is set.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Use <code>allow_unscoped_reads</code> only temporarily, for example to test routing before scopes are provisioned in your identity provider. The server logs a warning at every startup while it is set.</p>
+<p>Use <code>allow_unscoped_reads</code> only temporarily, for example, to test routing before scopes are set up in the identity provider. The server logs a warning at every startup while it is set.</p>
 </div>
 <hr />
 <h2 id="discover-which-databases-you-can-reach">Discover Accessible Databases<a class="headerlink" href="#discover-which-databases-you-can-reach" title="Permanent link">&para;</a></h2>
@@ -4447,7 +4447,7 @@
 </code></pre></div>
 <ul>
 <li>Only databases the caller can read are listed. When scope checks are off, every registered database is listed.</li>
-<li><code>url</code> is filled in from <code>FASTMCP_SERVER_AUTH_BASE_URL</code>. When it is not configured, <code>url</code> is <code>null</code>; use <code>path</code> with the address you already use for the server.</li>
+<li>The server fills in <code>url</code> from <code>FASTMCP_SERVER_AUTH_BASE_URL</code>. When that setting is not configured, <code>url</code> is <code>null</code>. Use <code>path</code> with the address you already use for the server.</li>
 <li>Credentials are never returned.</li>
 </ul>
 <p>The same data is available as the resource <code>targets://accessible</code>, for applications that read it directly, for example to populate a database picker.</p>
@@ -4467,7 +4467,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <p>Use the <code>url</code> or <code>path</code> values from <code>list_accessible_targets</code>. For the configuration format of other clients, see <a href="../mcp-clients/index.html#client-configuration-examples">Connect MCP Clients</a>.</p>
-<p>A client connected to the server's <code>/mcp</code> URL, with no database in the path, can call <code>list_accessible_targets</code>, but the database tools do not work when the registry has more than one server or database. They return <code>Failed to get database connection or cursor</code> followed by the reason the request must name a target (the server log records the same text). Connect to a database's URL instead.</p>
+<p>A client connected to the server's <code>/mcp</code> URL, with no database in the path, can call <code>list_accessible_targets</code>. The database tools do not work in that case when the registry has more than one server or database. They return <code>Failed to get database connection or cursor</code> followed by the reason the request must name a target. The server log records the same text. Connect to a database's URL instead.</p>
 <hr />
 <h2 id="schema-resources">Schema Resources<a class="headerlink" href="#schema-resources" title="Permanent link">&para;</a></h2>
 <p>In a multi-target deployment, each database has its own schema resource:</p>
@@ -4541,7 +4541,7 @@
 <tr>
 <td style="text-align: left;"><code>breaker_enabled</code></td>
 <td style="text-align: left;"><code>true</code></td>
-<td style="text-align: left;">When an installation repeatedly fails to accept connections, stop trying for a while and refuse its requests immediately, so callers of other installations are not slowed down. After a pause, one request is let through to test whether it has recovered.</td>
+<td style="text-align: left;">Stops trying an installation that repeatedly fails to accept connections, and refuses its requests immediately. This keeps callers of other installations from slowing down. After a pause, the server lets one request through to test whether the installation has recovered.</td>
 </tr>
 </tbody>
 </table>
@@ -4591,7 +4591,7 @@
 <ul>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"/></svg></span> <strong><a href="authentication/index.html">Authentication</a></strong><br />
-  Set up OAuth and per-target scopes with your identity provider.</p>
+  Set up OAuth and per-target scopes with the identity provider.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.67 13.67c-.47.46-1.04.83-1.67 1.06V23H8v-2H5v-3h3v-3.28c-1.74-.62-3-2.26-3-4.22C5 8 7 6 9.5 6h.1c-.47.95-.68 2-.57 3.08-.59.2-1.03.76-1.03 1.42 0 .83.67 1.5 1.5 1.5.23 0 .45-.06.65-.15.64.84 1.52 1.47 2.52 1.82m8.06 5.77-2.76 1.16-.78-1.84-2.76 1.17-1.17-2.77L16.03 16l-1.27-3c-1.85.08-3.65-.95-4.41-2.75-.96-2.29.12-4.93 2.41-5.9.24-.1.5-.17.74-.23C12.84 2.87 11.5 2 10 2 7.79 2 6 3.79 6 6v.24c-.3.26-.6.58-.85.91C5.06 6.78 5 6.4 5 6c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.42-.6 2.67-1.55 3.57.42.43 1.05.56 1.63.31.77-.32 1.12-1.2.8-1.96a1 1 0 0 0-.14-.26C15.9 7.13 16 6.58 16 6c0-.63-.1-1.24-.28-1.81 1.28.36 2.38 1.25 2.93 2.57.76 1.8.24 3.81-1.15 5.05zM13 8.6c.37-.41.65-.89.82-1.42-.54.27-.85.82-.82 1.42"/></svg></span> <strong><a href="authentication/resource-server.html">Resource-Server Mode</a></strong><br />
@@ -4627,7 +4627,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

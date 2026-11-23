@@ -4766,19 +4766,19 @@
 <p>The <code>mcp:write</code> scope permits write statements in general. It does not grant table privileges. With <code>user_impersonation</code> enabled, each write also runs as that user's own database account, so grant the matching <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> privileges in the database as well. See <a href="#creating-the-matching-database-user">Creating the Matching Database User</a>.</p>
 </div>
 <h3 id="step-53-per-target-scopes-resource-server-mode">Step 5.3: Per-Target Scopes (Resource-Server Mode)<a class="headerlink" href="#step-53-per-target-scopes-resource-server-mode" title="Permanent link">&para;</a></h3>
-<p>A server that <a href="../multi-target.html">serves several databases</a> in <a href="index.html#resource-server-mode">resource-server mode</a> checks a grant per URL, <code>actian:{host}:{instance}:{database}:read</code> or <code>:write</code>, instead of <code>mcp:write</code>. Keycloak issues them the same way:</p>
+<p>A server that <a href="../multi-target.html">serves several databases</a> in <a href="index.html#resource-server-mode">resource-server mode</a> checks a grant per URL, <code>actian:{host}:{instance}:{database}:read</code> or <code>:write</code>, instead of <code>mcp:write</code>. Keycloak issues them in the same way:</p>
 <ol>
-<li>For each grant, create a client scope as in Step 5.1 whose <strong>Name</strong> is the grant itself, for example <code>actian:zen16:admin:DEMODATA:read</code>, with <strong>Include in token scope</strong> <code>On</code>.</li>
-<li>Attach each scope as <strong>Optional</strong> to the client that requests the tokens, as in Step 5.2. In resource-server mode that is the calling application's client: the MCP server runs no login of its own.</li>
-<li>Ask for the grants by name in the token request, for example <code>scope=openid actian:zen16:admin:DEMODATA:read</code>. They arrive in the token's <code>scope</code> claim, where the server reads them. The server also reads <code>scp</code> and <code>permissions</code>, so a hardcoded-claim mapper that writes the grants into <code>scp</code> works too.</li>
+<li>For each grant, create a client scope as in Step 5.1. Set <strong>Name</strong> to the grant itself, for example <code>actian:zen16:admin:DEMODATA:read</code>. Set <strong>Include in token scope</strong> to <code>On</code>.</li>
+<li>Attach each scope as <strong>Optional</strong> to the client that requests the tokens, as in Step 5.2. In resource-server mode, that is the calling application's client. The MCP server runs no login of its own.</li>
+<li>Request the grants by name in the token request, for example <code>scope=openid actian:zen16:admin:DEMODATA:read</code>. They arrive in the token's <code>scope</code> claim, where the server reads them. The server also reads <code>scp</code> and <code>permissions</code>, so a hardcoded-claim mapper that writes the grants into <code>scp</code> also works.</li>
 </ol>
-<p>A <code>write</code> grant implies <code>read</code>. A token without the grant for a URL is refused with <code>403 insufficient_scope</code>, and the <code>WWW-Authenticate</code> header names the grant to request. See <a href="index.html#per-target-scopes">Per-Target Scopes</a>.</p>
+<p>A <code>write</code> grant implies <code>read</code>. The server refuses a token without the grant for a URL with <code>403 insufficient_scope</code>. The <code>WWW-Authenticate</code> header names the grant to request. See <a href="index.html#per-target-scopes">Per-Target Scopes</a>.</p>
 <h2 id="step-6-create-keycloak-users-if-using-user-impersonation">Step 6: Create Keycloak Users (If Using User Impersonation)<a class="headerlink" href="#step-6-create-keycloak-users-if-using-user-impersonation" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Not applicable to Zen</p>
 <p>Zen does not support <code>SET SESSION AUTHORIZATION</code>, so user impersonation is unavailable and <code>user_impersonation</code> must be <code>false</code>. Skip this step. See <a href="index.html#user-impersonation">User Impersonation</a>.</p>
 </div>
-<p>Keycloak users are still how people sign in, created as in any realm (<strong>Users</strong> &gt; <strong>Add user</strong>, then <strong>Credentials</strong> &gt; <strong>Set password</strong>). They need no matching Zen account: every URL connects to Zen as the login in its target entry or <code>conn_string</code>, and the token's <code>preferred_username</code> is recorded in the <a href="../index.html#call-log">call log</a> only. Keycloak puts <code>preferred_username</code> into the token when the <code>profile</code> scope is present, which it is by default.</p>
+<p>People still sign in as Keycloak users. Create them as in any realm (<strong>Users</strong> &gt; <strong>Add user</strong>, then <strong>Credentials</strong> &gt; <strong>Set password</strong>). They need no matching Zen account. Every URL connects to Zen as the login in its target entry or <code>conn_string</code>. The server records the token's <code>preferred_username</code> in the <a href="../index.html#call-log">call log</a> only. Keycloak adds <code>preferred_username</code> to the token when the <code>profile</code> scope is present. That scope is present by default.</p>
 <h2 id="step-7-assemble-the-final-configuration">Step 7: Assemble Final Configuration<a class="headerlink" href="#step-7-assemble-the-final-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="mapping-summary">Mapping Summary<a class="headerlink" href="#mapping-summary" title="Permanent link">&para;</a></h3>
 <table>
@@ -4847,7 +4847,7 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code>ServerName</code> in <code>conn_string</code> is the Zen engine as the container reaches it: the Docker host's name or IP (<code>host.docker.internal</code> on Docker Desktop), or the engine container's network alias. Never <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself. A server for <a href="../multi-target.html">several databases</a> adds a <code>targets</code> block; <code>conn_string</code> stays required.</p>
+<p><code>ServerName</code> in <code>conn_string</code> is the Zen engine address as the container reaches it. Use the Docker host's name or IP (<code>host.docker.internal</code> on Docker Desktop), or the engine container's network alias. Never use <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself. A server for <a href="../multi-target.html">several databases</a> adds a <code>targets</code> block. <code>conn_string</code> is still required.</p>
 </div>
 <p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see <a href="index.html#secure-remote-deployments-with-https-and-tls">HTTPS / TLS for Remote Deployments</a>.</p>
 <p>For security best practices (file permissions, <code>.gitignore</code>, secrets management), see <a href="index.html#security-best-practices">Security Best Practices</a>.</p>
@@ -5087,7 +5087,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:21:48 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

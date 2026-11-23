@@ -40,7 +40,7 @@ Writes require `"query_mode": "read-write"` in `conf.json`. In that mode, every 
 | Write grant | `mcp:write` on the unqualified `/mcp` endpoint, or the target's `actian:{host}:{instance}:{database}:write` grant on a target URL. | When OAuth is enabled. A read-only server never requests or requires a write grant. |
 | Human approval | A person must approve the statement in the connected client. | Always, unless disabled with `write_confirmation`. |
 
-The write grant is checked first, so a caller without it is rejected before anyone is asked to approve anything. A write counts as not approved if the person declines, does not answer before the timeout, or the client cannot display the prompt at all.
+The server checks the write grant first. It rejects a caller without the grant before anyone is asked to approve anything. A write counts as not approved if the person declines, does not answer before the timeout, or the client cannot display the prompt.
 
 ```mermaid
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
@@ -83,7 +83,7 @@ The required write grant depends on the URL the client uses:
 | The unqualified `/mcp` URL in a single-database deployment | `mcp:write` |
 | A target URL, `/mcp/{host}/{instance}/{database}`, in a multi-target deployment | `actian:{host}:{instance}:{database}:write` for that database. `mcp:write` does not authorize writes to a target URL. |
 
-A target `:write` grant also permits reads on that target. `query_mode` must still be `read-write`, and human approval remains required unless `write_confirmation` is disabled. See [Multi-Target Deployments](multi-target.md#authentication-and-scope-behavior) and the provider-specific setup for [Auth0](authentication/auth0.md#multi-target-deployments-per-target-permissions) or [Keycloak](authentication/keycloak.md#multi-target-deployments-per-target-scopes).
+A target `:write` grant also permits reads on that target. `query_mode` must still be `read-write`. Human approval is still required unless you disable `write_confirmation`. See [Multi-Target Deployments](multi-target.md#authentication-and-scope-behavior) and the provider-specific setup for [Auth0](authentication/auth0.md#multi-target-deployments-per-target-permissions) or [Keycloak](authentication/keycloak.md#multi-target-deployments-per-target-scopes).
 
 ## Skipping Approval Prompt {#skipping-the-approval-prompt}
 
@@ -99,7 +99,7 @@ Some clients cannot display the approval prompt. For those deployments, set `wri
 !!! warning "This removes human oversight of every write"
     With `write_confirmation` set to `false`, the server runs `INSERT`, `UPDATE`, and `DELETE` statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and unattended writes by the AI agent are acceptable.
 
-    The applicable write-grant check still applies. Disabling the prompt does not grant write access to callers that lack `mcp:write` on the single-database endpoint or the target's `:write` grant on a multi-target URL.
+    The write-grant check still applies. Disabling the prompt does not give write access to callers that lack `mcp:write` on the single-database endpoint or the target's `:write` grant on a multi-target URL.
 
     This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See [Extensions](extensions/index.md#extension-security-controls).
 

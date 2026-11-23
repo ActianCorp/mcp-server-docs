@@ -10,7 +10,7 @@ This guide explains how to create and configure a Keycloak Realm and Client for 
 !!! note "Manual client registration"
     This guide focuses on manually created clients. Dynamic Client Registration (DCR) is not covered in this documentation.
 
-This guide shows how to obtain the issuer URL needed for `quarkus.oidc.auth-server-url`, as well as the audience value for `quarkus.oidc.token.audience` and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
+This guide shows how to get these values: the issuer URL for `quarkus.oidc.auth-server-url`, the audience value for `quarkus.oidc.token.audience`, and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
 
 !!! note "Keycloak version"
     This guide applies to **Keycloak 22 and later** (Quarkus-based). Versions older than version 17 (WildFly-based) use a different admin interface and URL structure. [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application) requires Keycloak 26.2 or later, the first version with standard token exchange.
@@ -286,10 +286,10 @@ quarkus.oidc.resource-metadata.scopes=openid,profile,email
 
 ## Token Exchange for a Calling Application
 
-Use this section for an application that has already signed the user in and calls this server for that user. For the concept, see [Calling Applications](../index.md#calling-applications). The recipe uses Keycloak 26.2 standard token exchange (RFC 8693).
+Use this section for an application that has already signed the user in and calls this server for that user. For the concept, see [Calling Applications](../index.md#calling-applications). The steps use Keycloak 26.2 standard token exchange (RFC 8693).
 
 1. **Create a client for the audience.** Create a client whose Client ID equals the audience value, `nsql-mcp`, with every flow off: **Client authentication** `Off`, and **Standard flow**, **Direct access grants** and **Service accounts roles** unchecked. The client exists only so that the `audience` parameter of the exchange request can name it.
-2. **Configure the calling application's client.** For the calling application's client (example Client ID `actian-agentic`), set **Client authentication** to `On`, because only confidential clients may exchange tokens, and check **Standard Token Exchange**.
+2. **Configure the calling application's client.** For the calling application's client (example Client ID `actian-agentic`), set **Client authentication** to `On`, because only confidential clients may exchange tokens, and select **Standard Token Exchange**.
 3. **Attach the scopes as Optional.** On the calling client's **Client scopes** tab, add `nsql-mcp-audience` and `mcp:write` as **Optional**.
 
     !!! warning "Optional, not Default"
@@ -299,7 +299,7 @@ Use this section for an application that has already signed the user in and call
         invalid_scope: Invalid scopes: nsql-mcp-audience mcp:write
         ```
 
-4. **Send the exchange request.** The calling application posts the user's existing access token to the realm's token endpoint, `<issuer-url>/protocol/openid-connect/token`, authenticating with its client ID and secret and sending these form parameters:
+4. **Send the exchange request.** The calling application sends the user's existing access token to the realm's token endpoint, `<issuer-url>/protocol/openid-connect/token`. It authenticates with its client ID and secret and sends these form parameters:
 
     | Parameter | Value |
     |---|---|
@@ -309,7 +309,7 @@ Use this section for an application that has already signed the user in and call
     | `audience` | `nsql-mcp` |
     | `scope` | `nsql-mcp-audience mcp:write` |
 
-5. **Check the result.** In the returned token, `aud` is exactly `nsql-mcp` (the original audience, for example `account`, is dropped), `azp` is the calling client, and the user is the same (`preferred_username`). Omit `mcp:write` from `scope` to get a read-only token.
+5. **Check the result.** In the returned token, `aud` is exactly `nsql-mcp`. The original audience, for example `account`, is dropped. The `azp` claim is the calling client, and the user is the same (`preferred_username`). To get a read-only token, omit `mcp:write` from `scope`.
 
 The server validates the audience, not how the token was obtained.
 

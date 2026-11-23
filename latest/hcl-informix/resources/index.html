@@ -3769,7 +3769,7 @@
 </tr>
 <tr>
 <td><a href="#multi-target-deployments"><code>resource://database/{host}/{instance}/{database}/schema</code></a></td>
-<td>In a multi-target deployment, the schema of one target database. Same output as <code>resource://database/schema</code>.</td>
+<td>In a multi-target deployment, the schema of one target database. The output is the same as <code>resource://database/schema</code>.</td>
 </tr>
 <tr>
 <td><a href="#targetsaccessible"><code>targets://accessible</code></a></td>
@@ -3827,11 +3827,11 @@
 <p>For example, <code>resource://database/sales-db.example.com/II/salesmart/schema</code>. The output is the same as for <code>resource://database/schema</code>.</p>
 <ul>
 <li>A session connected to a target's URL lists only that target's schema resource.</li>
-<li>Reading another target's schema URI over that session returns "resource not found", the same as a URI that does not exist.</li>
-<li>After targets are added or removed through <code>targets.d/</code>, list resources again to see the change.</li>
+<li>Reading another target's schema URI in that session returns "resource not found", the same as a URI that does not exist.</li>
+<li>After you add or remove targets through <code>targets.d/</code>, list the resources again to see the change.</li>
 </ul>
 <h2 id="targetsaccessible">targets://accessible<a class="headerlink" href="#targetsaccessible" title="Permanent link">&para;</a></h2>
-<p>In a multi-target deployment, this resource returns the databases the caller's token can read, with the URL path to connect to each one. It returns the same data as the <code>list_accessible_targets</code> tool. For the output format, see <a href="../multi-target.html#discover-which-databases-you-can-reach">Discover Which Databases You Can Reach</a>.</p>
+<p>In a multi-target deployment, this resource returns the databases that the caller's token can read, with the URL path for each one. It returns the same data as the <code>list_accessible_targets</code> tool. For the output format, see <a href="../multi-target.html#discover-which-databases-you-can-reach">Discover Which Databases You Can Reach</a>.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -3865,7 +3865,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 18:00:03 UTC">November 18, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

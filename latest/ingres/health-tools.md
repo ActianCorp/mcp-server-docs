@@ -10,7 +10,7 @@ The Actian MCP Server for Actian Ingres includes seven built-in tools that repor
 The tools read the Ingres Management Architecture database (`imadb`) and the connected database's own system catalogs. They are available only on Actian Ingres. The Actian Analytics Engine server does not provide them.
 
 !!! note "Read-only"
-    Every health tool only reads. No health tool changes database state, takes a checkpoint, runs `optimizedb`, or ends a session. Remediation remains a task for Ingres tooling or for an approved write. All seven tools are advertised to clients as read-only. See [Tool annotations](tools/index.md#tool-annotations).
+    Every health tool only reads. No health tool changes database state, takes a checkpoint, runs `optimizedb`, or ends a session. To fix a problem, use Ingres tooling or an approved write. All seven tools are advertised to clients as read-only. See [Tool annotations](tools/index.md#tool-annotations).
 
 ## Available Tools
 
@@ -50,7 +50,7 @@ Every health tool returns the same JSON envelope.
 | `note` | `string` | A one-sentence finding, present only when a metric reached `warn` or `crit` or the tool has a finding of its own. A healthy result has no `note`. |
 | `raw` | `object` | The catalog rows behind the metrics, each as `{"columns", "rows", "row_count"}`. Present when at least one block was read. |
 
-Each entry in `metrics` carries its value together with the threshold that judged it, so a client can act on the result without looking anything up:
+Each entry in `metrics` includes its value and the threshold that judged it. A client can act on the result without looking anything up:
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -73,7 +73,7 @@ Each entry in `metrics` carries its value together with the threshold that judge
 
 Thresholds are inclusive: a value equal to `warn` is reported as `warn`. The overall `status` ranks `crit` above `warn`, `warn` above `ok`, and `ok` above `info`, so a result whose metrics are all informational reports `info`.
 
-Many values are reported as informational on purpose. Cumulative counters, such as deadlocks since server start, only ever increase, so a fixed threshold on them would always eventually warn. Capacity figures are reported as raw counts beside their limits rather than as percentages, so you can compare them against the definition you use.
+Many values are reported as informational on purpose. Cumulative counters, such as deadlocks since server start, only increase. A fixed threshold on them would eventually always warn. The tools report capacity figures as raw counts beside their limits, not as percentages. You can then compare them against the definition you use.
 
 ### Partial Results
 
@@ -229,11 +229,11 @@ Reports the queries running in the connected database at the moment of the call,
 | `active_sessions` | Number of sessions you can see that have a query in progress. `null` if the session read failed. |
 | `query_elapsed_seconds[<session_id>]` | Whole seconds the session's current query has been running. The note gives the user, database, and session activity. |
 
-The tool lists the 10 longest-running queries individually. `active_sessions` gives the total, so any sessions beyond the first 10 are counted rather than silently omitted. `raw.sessions` contains the same 10 rows, with the columns `session_id`, `effective_user`, `db_name`, `session_activity`, `server_pid`, and `elapsed_seconds`.
+The tool lists the 10 longest-running queries individually. `active_sessions` gives the total, so sessions beyond the first 10 are still counted. `raw.sessions` contains the same 10 rows, with the columns `session_id`, `effective_user`, `db_name`, `session_activity`, `server_pid`, and `elapsed_seconds`.
 
 Consider the following when you read the result:
 
-- **No threshold.** How long is too long depends on your workload, so all metrics are informational and a successful call reports `info`. The call reports `crit` only when the session read itself fails.
+- **No threshold.** How long is too long depends on the workload, so all metrics are informational and a successful call reports `info`. The call reports `crit` only when the session read itself fails.
 - **A snapshot, not a history.** A query that has already finished does not appear.
 - **No statement text.** The SQL text can contain literal values, so the tool never returns it. To read a statement, take its `session_id` to `iimonitor`.
 - **Some statements have no age.** Ingres records a start time for DML only. A statement without one, such as DDL, is still counted and listed, but its elapsed time is `null` and its note explains why.
@@ -263,7 +263,7 @@ Reports buffer cache activity and log writer pressure.
 
 **Scope:** installation
 
-All metrics are informational. Hit and read counts are published as raw cumulative counts; no hit ratio is calculated. Page sizes that have served no reads and no hits are omitted.
+All metrics are informational. The tool reports hit and read counts as raw cumulative counts and calculates no hit ratio. It omits page sizes that have served no reads and no hits.
 
 | Metric | Description |
 |--------|-------------|
@@ -377,7 +377,7 @@ The following result is illustrative and omits `raw`.
 
 ## Configuring Thresholds
 
-The default thresholds suit most installations. To change them, add a `health` block to `conf.json`. Each threshold is an object with a required `warn` and an optional `crit`. You only need to list the thresholds you want to change; the others keep their defaults.
+The default thresholds suit most installations. To change them, add a `health` block to `conf.json`. Each threshold is an object with a required `warn` and an optional `crit`. List only the thresholds you want to change. The others keep their defaults.
 
 ```json
 {
@@ -412,7 +412,7 @@ A metric reaches `warn` when its value is greater than or equal to `warn`, and `
 |-----|------|---------|-------------|
 | `query_timeout` | number | `30` | Maximum seconds for each health query. `0` means no limit. Must be zero or a positive number. |
 
-The limit ensures that a health tool returns even when the Ingres server accepts connections but stops answering, which is often the situation in which you need the health tools most. A query that exceeds the limit is reported in `unavailable`.
+The limit lets a health tool return even when the Ingres server accepts connections but stops answering. That is often when you need the health tools most. A query that exceeds the limit is reported in `unavailable`.
 
 ### Validation
 
@@ -436,7 +436,7 @@ Each health call reads from two places:
 
 On the `imadb` connection, the server requests that reads take no read locks, so a health read does not block other sessions. If the Ingres server refuses that setting, the read still runs.
 
-The identity used must be able to connect to `imadb` and to read the relevant Ingres catalogs. If it cannot, the affected parts appear in `unavailable` with the database error, and the tool still reports everything else. Catalog visibility can also be narrowed by privilege: for example, `long_running_queries` counts only the sessions the user is permitted to see.
+The identity used must be able to connect to `imadb` and to read the relevant Ingres catalogs. If it cannot, the affected parts appear in `unavailable` with the database error, and the tool still reports everything else. Privileges can also limit what a user sees. For example, `long_running_queries` counts only the sessions the user is permitted to see.
 
 ## Next Steps
 

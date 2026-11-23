@@ -3774,7 +3774,7 @@
 
 
 <h1 id="serving-multiple-databases-from-one-server">Serving Multiple Databases from One Server<a class="headerlink" href="#serving-multiple-databases-from-one-server" title="Permanent link">&para;</a></h1>
-<p>Without a <code>targets</code> block, one container serves one database at one URL, <code>/mcp</code>. With a <code>targets</code> block, the same container serves a list of entries (engine, persona, database), each at its own URL and each with its own connection to Zen. Nothing else changes: same image, same <code>docker run</code> command, one more block in <code>conf.json</code>.</p>
+<p>Without a <code>targets</code> block, one container serves one database at one URL, <code>/mcp</code>. With a <code>targets</code> block, the same container serves a list of entries (engine, persona, database). Each entry has its own URL and its own connection to Zen. Nothing else changes. You use the same image and the same <code>docker run</code> command, and add one block to <code>conf.json</code>.</p>
 <h2 id="how-an-entry-becomes-a-url">How an Entry Becomes a URL<a class="headerlink" href="#how-an-entry-becomes-a-url" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code>{"host": "zen16", "instance": "admin", "databases": ["DEMODATA"]}
           |                   |                      |
@@ -3793,11 +3793,11 @@ http://&lt;mcp-host&gt;:8000/mcp/zen16/admin/DEMODATA/mcp
 <tbody>
 <tr>
 <td><code>host</code></td>
-<td>The Zen engine as the container reaches it — the same value you would put after <code>ServerName=</code> in a connection string. It is also the first URL segment.</td>
+<td>The Zen engine as the container reaches it. This is the same value you put after <code>ServerName=</code> in a connection string. It is also the first URL segment.</td>
 </tr>
 <tr>
 <td><code>instance</code></td>
-<td>A persona label. Zen has no installation code, so this is a word you choose; it never reaches the engine and only names the URL.</td>
+<td>A persona label. Zen has no installation code, so you choose a word. It never reaches the engine. It only names the URL.</td>
 </tr>
 <tr>
 <td><code>databases</code></td>
@@ -3805,10 +3805,10 @@ http://&lt;mcp-host&gt;:8000/mcp/zen16/admin/DEMODATA/mcp
 </tr>
 </tbody>
 </table>
-<p>The first <code>mcp</code> in the path is the configurable prefix (<code>target_path_prefix</code>, default <code>mcp</code>); the last <code>mcp</code> is the endpoint. The <code>list_accessible_targets</code> tool returns the path of every entry the caller may use. See <a href="tools/index.html#list_accessible_targets">Tools</a>.</p>
+<p>The first <code>mcp</code> in the path is the configurable prefix (<code>target_path_prefix</code>, default <code>mcp</code>). The last <code>mcp</code> is the endpoint. The <code>list_accessible_targets</code> tool returns the path of every entry that the caller can use. See <a href="tools/index.html#list_accessible_targets">Tools</a>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Use a name for <code>host</code> that survives a move</p>
-<p><code>host</code> is the engine address, the first URL segment and part of every per-target scope (<code>actian:{host}:{instance}:{database}:read</code>). If it is the machine name, moving the engine to another machine changes every client URL and every grant. Give the engine a stable Domain Name System (DNS) name instead, a CNAME such as <code>sales-db.corp</code>, or a hosts entry in the container (<code>docker run --add-host sales-db:10.1.2.3 ...</code>), and put that name in <code>host</code>. A move is then a DNS change and a restart of the MCP container. An entry's <code>alias</code> is only shown by <code>list_accessible_targets</code>; it does not change the URL.</p>
+<p><code>host</code> is the engine address, the first URL segment, and part of every per-target scope (<code>actian:{host}:{instance}:{database}:read</code>). If <code>host</code> is the machine name, moving the engine to another machine changes every client URL and every grant. Instead, give the engine a stable Domain Name System (DNS) name, such as a CNAME like <code>sales-db.corp</code>. You can also use a hosts entry in the container (<code>docker run --add-host sales-db:10.1.2.3 ...</code>). Put that name in <code>host</code>. A move then needs only a DNS change and a restart of the MCP container. An entry's <code>alias</code> appears only in <code>list_accessible_targets</code>. It does not change the URL.</p>
 </div>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>Three entries: a read-only persona and an admin persona on <code>DEMODATA</code>, and an application persona on <code>DEFAULTDB</code>, all on the engine <code>zen16</code>.</p>
@@ -3882,13 +3882,13 @@ http://&lt;mcp-host&gt;:8000/mcp/zen16/admin/DEMODATA/mcp
 <td><code>targets.defaults</code></td>
 <td><code>object</code></td>
 <td>—</td>
-<td>Values shared by every entry. <code>driver</code> and <code>port</code> as in the connection string (<code>port</code> defaults to <code>1583</code>). <code>username</code> and <code>password</code> must be non-empty — Zen ignores them when database security is off, so a placeholder is fine. <code>max_connections</code> is required by the framework and not applied to Zen, see <a href="#limits">Limits</a>.</td>
+<td>Values shared by every entry. <code>driver</code> and <code>port</code> as in the connection string (<code>port</code> defaults to <code>1583</code>). <code>username</code> and <code>password</code> must be non-empty. Zen ignores them when database security is off, so a placeholder is fine. The framework requires <code>max_connections</code>, but Zen does not apply it. See <a href="#limits">Limits</a>.</td>
 </tr>
 <tr>
 <td><code>targets.list</code></td>
 <td><code>array</code></td>
 <td>—</td>
-<td>One object per engine and persona. <code>host</code>, <code>instance</code> and <code>databases</code> are mandatory; any key from <code>defaults</code> may be repeated to override it for that entry, for example a <code>username</code> and <code>password</code> for an engine with Zen security on.</td>
+<td>One object per engine and persona. <code>host</code>, <code>instance</code>, and <code>databases</code> are mandatory. To override a key from <code>defaults</code> for one entry, repeat it in that entry. For example, set a <code>username</code> and <code>password</code> for an engine with Zen security on.</td>
 </tr>
 <tr>
 <td><code>zen_readonly_personas</code></td>
@@ -3900,13 +3900,13 @@ http://&lt;mcp-host&gt;:8000/mcp/zen16/admin/DEMODATA/mcp
 <td><code>allow_unscoped_reads</code></td>
 <td><code>boolean</code></td>
 <td><code>false</code></td>
-<td>Lets a caller without a per-target grant read. Required to run more than one target without authentication; with authentication it disables per-target enforcement and is for test setups only. See <a href="authentication/index.html#per-target-scopes">Authentication</a>.</td>
+<td>Lets a caller without a per-target grant read. You need it to run more than one target without authentication. With authentication, it disables per-target enforcement, so use it only in test setups. See <a href="authentication/index.html#per-target-scopes">Authentication</a>.</td>
 </tr>
 <tr>
 <td><code>targets_dir</code></td>
 <td><code>string</code></td>
 <td><code>/app/targets.d</code></td>
-<td>Directory of additional target files, see <a href="#adding-a-database-without-a-restart">Adding a Database Without a Restart</a>. The directory must exist when the server starts.</td>
+<td>Directory of additional target files. See <a href="#adding-a-database-without-a-restart">Adding a Database Without a Restart</a>. The directory must exist when the server starts.</td>
 </tr>
 <tr>
 <td><code>targets_reload_interval</code></td>
@@ -3924,45 +3924,45 @@ http://&lt;mcp-host&gt;:8000/mcp/zen16/admin/DEMODATA/mcp
 </table>
 <div class="admonition note">
 <p class="admonition-title"><code>conn_string</code> stays required</p>
-<p>The server still opens the connection described by <code>conn_string</code> (or <code>database</code>) at start, as it did before. The targets add their own connections on top. Point it at any database the engine has.</p>
+<p>At start, the server still opens the connection that <code>conn_string</code> (or <code>database</code>) describes, as before. The targets add their own connections. Point <code>conn_string</code> at any database that the engine has.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">More than one target needs authentication or the escape hatch</p>
-<p>Several targets without an identity provider and without <code>allow_unscoped_reads: true</code> stop the server at start: <code>N targets are configured, but per-target scope enforcement ... is not active</code>. With the hatch, anyone who can reach a URL may use it, exactly as a single-database server without Open Authorization (OAuth). For a deployment with real users, configure <a href="authentication/index.html#resource-server-mode">resource-server mode</a> and leave <code>allow_unscoped_reads</code> out.</p>
+<p>Several targets without an identity provider and without <code>allow_unscoped_reads: true</code> stop the server at start: <code>N targets are configured, but per-target scope enforcement ... is not active</code>. With the escape hatch, anyone who can reach a URL can use it, as on a single-database server without Open Authorization (OAuth). For a deployment with real users, configure <a href="authentication/index.html#resource-server-mode">resource-server mode</a> and leave out <code>allow_unscoped_reads</code>.</p>
 </div>
 <h2 id="read-only-personas">Read-Only Personas<a class="headerlink" href="#read-only-personas" title="Permanent link">&para;</a></h2>
-<p>A persona listed in <code>zen_readonly_personas</code> is opened read-only even when <code>query_mode</code> is <code>read-write</code>: every connection of that target carries the Open Database Connectivity (ODBC) attribute <code>SQL_ATTR_ACCESS_MODE=READ_ONLY</code> and <code>OPENMODE=1</code> in its connection string. The server refuses the write tools on that URL before anything reaches Zen: <code>target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL</code>. The engine's own <code>Access denied to a READ-ONLY data source</code> is the backstop for a statement that reaches the connection anyway. The word <code>readonly</code> is not special: <code>zen_readonly_personas: ["analyst"]</code> with <code>"instance": "analyst"</code> works the same.</p>
-<p>What a read-only persona does not do:</p>
+<p>A persona listed in <code>zen_readonly_personas</code> opens read-only, even when <code>query_mode</code> is <code>read-write</code>. Every connection of that target carries the Open Database Connectivity (ODBC) attribute <code>SQL_ATTR_ACCESS_MODE=READ_ONLY</code> and <code>OPENMODE=1</code> in its connection string. The server refuses the write tools on that URL before anything reaches Zen: <code>target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL</code>. If a statement reaches the connection anyway, the engine's own <code>Access denied to a READ-ONLY data source</code> is the backstop. The word <code>readonly</code> is not special. <code>zen_readonly_personas: ["analyst"]</code> with <code>"instance": "analyst"</code> works the same way.</p>
+<p>A read-only persona does not do the following:</p>
 <ul>
-<li>It does not hide the write tools. Under multi-target the server publishes one tool list for all URLs, so <code>execute_write_query</code> is listed on the read-only URL as well; the server refuses it.</li>
-<li>It does not give rights finer than read or write. For that, use Zen logins: with Zen security on, give each entry its own <code>username</code> and <code>password</code>, and the engine enforces that user's permissions. A <code>SELECT</code> on a table the login may not see fails with a Zen permission error.</li>
+<li>It does not hide the write tools. In a multi-target deployment, the server publishes one tool list for all URLs. <code>execute_write_query</code> is therefore listed on the read-only URL as well, and the server refuses it.</li>
+<li>It does not give rights finer than read or write. For finer rights, use Zen logins. With Zen security on, give each entry its own <code>username</code> and <code>password</code>. The engine then enforces that user's permissions. A <code>SELECT</code> on a table that the login cannot see fails with a Zen permission error.</li>
 </ul>
 <h2 id="adding-a-database-without-a-restart">Adding a Database Without a Restart<a class="headerlink" href="#adding-a-database-without-a-restart" title="Permanent link">&para;</a></h2>
-<p>Mount a directory at <code>/app/targets.d</code> when you start the container (<code>-v /path/to/targets.d:/app/targets.d</code>). Its presence switches the feature on. Later, drop a file into it:</p>
+<p>Mount a directory at <code>/app/targets.d</code> when you start the container (<code>-v /path/to/targets.d:/app/targets.d</code>). The mounted directory turns the feature on. Later, add a file to it:</p>
 <div class="language-json highlight"><span class="filename">targets.d/hr.json</span><pre><span></span><code><span class="p">{</span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zen16"</span><span class="p">,</span><span class="w"> </span><span class="nt">"instance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hr"</span><span class="p">,</span><span class="w"> </span><span class="nt">"databases"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"DEFAULTDB"</span><span class="p">]}</span>
 </code></pre></div>
-<p>Within <code>targets_reload_interval</code> seconds the URL <code>/mcp/zen16/hr/DEFAULTDB/mcp</code> answers. Delete the file and the URL stops answering (<code>404</code> without an identity provider; with one, the same <code>403 insufficient_scope</code> as for a target the caller has no grant for, and <code>401</code> without a token) and its connection to Zen closes. A file may hold one entry or a JSON list of entries; <code>targets.defaults</code> applies to them too. The server logs a file that is not valid JSON, and the registry keeps its previous contents.</p>
+<p>Within <code>targets_reload_interval</code> seconds, the URL <code>/mcp/zen16/hr/DEFAULTDB/mcp</code> answers. When you delete the file, the URL stops answering and its connection to Zen closes. Without an identity provider, the URL returns <code>404</code>. With one, it returns the same <code>403 insufficient_scope</code> as for a target that the caller has no grant for, and <code>401</code> without a token. A file can hold one entry or a JSON list of entries. <code>targets.defaults</code> applies to them too. The server logs a file that is not valid JSON, and the registry keeps its previous contents.</p>
 <h2 id="what-the-agent-sees">What the Agent Sees<a class="headerlink" href="#what-the-agent-sees" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Each URL has its own instructions text (the mode, and a summary of the tables of that database) and its own <code>resource://database/schema</code> content. An agent connected to <code>app/DEFAULTDB</code> is told about DEFAULTDB, not about DEMODATA.</li>
-<li><code>list_accessible_targets</code> returns every entry with its <code>path</code>, and a full <code>url</code> when <code>FASTMCP_SERVER_AUTH_BASE_URL</code> is configured. With authentication on, the list contains only the targets the caller's token grants; call it on the plain <code>/mcp</code> URL, since a token without a grant is refused on every target URL.</li>
-<li>No switching databases inside one session: <code>database_manage</code> with <code>action=switch</code> is refused on a routed URL. To work with another database, connect to its URL.</li>
-<li>The <a href="index.html#call-log">call log</a> carries the target of each call as <code>host/instance/database</code>, so calls through different URLs are told apart afterwards.</li>
+<li>Each URL has its own instructions text (the mode and a summary of the tables in that database) and its own <code>resource://database/schema</code> content. An agent connected to <code>app/DEFAULTDB</code> learns about DEFAULTDB, not DEMODATA.</li>
+<li><code>list_accessible_targets</code> returns every entry with its <code>path</code>. It also returns a full <code>url</code> when <code>FASTMCP_SERVER_AUTH_BASE_URL</code> is configured. With authentication on, the list contains only the targets that the caller's token grants. Call it on the plain <code>/mcp</code> URL, because the server refuses a token without a grant on every target URL.</li>
+<li>You cannot switch databases inside one session. The server refuses <code>database_manage</code> with <code>action=switch</code> on a routed URL. To work with another database, connect to its URL.</li>
+<li>The <a href="index.html#call-log">call log</a> records the target of each call as <code>host/instance/database</code>, so you can tell apart calls made through different URLs.</li>
 </ul>
 <h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Zen keeps its single-database connection model per target: one connection set per entry, with one ODBC handle per worker thread. The framework's pool settings <code>max_connections</code>, <code>breaker_enabled</code> and <code>pool_idle_ttl</code> are accepted in the configuration but not applied to Zen.</li>
-<li>Several URLs on one database are several Zen sessions. <code>DROP TABLE</code> through <code>admin/DEMODATA</code> can fail with Zen status <code>-1304</code> while the <code>readonly</code> session has the table open, as with any two Zen clients.</li>
-<li>Zen never sees the person behind the agent: every URL connects as the login in its entry. With authentication on, the token's user name goes to the call log, see <a href="authentication/index.html#resource-server-mode">Authentication</a>.</li>
+<li>Zen keeps its single-database connection model for each target: one connection set per entry, with one ODBC handle per worker thread. The configuration accepts the framework's pool settings <code>max_connections</code>, <code>breaker_enabled</code>, and <code>pool_idle_ttl</code>, but Zen does not apply them.</li>
+<li>Several URLs on one database mean several Zen sessions. <code>DROP TABLE</code> through <code>admin/DEMODATA</code> can fail with Zen status <code>-1304</code> while the <code>readonly</code> session has the table open. This is the same as with any two Zen clients.</li>
+<li>Zen never sees the person behind the agent. Every URL connects as the login in its entry. With authentication on, the token's user name goes to the call log. See <a href="authentication/index.html#resource-server-mode">Authentication</a>.</li>
 </ul>
 <h2 id="verifying-a-setup">Verifying a Setup<a class="headerlink" href="#verifying-a-setup" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Connect an agent to each URL and call <code>list_tables</code>; the lists must differ between databases.</li>
-<li>On the read-only URL ask for an <code>INSERT</code>; expect <code>target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL</code>.</li>
-<li>On the admin URL run the same <code>INSERT</code>; expect the approval prompt, then success.</li>
-<li>Read <code>resource://database/schema</code> on two URLs; the content must follow the URL.</li>
-<li>Call a tool on the plain <code>/mcp</code> URL; expect "no target bound to this request".</li>
-<li>Drop a file into <code>targets.d</code>; the new URL must answer without a restart. Remove it; the URL must stop answering (<code>404</code>, or <code>403</code> with an identity provider).</li>
+<li>Connect an agent to each URL and call <code>list_tables</code>. The lists must differ between databases.</li>
+<li>On the read-only URL, ask for an <code>INSERT</code>. Expect <code>target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL</code>.</li>
+<li>On the admin URL, run the same <code>INSERT</code>. Expect the approval prompt, then success.</li>
+<li>Read <code>resource://database/schema</code> on two URLs. The content must follow the URL.</li>
+<li>Call a tool on the plain <code>/mcp</code> URL. Expect "no target bound to this request".</li>
+<li>Add a file to <code>targets.d</code>. The new URL must answer without a restart. Remove the file. The URL must stop answering (<code>404</code>, or <code>403</code> with an identity provider).</li>
 </ol>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
@@ -3973,11 +3973,11 @@ http://&lt;mcp-host&gt;:8000/mcp/zen16/admin/DEMODATA/mcp
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 19h1a1 1 0 0 1 1 1h7v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-7zM4 3h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1m5 4h1V5H9zm0 8h1v-2H9zM5 5v2h2V5zm0 8v2h2v-2z"/></svg></span> <strong><a href="deployment.html">Deployment Scenarios</a></strong>
-  Where the engine, the server and the agents sit, and which settings each layout needs.</p>
+  Where the engine, the server, and the agents run, and which settings each layout needs.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.71 20.29-1.42 1.42a1 1 0 0 1-1.41 0L7 9.85A3.8 3.8 0 0 1 6 10a4 4 0 0 1-3.78-5.3l2.54 2.54.53-.53 1.42-1.42.53-.53L4.7 2.22A4 4 0 0 1 10 6a3.8 3.8 0 0 1-.15 1l11.86 11.88a1 1 0 0 1 0 1.41M2.29 18.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0l5.47-5.46-2.83-2.83M20 2l-4 2v2l-2.17 2.17 2 2L18 8h2l2-4Z"/></svg></span> <strong><a href="tools/index.html#list_accessible_targets">Tools</a></strong>
-  How an agent discovers the URLs it may use.</p>
+  How an agent finds the URLs that it can use.</p>
 </li>
 </ul>
 </div>
@@ -4001,7 +4001,7 @@ http://&lt;mcp-host&gt;:8000/mcp/zen16/admin/DEMODATA/mcp
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

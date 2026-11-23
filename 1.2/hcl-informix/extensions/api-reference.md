@@ -25,7 +25,7 @@ Call these functions from the extension module.
 |--------|-----------|---------|
 | `get_current_user` | `get_current_user() -> str \| None` | The authenticated username, or `None` when OAuth or impersonation is off. Treat `None` as unknown, not as an authorization decision. |
 | `get_current_scopes` | `get_current_scopes() -> frozenset[str]` | The scopes on the current request's access token, as exact strings. Empty unless OAuth is enabled and the server is in read-write mode. |
-| `has_scope` | `has_scope(scope: str) -> bool` | `True` if the current token carries `scope`, matched exactly. Same availability as `get_current_scopes()`. Use it for custom checks. The applicable write grant (`mcp:write` for a single-database deployment or the target's per-target `:write` grant) is enforced automatically. |
+| `has_scope` | `has_scope(scope: str) -> bool` | `True` if the current token carries `scope`, matched exactly. Same availability as `get_current_scopes()`. Use it for custom checks. The server enforces the applicable write grant automatically: `mcp:write` for a single-database deployment, or the target's per-target `:write` grant. |
 | `get_database` | `get_database() -> DatabaseAccess` | The database facade. |
 | `request_write_confirmation` | `await request_write_confirmation(description: str, details: dict \| None = None, timeout: int = 60) -> bool` | `True` only on explicit approval. A decline, cancel, timeout, or missing context returns `False`. `description` and `details` are shown to the user. |
 
@@ -47,7 +47,7 @@ The `db.transaction()` method returns this object.
 | Member | Signature | Behavior |
 |--------|-----------|----------|
 | Context manager | `async with db.transaction() as tx:` | Commits on a clean exit, rolls back on an exception, and always releases the connection. |
-| `begin` | `await tx.begin() -> Transaction` | Starts the transaction explicitly. The context manager calls this automatically. Raises if the server is not in read-write mode, if the caller's token lacks the applicable write grant (`mcp:write` or the target's per-target `:write` grant), or if the authenticated user cannot be resolved when impersonation is required. |
+| `begin` | `await tx.begin() -> Transaction` | Starts the transaction explicitly. The context manager calls this automatically. Raises if the server is not in read-write mode, if the caller's token lacks the applicable write grant (`mcp:write` or the target's per-target `:write` grant), or if impersonation is required and the server cannot resolve the authenticated user. |
 | `query` | `await tx.query(sql, params=None) -> dict` | A `SELECT` on the pinned connection. Sees the transaction's own uncommitted writes. Raises on failure. |
 | `write` | `await tx.write(sql, params=None) -> dict` | Data Manipulation Language (DML) on the pinned connection. Raises on failure, aborting the transaction. |
 | `commit` | `await tx.commit() -> dict` | Commits and releases. Raises if the commit fails or the transaction already finished. |

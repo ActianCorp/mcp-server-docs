@@ -4150,7 +4150,7 @@
 
 
 <h1 id="configuring-auth0">Configuring Auth0<a class="headerlink" href="#configuring-auth0" title="Permanent link">&para;</a></h1>
-<p>Set up an Auth0 application and API to enable OAuth 2.0 and OpenID Connect (OIDC) authentication for your Actian MCP Server. After you complete these steps, you can see the credentials required for the <code>oauth</code> block in the <code>conf.json</code> configuration file.</p>
+<p>Set up an Auth0 application and API to enable OAuth 2.0 and OpenID Connect (OIDC) authentication for the Actian MCP Server. After you complete these steps, you have the credentials that the <code>oauth</code> block in <code>conf.json</code> needs.</p>
 <p>For details on shared security concepts like TLS and user impersonation, see <a href="index.html">Authentication Overview</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Reference</p>
@@ -4174,19 +4174,19 @@
 <li><strong>Set Callback URLs:</strong> Add <code>&lt;BASE_URL&gt;/auth/callback</code> to <strong>Allowed Callback URLs</strong>.</li>
 <li><strong>Add the write scope</strong>, if <code>query_mode</code> is <code>read-write</code>: define the <code>mcp:write</code> permission on the API, enable both <strong>RBAC Settings</strong> toggles, then grant it to users through a role. See <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a> and <a href="#step-42-grant-the-write-scope-read-write-deployments-only">Step 4.2</a>.</li>
 <li><strong>Update Configuration:</strong> Add your Auth0 domain and credentials to <code>conf.json</code>.</li>
-<li><strong>Start the server:</strong> Launch the server using the <code>--transport sse</code> or <code>http</code> / <code>streamable-http</code> flag.</li>
+<li><strong>Start the server:</strong> Run the server with the <code>--transport sse</code> or <code>http</code> / <code>streamable-http</code> flag.</li>
 </ol>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li>An Auth0 account (<a href="https://auth0.com/signup">sign up free</a>).</li>
-<li>An Auth0 <strong>Tenant</strong> (created automatically on sign-up, for example, <code>dev-abc123</code>). Every API, Application, and user you create below lives inside this tenant, and its domain (for example, <code>dev-abc123.us.auth0.com</code>) becomes part of the <code>FASTMCP_SERVER_AUTH_CONFIG_URL</code> you set in <code>conf.json</code>.</li>
+<li>An Auth0 <strong>Tenant</strong> (created automatically on sign-up, for example, <code>dev-abc123</code>). Every API, Application, and user that you create in this guide lives inside this tenant. The tenant's domain (for example, <code>dev-abc123.us.auth0.com</code>) becomes part of the <code>FASTMCP_SERVER_AUTH_CONFIG_URL</code> that you set in <code>conf.json</code>.</li>
 <li>Actian MCP Server installed and ready to run.</li>
 </ul>
 <h2 id="step-1-create-an-auth0-api">Step 1: Create an Auth0 API<a class="headerlink" href="#step-1-create-an-auth0-api" title="Permanent link">&para;</a></h2>
 <p>The <strong>API</strong> represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 include the API's identifier as the <code>audience</code> claim.</p>
 <ol>
 <li>Log in to the <a href="https://manage.auth0.com/">Auth0 Dashboard</a>.</li>
-<li>In the left sidebar, navigate to <strong>Applications</strong> &gt; APIs**.</li>
+<li>In the left sidebar, navigate to <strong>Applications</strong> &gt; <strong>APIs</strong>.</li>
 <li>Select <strong>+ Create API</strong>.</li>
 <li>
 <p>Fill the form as follows:</p>
@@ -4207,12 +4207,12 @@
 <tr>
 <td><strong>Identifier (Audience)</strong></td>
 <td><code>https://&lt;mcp-server-host&gt;:8000/mcp</code></td>
-<td>Logical identifier (may not be a reachable URL). This becomes your <code>FASTMCP_SERVER_AUTH_AUDIENCE</code>.</td>
+<td>Logical identifier (it may not be a reachable URL). This becomes the <code>FASTMCP_SERVER_AUTH_AUDIENCE</code>.</td>
 </tr>
 <tr>
 <td><strong>Signing Algorithm</strong></td>
 <td><code>RS256</code></td>
-<td>Default, leave the value as is.</td>
+<td>Default. Leave the value as is.</td>
 </tr>
 </tbody>
 </table>
@@ -4298,11 +4298,11 @@
 <p>The <strong>Application</strong> represents the MCP server's OAuth client. It holds <code>client_id</code> and <code>client_secret</code> used during the OAuth handshake.</p>
 <div class="admonition note">
 <p class="admonition-title">Why Machine to Machine?</p>
-<p>The MCP server's OAuth proxy (OIDCProxy) acts as a confidential client. It authenticates with Auth0 using a <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code> pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.</p>
+<p>The MCP server's OAuth proxy (OIDCProxy) acts as a confidential client. It authenticates with Auth0 with a <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code> pair, which is exactly the Machine to Machine pattern. The browser-based user login flow runs between the OIDCProxy and MCP clients such as Visual Studio Code or Claude Desktop. MCP clients never talk to Auth0 directly.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Do not use "Regular Web Application"</p>
-<p>Auth0 enforces PKCE validation differently for Web applications, which conflicts with the forwarding of OIDCProxy authorization requests. This causes <code>code_challenge: Field required</code> errors.</p>
+<p>Auth0 enforces Proof Key for Code Exchange (PKCE) validation differently for Web applications. This conflicts with how OIDCProxy forwards authorization requests and causes <code>code_challenge: Field required</code> errors.</p>
 </div>
 <ol>
 <li>In the Auth0 Dashboard, navigate to <strong>Applications</strong> &gt; <strong>Applications</strong>.</li>
@@ -4348,7 +4348,7 @@
 <tr>
 <td><strong>Allowed Callback URLs</strong></td>
 <td><code>https://&lt;mcp-server-host&gt;:8000/auth/callback</code></td>
-<td>Must exactly match <code>&lt;BASE_URL&gt;/auth/callback</code>. Multiple URLs can be comma-separated.</td>
+<td>Must exactly match <code>&lt;BASE_URL&gt;/auth/callback</code>. Separate multiple URLs with commas.</td>
 </tr>
 <tr>
 <td><strong>Allowed Logout URLs</strong></td>
@@ -4368,7 +4368,7 @@
 </div>
 <p>Select <strong>Save Changes</strong>.</p>
 <h3 id="configure-grant-types">Configure Grant Types<a class="headerlink" href="#configure-grant-types" title="Permanent link">&para;</a></h3>
-<p>Machine to Machine applications should have <strong>Authorization Code</strong> enabled by default, but you should always verify since some tenants or configurations may differ.</p>
+<p>Machine to Machine applications have <strong>Authorization Code</strong> enabled by default. Verify it anyway, because some tenants or configurations differ.</p>
 <ol>
 <li>On the <strong>Settings</strong> tab, select <strong>Show Advanced Settings</strong>.</li>
 <li>Select the <strong>Grant Types</strong> tab.</li>
@@ -4382,7 +4382,7 @@
 <p>Without <strong>Authorization Code</strong> enabled, Auth0 returns <code>Grant type 'authorization_code' not allowed for the client</code>. This grant type is enabled by default for Machine to Machine applications. If not, re-enable it.</p>
 </div>
 <h3 id="output-of-step-2">Output of Step 2<a class="headerlink" href="#output-of-step-2" title="Permanent link">&para;</a></h3>
-<p>All values appear on the <strong>Settings</strong> tab of your application:</p>
+<p>All values appear on the <strong>Settings</strong> tab of the application:</p>
 <table>
 <thead>
 <tr>
@@ -4397,7 +4397,7 @@
 </tr>
 <tr>
 <td><code>FASTMCP_SERVER_AUTH_CLIENT_SECRET</code></td>
-<td><strong>Client Secret</strong> (click the eye icon to reveal)</td>
+<td><strong>Client Secret</strong> (select the eye icon to show it)</td>
 </tr>
 <tr>
 <td><code>FASTMCP_SERVER_AUTH_CONFIG_URL</code></td>
@@ -4420,7 +4420,7 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Authorizing means selecting permissions</p>
-<p>Authorizing the application means selecting, from a permission checklist, which of the API's permissions (in this guide, just <code>mcp:write</code>, defined in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>) the application is allowed to request. If your API defines no permissions yet, the checklist is empty and there is nothing to select. This is expected for read-only deployments.</p>
+<p>Authorizing the application means selecting, from a permission checklist, the API permissions that the application may request (in this guide, only <code>mcp:write</code>, defined in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>). If the API defines no permissions yet, the checklist is empty and there is nothing to select. This is expected for read-only deployments.</p>
 </div>
 <p>You can authorize from either the application's APIs tab or the API's Application Access tab:</p>
 <p><strong>Option A - Authorize from Application:</strong></p>
@@ -4440,16 +4440,16 @@
 <p>After saving, the application row on the <strong>Application Access</strong> tab shows a green checkmark and "1 / 1 permissions granted" under both <strong>User-Delegated Access</strong> and <strong>Client Access</strong>.</p>
 <div class="admonition important">
 <p class="admonition-title">User-Delegated Access is required for user impersonation</p>
-<p>If you plan to use <code>user_impersonation: true</code>, the application must be authorized for <strong>User-Delegated Access</strong>. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server has no user name to record in the call log.</p>
+<p>If you plan to use <code>user_impersonation: true</code>, the application must be authorized for <strong>User-Delegated Access</strong>. Without it, Auth0 does not issue tokens with user identity claims (email and sub) during the Authorization Code flow, so the MCP server has no user name to record in the call log.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">This is not the same as granting the scope to a user</p>
-<p>Authorizing the application here means it is <em>allowed to request</em> <code>mcp:write</code>, not that any particular user's token will carry it. With <strong>Enable RBAC</strong> on (required in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>), whether a specific user's token actually includes <code>mcp:write</code> depends on that user holding it through a role, which is a separate, per-user assignment in <a href="#step-42-grant-the-write-scope-read-write-deployments-only">Step 4.2</a>. Both steps are required for read-write deployments.</p>
+<p>Authorizing the application here means it is <em>allowed to request</em> <code>mcp:write</code>. It does not mean that any particular user's token carries it. With <strong>Enable RBAC</strong> on (required in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>), a user's token includes <code>mcp:write</code> only when that user holds it through a role. That is a separate, per-user assignment in <a href="#step-42-grant-the-write-scope-read-write-deployments-only">Step 4.2</a>. Both steps are required for read-write deployments.</p>
 </div>
 <h2 id="step-4-create-auth0-users">Step 4: Create Auth0 Users<a class="headerlink" href="#step-4-create-auth0-users" title="Permanent link">&para;</a></h2>
 <div class="admonition note">
 <p class="admonition-title">No database accounts on VectorAI DB</p>
-<p>The engine sees only the server's API key, so no Auth0 user needs a matching database account. Create the Auth0 users your people log in with. Which name the server records for each of them in the call log is described under <a href="index.html#user-impersonation">User Impersonation</a>.</p>
+<p>The engine sees only the server's API key, so no Auth0 user needs a matching database account. Create the Auth0 users that your people sign in with. <a href="index.html#user-impersonation">User Impersonation</a> describes which name the server records for each of them in the call log.</p>
 </div>
 <h3 id="step-41-create-the-user-in-auth0">Step 4.1: Create User in Auth0<a class="headerlink" href="#step-41-create-the-user-in-auth0" title="Permanent link">&para;</a></h3>
 <ol>
@@ -4474,7 +4474,7 @@
 <tr>
 <td><strong>Password</strong></td>
 <td>A secure password</td>
-<td>Used for Auth0 login</td>
+<td>Used for Auth0 sign-in</td>
 </tr>
 <tr>
 <td><strong>Connection</strong></td>
@@ -4494,7 +4494,7 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Federated identity caveat</p>
-<p>With <code>user_impersonation: true</code>, a user who signs in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0 and arrives without an email is recorded by the <code>sub</code> claim with the provider prefix removed: <code>google-oauth2|12345</code> is logged as <code>12345</code>. Add a <code>username</code> to the Auth0 user profile if you want readable names in the call log.</p>
+<p>With <code>user_impersonation: true</code>, a user who signs in to Auth0 through Google, Microsoft Entra, SAML, or corporate single sign-on and arrives without an email is recorded by the <code>sub</code> claim, with the provider prefix removed. For example, <code>google-oauth2|12345</code> is logged as <code>12345</code>. Add a <code>username</code> to the Auth0 user profile if you want readable names in the call log.</p>
 </div>
 <h3 id="step-42-grant-the-write-scope-read-write-deployments-only">Step 4.2: Grant Write Scope (Read-Write Deployments Only)<a class="headerlink" href="#step-42-grant-the-write-scope-read-write-deployments-only" title="Permanent link">&para;</a></h3>
 <p>Skip this step if <code>query_mode</code> is <code>read-only</code>.</p>
@@ -4506,10 +4506,10 @@
 <li>Select your API, for example <code>Actian MCP Server</code>, select the <code>mcp:write</code> permission, and add it.</li>
 <li>On the role's <strong>Users</strong> tab, select <strong>Add Users</strong> and assign the users who are allowed to write.</li>
 </ol>
-<p>Users without this role can still read. Their tokens do not carry <code>mcp:write</code>, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see <a href="keycloak.html#user-eligibility">which users can obtain the scope</a> there.</p>
+<p>Users without this role can still read. Their tokens do not carry <code>mcp:write</code>, so the server rejects their writes. Because the permission is granted per user, a user cannot get the scope by asking for it. Keycloak works differently. If you also run Keycloak, see <a href="keycloak.html#user-eligibility">which users can obtain the scope</a> there.</p>
 <div class="admonition warning">
 <p class="admonition-title">The scope is the only per-user write control</p>
-<p>The engine sees only the server's API key and cannot tell users apart, so there are no per-user privileges behind the scope. A user whose token carries <code>mcp:write</code> can write to every collection the server exposes; the approval prompt is the only other check. See <a href="../write-support.html#authorizing-a-write">Write support</a>.</p>
+<p>The engine sees only the server's API key and cannot tell users apart, so there are no per-user privileges behind the scope. A user whose token carries <code>mcp:write</code> can write to every collection that the server exposes. The approval prompt is the only other check. See <a href="../write-support.html#authorizing-a-write">Write support</a>.</p>
 </div>
 <h2 id="step-5-assemble-the-final-configuration">Step 5: Assemble Final Configuration<a class="headerlink" href="#step-5-assemble-the-final-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="mapping-summary">Mapping Summary<a class="headerlink" href="#mapping-summary" title="Permanent link">&para;</a></h3>
@@ -4539,7 +4539,7 @@
 </tr>
 <tr>
 <td><code>FASTMCP_SERVER_AUTH_BASE_URL</code></td>
-<td>Your MCP server's external URL</td>
+<td>The MCP server's external URL</td>
 <td><code>https://&lt;mcp-server-host&gt;:8000</code></td>
 </tr>
 <tr>
@@ -4550,17 +4550,17 @@
 <tr>
 <td><code>user_impersonation</code></td>
 <td>No</td>
-<td><code>true</code> (the default) or <code>false</code>. It decides where the server looks for the caller's name for the call log; VectorAI DB has no per-user identity either way. See <a href="index.html#user-impersonation">User Impersonation</a></td>
+<td><code>true</code> (the default) or <code>false</code>. It decides where the server looks for the caller's name for the call log. VectorAI DB has no per-user identity either way. See <a href="index.html#user-impersonation">User Impersonation</a></td>
 </tr>
 </tbody>
 </table>
 <div class="admonition info">
 <p class="admonition-title">Audience fallback</p>
-<p>If <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> is omitted, the server uses <code>FASTMCP_SERVER_AUTH_CLIENT_ID</code> as the audience. This is common for Keycloak setups, but for Auth0 you should always set an explicit audience, the Client ID will not match the API Identifier.</p>
+<p>If you omit <code>FASTMCP_SERVER_AUTH_AUDIENCE</code>, the server uses <code>FASTMCP_SERVER_AUTH_CLIENT_ID</code> as the audience. This is common for Keycloak setups. For Auth0, always set an explicit audience, because the Client ID does not match the API Identifier.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The <code>AUDIENCE</code> is a logical identifier used for token validation. It may not need be a reachable HTTPS URL.</p>
+<p>The <code>AUDIENCE</code> is a logical identifier used for token validation. It does not need to be a reachable HTTPS URL.</p>
 </div>
 <h3 id="example-confjson">Example <code>conf.json</code><a class="headerlink" href="#example-confjson" title="Permanent link">&para;</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -4587,17 +4587,17 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code>vectorai.url</code> is the engine as the container reaches it: the Docker host's name or IP (<code>host.docker.internal</code> on Docker Desktop), or the engine container's network alias. Never <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself. The <code>embedding</code> and <code>collections</code> blocks are described on the <a href="../index.html">overview</a>.</p>
+<p><code>vectorai.url</code> is the engine's address as the container sees it: the Docker host's name or IP (<code>host.docker.internal</code> on Docker Desktop), or the engine container's network alias. Do not use <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself. The <code>embedding</code> and <code>collections</code> blocks are described on the <a href="../index.html">overview</a>.</p>
 </div>
 <p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see <a href="index.html#secure-remote-deployments-with-https-and-tls">HTTPS / TLS for Remote Deployments</a>.</p>
 <p>For security best practices (file permissions, <code>.gitignore</code>, secrets management), see <a href="index.html#security-best-practices">Security Best Practices</a>.</p>
 <h2 id="verify-end-to-end">Verify Setup End-to-End<a class="headerlink" href="#verify-end-to-end" title="Permanent link">&para;</a></h2>
 <p>After starting the MCP server container with OAuth configured:</p>
 <ol>
-<li>Open a browser and navigate to your server's <code>/mcp</code> endpoint, for example, <code>https://&lt;your-server-host&gt;:8000/mcp</code>.</li>
-<li>You should be redirected to the Auth0 login page.</li>
-<li>Log in with an Auth0 user, for example, the user you created in <a href="#step-4-create-auth0-users">Step 4</a>.</li>
-<li>After logging in, Auth0 redirects you back to the MCP server with a valid token.</li>
+<li>Open a browser and go to the server's <code>/mcp</code> endpoint, for example, <code>https://&lt;your-server-host&gt;:8000/mcp</code>.</li>
+<li>The browser redirects you to the Auth0 sign-in page.</li>
+<li>Sign in with an Auth0 user, for example, the user you created in <a href="#step-4-create-auth0-users">Step 4</a>.</li>
+<li>After you sign in, Auth0 redirects you back to the MCP server with a valid token.</li>
 <li>Call a tool from the MCP client, for example <code>list_collections</code>, and look at the container log: the <a href="../index.html#call-log">call log</a> record for the call has the caller's name in <code>user</code>, or <code>null</code> when <code>user_impersonation</code> is <code>false</code> and the token carries no user claim.</li>
 </ol>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
@@ -4605,7 +4605,7 @@
 <div class="language-bash highlight"><pre><span></span><code>curl<span class="w"> </span>https://dev-abc123.us.auth0.com/.well-known/openid-configuration<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
-<p>You should see <code>issuer</code>, <code>authorization_endpoint</code>, <code>token_endpoint</code>, <code>jwks_uri</code>, and similar.</p>
+<p>The output includes <code>issuer</code>, <code>authorization_endpoint</code>, <code>token_endpoint</code>, <code>jwks_uri</code>, and other fields.</p>
 <h3 id="common-errors">Common Errors<a class="headerlink" href="#common-errors" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4634,7 +4634,7 @@
 <tr>
 <td><code>audience mismatch</code></td>
 <td><code>FASTMCP_SERVER_AUTH_AUDIENCE</code> does not match the API Identifier.</td>
-<td>Ensure they are identical strings.</td>
+<td>Use identical strings.</td>
 </tr>
 <tr>
 <td><code>invalid_client</code></td>
@@ -4673,8 +4673,8 @@
 </tr>
 <tr>
 <td><code>ssl.SSLError: PEM lib</code></td>
-<td>Missing cert/key env vars before Docker start.</td>
-<td>Mount cert/key as volumes when starting the container (see <a href="index.html#step-3-deploy-the-docker">Docker Deployment</a>).</td>
+<td>Missing certificate and key environment variables before Docker starts.</td>
+<td>Mount the certificate and key as volumes when you start the container (see <a href="index.html#step-3-deploy-the-docker">Docker Deployment</a>).</td>
 </tr>
 <tr>
 <td><code>ERR_TLS_CERT_ALTNAME_INVALID</code></td>
@@ -4683,23 +4683,23 @@
 </tr>
 <tr>
 <td><code>TypeError: fetch failed</code> (VS Code)</td>
-<td>Self-signed cert not trusted by <code>Node.js</code>.</td>
+<td>Self-signed certificate not trusted by <code>Node.js</code>.</td>
 <td>Launch Visual Studio Code with <code>NODE_EXTRA_CA_CERTS=/path/to/server.crt code .</code></td>
 </tr>
 <tr>
 <td><code>Client Not Registered</code> (VS Code)</td>
 <td>Server's Docker container was recreated, wiping client registrations, but Visual Studio Code caches the old client ID.</td>
-<td>Quit Visual Studio Code, then delete stale registrations from the state DB (see <a href="#clearing-visual-studio-code-oauth-cache">Clearing Visual Studio Code OAuth cache</a> below) and reopen Visual Studio Code. To prevent recurrence, mount a Docker volume for <code>/root/.local/share/fastmcp</code>.</td>
+<td>Quit Visual Studio Code, then delete stale registrations from the state DB (see <a href="#clearing-visual-studio-code-oauth-cache">Clearing Visual Studio Code OAuth cache</a> below) and reopen Visual Studio Code. To prevent this, mount a Docker volume for <code>/root/.local/share/fastmcp</code>.</td>
 </tr>
 <tr>
 <td><code>Service not found: https://...</code> / <code>access_denied</code></td>
 <td><code>AUDIENCE</code> mismatch between client request and server config (often <code>http</code> versus <code>https</code>).</td>
-<td>Ensure <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> in <code>conf.json</code> exactly matches the Auth0 API Identifier.</td>
+<td>Confirm that <code>FASTMCP_SERVER_AUTH_AUDIENCE</code> in <code>conf.json</code> exactly matches the Auth0 API Identifier.</td>
 </tr>
 <tr>
 <td>Token validation behaves unexpectedly</td>
 <td>OIDC endpoint is unreachable at startup.</td>
-<td>Restart server after endpoint is accessible.</td>
+<td>Restart the server after the endpoint is reachable.</td>
 </tr>
 </tbody>
 </table>
@@ -4733,7 +4733,7 @@
 <p>Reopen Visual Studio Code. It re-registers with the server automatically.</p>
 </li>
 </ol>
-<p>Replace <code>&lt;your-server-host&gt;</code> with your server's IP or hostname, for example, <code>35.185.60.76</code>. This only clears the registration for that specific server.</p>
+<p>Replace <code>&lt;your-server-host&gt;</code> with your server's IP or hostname, for example, <code>35.185.60.76</code>. This clears only the registration for that server.</p>
 <div class="admonition tip">
 <p class="admonition-title">Prevent recurrence</p>
 <p>Mount a Docker volume for the server's OAuth state, so client registrations survive container recreation:
@@ -4744,12 +4744,12 @@
 <p>Auth0 tokens have a configurable lifetime:</p>
 <ol>
 <li>Navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>your API</strong> &gt; <strong>Settings</strong>.</li>
-<li>Check <strong>Token Expiration (Seconds)</strong>. Default is 86400 (24 hours).</li>
+<li>Check <strong>Token Expiration (Seconds)</strong>. The default is 86400 (24 hours).</li>
 <li>Adjust as needed.</li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Token refresh is handled automatically by the OAuth flow when using browser-based authentication.</p>
+<p>The OAuth flow refreshes tokens automatically when you use browser-based authentication.</p>
 </div>
 <h2 id="staging-versus-production">Staging Versus Production<a class="headerlink" href="#staging-versus-production" title="Permanent link">&para;</a></h2>
 <table>
@@ -4790,7 +4790,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

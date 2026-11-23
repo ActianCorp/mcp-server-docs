@@ -3670,8 +3670,8 @@
 
 
 <h1 id="actian-mcp-server-for-vectorai-db">Actian MCP Server for VectorAI DB<a class="headerlink" href="#actian-mcp-server-for-vectorai-db" title="Permanent link">&para;</a></h1>
-<p>The Actian MCP Server for VectorAI DB connects AI applications to an Actian VectorAI DB engine through the open <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a>. An MCP client sees the collections listed in the server's configuration. It can search them, page through them and, when writes are enabled, store or delete points after the user approves each write.</p>
-<p>Actian VectorAI DB is the vector engine of Actian Zen AI DB. The MCP Server talks to its Representational State Transfer (REST) API (port 6573 by default). No database driver is installed in the container.</p>
+<p>The Actian MCP Server for VectorAI DB connects AI applications to an Actian VectorAI DB engine through the open <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a>. An MCP client sees the collections listed in the server's configuration. It can search them and page through them. When writes are enabled, it can also store or delete points after the user approves each write.</p>
+<p>Actian VectorAI DB is the vector engine of Actian Zen AI DB. The MCP Server talks to the engine through its Representational State Transfer (REST) API (port 6573 by default). The container has no database driver.</p>
 <div class="admonition note">
 <p class="admonition-title">Four terms</p>
 <ul>
@@ -3705,11 +3705,11 @@
 </tr>
 <tr>
 <td><strong>Write support</strong></td>
-<td><code>create_collection</code>, <code>store</code>, <code>store_batch</code> and <code>delete_points</code> when <code>query_mode</code> is <code>read-write</code>. Every write needs the person at the MCP client to approve it, and the OAuth <code>mcp:write</code> scope when OAuth is enabled. See <a href="write-support.html">Write support</a>.</td>
+<td><code>create_collection</code>, <code>store</code>, <code>store_batch</code> and <code>delete_points</code> when <code>query_mode</code> is <code>read-write</code>. Every write needs approval from the person at the MCP client. When OAuth is enabled, it also needs the <code>mcp:write</code> scope. See <a href="write-support.html">Write support</a>.</td>
 </tr>
 <tr>
 <td><strong>Embedding providers</strong></td>
-<td><code>none</code> (vectors supplied by the caller), any server with the OpenAI embeddings API (Text Embeddings Inference, Ollama, vLLM, infinity) via <code>base_url</code>, OpenAI, Gemini. The compose file ships an optional embedding sidecar.</td>
+<td><code>none</code> (the caller supplies the vectors), any server with the OpenAI embeddings API (Text Embeddings Inference, Ollama, vLLM, or infinity) through <code>base_url</code>, OpenAI, or Gemini. The compose file ships an optional embedding sidecar.</td>
 </tr>
 <tr>
 <td><strong>Resources and prompts</strong></td>
@@ -3725,23 +3725,23 @@
 </tr>
 </tbody>
 </table>
-<p>Dropping a collection is not an MCP tool in this release; it stays an operator action on the engine.</p>
+<p>This release has no MCP tool to drop a collection. Dropping a collection stays an operator action on the engine.</p>
 <h2 id="how-collections-are-exposed">Exposing Collections<a class="headerlink" href="#how-collections-are-exposed" title="Permanent link">&para;</a></h2>
-<p>The server exposes only the collections listed under <code>collections</code> in <code>conf.json</code>. A collection that exists on the engine but is not listed is not shown, not searchable and not writable; a tool that names it answers with the configured names instead:</p>
+<p>The server exposes only the collections listed under <code>collections</code> in <code>conf.json</code>. The server does not show, search, or write a collection that exists on the engine but is not listed. A tool that names it answers with the configured names instead:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection 'other' is not configured on this server; configured: documents, faq"</span><span class="p">}</span>
 </code></pre></div>
-<p>A listed collection does not have to exist yet. It is reported as "not created on the engine yet" and <code>create_collection</code> creates it with the configured vector size and distance. The server never edits <code>conf.json</code>; to expose a new collection, add it to the file and restart the container.</p>
+<p>A listed collection does not have to exist yet. It is reported as "not created on the engine yet" and <code>create_collection</code> creates it with the configured vector size and distance. The server never edits <code>conf.json</code>. To expose a new collection, add it to the file and restart the container.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Container engine:</strong> Docker installed and running on the host.</li>
-<li><strong>Actian VectorAI DB engine:</strong> a running engine that the container can reach over its REST API (default port 6573). The engine inside an Actian Zen AI DB installation works as is. For a stand-alone engine, run the public container (the <code>ACTIAN_VECTORAI_ACCEPT_EULA</code> variable accepts the End User License Agreement (EULA)): <code>docker run -d -e ACTIAN_VECTORAI_ACCEPT_EULA=YES -p 6573:6573 actian/vectorai:1.0.3</code>. Without the EULA variable the container exits at once.</li>
-<li><strong>Embedding endpoint (for text search and <code>store</code>):</strong> any server that speaks the OpenAI embeddings API (the compose file can start one next to the server), or an OpenAI or Gemini API key. Without one, set <code>embedding.provider</code> to <code>none</code> and use <code>search_by_vector</code> with vectors produced elsewhere.</li>
-<li><strong>Engine API key (optional):</strong> only when authentication is switched on in the engine. See <a href="#engine-api-key">Engine API key</a>.</li>
+<li><strong>Actian VectorAI DB engine:</strong> a running engine that the container can reach over its REST API (default port 6573). The engine in an Actian Zen AI DB installation works as is. For a stand-alone engine, run the public container. The <code>ACTIAN_VECTORAI_ACCEPT_EULA</code> variable accepts the End User License Agreement (EULA): <code>docker run -d -e ACTIAN_VECTORAI_ACCEPT_EULA=YES -p 6573:6573 actian/vectorai:1.0.3</code>. Without this variable, the container exits at once.</li>
+<li><strong>Embedding endpoint (for text search and <code>store</code>):</strong> any server that supports the OpenAI embeddings API (the compose file can start one next to the server), or an OpenAI or Gemini API key. Without one, set <code>embedding.provider</code> to <code>none</code> and use <code>search_by_vector</code> with vectors that you produce elsewhere.</li>
+<li><strong>Engine API key (optional):</strong> only when authentication is turned on in the engine. See <a href="#engine-api-key">Engine API key</a>.</li>
 <li><strong>OpenID Connect (OIDC) provider (optional):</strong> only when you use OAuth. See <a href="authentication/index.html">Authentication</a>.</li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Startup needs the engine</p>
-<p>The server checks the engine once at start and refuses to run when it does not answer. Under <code>docker run --restart unless-stopped</code> or compose the container restarts until the engine is reachable; the log shows <code>RuntimeError: VectorAI engine at &lt;url&gt; is unreachable</code>. Start the engine first.</p>
+<p>The server checks the engine once at start. It refuses to run when the engine does not answer. With <code>docker run --restart unless-stopped</code> or compose, the container restarts until the engine is reachable, and the log shows <code>RuntimeError: VectorAI engine at &lt;url&gt; is unreachable</code>. Start the engine first.</p>
 </div>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>Configuration is a <code>conf.json</code> file mounted at <code>/app/conf.json</code>. Framework keys (<code>host</code>, <code>port</code>, <code>query_mode</code>, <code>write_confirmation</code>, <code>log_level</code>, <code>oauth</code>, <code>auth_mode</code>, <code>extensions</code>) work as for every other plugin. The VectorAI plugin adds three blocks: <code>vectorai</code> (where the engine is), <code>embedding</code> (how text becomes vectors) and <code>collections</code> (what is exposed).</p>
@@ -3780,10 +3780,10 @@
 </code></pre></div>
 <p>The key can also come from the environment variable <code>VECTORAI_EMBEDDING_API_KEY</code> instead of the file. Keys in <code>conf.json</code> end in <code>_secret</code> so the server's debug output redacts them.</p>
 <h3 id="engine-api-key">Engine API Key<a class="headerlink" href="#engine-api-key" title="Permanent link">&para;</a></h3>
-<p>The engine ships with authentication off: it answers every REST request, and the server needs no key. When authentication is on, every request must carry a key, and the server sends the value of <code>vectorai.api_key_secret</code> (or the environment variable <code>VECTORAI_API_KEY</code>) as the <code>api-key</code> header on every call, including the startup check and the health resource.</p>
-<p>Switching authentication on is done in the engine, not in the MCP Server. In short, for the <code>actian/vectorai</code> container: start it with <code>ACTIAN_VECTORAI_ADMIN_PASSWORD=&lt;password&gt;</code> (this creates the built-in <code>admin</code> user), log in with <code>POST /auth/admin/login</code> to get an admin token, enable authentication with <code>PATCH /auth/enabled</code> and body <code>{"enabled": true}</code>, then create a key with <code>POST /auth/api_key</code> and permission <code>read</code> (read-only server) or <code>read,write</code>. The setting is persisted by the engine and survives restarts. The engine documentation calls these keys access tokens; see <a href="https://docs.vectoraidb.actian.com/api-reference/access-tokens/create-access-token">Create access token</a> in the Actian VectorAI DB documentation for the full API, including expiry and permissions.</p>
+<p>The engine ships with authentication off. It answers every REST request, and the server needs no key. When authentication is on, every request must carry a key. The server sends the value of <code>vectorai.api_key_secret</code> (or the environment variable <code>VECTORAI_API_KEY</code>) as the <code>api-key</code> header on every call, including the startup check and the health resource.</p>
+<p>You turn authentication on in the engine, not in the MCP Server. For the <code>actian/vectorai</code> container, do the following. Start it with <code>ACTIAN_VECTORAI_ADMIN_PASSWORD=&lt;password&gt;</code>, which creates the built-in <code>admin</code> user. Sign in with <code>POST /auth/admin/login</code> to get an admin token. Enable authentication with <code>PATCH /auth/enabled</code> and body <code>{"enabled": true}</code>. Then create a key with <code>POST /auth/api_key</code> and permission <code>read</code> (read-only server) or <code>read,write</code>. The engine keeps the setting across restarts. The engine documentation calls these keys access tokens. For the full API, including expiry and permissions, see <a href="https://docs.vectoraidb.actian.com/api-reference/access-tokens/create-access-token">Create access token</a> in the Actian VectorAI DB documentation.</p>
 <h3 id="one-embedding-model-per-collection">One Embedding Model per Collection<a class="headerlink" href="#one-embedding-model-per-collection" title="Permanent link">&para;</a></h3>
-<p>The engine stores vectors, not the name of the model that produced them. A collection filled with one model and searched with another returns meaningless scores. Keep <code>embedding.model</code> (or the per-collection override) the same for the life of a collection. For a collection that already exists, set <code>vector_size</code> in <code>conf.json</code> so that a mismatch is reported instead of producing bad results. <code>store</code> and <code>store_batch</code> compare the embedding's dimension with the collection's before anything is written.</p>
+<p>The engine stores vectors, not the name of the model that produced them. A collection filled with one model and searched with another returns meaningless scores. Keep <code>embedding.model</code> (or the per-collection override) the same for the life of a collection. For a collection that already exists, set <code>vector_size</code> in <code>conf.json</code> so that the server reports a mismatch instead of returning bad results. <code>store</code> and <code>store_batch</code> compare the embedding's dimension with the collection's before anything is written.</p>
 <h3 id="configuration-reference">Configuration Reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h3>
 <p><strong>Framework keys</strong></p>
 <table>
@@ -3830,7 +3830,7 @@
 <td>string</td>
 <td>No</td>
 <td><code>INFO</code></td>
-<td><code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, <code>ERROR</code> or <code>CRITICAL</code>.</td>
+<td><code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, <code>ERROR</code>, or <code>CRITICAL</code>.</td>
 </tr>
 <tr>
 <td><code>oauth</code></td>
@@ -3844,7 +3844,7 @@
 <td>string</td>
 <td>No</td>
 <td>—</td>
-<td><code>resource-server</code> makes the server verify tokens issued by your identity provider instead of running its own login. See <a href="authentication/index.html#resource-server-mode">Resource-server mode</a>.</td>
+<td><code>resource-server</code> makes the server verify tokens that the identity provider issues instead of running its own login. See <a href="authentication/index.html#resource-server-mode">Resource-server mode</a>.</td>
 </tr>
 <tr>
 <td><code>ssl_certfile</code>, <code>ssl_keyfile</code></td>
@@ -3907,7 +3907,7 @@
 <td>array</td>
 <td>No</td>
 <td><code>[408, 429, 500, 502, 503, 504]</code></td>
-<td>HTTP statuses that are retried. <code>Retry-After</code> is honoured.</td>
+<td>HTTP statuses that are retried. <code>Retry-After</code> is honored.</td>
 </tr>
 <tr>
 <td><code>vectorai.backoff_base</code>, <code>vectorai.backoff_max</code></td>
@@ -3942,21 +3942,21 @@
 <td>string</td>
 <td>No</td>
 <td><code>none</code></td>
-<td><code>none</code>, <code>openai</code>, <code>gemini</code> or <code>dev-hash</code>. <code>none</code> disables <code>search</code>, <code>store</code> and <code>store_batch</code>; <code>search_by_vector</code> still works. <code>dev-hash</code> is a deterministic test provider, not a semantic embedding, and is announced as such in the log.</td>
+<td><code>none</code>, <code>openai</code>, <code>gemini</code>, or <code>dev-hash</code>. <code>none</code> disables <code>search</code>, <code>store</code> and <code>store_batch</code>; <code>search_by_vector</code> still works. <code>dev-hash</code> is a deterministic test provider, not a semantic embedding, and the log says so.</td>
 </tr>
 <tr>
 <td><code>embedding.model</code></td>
 <td>string</td>
 <td>With <code>base_url</code></td>
 <td><code>text-embedding-3-small</code> (openai), <code>gemini-embedding-001</code> (gemini)</td>
-<td>Model name. With <code>base_url</code> it is the model the server actually serves and is required.</td>
+<td>Model name. With <code>base_url</code>, this is the model that the endpoint serves, and it is required.</td>
 </tr>
 <tr>
 <td><code>embedding.base_url</code></td>
 <td>string</td>
 <td>No</td>
 <td>—</td>
-<td>OpenAI-compatible endpoint, e.g. <code>http://embedding:80/v1</code> for the compose sidecar or <code>http://host.docker.internal:11434/v1</code> for Ollama. Makes the API key optional.</td>
+<td>OpenAI-compatible endpoint, for example <code>http://embedding:80/v1</code> for the compose sidecar or <code>http://host.docker.internal:11434/v1</code> for Ollama. It makes the API key optional.</td>
 </tr>
 <tr>
 <td><code>embedding.api_key_secret</code></td>
@@ -3970,7 +3970,7 @@
 <td>integer</td>
 <td>For <code>dev-hash</code></td>
 <td>—</td>
-<td>Vector dimension. For <code>openai</code> it is passed as <code>dimensions</code> (models that support shortening). Otherwise the provider's dimension is used. Do not set it for models that do not support shortening: the vector is cut and search degrades silently.</td>
+<td>Vector dimension. For <code>openai</code> it is passed as <code>dimensions</code> (models that support shortening). Otherwise the provider's dimension is used. Do not set it for models that do not support shortening. The vector is cut, and search quality drops without a warning.</td>
 </tr>
 <tr>
 <td><code>embedding.batch_size</code></td>
@@ -3984,7 +3984,7 @@
 <td>integer</td>
 <td>No</td>
 <td><code>8191</code> for hosted OpenAI, unset otherwise</td>
-<td>Token limit of the served model. A text that reaches it is refused before the approval prompt instead of being cut. Set it for a self-hosted endpoint (8192 for bge-m3, 512 for bge-small-en-v1.5).</td>
+<td>Token limit of the served model. The server refuses a text that reaches the limit before the approval prompt, instead of cutting it. Set it for a self-hosted endpoint (8192 for bge-m3, 512 for bge-small-en-v1.5).</td>
 </tr>
 <tr>
 <td><code>embedding.ca_file</code></td>
@@ -4033,7 +4033,7 @@
 <td>string</td>
 <td>No</td>
 <td><code>Cosine</code></td>
-<td><code>Cosine</code>, <code>Dot</code>, <code>Euclid</code> or <code>Manhattan</code>. Used by <code>create_collection</code>.</td>
+<td><code>Cosine</code>, <code>Dot</code>, <code>Euclid</code>, or <code>Manhattan</code>. Used by <code>create_collection</code>.</td>
 </tr>
 <tr>
 <td><code>collections[].embedding</code></td>
@@ -4082,7 +4082,7 @@
 <td>integer</td>
 <td>No</td>
 <td><code>32</code></td>
-<td>Most items one <code>store_batch</code> call may carry; a longer batch is rejected before the approval prompt.</td>
+<td>Maximum items in one <code>store_batch</code> call. The server rejects a longer batch before the approval prompt.</td>
 </tr>
 </tbody>
 </table>
@@ -4114,7 +4114,7 @@
 </tr>
 </tbody>
 </table>
-<p>Not used by this plugin: <code>conn_string</code>, <code>database</code>, <code>username</code>, <code>password</code>, <code>max_rows</code>. A <code>targets</code> block (several databases from one server) is refused at startup: one engine per server.</p>
+<p>Not used by this plugin: <code>conn_string</code>, <code>database</code>, <code>username</code>, <code>password</code>, <code>max_rows</code>. The server refuses a <code>targets</code> block (several databases from one server) at startup. It supports one engine per server.</p>
 <h2 id="start-the-server">Start Server<a class="headerlink" href="#start-the-server" title="Permanent link">&para;</a></h2>
 <p>Once <code>conf.json</code> is ready, start the container and mount the configuration file:</p>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
@@ -4127,27 +4127,27 @@
 <p>The MCP endpoint is <code>http://&lt;host&gt;:8000/mcp</code> (streamable HTTP).</p>
 <div class="admonition note">
 <p class="admonition-title">Container networking</p>
-<p><code>-p 8000:8000</code> exposes the server port on the host. <code>--add-host=host.docker.internal:host-gateway</code> allows the container to reach services on the host machine (such as the engine on port 6573). Docker Desktop on Windows and macOS resolves <code>host.docker.internal</code> automatically; Linux requires the <code>--add-host</code> flag.</p>
+<p><code>-p 8000:8000</code> exposes the server port on the host. <code>--add-host=host.docker.internal:host-gateway</code> lets the container reach services on the host machine (such as the engine on port 6573). Docker Desktop on Windows and macOS resolves <code>host.docker.internal</code> automatically. Linux requires the <code>--add-host</code> flag.</p>
 </div>
 <p>With the embedding sidecar, use the compose file shipped with the image sources (<code>src/vectorai/docker/docker-compose.yml</code>):</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="nv">CONF_FILE</span><span class="o">=</span>./conf.json<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>embedding<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
-<p>This starts Text Embeddings Inference (CPU build) with <code>BAAI/bge-m3</code> next to the server and downloads the model once into the <code>tei-cache</code> volume (2.2 GB; the sidecar reports <code>healthy</code> a few minutes after the first start). Point <code>embedding.base_url</code> at <code>http://embedding:80/v1</code> and set <code>embedding.model</code> to the same model name. Other models: <code>EMBEDDING_MODEL=&lt;huggingface id&gt;</code>. bge-m3 is multilingual; <code>BAAI/bge-small-en-v1.5</code> is English-only. The sidecar runs with <code>AUTO_TRUNCATE=false</code>, so a text longer than the model takes is refused rather than cut.</p>
-<p>The log lines to wait for are the engine check, <code>VectorAI: &lt;engine version&gt; at &lt;url&gt;, N/M configured collection(s) present, mode=read-only</code>, followed by <code>Uvicorn running on http://0.0.0.0:8000</code>.</p>
+<p>This starts Text Embeddings Inference (CPU build) with <code>BAAI/bge-m3</code> next to the server. It downloads the model once into the <code>tei-cache</code> volume (2.2 GB). The sidecar reports <code>healthy</code> a few minutes after the first start. Point <code>embedding.base_url</code> at <code>http://embedding:80/v1</code> and set <code>embedding.model</code> to the same model name. For another model, set <code>EMBEDDING_MODEL=&lt;huggingface id&gt;</code>. bge-m3 is multilingual. <code>BAAI/bge-small-en-v1.5</code> is English-only. The sidecar runs with <code>AUTO_TRUNCATE=false</code>, so it refuses a text that is longer than the model accepts instead of cutting it.</p>
+<p>Wait for these log lines: the engine check, <code>VectorAI: &lt;engine version&gt; at &lt;url&gt;, N/M configured collection(s) present, mode=read-only</code>, and then <code>Uvicorn running on http://0.0.0.0:8000</code>.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<p>The server instructions sent to the client carry the collection summary: name, description, vector size and distance, point count, and which embedding answers text search (or "no text embedding: use search_by_vector"). Typical workflows:</p>
+<p>The server instructions that the client receives include the collection summary: name, description, vector size and distance, point count, and which embedding answers text search (or "no text embedding: use search_by_vector"). Typical workflows:</p>
 <ul>
 <li><strong>Find, then search:</strong> <code>list_collections</code>, then <code>search</code> on the collection whose description fits the question. Scores are the engine's similarity scores; <code>score_threshold</code> cuts off weak matches.</li>
-<li><strong>Filter:</strong> restrict a search with the engine's JSON filter on payload fields, for example <code>{"must": [{"key": "metadata.kind", "match": {"value": "faq"}}]}</code>. The same filter works in <code>count_points</code> and <code>scroll_points</code>. The filter is passed to the engine as is; see the Actian VectorAI DB documentation for the syntax.</li>
-<li><strong>Write:</strong> in <code>read-write</code> mode, <code>create_collection</code> once, then <code>store</code> one text per call or <code>store_batch</code> for several, with <code>metadata</code> for later filtering. Each call asks the person at the client for approval.</li>
+<li><strong>Filter:</strong> restrict a search with the engine's JSON filter on payload fields, for example <code>{"must": [{"key": "metadata.kind", "match": {"value": "faq"}}]}</code>. The same filter works in <code>count_points</code> and <code>scroll_points</code>. The server passes the filter to the engine unchanged. For the syntax, see the Actian VectorAI DB documentation.</li>
+<li><strong>Write:</strong> in <code>read-write</code> mode, run <code>create_collection</code> once. Then use <code>store</code> for one text per call or <code>store_batch</code> for several, with <code>metadata</code> for later filtering. Each call asks the person at the client for approval.</li>
 </ul>
-<p>When OAuth is enabled, the token protects the MCP Server; the engine <code>api-key</code> is a separate secret that the server presents to the engine on behalf of every caller. The plugin does not impersonate users at the engine.</p>
+<p>When OAuth is enabled, the token protects the MCP Server. The engine <code>api-key</code> is a separate secret that the server sends to the engine for every caller. The plugin does not impersonate users at the engine.</p>
 <h3 id="engine-behaviour">Engine Behavior<a class="headerlink" href="#engine-behaviour" title="Permanent link">&para;</a></h3>
 <ul>
-<li>A collection shows <code>points_count: 0</code> next to a non-zero <code>vectors_count</code>, and status <code>unknowncollectionstatus</code>, until the engine has loaded it for a search; <code>count_points</code> is exact at any time.</li>
-<li>A collection whose points were mostly deleted reports <code>status: "red"</code> (delete ratio above one half) and <code>"yellow"</code> above 0.3. This is not an error: searches and writes keep working, and the status returns to <code>green</code> as live points are added. An index rebuild in progress also shows <code>yellow</code>.</li>
-<li>Point ids are either UUID strings or unsigned integers. <code>store</code> generates a UUID when none is given; an existing id is overwritten, and the approval prompt says so.</li>
-<li>The engine stores no description per collection (its REST <code>metadata</code> on create answers 501); the description shown to the model comes from <code>conf.json</code>.</li>
+<li>Until the engine loads a collection for a search, the collection shows <code>points_count: 0</code> with a non-zero <code>vectors_count</code> and the status <code>unknowncollectionstatus</code>. <code>count_points</code> is always exact.</li>
+<li>A collection with mostly deleted points reports <code>status: "red"</code> (delete ratio above one half), or <code>"yellow"</code> above 0.3. This is not an error. Searches and writes keep working, and the status returns to <code>green</code> as you add live points. A rebuild of the index also shows <code>yellow</code>.</li>
+<li>Point ids are either UUID strings or unsigned integers. <code>store</code> generates a UUID when you give none. It overwrites an existing id, and the approval prompt says so.</li>
+<li>The engine stores no description per collection (its REST <code>metadata</code> on create answers 501). The description shown to the model comes from <code>conf.json</code>.</li>
 </ul>
 <h2 id="call-log">Call Log<a class="headerlink" href="#call-log" title="Permanent link">&para;</a></h2>
 <p>Every tool call writes one JSON line to the container log (<code>docker logs &lt;container&gt;</code>). The record has the same fields as the Zen plugin's call log, so one log pipeline serves both:</p>
@@ -4196,14 +4196,14 @@
 </table>
 <p>Query text, payloads, vectors and filter values are never written. <code>call_log_queries</code> adds the <code>search</code> query text; <code>call_log: false</code> turns the log off. The log is a record of what the server did, not an audit trail: nothing in it is tamper-evident.</p>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p>The server supports the same modes as every other plugin, documented under <a href="authentication/index.html">Authentication</a>. One difference from the SQL plugins: there is no per-user database identity. Every engine request carries the configured API key, so <code>user_impersonation</code> only decides where the server looks for the caller's name for the call log and, in resource-server mode, whether a token must name a user: there the default <code>true</code> refuses a token without a <code>username</code>, <code>preferred_username</code> or <code>email</code> claim, and <code>false</code> accepts service tokens too. <a href="authentication/index.html#user-impersonation">User Impersonation</a> has the details for each mode. <code>conf.resource-server.json</code> in the image's docker folder is a filled-in <code>resource-server</code> example with <code>user_impersonation: false</code>.</p>
-<p>Reads need a valid token for the server's audience. Writes need the <code>mcp:write</code> scope on top, checked before any embedding call, then the approval prompt.</p>
+<p>The server supports the same modes as every other plugin. See <a href="authentication/index.html">Authentication</a>. VectorAI DB differs from the SQL plugins in one way: it has no per-user database identity. Every engine request carries the configured API key. So <code>user_impersonation</code> only decides where the server looks for the caller's name for the call log. In resource-server mode, it also decides whether a token must name a user. There, the default <code>true</code> refuses a token without a <code>username</code>, <code>preferred_username</code>, or <code>email</code> claim, and <code>false</code> accepts service tokens too. <a href="authentication/index.html#user-impersonation">User Impersonation</a> has the details for each mode. <code>conf.resource-server.json</code> in the image's docker folder is a filled-in <code>resource-server</code> example with <code>user_impersonation: false</code>.</p>
+<p>Reads need a valid token for the server's audience. Writes also need the <code>mcp:write</code> scope. The server checks the scope before any embedding call, and then shows the approval prompt.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg></span> <strong><a href="write-support.html">Write Support</a></strong><br />
-  Enable writes, and what gates each write.</p>
+  Enable writes and see what gates each write.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"/></svg></span> <strong><a href="authentication/index.html">Authentication</a></strong><br />
@@ -4247,7 +4247,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

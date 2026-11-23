@@ -10,7 +10,7 @@ This guide describes how to create and configure an Auth0 API and Application fo
 !!! note "Manual client registration"
     This guide focuses on manually created clients. Dynamic Client Registration (DCR) is not covered in this documentation.
 
-This guide shows how to obtain the issuer URL needed for `quarkus.oidc.auth-server-url`, the audience value for `quarkus.oidc.token.audience`, as well as the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
+This guide shows how to get the issuer URL for `quarkus.oidc.auth-server-url`, the audience value for `quarkus.oidc.token.audience`, and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
 
 !!! info "Reference"
     [Auth0 OpenID Connect documentation](https://auth0.com/docs/authenticate/protocols/openid-connect-protocol)
@@ -103,7 +103,7 @@ In write mode, the server checks every write call for the `mcp:write` scope and 
 On the API's **Settings** tab, scroll to **RBAC Settings**, turn on **Enable RBAC**, and select **Save**. With RBAC on, Auth0 checks what the caller holds before it fills the token's `scope` claim, which is the claim the server reads. Without RBAC, Auth0 grants any defined API scope that a client requests, so any user of an authorized application can obtain `mcp:write`. RBAC is what makes write access per user.
 
 !!! note "**Add Permissions in the Access Token** is optional"
-    That neighboring toggle adds the user's granted permissions to a separate `permissions` claim. The server reads `mcp:write` from that claim as well as from `scope`. With the toggle on, a user whose role grants `mcp:write` can write even when the client did not request the scope, so a client cannot limit itself below the user's role. With the toggle off, only `scope` counts and a client can ask for less. This guide keeps the toggle off and relies on the scope request.
+    That neighboring toggle adds the user's granted permissions to a separate `permissions` claim. The server reads `mcp:write` from that claim as well as from `scope`. With the toggle on, a user whose role grants `mcp:write` can write even when the client did not request the scope, so a client cannot ask for less than the user's role allows. With the toggle off, only `scope` counts and a client can ask for less. This guide keeps the toggle off and relies on the scope request.
 
 #### Grant It Through a Role
 
@@ -172,7 +172,7 @@ This step allows the application to request tokens for the API and to choose whi
 
 ### Calling Applications
 
-An application that has already signed the user in and calls this server for that user (see [Calling Applications](../index.md#calling-applications)) requests the API Identifier as its `audience` when the user signs in. Auth0 offers no equivalent of the Keycloak standard token exchange for this case, so there is no exchange step.
+An application that has already signed the user in can call this server for that user (see [Calling Applications](../index.md#calling-applications)). When the user signs in, the application requests the API Identifier as its `audience`. Auth0 has no equivalent of the Keycloak standard token exchange for this case, so there is no exchange step.
 
 Authorize that application for the API as described in [Grant API Access](#grant-api-access). In write mode, have it include `mcp:write` in its scope request.
 

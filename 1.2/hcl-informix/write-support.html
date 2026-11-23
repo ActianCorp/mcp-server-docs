@@ -3741,7 +3741,7 @@
 </tr>
 </tbody>
 </table>
-<p>The write grant is checked first, so a caller without it is rejected before anyone is asked to approve anything. A write counts as not approved if the person declines, does not answer before the timeout, or the client cannot display the prompt at all.</p>
+<p>The server checks the write grant first. It rejects a caller without the grant before anyone is asked to approve anything. A write counts as not approved if the person declines, does not answer before the timeout, or the client cannot display the prompt.</p>
 <pre class="mermaid"><code>%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     participant User as User
@@ -3789,7 +3789,7 @@ sequenceDiagram
 </tr>
 </tbody>
 </table>
-<p>A target <code>:write</code> grant also permits reads on that target. <code>query_mode</code> must still be <code>read-write</code>, and human approval remains required unless <code>write_confirmation</code> is disabled. See <a href="multi-target.html#authentication-and-scope-behavior">Multi-Target Deployments</a> and the provider-specific setup for <a href="authentication/auth0.html#multi-target-deployments-per-target-permissions">Auth0</a> or <a href="authentication/keycloak.html#multi-target-deployments-per-target-scopes">Keycloak</a>.</p>
+<p>A target <code>:write</code> grant also permits reads on that target. <code>query_mode</code> must still be <code>read-write</code>. Human approval is still required unless you disable <code>write_confirmation</code>. See <a href="multi-target.html#authentication-and-scope-behavior">Multi-Target Deployments</a> and the provider-specific setup for <a href="authentication/auth0.html#multi-target-deployments-per-target-permissions">Auth0</a> or <a href="authentication/keycloak.html#multi-target-deployments-per-target-scopes">Keycloak</a>.</p>
 <h2 id="skipping-the-approval-prompt">Skipping Approval Prompt<a class="headerlink" href="#skipping-the-approval-prompt" title="Permanent link">&para;</a></h2>
 <p>Some clients cannot display the approval prompt. For those deployments, set <code>write_confirmation</code> to <code>false</code> in <code>conf.json</code> to run the server's built-in write tools without asking for approval:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
@@ -3800,7 +3800,7 @@ sequenceDiagram
 <div class="admonition warning">
 <p class="admonition-title">This removes human oversight of every write</p>
 <p>With <code>write_confirmation</code> set to <code>false</code>, the server runs <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> statements as soon as they are requested. Nobody is asked first. Use it only when the client cannot prompt and unattended writes by the AI agent are acceptable.</p>
-<p>The applicable write-grant check still applies. Disabling the prompt does not grant write access to callers that lack <code>mcp:write</code> on the single-database endpoint or the target's <code>:write</code> grant on a multi-target URL.</p>
+<p>The write-grant check still applies. Disabling the prompt does not give write access to callers that lack <code>mcp:write</code> on the single-database endpoint or the target's <code>:write</code> grant on a multi-target URL.</p>
 <p>This setting covers the built-in write tools only. An extension that asks for approval itself always prompts, whatever this is set to. See <a href="extensions/index.html#extension-security-controls">Extensions</a>.</p>
 </div>
 <p>The server records what it skipped. At startup it logs a warning banner stating that write confirmation is disabled, and it logs a warning for each write that ran without approval. Those entries name the tool only. They never include the statement text or the row values.</p>
@@ -3841,7 +3841,7 @@ sequenceDiagram
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

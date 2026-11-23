@@ -4216,7 +4216,7 @@
 <p>The tools read the Ingres Management Architecture database (<code>imadb</code>) and the connected database's own system catalogs. They are available only on Actian Ingres. The Actian Analytics Engine server does not provide them.</p>
 <div class="admonition note">
 <p class="admonition-title">Read-only</p>
-<p>Every health tool only reads. No health tool changes database state, takes a checkpoint, runs <code>optimizedb</code>, or ends a session. Remediation remains a task for Ingres tooling or for an approved write. All seven tools are advertised to clients as read-only. See <a href="tools/index.html#tool-annotations">Tool annotations</a>.</p>
+<p>Every health tool only reads. No health tool changes database state, takes a checkpoint, runs <code>optimizedb</code>, or ends a session. To fix a problem, use Ingres tooling or an approved write. All seven tools are advertised to clients as read-only. See <a href="tools/index.html#tool-annotations">Tool annotations</a>.</p>
 </div>
 <h2 id="available-tools">Available Tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
 <table>
@@ -4339,7 +4339,7 @@
 </tr>
 </tbody>
 </table>
-<p>Each entry in <code>metrics</code> carries its value together with the threshold that judged it, so a client can act on the result without looking anything up:</p>
+<p>Each entry in <code>metrics</code> includes its value and the threshold that judged it. A client can act on the result without looking anything up:</p>
 <table>
 <thead>
 <tr>
@@ -4414,7 +4414,7 @@
 </tbody>
 </table>
 <p>Thresholds are inclusive: a value equal to <code>warn</code> is reported as <code>warn</code>. The overall <code>status</code> ranks <code>crit</code> above <code>warn</code>, <code>warn</code> above <code>ok</code>, and <code>ok</code> above <code>info</code>, so a result whose metrics are all informational reports <code>info</code>.</p>
-<p>Many values are reported as informational on purpose. Cumulative counters, such as deadlocks since server start, only ever increase, so a fixed threshold on them would always eventually warn. Capacity figures are reported as raw counts beside their limits rather than as percentages, so you can compare them against the definition you use.</p>
+<p>Many values are reported as informational on purpose. Cumulative counters, such as deadlocks since server start, only increase. A fixed threshold on them would eventually always warn. The tools report capacity figures as raw counts beside their limits, not as percentages. You can then compare them against the definition you use.</p>
 <h3 id="partial-results">Partial Results<a class="headerlink" href="#partial-results" title="Permanent link">&para;</a></h3>
 <p>If part of a read fails, the tool still returns the parts it could read and adds an entry to <code>unavailable</code>:</p>
 <table>
@@ -4682,10 +4682,10 @@
 </tr>
 </tbody>
 </table>
-<p>The tool lists the 10 longest-running queries individually. <code>active_sessions</code> gives the total, so any sessions beyond the first 10 are counted rather than silently omitted. <code>raw.sessions</code> contains the same 10 rows, with the columns <code>session_id</code>, <code>effective_user</code>, <code>db_name</code>, <code>session_activity</code>, <code>server_pid</code>, and <code>elapsed_seconds</code>.</p>
+<p>The tool lists the 10 longest-running queries individually. <code>active_sessions</code> gives the total, so sessions beyond the first 10 are still counted. <code>raw.sessions</code> contains the same 10 rows, with the columns <code>session_id</code>, <code>effective_user</code>, <code>db_name</code>, <code>session_activity</code>, <code>server_pid</code>, and <code>elapsed_seconds</code>.</p>
 <p>Consider the following when you read the result:</p>
 <ul>
-<li><strong>No threshold.</strong> How long is too long depends on your workload, so all metrics are informational and a successful call reports <code>info</code>. The call reports <code>crit</code> only when the session read itself fails.</li>
+<li><strong>No threshold.</strong> How long is too long depends on the workload, so all metrics are informational and a successful call reports <code>info</code>. The call reports <code>crit</code> only when the session read itself fails.</li>
 <li><strong>A snapshot, not a history.</strong> A query that has already finished does not appear.</li>
 <li><strong>No statement text.</strong> The SQL text can contain literal values, so the tool never returns it. To read a statement, take its <code>session_id</code> to <code>iimonitor</code>.</li>
 <li><strong>Some statements have no age.</strong> Ingres records a start time for DML only. A statement without one, such as DDL, is still counted and listed, but its elapsed time is <code>null</code> and its note explains why.</li>
@@ -4708,7 +4708,7 @@
 <h2 id="cache_io_health">cache_io_health<a class="headerlink" href="#cache_io_health" title="Permanent link">&para;</a></h2>
 <p>Reports buffer cache activity and log writer pressure.</p>
 <p><strong>Scope:</strong> installation</p>
-<p>All metrics are informational. Hit and read counts are published as raw cumulative counts; no hit ratio is calculated. Page sizes that have served no reads and no hits are omitted.</p>
+<p>All metrics are informational. The tool reports hit and read counts as raw cumulative counts and calculates no hit ratio. It omits page sizes that have served no reads and no hits.</p>
 <table>
 <thead>
 <tr>
@@ -4881,7 +4881,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="configuring-thresholds">Configuring Thresholds<a class="headerlink" href="#configuring-thresholds" title="Permanent link">&para;</a></h2>
-<p>The default thresholds suit most installations. To change them, add a <code>health</code> block to <code>conf.json</code>. Each threshold is an object with a required <code>warn</code> and an optional <code>crit</code>. You only need to list the thresholds you want to change; the others keep their defaults.</p>
+<p>The default thresholds suit most installations. To change them, add a <code>health</code> block to <code>conf.json</code>. Each threshold is an object with a required <code>warn</code> and an optional <code>crit</code>. List only the thresholds you want to change. The others keep their defaults.</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"health"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">"checkpoint_age_hours"</span><span class="p">:</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"warn"</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w">  </span><span class="nt">"crit"</span><span class="p">:</span><span class="w"> </span><span class="mi">72</span><span class="w"> </span><span class="p">},</span>
@@ -4969,7 +4969,7 @@
 </tr>
 </tbody>
 </table>
-<p>The limit ensures that a health tool returns even when the Ingres server accepts connections but stops answering, which is often the situation in which you need the health tools most. A query that exceeds the limit is reported in <code>unavailable</code>.</p>
+<p>The limit lets a health tool return even when the Ingres server accepts connections but stops answering. That is often when you need the health tools most. A query that exceeds the limit is reported in <code>unavailable</code>.</p>
 <h3 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h3>
 <p>The server checks the <code>health</code> block at startup and does not start if the block cannot be applied as written. This prevents a mistyped key from silently leaving a threshold on its default. The server rejects:</p>
 <ul>
@@ -4988,7 +4988,7 @@
 <li>The connected database's system catalogs, for table, journaling, page, and statistics information. These reads use the server's normal connection pool.</li>
 </ul>
 <p>On the <code>imadb</code> connection, the server requests that reads take no read locks, so a health read does not block other sessions. If the Ingres server refuses that setting, the read still runs.</p>
-<p>The identity used must be able to connect to <code>imadb</code> and to read the relevant Ingres catalogs. If it cannot, the affected parts appear in <code>unavailable</code> with the database error, and the tool still reports everything else. Catalog visibility can also be narrowed by privilege: for example, <code>long_running_queries</code> counts only the sessions the user is permitted to see.</p>
+<p>The identity used must be able to connect to <code>imadb</code> and to read the relevant Ingres catalogs. If it cannot, the affected parts appear in <code>unavailable</code> with the database error, and the tool still reports everything else. Privileges can also limit what a user sees. For example, <code>long_running_queries</code> counts only the sessions the user is permitted to see.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -5026,7 +5026,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 7, 2026 00:18:20 UTC">November 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

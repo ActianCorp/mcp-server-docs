@@ -250,7 +250,7 @@ Returns schema details for a table, including column names, data types, lengths,
 }
 ```
 
-`other_owners` and `hint` are present only when you pass a plain name and tables with that name belong to more than one owner. `other_owners` lists the owners that were not described; call the tool again with `owner.table` to describe one of those.
+`other_owners` and `hint` are present only when you pass a plain name and tables with that name belong to more than one owner. `other_owners` lists the owners that were not described. To describe one of those, call the tool again with `owner.table`.
 
 If no table matches the name, or you cannot see it, the response succeeds with an empty `rows` list and a `row_count` of `0`.
 
@@ -492,7 +492,7 @@ Show me all the functions in my database
 
 ## Operational Health Tools
 
-The following read-only tools report the operational health of the Ingres installation and the connected database. They take no parameters and return a common result format in which each value carries its status (`ok`, `warn`, `crit`, or `info`) and the threshold that judged it. For the result format, thresholds, and the `health` configuration block, see [Health tools](../health-tools.md).
+The following read-only tools report the operational health of the Ingres installation and the connected database. They take no parameters. They return a common result format in which each value includes its status (`ok`, `warn`, `crit`, or `info`) and the threshold that judged it. For the result format, thresholds, and the `health` configuration block, see [Health tools](../health-tools.md).
 
 | Tool | Scope | Reports |
 |------|-------|---------|

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="By default, the Actian MCP Server for VectorAI DB permits only reads: listing, searching, counting and paging. Set query_mode to read-write in conf.json to also register the four write tools: create_collection, store, store_batch and delete_points. Extensions can write through the same checks.">
+        <meta name="description" content="By default, the Actian MCP Server for VectorAI DB permits only reads: listing, searching, counting, and paging. Set query_mode to read-write in conf.json to also register the four write tools: create_collection, store, store_batch, and delete_points. Extensions can write through the same checks.">
       
       
       
@@ -3674,7 +3674,7 @@
 
 
 <h1 id="write-support">Write Support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
-<p>By default, the Actian MCP Server for VectorAI DB permits only reads: listing, searching, counting and paging. Set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also register the four write tools: <code>create_collection</code>, <code>store</code>, <code>store_batch</code> and <code>delete_points</code>. Extensions can write through the same checks.</p>
+<p>By default, the Actian MCP Server for VectorAI DB permits only reads: listing, searching, counting, and paging. Set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also register the four write tools: <code>create_collection</code>, <code>store</code>, <code>store_batch</code>, and <code>delete_points</code>. Extensions can write through the same checks.</p>
 <h2 id="what-a-write-is-in-vectorai">Write Operations in VectorAI DB<a class="headerlink" href="#what-a-write-is-in-vectorai" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3707,8 +3707,8 @@
 </tr>
 </tbody>
 </table>
-<p>Every prompt is sent as <code>Approve this database write?</code>, the text above, and a <code>Details</code> block in JSON (collection, ids, vector size, and for batches every id and the ids overwritten). The client shows it to the person and returns their answer.</p>
-<p>Only collections listed in <code>conf.json</code> can be created or written. Dropping a collection is not an MCP tool; it stays an operator action against the engine (<code>DELETE /collections/&lt;name&gt;</code> on the REST API). Payload updates without re-embedding are not part of this release. <code>store_batch</code> stores several texts with one approval, at most <code>max_batch_size</code> items (32 by default). Loading a whole corpus belongs in a script against the engine, not in an MCP session.</p>
+<p>Every prompt has three parts: the question <code>Approve this database write?</code>, the text above, and a <code>Details</code> block in JSON. The block lists the collection, ids, and vector size. For batches, it also lists every id and the ids overwritten. The client shows the prompt to the person and returns their answer.</p>
+<p>Only collections listed in <code>conf.json</code> can be created or written. Dropping a collection is not an MCP tool. An operator does it against the engine (<code>DELETE /collections/&lt;name&gt;</code> on the REST API). Payload updates without re-embedding are not part of this release. Loading a whole corpus belongs in a script against the engine, not in an MCP session.</p>
 <h2 id="enabling-write-mode">Enabling Write Mode<a class="headerlink" href="#enabling-write-mode" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3724,7 +3724,7 @@
 </tr>
 <tr>
 <td><code>read-write</code></td>
-<td>Read tools plus <code>create_collection</code>, <code>store</code>, <code>store_batch</code>, <code>delete_points</code> and the <code>store_information</code> prompt.</td>
+<td>Read tools plus <code>create_collection</code>, <code>store</code>, <code>store_batch</code>, <code>delete_points</code>, and the <code>store_information</code> prompt.</td>
 </tr>
 </tbody>
 </table>
@@ -3751,14 +3751,14 @@
 </tr>
 </tbody>
 </table>
-<p>The scope is checked first, before any text is sent to the embedding provider, so a caller without it is rejected before anyone is asked to approve anything:</p>
+<p>The server checks the scope first, before it sends any text to the embedding provider. A caller without the scope is rejected before anyone is asked to approve a write:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"write operations require the 'mcp:write' scope, which the access token does not carry"</span><span class="p">}</span>
 </code></pre></div>
-<p>A declined prompt, a prompt not answered within 60 seconds, or a client that cannot show prompts all result in <code>Write rejected by user</code>; nothing is written. Every outcome leaves one call log record: <code>status: "ok"</code> for a write that landed, <code>"rejected"</code> for a declined prompt, <code>"error"</code> for a missing scope or a validation failure, with the token's user in <code>user</code> (see <a href="index.html#call-log">Call log</a>).</p>
-<p><code>store</code> and <code>store_batch</code> validate before they ask: the collection must exist on the engine, no text may be empty, ids must be UUID strings or unsigned integers (and unique within a batch), the batch may not exceed <code>max_batch_size</code>, a text may not reach <code>embedding.max_input_tokens</code> when that is set, and the embedding's dimension must match the collection's vector size. Those failures come back as errors without an approval prompt, so the user is never asked to approve a write that cannot land.</p>
+<p>A declined prompt, a prompt not answered within 60 seconds, or a client that cannot show prompts all result in <code>Write rejected by user</code>. Nothing is written. Every outcome adds one call log record: <code>status: "ok"</code> for a write that landed, <code>"rejected"</code> for a declined prompt, and <code>"error"</code> for a missing scope or a validation failure. The <code>user</code> field holds the token's user (see <a href="index.html#call-log">Call log</a>).</p>
+<p><code>store</code> and <code>store_batch</code> validate the request before they ask for approval. The collection must exist on the engine. No text may be empty. Ids must be UUID strings or unsigned integers, and unique within a batch. The batch may not exceed <code>max_batch_size</code>. A text may not reach <code>embedding.max_input_tokens</code> when that is set. The embedding's dimension must match the collection's vector size. These failures come back as errors without an approval prompt, so the user never approves a write that cannot land.</p>
 <div class="admonition note">
 <p class="admonition-title">Text leaves the server before the prompt</p>
-<p>The dimension check needs the vector, so the text goes to the embedding provider before the approval prompt. With <code>openai</code> or <code>gemini</code> on a hosted endpoint the text has left the host even when the write is then declined; a sidecar through <code>embedding.base_url</code> keeps it on the network; <code>none</code> and <code>dev-hash</code> send nothing.</p>
+<p>The dimension check needs the vector, so the text goes to the embedding provider before the approval prompt. With <code>openai</code> or <code>gemini</code> on a hosted endpoint, the text leaves the host even if the user declines the write. A sidecar through <code>embedding.base_url</code> keeps the text on the network. The <code>none</code> and <code>dev-hash</code> providers send nothing.</p>
 </div>
 <h2 id="skipping-the-approval-prompt">Skipping Approval Prompt<a class="headerlink" href="#skipping-the-approval-prompt" title="Permanent link">&para;</a></h2>
 <p>For clients that cannot show an approval prompt, set <code>write_confirmation</code> to <code>false</code> in <code>conf.json</code>. The write tools then run without asking, and the server logs every such write as <code>WRITE EXECUTED WITHOUT CONFIRMATION</code>. The <code>mcp:write</code> scope check still applies: disabling the prompt does not grant write access to callers that lack the scope.</p>
@@ -3789,7 +3789,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="The Actian MCP Server for VectorAI DB includes two built-in prompt templates. They turn a plain request into instructions that name the tool to use and say how to report the result: quote what was found, say when nothing scored well.">
+        <meta name="description" content="The Actian MCP Server for VectorAI DB includes two built-in prompt templates. They turn a plain request into instructions. The instructions name the tool to use and say how to report the result: quote what was found, and say when nothing scored well.">
       
       
       
@@ -3650,7 +3650,7 @@
 
 
 <h1 id="prompts">Prompts<a class="headerlink" href="#prompts" title="Permanent link">&para;</a></h1>
-<p>The Actian MCP Server for VectorAI DB includes two built-in prompt templates. They turn a plain request into instructions that name the tool to use and say how to report the result: quote what was found, say when nothing scored well.</p>
+<p>The Actian MCP Server for VectorAI DB includes two built-in prompt templates. They turn a plain request into instructions. The instructions name the tool to use and say how to report the result: quote what was found, and say when nothing scored well.</p>
 <h2 id="available-prompts">Available Prompts<a class="headerlink" href="#available-prompts" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3675,7 +3675,7 @@
 </table>
 <hr />
 <h2 id="find_information"><code>find_information</code><a class="headerlink" href="#find_information" title="Permanent link">&para;</a></h2>
-<p>Wraps a question in instructions to search the collections with the <code>search</code> tool, use a filter only when the user named a payload field, quote the returned texts with their ids and scores, and say so when nothing scores well.</p>
+<p>Wraps a question in instructions. The instructions tell the model to search the collections with the <code>search</code> tool, use a filter only when the user named a payload field, quote the returned texts with their ids and scores, and say so when nothing scores well.</p>
 <p><strong>Arguments</strong></p>
 <table>
 <thead>
@@ -3723,7 +3723,7 @@ shows what exists.
 </code></pre></div>
 <hr />
 <h2 id="store_information"><code>store_information</code><a class="headerlink" href="#store_information" title="Permanent link">&para;</a></h2>
-<p>Registered only when <code>query_mode</code> is <code>read-write</code>. Wraps a text in instructions to store it with the <code>store</code> tool, to create the collection first if the tool reports it does not exist, to use <code>store_batch</code> for several texts, and not to retry a write the user rejected.</p>
+<p>The server registers this prompt only when <code>query_mode</code> is <code>read-write</code>. It wraps a text in instructions. The instructions tell the model to store the text with the <code>store</code> tool, create the collection first if the tool reports that it does not exist, use <code>store_batch</code> for several texts, and not retry a write that the user rejected.</p>
 <p><strong>Arguments</strong></p>
 <table>
 <thead>
@@ -3808,7 +3808,7 @@ retry a rejected write.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

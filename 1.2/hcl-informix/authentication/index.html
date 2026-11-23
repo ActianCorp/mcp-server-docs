@@ -3704,7 +3704,7 @@
 </ul>
 </div>
 <h2 id="authentication-modes">Authentication Modes<a class="headerlink" href="#authentication-modes" title="Permanent link">&para;</a></h2>
-<p>For a multi-target deployment, both the OAuth login flow and resource-server mode enforce the per-target grant on requests to a target URL. The <code>allow_unscoped_reads</code> setting may change read checks; its exact Informix behavior still needs confirmation. The Informix deployment guide for resource-server mode is not included yet; the scope format is documented in <a href="../multi-target.html#authentication-and-scope-behavior">Multi-Target Deployments</a>.</p>
+<p>In a multi-target deployment, both the OAuth login flow and resource-server mode enforce the per-target grant on requests to a target URL. The <code>allow_unscoped_reads</code> setting may change read checks. Its exact Informix behavior still needs confirmation. This documentation does not yet include an Informix deployment guide for resource-server mode. The scope format is documented in <a href="../multi-target.html#authentication-and-scope-behavior">Multi-Target Deployments</a>.</p>
 <table>
 <thead>
 <tr>
@@ -3719,7 +3719,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Resource-server mode</strong></td>
-<td style="text-align: left;">The server validates an access token issued to the calling application. Informix-specific setup instructions are not documented yet.</td>
+<td style="text-align: left;">The server validates an access token issued to the calling application. Informix-specific setup instructions are not available yet.</td>
 </tr>
 </tbody>
 </table>
@@ -3810,7 +3810,7 @@ sequenceDiagram
 <p class="admonition-title">Scopes</p>
 <p>For read access you do not need to configure specific scopes. The server automatically requests the <code>openid</code>, <code>email</code>, and <code>profile</code> scopes.</p>
 </div>
-<p>For a single-database deployment using the unqualified <code>/mcp</code> URL, <code>query_mode: read-write</code> requires the <code>mcp:write</code> scope. In a multi-target deployment, requests to a target URL use per-target grants instead: <code>actian:{host}:{instance}:{database}:{read|write}</code>. A <code>:write</code> grant also allows reads on that target. See <a href="../multi-target.html#authentication-and-scope-behavior">Multi-Target Deployments</a>, <a href="../write-support.html#which-scope-authorizes-a-write">Write support</a>, and the provider setup for <a href="auth0.html#multi-target-deployments-per-target-permissions">Auth0</a> or <a href="keycloak.html#multi-target-deployments-per-target-scopes">Keycloak</a>.</p>
+<p>For a single-database deployment that uses the unqualified <code>/mcp</code> URL, <code>query_mode: read-write</code> requires the <code>mcp:write</code> scope. In a multi-target deployment, requests to a target URL use per-target grants instead: <code>actian:{host}:{instance}:{database}:{read|write}</code>. A <code>:write</code> grant also allows reads on that target. See <a href="../multi-target.html#authentication-and-scope-behavior">Multi-Target Deployments</a>, <a href="../write-support.html#which-scope-authorizes-a-write">Write support</a>, and the provider setup for <a href="auth0.html#multi-target-deployments-per-target-permissions">Auth0</a> or <a href="keycloak.html#multi-target-deployments-per-target-scopes">Keycloak</a>.</p>
 <h2 id="user-impersonation">User Impersonation<a class="headerlink" href="#user-impersonation" title="Permanent link">&para;</a></h2>
 <p>By default, the <code>user_impersonation</code> field is set to <code>true</code>. The server extracts a username from the authenticated user's JWT and runs <code>SET SESSION AUTHORIZATION "&lt;username&gt;"</code> before executing a database query. This ensures users only interact with data their specific database account is permitted to see.</p>
 <p>Impersonation covers extension-authored tools as well as the built-in ones, so an extension is also bounded by the end user's database privileges. See <a href="../extensions/index.html#end-user-execution">Extensions</a>.</p>
@@ -4020,7 +4020,7 @@ sudo<span class="w"> </span>update-ca-certificates
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

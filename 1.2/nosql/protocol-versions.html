@@ -3696,7 +3696,7 @@
 
 
 <h1 id="protocol-versions">Protocol Versions<a class="headerlink" href="#protocol-versions" title="Permanent link">&para;</a></h1>
-<p>The Actian MCP Server for NoSQL speaks two families of the Model Context Protocol (MCP) on the same endpoint. Most of what a client does is identical on both. Two things differ, and this page covers them: how a write is confirmed, and a few details in the server log and in one error code.</p>
+<p>The Actian MCP Server for NoSQL supports two families of the Model Context Protocol (MCP) on the same endpoint. Most client actions are identical on both. This page covers what differs: how a write is confirmed, plus a few details in the server log and in one error code.</p>
 <h2 id="accepted-protocol-versions">Accepted Protocol Versions<a class="headerlink" href="#accepted-protocol-versions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3745,10 +3745,10 @@
 <ul>
 <li>It is valid only for that exact call: the same tool, the same arguments, and, when authentication is on, the same signed-in user.</li>
 <li>It can be used once.</li>
-<li>It lasts <code>nsql.writes.confirmation-timeout-seconds</code> (default <code>60</code>). For a stateless client this is how long the person has to answer; a later answer is refused and the operation must be run again.</li>
-<li>A retry with a changed argument, or with an expired, unknown, or already used approval, is refused and nothing is written. The client must run the operation again from the start, which asks the question afresh. A "yes" sent without an approval is not accepted either: the server asks the question instead of writing.</li>
-<li>Declining and cancelling are refused with the same messages as on the stateful protocol, for example <code>Create not performed: the client declined the confirmation prompt.</code></li>
-<li>A client that declares only URL-mode elicitation cannot show the confirmation form, so it never sees the write tools, on either protocol. For a stateless client this is decided on every request, from the capabilities that request declares.</li>
+<li>It stays valid for the time set in <code>nsql.writes.confirmation-timeout-seconds</code> (default <code>60</code>). This is how long the person has to answer. The server refuses a later answer, and the client must run the operation again.</li>
+<li>The server refuses a retry that changes an argument or uses an expired, unknown, or already used approval, and it writes nothing. The client must run the operation again from the start, which asks the question again. The server also does not accept a "yes" sent without an approval. It asks the question instead of writing.</li>
+<li>Declining or cancelling gets the same refusal messages as on the stateful protocol, for example <code>Create not performed: the client declined the confirmation prompt.</code></li>
+<li>A client that declares only URL-mode elicitation cannot show the confirmation form, so it never sees the write tools, on either protocol. For a stateless client, the server decides this on every request, from the capabilities that the request declares.</li>
 </ul>
 <h2 id="running-more-than-one-server-instance">Running More Than One Server Instance<a class="headerlink" href="#running-more-than-one-server-instance" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
@@ -3756,14 +3756,14 @@
 <p>A stateless approval is held in the memory of the instance that asked, the same way query cursors are. If the retry reaches a different instance, that instance does not know the approval and refuses the retry. Nothing is written, so the failure is safe, but the client cannot complete the operation. Route each client's requests to one instance (sticky routing).</p>
 </div>
 <h2 id="resource-not-found">Resource Not Found<a class="headerlink" href="#resource-not-found" title="Permanent link">&para;</a></h2>
-<p>Reading <code>db://schema/class/{className}</code> for a class that does not exist answers with JSON-RPC error <code>-32602</code> (invalid params) to a stateless client and <code>-32002</code> (resource not found) to a stateful one. The 2026-07-28 specification changed the code, and the server follows the code of the protocol the client is using.</p>
+<p>Reading <code>db://schema/class/{className}</code> for a class that does not exist returns JSON-RPC error <code>-32602</code> (invalid params) to a stateless client and <code>-32002</code> (resource not found) to a stateful client. The 2026-07-28 specification changed the code. The server uses the code for the protocol that the client uses.</p>
 <h2 id="server-log">Server Log<a class="headerlink" href="#server-log" title="Permanent link">&para;</a></h2>
 <p>For each stateless <code>server/discover</code>, the server writes one line at <code>INFO</code>:</p>
 <div class="language-text highlight"><pre><span></span><code>INFO  MCP client connected [stateless]: client=&lt;name&gt;/&lt;version&gt;, protocol=2026-07-28, elicitation=true, write tools exposed.
 </code></pre></div>
-<p>The server writes nothing of its own for the calls that follow. A stateful client still produces the same line once per handshake, with the connection in place of the word <code>stateless</code>. How often a stateless client sends <code>server/discover</code> again is up to the client.</p>
+<p>The server logs nothing of its own for the calls that follow. A stateful client still produces the same line once per handshake, with the connection in place of the word <code>stateless</code>. Each stateless client decides how often to send <code>server/discover</code> again.</p>
 <h2 id="for-extension-authors">For Extension Authors<a class="headerlink" href="#for-extension-authors" title="Permanent link">&para;</a></h2>
-<p>An extension write tool that calls <code>context.confirm(...)</code> works on both protocols without any change. On the stateless protocol the handler runs again from the start after the person approves, so keep side effects after <code>confirm()</code>, do not catch exceptions around it, and call it at most once per tool call: a second call in one stateless call is refused. The details are in <a href="extensions/index.html#write-gating-for-extension-tools">Write Gating for Extension Tools</a>.</p>
+<p>An extension write tool that calls <code>context.confirm(...)</code> works on both protocols without changes. On the stateless protocol, the handler runs again from the start after the person approves. So keep side effects after <code>confirm()</code>, do not catch exceptions around it, and call it at most once for each tool call. The server refuses a second call in one stateless call. For details, see <a href="extensions/index.html#write-gating-for-extension-tools">Write Gating for Extension Tools</a>.</p>
 
 
 
@@ -3784,7 +3784,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 9, 2026 13:20:47 UTC">October 9, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
   </span>
 
     

@@ -23,7 +23,7 @@ The Actian MCP Server for HCL Informix® supports the following operations:
 | **Serve multiple databases** | Route clients to Informix databases through a target registry. See [Multi-Target Deployments](multi-target.md). |
 
 !!! note "Write support is opt-in"
-  The server permits only read queries unless you set `query_mode` to `read-write`. In a single-database deployment, each write requires `mcp:write` and human approval. On a multi-target URL, it requires that target's per-target `:write` grant and human approval. For more information, see [Write support](write-support.md).
+  The server permits only read queries unless you set `query_mode` to `read-write`. In a single-database deployment, each write requires `mcp:write` and human approval. On a multi-target URL, each write requires that target's per-target `:write` grant and human approval. For more information, see [Write support](write-support.md).
 
 ---
 
@@ -109,8 +109,8 @@ Create a file named `conf.json` in the working directory and add the database-sp
 | `extensions` | `array` | — | Extension modules to load, each object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md) |
 | `targets` | `object` | — | Informix server and database registry for a multi-target deployment. See [Multi-Target Deployments](multi-target.md). |
 | `targets_dir` | `string` | — | Directory containing additional target definitions. See [Multi-Target Deployments](multi-target.md#configure-targets). |
-| `targets_reload_interval` | `integer` | `10` in the supplied example | Interval in seconds for checking target definitions. Confirm Informix reload behavior before relying on live updates. |
-| `allow_unscoped_reads` | `boolean` | `true` in the supplied example | Multi-target setting shown in the example. Confirm its Informix effect on per-target read authorization before enabling it. |
+| `targets_reload_interval` | `integer` | `10` in the supplied example | Interval in seconds for checking target definitions. Confirm the Informix reload behavior before you rely on live updates. |
+| `allow_unscoped_reads` | `boolean` | `true` in the supplied example | Multi-target setting shown in the example. Confirm its Informix effect on per-target read authorization before you enable it. |
 
 ---
 
