@@ -19,7 +19,7 @@ Identify the deployment type to determine the connection URL. The standard endpo
 In a multi-target deployment, configure one client entry for each database, using that database's URL. A client connected to `/mcp` can call `list_accessible_targets` to find the URLs, but it cannot query a database there. For more information, see the multi-target documentation for [Ingres](../ingres/multi-target.md#connect-a-client-to-each-database), [Analytics Engine](../analytics-engine/multi-target.md#connect-a-client-to-each-database), or [Zen](../zen/multi-target.md).
 
 !!! note "Resource-server mode"
-    In resource-server mode (Ingres and Analytics Engine), the server runs no login. The client sends an access token from the identity provider in the `Authorization: Bearer` header. The browser-login setups on this page, such as Claude Desktop through `mcp-remote` and `MCP_AUTH=oauth` for the Python client, do not apply, because those clients register themselves with the server. Claude Code can sign in with an Auth0 client that you register in advance. For the steps and for application examples, see Resource-Server Mode for [Ingres](../ingres/authentication/resource-server.md#call-the-server-from-a-client) or [Analytics Engine](../analytics-engine/authentication/resource-server.md#call-the-server-from-a-client).
+    In resource-server mode (Ingres, Analytics Engine, Zen, and VectorAI DB), the server runs no login. The client sends an access token from the identity provider in the `Authorization: Bearer` header. The browser-login setups on this page, such as Claude Desktop through `mcp-remote` and `MCP_AUTH=oauth` for the Python client, do not apply, because those clients register themselves with the server. Claude Code can sign in with an Auth0 client that you register in advance. For the steps and for application examples, see Resource-Server Mode for [Ingres](../ingres/authentication/resource-server.md#call-the-server-from-a-client) or [Analytics Engine](../analytics-engine/authentication/resource-server.md#call-the-server-from-a-client). Zen and VectorAI DB accept the same tokens. See [Zen](../zen/authentication/index.md#resource-server-mode) and [VectorAI DB](../vectorai-db/authentication/index.md#resource-server-mode).
 
 ## Elicitation Support for Write Approval
 
@@ -40,7 +40,7 @@ When write support is enabled, the server asks a person to approve each write be
 !!! warning "A client that cannot prompt cannot write"
     If the connected client does not support elicitation, no write goes through. The server never approves a write silently. Read queries are not affected.
 
-    On the SQL databases, the server rejects the write in the same way as it rejects a write that a person declines. To let such a client write, set `write_confirmation` to `false` in `conf.json`. The server then runs writes without asking anyone first. For more information, see [Write support](../ingres/write-support.md#skipping-the-approval-prompt).
+    On the SQL databases and VectorAI DB, the server rejects the write in the same way as it rejects a write that a person declines. To let such a client write, set `write_confirmation` to `false` in `conf.json`. The server then runs writes without asking anyone first. For more information, see [Write support](../ingres/write-support.md#skipping-the-approval-prompt) and, for VectorAI DB, [Skipping Approval Prompt](../vectorai-db/write-support.md#skipping-the-approval-prompt).
 
     On Actian NoSQL, the server does not offer the write tools to such a client at all. The tools are absent from the tool list, and a call to one of them fails as an unknown tool. For more information, see [Why the write tools may not appear](../nosql/write-support.md#missing-write-tools).
 
@@ -159,7 +159,7 @@ You can connect MCP clients such as Claude Desktop, Cursor, GitHub Copilot, fast
 !!! warning "Actian NoSQL"
     Actian NoSQL uses different tools, such as JPQL-based queries and LOID fetches, and a different authentication model. For a NoSQL-specific Python client example, see [Connect Using a Python Client](../nosql/index.md#connect-using-a-python-client).
 
-This section describes how to connect to a running Actian MCP Server instance with the example Python client [`hitl_demo_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py). The script runs read-only queries against every database plugin: Ingres, HCL Informix®, Zen, and Analytics Engine. It also calls write-approval-gated tools directly, which is useful on clients that cannot render a write-approval prompt, such as Claude Desktop and GitHub Copilot.
+This section describes how to connect to a running Actian MCP Server instance with the example Python client [`hitl_demo_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py). The script runs read-only queries against every database plugin: Ingres, HCL Informix®, Zen, Analytics Engine, and VectorAI DB. It also calls write-approval-gated tools directly, which is useful on clients that cannot render a write-approval prompt, such as Claude Desktop and GitHub Copilot.
 
 ### Prerequisites
 
@@ -188,7 +188,7 @@ Most tools share the same interface across databases, but the parameter names va
 | `list_tables` | All databases | None |
 | `list_functions` | Ingres / Analytics Engine / HCL Informix® | None |
 
-`list_tables` and `list_functions` take no input parameters, so those calls are identical on every database. Zen does not register `list_functions`, and Zen adds tools that the other databases do not have, such as `orm_operation` and `execute_write_query`. For the tools that a given database exposes, see its Tools page, for example [Zen tools](../zen/tools/index.md).
+`list_tables` and `list_functions` take no input parameters, so those calls are identical on every database. Zen does not register `list_functions`, and Zen adds tools that the other databases do not have, such as `orm_operation` and `execute_write_query`. For the tools that a given database exposes, see its Tools page, for example [Zen tools](../zen/tools/index.md). VectorAI DB has none of the tools in the table. Its tools work on collections: `list_collections` takes no parameters, and the other tools take `collection` plus their own arguments, such as `query` for `search`. See [VectorAI DB tools](../vectorai-db/tools/index.md).
 
 The following examples use the parameter names for Ingres, Analytics Engine, and HCL Informix®. For Zen, substitute the parameter names from the preceding table.
 
@@ -235,6 +235,18 @@ python hitl_demo_client.py http://localhost:8000/mcp execute_query '{"sql": "SEL
 ```powershell
 '{"sql": "SELECT DATABASE()"}' | Set-Content -Encoding utf8 args.json
 python hitl_demo_client.py http://localhost:8000/mcp execute_query "@args.json"
+```
+
+For VectorAI DB, call the collection tools. `search` embeds the query text with the configured embedding provider and returns the nearest points:
+
+```bash
+python hitl_demo_client.py http://localhost:8000/mcp list_collections
+python hitl_demo_client.py http://localhost:8000/mcp search '{"collection": "documents", "query": "warranty terms", "limit": 3}'
+```
+
+```powershell
+'{"collection": "documents", "query": "warranty terms", "limit": 3}' | Set-Content -Encoding utf8 args.json
+python hitl_demo_client.py http://localhost:8000/mcp search "@args.json"
 ```
 
 See [Parameter Naming Differences](#parameter-naming-differences) for the full list of substitutions.
@@ -306,6 +318,8 @@ On PowerShell, pass the arguments from a file for the same reason described in [
 '{"product_id": 1, "delta": 5}' | Set-Content -Encoding utf8 args.json
 python hitl_demo_client.py http://localhost:8000/mcp adjust_stock "@args.json"
 ```
+
+On VectorAI DB, the built-in write tools go through the same prompt, for example `store '{"collection": "documents", "text": "Returns are accepted within 30 days."}'`.
 
 For the full write-approval walkthrough, see [Answering the Approval Prompt](../ingres/extensions/examples.md#answering-the-approval-prompt).
 

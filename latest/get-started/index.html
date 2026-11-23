@@ -3781,7 +3781,7 @@
 <p>Before you begin, ensure that the following requirements are met:</p>
 <ul>
 <li><strong>Container runtime</strong>: Docker or Podman is installed on the host machine</li>
-<li><strong>Database access</strong>: There is network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, Analytics Engine, or VectorAI DB)</li>
+<li><strong>Database access</strong>: There is network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, Analytics Engine, or VectorAI DB). VectorAI DB also needs an embedding endpoint for text search. See <a href="../vectorai-db/index.html#prerequisites">VectorAI DB prerequisites</a></li>
 <li><strong>AI client</strong>: An MCP-compatible client, such as Claude Desktop, Cursor, GitHub Copilot, or Codex already exists</li>
 </ul>
 <h2 id="step-1-select-a-database-image">Step 1: Select a Database Image<a class="headerlink" href="#step-1-select-a-database-image" title="Permanent link">&para;</a></h2>
@@ -3821,7 +3821,7 @@
 </tbody>
 </table>
 <h2 id="step-2-create-a-configuration-file">Step 2: Create a Configuration File<a class="headerlink" href="#step-2-create-a-configuration-file" title="Permanent link">&para;</a></h2>
-<p>Each self-hosted SQL database requires a <code>conf.json</code> file that contains the connection details. Two cases differ: Actian NoSQL is configured through <code>application.properties</code> instead, and the SaaS deployment of Analytics Engine needs no configuration file at all, because the MCP Server is configured for you.</p>
+<p>Each self-hosted database requires a <code>conf.json</code> file that contains the connection details. Two cases differ: Actian NoSQL is configured through <code>application.properties</code> instead, and the SaaS deployment of Analytics Engine needs no configuration file at all, because the MCP Server is configured for you.</p>
 <p>Each database has unique settings. For more information, see the database configuration document:</p>
 <ul>
 <li><a href="../ingres/index.html#configuration">Ingres Configuration</a></li>
@@ -3890,7 +3890,7 @@
 <td><code>query_mode</code></td>
 <td>String</td>
 <td>No</td>
-<td>Whether data-modifying SQL is permitted. Valid values: <code>read-only</code>, <code>read-write</code>. Defaults to <code>read-only</code>. For more information, see <a href="../ingres/write-support.html">Write support</a></td>
+<td>Whether writes are permitted: data-modifying SQL, or the write tools on VectorAI DB. Valid values: <code>read-only</code>, <code>read-write</code>. Defaults to <code>read-only</code>. For more information, see <a href="../ingres/write-support.html">Write support</a> and <a href="../vectorai-db/write-support.html">VectorAI DB write support</a></td>
 </tr>
 <tr>
 <td><code>write_confirmation</code></td>
@@ -3912,9 +3912,10 @@
 <li>Ingres and Analytics Engine: <code>driver</code>, <code>server</code>, <code>database</code>, <code>database_user</code>, and <code>database_password</code></li>
 <li>HCL Informix®: <code>server</code>, <code>servername</code>, <code>service</code>, <code>database</code>, <code>database_user</code>, and <code>database_password</code></li>
 <li>Zen: <code>conn_string</code></li>
+<li>VectorAI DB: <code>vectorai.url</code> (the engine's REST API), plus the <code>embedding</code> and <code>collections</code> blocks</li>
 </ul>
 <h3 id="multi-target-deployments">Multi-Target Deployments<a class="headerlink" href="#multi-target-deployments" title="Permanent link">&para;</a></h3>
-<p>Ingres, Analytics Engine, HCL Informix®, and Zen can serve several databases from one server. You list the database servers and their databases in a <code>targets</code> block in <code>conf.json</code>, instead of the single-database fields. Each database has its own URL, <code>/mcp/{host}/{instance}/{database}</code>, and a client connects to that URL. When the block lists more than one database server, the server requires authentication to check a scope for each database.</p>
+<p>Ingres, Analytics Engine, HCL Informix®, and Zen can serve several databases from one server. You list the database servers and their databases in a <code>targets</code> block in <code>conf.json</code>, instead of the single-database fields. Each database has its own URL, <code>/mcp/{host}/{instance}/{database}</code>, and a client connects to that URL. When the block lists more than one database server, the server requires authentication to check a scope for each database. VectorAI DB does not accept a <code>targets</code> block. One container serves one engine.</p>
 <p>The fields and their meaning differ by database. For the configuration details, see the multi-target documentation for your database: <a href="../ingres/multi-target.html">Ingres</a>, <a href="../analytics-engine/multi-target.html">Analytics Engine</a>, <a href="../zen/multi-target.html">Zen</a>, or Actian NoSQL.</p>
 <div class="admonition note">
 <p class="admonition-title">Configuration File Protection</p>
@@ -3937,6 +3938,10 @@
 <span class="w">    </span>--name<span class="o">=</span>actian-mcp<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>actian/analytics-engine-mcp-server:1.2.0
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Engines on the Docker host</p>
+<p>Zen and VectorAI DB engines often run on the Docker host itself. On Linux, add <code>--add-host=host.docker.internal:host-gateway</code> so that the container can reach the engine through <code>host.docker.internal</code>. For more information, see <a href="../zen/deployment.html#finding-zen">Finding Zen</a> and, for VectorAI DB, <a href="../vectorai-db/index.html#start-the-server">Start Server</a>.</p>
+</div>
 <h2 id="step-4-connect-to-an-mcp-client">Step 4: Connect to an MCP Client<a class="headerlink" href="#step-4-connect-to-an-mcp-client" title="Permanent link">&para;</a></h2>
 <p>The server operates in HTTP transport mode. Configure the AI client to connect to the following endpoint:</p>
 <p><div class="language-text highlight"><pre><span></span><code>http://localhost:&lt;port&gt;/mcp
@@ -3961,7 +3966,7 @@ Prompt the AI with a standard database request, such as:</p>
 <blockquote>
 <p>"List all tables in the database"</p>
 </blockquote>
-<p>The client will invoke the server's <code>list_tables</code> tool. If the AI client returns a list of the database tables, the end-to-end connection is working correctly.</p>
+<p>The client will invoke the server's <code>list_tables</code> tool. If the AI client returns a list of the database tables, the end-to-end connection is working correctly. On VectorAI DB, ask for the collections instead, for example "List the collections". The client invokes <code>list_collections</code>, which returns the configured collections with their state on the engine.</p>
 <p>For the complete list of available tools for each database, see database-specific documentation:</p>
 <ul>
 <li><a href="../ingres/tools/index.html">Ingres tools</a></li>
@@ -4012,7 +4017,7 @@ Prompt the AI with a standard database request, such as:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 15:16:07 UTC">November 23, 2026</span>
   </span>
 
     
