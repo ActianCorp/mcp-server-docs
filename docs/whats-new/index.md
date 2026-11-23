@@ -34,7 +34,7 @@ For more information, see [Actian VectorAI DB](../vectorai-db/index.md).
 
 One container can now serve many databases instead of running one container for each database. You list the databases in a `targets` block in `conf.json`. Each database gets its own URL, and OAuth scopes control access to each database separately. You can add or remove targets without restarting the server by using `targets.d` files. A deployment without a `targets` block works as before.
 
-- For Ingres and Analytics Engine, each database in a target entry can have its own user name and password.
+- Each database in a target entry can have its own user name and password.
 - A caller whose token has no grant for a database gets `403 Forbidden` with `insufficient_scope`, naming the scope that is missing.
 - A request that does not name a database tells the client which URL to use.
 
