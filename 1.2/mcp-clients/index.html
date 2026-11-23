@@ -4056,7 +4056,7 @@
 </tr>
 </tbody>
 </table>
-<p><code>list_tables</code> and <code>list_functions</code> take no input parameters, so those calls are identical on every database. Zen does not register <code>list_functions</code>, and Zen adds tools that the other databases do not have, such as <code>orm_operation</code> and <code>execute_write_query</code>. For the tools that a given database exposes, see its Tools page, for example <a href="../zen/tools/index.html">Zen tools</a>. VectorAI DB has none of the tools in the table. Its tools work on collections: <code>list_collections</code> takes no parameters, and the other tools take <code>collection</code> plus their own arguments, such as <code>query</code> for <code>search</code>. See <a href="../vectorai-db/tools/index.html">VectorAI DB tools</a>.</p>
+<p><code>list_tables</code> and <code>list_functions</code> take no input parameters, so those calls are identical on every database. Zen does not register <code>list_functions</code>, and Zen adds tools that the other databases do not have, such as <code>orm_operation</code> and <code>execute_write_query</code>. For the tools that a given database exposes, see its Tools page, for example <a href="../zen/tools/index.html">Zen tools</a>. VectorAI DB has none of the tools in the table. Its tools work on collections. <code>list_collections</code> takes no parameters. The other tools take <code>collection</code> plus their own arguments, such as <code>query</code> for <code>search</code>. See <a href="../vectorai-db/tools/index.html">VectorAI DB tools</a>.</p>
 <p>The following examples use the parameter names for Ingres, Analytics Engine, and HCL Informix®. For Zen, substitute the parameter names from the preceding table.</p>
 <h3 id="basic-connection-example">Basic Connection Example<a class="headerlink" href="#basic-connection-example" title="Permanent link">&para;</a></h3>
 <p>Run the script with a server URL, a tool name, and the arguments for the tool as a JSON object:</p>
@@ -4178,7 +4178,7 @@ information about configuring a persistent token store, see the
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 15:16:07 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 15:59:48 UTC">November 23, 2026</span>
   </span>
 
     

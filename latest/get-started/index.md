@@ -12,7 +12,7 @@ The Actian MCP Server is distributed as Docker container images, with one dedica
 Before you begin, ensure that the following requirements are met:
 
 - **Container runtime**: Docker or Podman is installed on the host machine
-- **Database access**: There is network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, Analytics Engine, or VectorAI DB). VectorAI DB also needs an embedding endpoint for text search. See [VectorAI DB prerequisites](../vectorai-db/index.md#prerequisites)
+- **Database access**: There is network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, Analytics Engine, or VectorAI DB). VectorAI DB also needs an embedding endpoint for text search. See [VectorAI DB prerequisites](../vectorai-db/index.md#prerequisites).
 - **AI client**: An MCP-compatible client, such as Claude Desktop, Cursor, GitHub Copilot, or Codex already exists
 
 ## Step 1: Select a Database Image
@@ -98,7 +98,7 @@ docker run -d \
 ```
 
 !!! note "Engines on the Docker host"
-    Zen and VectorAI DB engines often run on the Docker host itself. On Linux, add `--add-host=host.docker.internal:host-gateway` so that the container can reach the engine through `host.docker.internal`. For more information, see [Finding Zen](../zen/deployment.md#finding-zen) and, for VectorAI DB, [Start Server](../vectorai-db/index.md#start-the-server).
+    Zen and VectorAI DB engines often run on the Docker host itself. On Linux, add `--add-host=host.docker.internal:host-gateway` so the container can reach the engine through `host.docker.internal`. For more information, see [Finding Zen](../zen/deployment.md#finding-zen) and, for VectorAI DB, [Start Server](../vectorai-db/index.md#start-the-server).
 
 ## Step 4: Connect to an MCP Client
 

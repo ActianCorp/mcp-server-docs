@@ -188,7 +188,7 @@ Most tools share the same interface across databases, but the parameter names va
 | `list_tables` | All databases | None |
 | `list_functions` | Ingres / Analytics Engine / HCL Informix® | None |
 
-`list_tables` and `list_functions` take no input parameters, so those calls are identical on every database. Zen does not register `list_functions`, and Zen adds tools that the other databases do not have, such as `orm_operation` and `execute_write_query`. For the tools that a given database exposes, see its Tools page, for example [Zen tools](../zen/tools/index.md). VectorAI DB has none of the tools in the table. Its tools work on collections: `list_collections` takes no parameters, and the other tools take `collection` plus their own arguments, such as `query` for `search`. See [VectorAI DB tools](../vectorai-db/tools/index.md).
+`list_tables` and `list_functions` take no input parameters, so those calls are identical on every database. Zen does not register `list_functions`, and Zen adds tools that the other databases do not have, such as `orm_operation` and `execute_write_query`. For the tools that a given database exposes, see its Tools page, for example [Zen tools](../zen/tools/index.md). VectorAI DB has none of the tools in the table. Its tools work on collections. `list_collections` takes no parameters. The other tools take `collection` plus their own arguments, such as `query` for `search`. See [VectorAI DB tools](../vectorai-db/tools/index.md).
 
 The following examples use the parameter names for Ingres, Analytics Engine, and HCL Informix®. For Zen, substitute the parameter names from the preceding table.
 
