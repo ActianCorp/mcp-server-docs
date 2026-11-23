@@ -298,7 +298,7 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
 ```
 
 !!! note
-    `ServerName` in `conn_string` is the Zen engine as the container reaches it: the Docker host's name or IP (`host.docker.internal` on Docker Desktop), or the engine container's network alias. Never `localhost` or `127.0.0.1`, which refer to the container itself. A server for [several databases](../multi-target.md) adds a `targets` block; `conn_string` stays required.
+    `ServerName` in `conn_string` is the Zen engine address as the container reaches it. Use the Docker host's name or IP (`host.docker.internal` on Docker Desktop), or the engine container's network alias. Never use `localhost` or `127.0.0.1`, which refer to the container itself. A server for [several databases](../multi-target.md) adds a `targets` block. `conn_string` is still required.
 
 For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see [HTTPS / TLS for Remote Deployments](index.md#secure-remote-deployments-with-https-and-tls).
 

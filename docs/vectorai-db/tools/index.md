@@ -5,7 +5,7 @@ description: Reference for the VectorAI DB tools of the Actian MCP Server: colle
 
 # Tools
 
-The server registers six read tools in every mode and four write tools only when `query_mode` is `read-write` (see [Write support](../write-support.md)). Every tool except `list_collections` takes a `collection` name and answers only for collections listed in `conf.json`; any other name returns an error that lists the configured ones.
+The server registers six read tools in every mode and four write tools only when `query_mode` is `read-write` (see [Write support](../write-support.md)). Every tool except `list_collections` takes a `collection` name. A tool answers only for collections listed in `conf.json`. Any other name returns an error that lists the configured ones.
 
 ## Available Tools
 
@@ -14,7 +14,7 @@ The server registers six read tools in every mode and four write tools only when
 | [`list_collections`](#list_collections) | yes | yes | Configured collections with their live state on the engine. |
 | [`describe_collection`](#describe_collection) | yes | yes | Full detail for one collection: engine config, payload schema, index type. |
 | [`search`](#search) | yes | yes | Semantic search from a text query. |
-| [`search_by_vector`](#search_by_vector) | yes | yes | Nearest-neighbour search from a vector. |
+| [`search_by_vector`](#search_by_vector) | yes | yes | Nearest-neighbor search from a vector. |
 | [`count_points`](#count_points) | yes | yes | Number of points, optionally filtered. |
 | [`scroll_points`](#scroll_points) | yes | yes | Page through points in id order. |
 | [`create_collection`](#create_collection) | | yes | Create a configured collection on the engine. |
@@ -22,7 +22,7 @@ The server registers six read tools in every mode and four write tools only when
 | [`store_batch`](#store_batch) | | yes | Embed several texts and store them as points with one approval. |
 | [`delete_points`](#delete_points) | | yes | Delete points by id. |
 
-Writes require the `mcp:write` scope when OAuth is enabled and an approval prompt at the client. `search`, `store` and `store_batch` need an embedding provider. With `embedding.provider: none` they answer with an error; use `search_by_vector` instead.
+Writes need the `mcp:write` scope when OAuth is enabled, and an approval prompt at the client. `search`, `store`, and `store_batch` need an embedding provider. With `embedding.provider: none`, they return an error. Use `search_by_vector` instead.
 
 ### Common Output
 
@@ -36,17 +36,17 @@ Every tool returns a JSON object with `success`. On failure:
 }
 ```
 
-`status_code` is present when the engine answered with an HTTP error (the message is then prefixed `VectorAI:`, for example `VectorAI: Search failed: Dimension mismatch for vector '': expected 1024, got 2`). Other errors are validation errors (`limit must be >= 1`, `text must not be empty`, `collection 'x' is not configured on this server; configured: ...`), embedding errors, or `Write rejected by user`.
+`status_code` is present when the engine returns an HTTP error. The message then starts with `VectorAI:`, for example `VectorAI: Search failed: Dimension mismatch for vector '': expected 1024, got 2`. Other errors are validation errors (`limit must be >= 1`, `text must not be empty`, `collection 'x' is not configured on this server; configured: ...`), embedding errors, or `Write rejected by user`.
 
 ### Filters
 
-`search`, `search_by_vector`, `count_points` and `scroll_points` accept `filter`, the engine's JSON filter on payload fields, passed through unchanged:
+`search`, `search_by_vector`, `count_points`, and `scroll_points` accept `filter`. This is the engine's JSON filter on payload fields. The server passes it through unchanged:
 
 ```json
 {"must": [{"key": "metadata.kind", "match": {"value": "faq"}}]}
 ```
 
-`store` writes `metadata` under the payload key `metadata`, so fields given at store time are addressed as `metadata.<field>`. See the Actian VectorAI DB documentation on filtering for the full syntax.
+`store` writes `metadata` under the payload key `metadata`, so you address fields given at store time as `metadata.<field>`. See the Actian VectorAI DB documentation on filtering for the full syntax.
 
 ---
 
@@ -87,13 +87,13 @@ This tool takes no input parameters.
 }
 ```
 
-`exists` is `false` for a configured collection not yet created on the engine, and `null` with an `error` field when the engine could not answer for it. `status` is the engine's collection status: `green`, `yellow`, `red`, or `unknowncollectionstatus` for a collection the engine has not loaded yet; see [Engine behaviour](../index.md#engine-behaviour).
+`exists` is `false` for a configured collection that is not yet created on the engine. It is `null`, with an `error` field, when the engine could not answer for it. `status` is the engine's collection status: `green`, `yellow`, `red`, or `unknowncollectionstatus` (a collection the engine has not loaded yet). See [Engine behaviour](../index.md#engine-behaviour).
 
 ---
 
 ## `describe_collection`
 
-Full detail for one configured collection: everything `list_collections` shows plus the engine's configuration, payload schema and index type, and the values configured in `conf.json`.
+Returns full detail for one configured collection. This includes everything `list_collections` shows, plus the engine's configuration, payload schema, and index type, and the values configured in `conf.json`.
 
 **Parameters**
 
@@ -161,7 +161,7 @@ Embeds `query` with the collection's embedding provider and returns the nearest 
 }
 ```
 
-`text` is the payload's `text_field` and is present only when that field exists on the point. `count` is the number of results returned, `limit` the effective limit after capping: a request with `limit: 100000` comes back with `"limit": 100`.
+`text` holds the payload's `text_field`. It is present only when that field exists on the point. `count` is the number of results returned. `limit` is the effective limit after capping. For example, a request with `limit: 100000` comes back with `"limit": 100`.
 
 **Example**
 
@@ -182,14 +182,14 @@ Response (abridged):
 
 ## `search_by_vector`
 
-Nearest-neighbour search with a vector the caller already has. The vector must have the collection's dimension; the engine refuses any other size (`Dimension mismatch ... expected 1024, got 2`). Works with `embedding.provider: none`.
+Runs a nearest-neighbor search with a vector that the caller already has. The vector must have the collection's dimension. The engine refuses any other size (`Dimension mismatch ... expected 1024, got 2`). This tool works with `embedding.provider: none`.
 
 **Parameters**
 
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
 | `collection` | string | Yes | | A configured collection name. |
-| `vector` | array of numbers | Yes | | Query vector, same dimension as the collection; must not be empty. |
+| `vector` | array of numbers | Yes | | Query vector. It must have the collection's dimension and must not be empty. |
 | `limit` | integer | No | `search_limit` (10) | As for `search`. |
 | `filter` | object | No | — | As for `search`. |
 | `score_threshold` | number | No | — | As for `search`. |
@@ -200,7 +200,7 @@ Nearest-neighbour search with a vector the caller already has. The vector must h
 
 ## `count_points`
 
-Number of points in a configured collection, optionally restricted by a filter. Exact at any time (unlike the `points_count` shown by `list_collections` before the engine has loaded the collection).
+Returns the number of points in a configured collection, optionally restricted by a filter. The count is always exact, unlike the `points_count` that `list_collections` shows before the engine has loaded the collection.
 
 **Parameters**
 
@@ -219,7 +219,7 @@ Number of points in a configured collection, optionally restricted by a filter. 
 
 ## `scroll_points`
 
-Pages through a collection's points in id order without a query vector. Pass the returned `next_page_offset` as `offset` to get the next page; it is `null` on the last page.
+Pages through a collection's points in id order without a query vector. To get the next page, pass the returned `next_page_offset` as `offset`. On the last page, `next_page_offset` is `null`.
 
 **Parameters**
 
@@ -246,13 +246,13 @@ Pages through a collection's points in id order without a query vector. Pass the
 }
 ```
 
-`score` is always `null` for scrolled points (no query vector). `vector` is present only when `with_vector` is `true`; it has the collection's dimension.
+`score` is always `null` for scrolled points because there is no query vector. `vector` is present only when `with_vector` is `true`. It has the collection's dimension.
 
 ---
 
 ## `create_collection`
 
-Read-write mode only. Creates a configured collection on the engine with the configured `vector_size` and `distance` (`Cosine` when unset). When `vector_size` is not in `conf.json`, the embedding provider's dimension is used; for providers that do not publish it, one probe embedding is made. When the collection already exists the call succeeds without a prompt and without changes.
+Read-write mode only. Creates a configured collection on the engine with the configured `vector_size` and `distance` (`Cosine` when unset). If `conf.json` has no `vector_size`, the server uses the embedding provider's dimension. For providers that do not publish it, the server makes one probe embedding. If the collection already exists, the call succeeds without a prompt and without changes.
 
 **Parameters**
 
@@ -272,7 +272,7 @@ Read-write mode only. Creates a configured collection on the engine with the con
 { "success": true, "collection": "<name>", "created": false, "message": "collection already exists" }
 ```
 
-A collection with `embedding.provider: none` and no `vector_size` cannot be created: the error says which key to add to `conf.json`.
+You cannot create a collection with `embedding.provider: none` and no `vector_size`. The error says which key to add to `conf.json`.
 
 ---
 
@@ -280,7 +280,7 @@ A collection with `embedding.provider: none` and no `vector_size` cannot be crea
 
 Read-write mode only. Embeds `text` and upserts it as one point. The payload holds the text under the collection's `text_field` (default `document`) plus `metadata` as given, so later filters can use `metadata.<field>`. The collection must already exist.
 
-Before asking for approval, `store` checks that the text is not empty, that the collection exists on the engine, that the text is within `embedding.max_input_tokens` when that is set, and that the embedding's dimension equals the collection's vector size. A mismatch is reported as an error naming the two sizes and the `conf.json` keys to fix. The text reaches the embedding provider before the prompt.
+Before it asks for approval, `store` checks four things. The text is not empty. The collection exists on the engine. The text is within `embedding.max_input_tokens`, when that is set. The embedding's dimension equals the collection's vector size. A mismatch returns an error that names the two sizes and the `conf.json` keys to fix. The text reaches the embedding provider before the prompt.
 
 **Parameters**
 
@@ -291,7 +291,7 @@ Before asking for approval, `store` checks that the text is not empty, that the 
 | `metadata` | object | No | — | Stored under the payload key `metadata`. |
 | `id` | string or integer | No | new UUID | UUID string or unsigned integer. An existing id is overwritten. |
 
-**Approval prompt**: `Store 1 point in <name>: <first 120 characters of the text>`, plus `overwrites existing point <id>` when the id already exists. The prompt details carry the id, the text preview, the metadata, the ids overwritten and the vector size.
+**Approval prompt**: `Store 1 point in <name>: <first 120 characters of the text>`, plus `overwrites existing point <id>` when the id already exists. The prompt details include the id, the text preview, the metadata, the ids overwritten, and the vector size.
 
 **Output schema**
 
@@ -314,15 +314,15 @@ Request:
 { "collection": "documents", "text": "Write tools require the user to approve each change.", "metadata": { "kind": "note" } }
 ```
 
-The client shows `Store 1 point in documents: Write tools require the user to approve each change.`; after approval the response above is returned.
+The client shows `Store 1 point in documents: Write tools require the user to approve each change.`; after approval, the tool returns the response above.
 
 ---
 
 ## `store_batch`
 
-Read-write mode only. Embeds several texts and upserts them as points in one call, with one approval prompt for the whole batch. The texts go to the embedding provider in requests of `embedding.batch_size` and to the engine in one request, so all points land or none. Each item takes the same fields as a `store` call.
+Read-write mode only. Embeds several texts and upserts them as points in one call, with one approval prompt for the whole batch. The texts go to the embedding provider in requests of `embedding.batch_size` and to the engine in one request, so either all points land or none do. Each item takes the same fields as a `store` call.
 
-Before asking for approval, `store_batch` checks every item (text not blank, `id` a UUID string or unsigned integer and used once in the batch, `metadata` an object), that the collection exists on the engine, that no text exceeds `embedding.max_input_tokens` when that is set, and that the embeddings' dimension equals the collection's vector size. A batch longer than `max_batch_size` (default 32) is rejected as well: `store_batch takes at most 32 items per call, got 40; split the batch or raise max_batch_size in conf.json`. Any failure returns an error and nothing is written.
+Before it asks for approval, `store_batch` checks every item. The text must not be blank, `id` must be a UUID string or unsigned integer that is used once in the batch, and `metadata` must be an object. The server also checks that the collection exists on the engine, that no text exceeds `embedding.max_input_tokens` when that is set, and that the embeddings' dimension equals the collection's vector size. It rejects a batch longer than `max_batch_size` (default 32): `store_batch takes at most 32 items per call, got 40; split the batch or raise max_batch_size in conf.json`. Any failure returns an error, and nothing is written.
 
 **Parameters**
 
@@ -331,7 +331,7 @@ Before asking for approval, `store_batch` checks every item (text not blank, `id
 | `collection` | string | Yes | A configured collection name. |
 | `items` | array of objects | Yes | 1 to `max_batch_size` items, each `{"text": string, "metadata"?: object, "id"?: string or integer}`. A missing id becomes a new UUID; an existing id is overwritten. |
 
-**Approval prompt**: a header `Store <n> points in <name>: <total> chars, metadata keys: <keys>` (or `no metadata`), with `overwrites <k> existing points` appended when ids already exist, followed by one numbered line per item: its length, its metadata, the first 60 characters of the text, and `overwrites id <id>` where applicable. The approver sees every item, because one approval covers the whole batch. The details carry all ids, the ids overwritten, the count, the total characters, the metadata keys and the vector size.
+**Approval prompt**: a header `Store <n> points in <name>: <total> chars, metadata keys: <keys>` (or `no metadata`), with `overwrites <k> existing points` appended when ids already exist. One numbered line per item follows: its length, its metadata, the first 60 characters of the text, and `overwrites id <id>` where applicable. The approver sees every item because one approval covers the whole batch. The details include all ids, the ids overwritten, the count, the total characters, the metadata keys, and the vector size.
 
 **Output schema**
 
@@ -345,22 +345,22 @@ Before asking for approval, `store_batch` checks every item (text not blank, `id
 }
 ```
 
-`ids` is in item order, so a wrong batch is undone with one `delete_points` call. Loading a whole corpus still belongs in a script against the engine's REST API, not in an MCP session.
+`ids` is in item order, so you can undo a wrong batch with one `delete_points` call. Loading a whole corpus still belongs in a script against the engine's REST API, not in an MCP session.
 
 ---
 
 ## `delete_points`
 
-Read-write mode only. Deletes points by id from a configured collection. The server looks the ids up first: `deleted` counts the ids that existed, the rest come back in `not_found`. When none of the ids exist nothing is deleted and no approval is asked.
+Read-write mode only. Deletes points by id from a configured collection. The server looks up the ids first. `deleted` counts the ids that existed. The rest come back in `not_found`. If none of the ids exist, nothing is deleted and the server asks for no approval.
 
 **Parameters**
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `collection` | string | Yes | A configured collection name. |
-| `ids` | array of string or integer | Yes | Point ids; must not be empty. A UUID is accepted in any spelling (case, with or without hyphens). |
+| `ids` | array of string or integer | Yes | Point ids. Must not be empty. The tool accepts a UUID in any spelling (any case, with or without hyphens). |
 
-**Approval prompt**: `Delete <n> points from <name>`, with `(<k> of <m> requested ids not found)` appended when some ids do not exist; the details list the first 20 ids to delete and the ids not found.
+**Approval prompt**: `Delete <n> points from <name>`, with `(<k> of <m> requested ids not found)` appended when some ids do not exist. The details list the first 20 ids to delete and the ids not found.
 
 **Output schema**
 

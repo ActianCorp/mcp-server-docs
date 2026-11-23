@@ -19,7 +19,7 @@ The Actian MCP Server for VectorAI DB publishes three JSON resources so a client
 
 ## `resource://vectorai/health`
 
-The engine's root response (its identity and version) and whether its `/healthz` endpoint answers.
+Returns the engine's root response (its identity and version) and whether its `/healthz` endpoint answers.
 
 **Parameters**: none.
 

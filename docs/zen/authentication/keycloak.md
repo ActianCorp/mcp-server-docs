@@ -274,20 +274,20 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
 
 ### Step 5.3: Per-Target Scopes (Resource-Server Mode)
 
-A server that [serves several databases](../multi-target.md) in [resource-server mode](index.md#resource-server-mode) checks a grant per URL, `actian:{host}:{instance}:{database}:read` or `:write`, instead of `mcp:write`. Keycloak issues them the same way:
+A server that [serves several databases](../multi-target.md) in [resource-server mode](index.md#resource-server-mode) checks a grant per URL, `actian:{host}:{instance}:{database}:read` or `:write`, instead of `mcp:write`. Keycloak issues them in the same way:
 
-1. For each grant, create a client scope as in Step 5.1 whose **Name** is the grant itself, for example `actian:zen16:admin:DEMODATA:read`, with **Include in token scope** `On`.
-2. Attach each scope as **Optional** to the client that requests the tokens, as in Step 5.2. In resource-server mode that is the calling application's client: the MCP server runs no login of its own.
-3. Ask for the grants by name in the token request, for example `scope=openid actian:zen16:admin:DEMODATA:read`. They arrive in the token's `scope` claim, where the server reads them. The server also reads `scp` and `permissions`, so a hardcoded-claim mapper that writes the grants into `scp` works too.
+1. For each grant, create a client scope as in Step 5.1. Set **Name** to the grant itself, for example `actian:zen16:admin:DEMODATA:read`. Set **Include in token scope** to `On`.
+2. Attach each scope as **Optional** to the client that requests the tokens, as in Step 5.2. In resource-server mode, that is the calling application's client. The MCP server runs no login of its own.
+3. Request the grants by name in the token request, for example `scope=openid actian:zen16:admin:DEMODATA:read`. They arrive in the token's `scope` claim, where the server reads them. The server also reads `scp` and `permissions`, so a hardcoded-claim mapper that writes the grants into `scp` also works.
 
-A `write` grant implies `read`. A token without the grant for a URL is refused with `403 insufficient_scope`, and the `WWW-Authenticate` header names the grant to request. See [Per-Target Scopes](index.md#per-target-scopes).
+A `write` grant implies `read`. The server refuses a token without the grant for a URL with `403 insufficient_scope`. The `WWW-Authenticate` header names the grant to request. See [Per-Target Scopes](index.md#per-target-scopes).
 
 ## Step 6: Create Keycloak Users (If Using User Impersonation)
 
 !!! warning "Not applicable to Zen"
     Zen does not support `SET SESSION AUTHORIZATION`, so user impersonation is unavailable and `user_impersonation` must be `false`. Skip this step. See [User Impersonation](index.md#user-impersonation).
 
-Keycloak users are still how people sign in, created as in any realm (**Users** > **Add user**, then **Credentials** > **Set password**). They need no matching Zen account: every URL connects to Zen as the login in its target entry or `conn_string`, and the token's `preferred_username` is recorded in the [call log](../index.md#call-log) only. Keycloak puts `preferred_username` into the token when the `profile` scope is present, which it is by default.
+People still sign in as Keycloak users. Create them as in any realm (**Users** > **Add user**, then **Credentials** > **Set password**). They need no matching Zen account. Every URL connects to Zen as the login in its target entry or `conn_string`. The server records the token's `preferred_username` in the [call log](../index.md#call-log) only. Keycloak adds `preferred_username` to the token when the `profile` scope is present. That scope is present by default.
 
 
 ## Step 7: Assemble Final Configuration {#step-7-assemble-the-final-configuration}
@@ -329,7 +329,7 @@ Keycloak users are still how people sign in, created as in any realm (**Users** 
 ```
 
 !!! note
-    `ServerName` in `conn_string` is the Zen engine as the container reaches it: the Docker host's name or IP (`host.docker.internal` on Docker Desktop), or the engine container's network alias. Never `localhost` or `127.0.0.1`, which refer to the container itself. A server for [several databases](../multi-target.md) adds a `targets` block; `conn_string` stays required.
+    `ServerName` in `conn_string` is the Zen engine address as the container reaches it. Use the Docker host's name or IP (`host.docker.internal` on Docker Desktop), or the engine container's network alias. Never use `localhost` or `127.0.0.1`, which refer to the container itself. A server for [several databases](../multi-target.md) adds a `targets` block. `conn_string` is still required.
 
 For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see [HTTPS / TLS for Remote Deployments](index.md#secure-remote-deployments-with-https-and-tls).
 

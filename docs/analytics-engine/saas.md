@@ -55,7 +55,7 @@ A warehouse offers the same tools as a self-hosted deployment: `execute_query`, 
 
 Write queries are enabled on a warehouse. Two conditions must be met before a write runs:
 
-1. Your database privileges allow it. The warehouse enforces your existing grants on each table, so the MCP Server cannot perform any write that your grants do not permit.
+1. Your database privileges allow it. The warehouse enforces your existing grants on each table. The MCP Server cannot run any write that your grants do not permit.
 2. You approve the write. The server describes the statement and waits for your confirmation before running it.
 
 !!! warning "A client that cannot prompt cannot write"

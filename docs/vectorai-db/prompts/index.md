@@ -5,7 +5,7 @@ description: Built-in prompt templates of the Actian MCP Server for VectorAI DB:
 
 # Prompts
 
-The Actian MCP Server for VectorAI DB includes two built-in prompt templates. They turn a plain request into instructions that name the tool to use and say how to report the result: quote what was found, say when nothing scored well.
+The Actian MCP Server for VectorAI DB includes two built-in prompt templates. They turn a plain request into instructions. The instructions name the tool to use and say how to report the result: quote what was found, and say when nothing scored well.
 
 ## Available Prompts
 
@@ -18,7 +18,7 @@ The Actian MCP Server for VectorAI DB includes two built-in prompt templates. Th
 
 ## `find_information`
 
-Wraps a question in instructions to search the collections with the `search` tool, use a filter only when the user named a payload field, quote the returned texts with their ids and scores, and say so when nothing scores well.
+Wraps a question in instructions. The instructions tell the model to search the collections with the `search` tool, use a filter only when the user named a payload field, quote the returned texts with their ids and scores, and say so when nothing scores well.
 
 **Arguments**
 
@@ -61,7 +61,7 @@ shows what exists.
 
 ## `store_information`
 
-Registered only when `query_mode` is `read-write`. Wraps a text in instructions to store it with the `store` tool, to create the collection first if the tool reports it does not exist, to use `store_batch` for several texts, and not to retry a write the user rejected.
+The server registers this prompt only when `query_mode` is `read-write`. It wraps a text in instructions. The instructions tell the model to store the text with the `store` tool, create the collection first if the tool reports that it does not exist, use `store_batch` for several texts, and not retry a write that the user rejected.
 
 **Arguments**
 

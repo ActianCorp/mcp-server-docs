@@ -38,9 +38,9 @@ One container per database remains fully supported. Use multi-target when the nu
     actian:{host}:{instance}:{database}:read
     ```
 
-4. The server connects only to databases in the registry. A URL that names anything else is never dialled.
+4. The server connects only to databases in the registry. A URL that names anything else is never contacted.
 
-The URL selects the database. No tool takes a database or target argument; a client chooses a database by connecting to its URL.
+The URL selects the database. No tool takes a database or target argument. A client chooses a database by connecting to its URL.
 
 ---
 
@@ -54,7 +54,7 @@ The URL selects the database. No tool takes a database or target argument; a cli
 
 ## Configure Target Registry {#configure-the-target-registry}
 
-Add a `targets` block to `conf.json`. Values in `defaults` apply to every entry; each entry in `list` describes one Analytics Engine installation and the databases it serves.
+Add a `targets` block to `conf.json`. Values in `defaults` apply to every entry. Each entry in `list` describes one Analytics Engine installation and the databases it serves.
 
 ```json
 {
@@ -110,7 +110,7 @@ With a `targets` block, the single-database keys `driver`, `server`, `database`,
 
 | Field | Required | Description |
 | :--- | :--- | :--- |
-| `host` | Yes | The database server's host name. It is the first segment of the target's URL and of its scopes, and the address the server connects to. Use a stable DNS name; see [Choosing the Host Name](#choosing-the-host-name). |
+| `host` | Yes | The database server's host name. It is the first segment of the target's URL and of its scopes, and the address the server connects to. Use a stable DNS name. See [Choosing the Host Name](#choosing-the-host-name). |
 | `instance` | Yes | The Analytics Engine installation ID, for example `VW`. It is the second segment of the target's URL and scopes. Letters, digits, and `_`, up to 32 characters. |
 | `databases` | Yes | The databases this entry serves. Each item is a database name, or an object with per-database credentials (see below). Database names may contain letters, digits, `_`, and `$`, up to 32 characters. `iidbdb` cannot be listed. |
 | `username`, `password` | Yes | The database account used for this installation. |
@@ -138,9 +138,9 @@ An Analytics Engine installation (`host` and `instance`) can appear only once in
 
 ### Choosing Host Name {#choosing-the-host-name}
 
-The `host` value appears in client URLs and in every scope your identity provider grants. If the database later moves to another machine and `host` is that machine's name, every URL and grant changes with it.
+The `host` value appears in client URLs and in every scope the identity provider grants. If the database later moves to another machine and `host` is that machine's name, every URL and grant changes with it.
 
-Give each installation a stable DNS name, such as a CNAME `sales-db.example.com`, and use that name in `host`. A move is then a DNS change plus a restart of the MCP Server container. Where you cannot add a DNS record, a hosts entry in the container works the same way:
+Give each installation a stable DNS name, such as a CNAME `sales-db.example.com`, and use that name in `host`. A move is then a DNS change plus a restart of the MCP Server container. If you cannot add a DNS record, add a hosts entry in the container:
 
 ```bash
 docker run --add-host sales-db.example.com:10.1.2.3 ...
@@ -229,12 +229,12 @@ actian:{host}:{instance}:{database}:{read|write}
 
 - `*` matches exactly one segment.
 - A `write` scope also grants `read`.
-- There are no deny scopes. What a token can reach is readable from its scopes.
+- There are no deny scopes. The scopes in a token show everything it can reach.
 - The server logs a warning each time a scope with a wildcard host is used.
 
-A write on a target URL needs that target's `write` scope, the server in `read-write` mode, and, unless disabled, human approval. The `mcp:write` scope does not authorize writes on a target URL, and does not apply to a deployment with more than one server or database. For details, see [Write Support](write-support.md).
+A write on a target URL needs three things: that target's `write` scope, the server in `read-write` mode, and human approval (unless disabled). The `mcp:write` scope does not authorize writes on a target URL. It also does not apply to a deployment with more than one server or database. For details, see [Write Support](write-support.md).
 
-How to deliver these scopes depends on your identity provider:
+How you deliver these scopes depends on the identity provider:
 
 - [Auth0: Per-Target Permissions](authentication/auth0.md#multi-target-deployments-per-target-permissions)
 - [Keycloak: Per-Target Scopes](authentication/keycloak.md#multi-target-deployments-per-target-scopes)
@@ -247,10 +247,10 @@ How to deliver these scopes depends on your identity provider:
 | Valid token without a read scope for the target | `403 Forbidden` with `WWW-Authenticate: Bearer error="insufficient_scope"`, naming the scope that is missing |
 | Valid token, target not in the registry | The same `403` as above |
 
-The server answers an unknown target and an ungranted one identically, so the responses cannot be used to discover which databases exist. The server log records the actual reason.
+The server answers an unknown target and an ungranted one identically, so callers cannot use the responses to find out which databases exist. The server log records the actual reason.
 
 !!! note "Granting a missing scope"
-    With the server's OAuth login, an MCP client may try to sign in again to obtain the missing scope. That attempt fails with an authorization error that names the missing scope. Grant the scope in your identity provider and sign in again.
+    With the server's OAuth login, an MCP client might try to sign in again to get the missing scope. That attempt fails with an authorization error that names the missing scope. Grant the scope in the identity provider and sign in again.
 
 Revoking a scope takes effect when the caller's current token expires. Tokens are verified locally against the identity provider's published keys. Use shorter token lifetimes if this matters.
 
@@ -263,7 +263,7 @@ Revoking a scope takes effect when the caller's current token expires. Tokens ar
 This setting turns off per-target scope checks. Any authenticated caller can then read every database in the registry, and a registry with more than one target can start without per-target scopes. Writes on target URLs are refused while it is set.
 
 !!! warning
-    Use `allow_unscoped_reads` only temporarily, for example to test routing before scopes are provisioned in your identity provider. The server logs a warning at every startup while it is set.
+    Use `allow_unscoped_reads` only temporarily, for example, to test routing before scopes are set up in the identity provider. The server logs a warning at every startup while it is set.
 
 ---
 
@@ -291,7 +291,7 @@ The `list_accessible_targets` tool returns the databases the caller's token can 
 ```
 
 - Only databases the caller can read are listed. When scope checks are off, every registered database is listed.
-- `url` is filled in from `FASTMCP_SERVER_AUTH_BASE_URL`. When it is not configured, `url` is `null`; use `path` with the address you already use for the server.
+- The server fills in `url` from `FASTMCP_SERVER_AUTH_BASE_URL`. When that setting is not configured, `url` is `null`. Use `path` with the address you already use for the server.
 - Credentials are never returned.
 
 The same data is available as the resource `targets://accessible`, for applications that read it directly, for example to populate a database picker.
@@ -317,7 +317,7 @@ Give each database its own entry in the client's configuration, using the databa
 
 Use the `url` or `path` values from `list_accessible_targets`. For the configuration format of other clients, see [Connect MCP Clients](../mcp-clients/index.md#client-configuration-examples).
 
-A client connected to the server's `/mcp` URL, with no database in the path, can call `list_accessible_targets`, but the database tools do not work when the registry has more than one server or database. They return `Failed to get database connection or cursor` followed by the reason the request must name a target (the server log records the same text). Connect to a database's URL instead.
+A client connected to the server's `/mcp` URL, with no database in the path, can call `list_accessible_targets`. The database tools do not work in that case when the registry has more than one server or database. They return `Failed to get database connection or cursor` followed by the reason the request must name a target. The server log records the same text. Connect to a database's URL instead.
 
 ---
 
@@ -377,7 +377,7 @@ These optional top-level `conf.json` settings control connections. Except for `c
 | `global_max_connections` | Same as `db_thread_workers` | The maximum number of database connections across all targets. The server logs a warning at startup if the targets' `max_connections` values add up to more. Cannot exceed `db_thread_workers`. |
 | `db_thread_workers` | The number of CPUs plus 4, at most 32 | The number of worker threads that run database calls. Each running call occupies one thread. |
 | `pool_idle_ttl` | `300` | Seconds a database's connection pool can sit idle before it is closed. `0` or less keeps idle pools open. Pools are created on first use. |
-| `breaker_enabled` | `true` | When an installation repeatedly fails to accept connections, stop trying for a while and refuse its requests immediately, so callers of other installations are not slowed down. After a pause, one request is let through to test whether it has recovered. |
+| `breaker_enabled` | `true` | Stops trying an installation that repeatedly fails to accept connections, and refuses its requests immediately. This keeps callers of other installations from slowing down. After a pause, the server lets one request through to test whether the installation has recovered. |
 
 ---
 
@@ -408,7 +408,7 @@ When you run more than one container behind a load balancer, configure it as fol
 <div class="grid cards" markdown>
 
 - :material-lock: **[Authentication](authentication/index.md)**  
-  Set up OAuth and per-target scopes with your identity provider.
+  Set up OAuth and per-target scopes with the identity provider.
 
 - :material-key-chain: **[Resource-Server Mode](authentication/resource-server.md)**  
   Accept access tokens from your own application's sign-in.

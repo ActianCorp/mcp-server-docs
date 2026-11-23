@@ -5,15 +5,15 @@ description: Add your own tools, resources, and prompts to the Actian MCP Server
 
 # Extensions
 
-You can extend the Actian MCP Server with extensions: your own Python modules that register extra tools, resources, and prompts on the running server, next to the built-in database tools. Use this for business logic you want an AI agent to call through the same endpoint, such as revenue forecasting, compliance checks, or data enrichment.
+Extensions are your own Python modules. They register extra tools, resources, and prompts on the running server, next to the built-in database tools. Use an extension for business logic that you want an AI agent to call through the same endpoint, such as revenue forecasting, compliance checks, or data enrichment.
 
-An extension *adds* capabilities. It does not manage the engine connection: the server already talks to the engine and already exposes the built-in tools. The module provides a `register()` function and uses the extension API for the caller's identity, scopes and the approval prompt.
+An extension *adds* capabilities. It does not manage the engine connection: the server already talks to the engine and already exposes the built-in tools. The module provides a `register()` function and uses the extension API for the caller's identity, scopes, and the approval prompt.
 
 Extensions are supported on Actian VectorAI DB.
 
 ## Writing Module {#writing-the-module}
 
-An extension is a normal Python module exposing one required function and two optional hooks:
+An extension is a normal Python module that has one required function and two optional hooks:
 
 ```python
 from actian_mcp_server.extension_api import (
@@ -32,12 +32,12 @@ async def setup(config): ...           # OPTIONAL, open resources at startup
 async def teardown(): ...              # OPTIONAL, release them at shutdown
 ```
 
-`register(server, config)` is called once at startup. Register your tools, resources, and prompts there exactly as you would on any FastMCP server.
+The server calls `register(server, config)` once at startup. Register your tools, resources, and prompts there, as you would on any FastMCP server.
 
-Implement `setup(config)` and `teardown()` only if your extension owns something that needs an explicit open and close, such as an HTTP client, a cache, or a connection pool of your own. Either may be `async` or plain.
+Implement `setup(config)` and `teardown()` only if your extension owns something that you must open and close explicitly, such as an HTTP client, a cache, or a connection pool of your own. Either can be `async` or plain.
 
 !!! note "Configuration never contains secrets"
-    The `config` argument holds the `config` block you set in `conf.json` plus a short list of non-secret values (`dbms`, `max_rows`, `transport`). It never contains the engine API key, the embedding key or OAuth secrets.
+    The `config` argument holds the `config` block you set in `conf.json`, plus a short list of non-secret values (`dbms`, `max_rows`, `transport`). It never contains the engine API key, the embedding key, or OAuth secrets.
 
 Give your tools schema-friendly signatures: typed parameters, and no `*args` or `**kwargs`.
 
@@ -53,7 +53,7 @@ docker run -d \
     <actian-mcp-image>
 ```
 
-Then list it by module name in `conf.json`. Paths are not used, because the location is fixed:
+Then list it by module name in `conf.json`. Do not use paths, because the location is fixed:
 
 ```json
 {
@@ -71,7 +71,7 @@ Then list it by module name in `conf.json`. Paths are not used, because the loca
 |------|--------|
 | Entry shape | An object with a required `module` and an optional `config`. Omit `config` if the extension needs no settings. |
 | Module name | The name of the file or package you mounted, for example `revenue_forecast.py` or `revenue_forecast/`. A package works by its dotted import path, such as `my_package.my_module`. |
-| Order | Extensions load in the order listed. Each module may be listed only once. |
+| Order | Extensions load in the order listed. Each module can be listed only once. |
 
 ## Server Responsibilities
 
@@ -80,13 +80,13 @@ Then list it by module name in `conf.json`. Paths are not used, because the loca
 | Authentication | The user is authenticated before your code runs. Read the identity with `get_current_user()`. |
 | Error isolation | An exception in your tool is returned to the client as an error. It does not crash the server. |
 | Transport and protocol | The server serves MCP over HTTP. You do not implement any of it. |
-| Logging | Extension loading, tool registration, and approval outcomes go to the server log, and so do your own `logging.getLogger(__name__)` messages. There is no automatic per-call audit log. If you need a record of who called what, log it in your tool. |
+| Logging | The server log records extension loading, tool registration, and approval outcomes, and your own `logging.getLogger(__name__)` messages. There is no automatic per-call audit log. To record who called what, log it in your tool. |
 
 ## Reaching Engine {#reaching-the-engine}
 
-The extension API's `get_database()` runs SQL and exists for the SQL plugins. On a VectorAI DB server its `query()` answers `{"success": false, "error": "querying is not supported for dbms 'vectorai'"}` and `transaction()` raises. Do not use it here.
+The extension API's `get_database()` runs SQL and exists for the SQL plugins. On a VectorAI DB server, its `query()` returns `{"success": false, "error": "querying is not supported for dbms 'vectorai'"}` and `transaction()` raises. Do not use it here.
 
-An extension that needs engine data calls the engine's REST API with its own HTTP client; `httpx` is installed in the image. Put the engine URL in the extension's `config` block. When the engine requires an API key, read it from an environment variable: the server does not hand its own key to extensions.
+An extension that needs engine data calls the engine's REST API with its own HTTP client. `httpx` is installed in the image. Put the engine URL in the extension's `config` block. If the engine requires an API key, read it from an environment variable. The server does not give its own key to extensions.
 
 ```python
 import os
@@ -112,11 +112,11 @@ def register(server, config):
         return r.json()
 ```
 
-Every request runs with that key, whoever the caller is. The key decides what the extension can read or write, and nothing limits it to the collections listed in `conf.json`: that limit lives in the built-in tools, not in the engine.
+Every request runs with that key, whoever the caller is. The key decides what the extension can read or write. Nothing limits the extension to the collections listed in `conf.json`, because that limit lives in the built-in tools, not in the engine.
 
 ## Requesting Write Approval {#asking-a-human-to-approve-a-write}
 
-Nothing confirms an extension's write automatically. Call `request_write_confirmation()` and write only if it returns `True`. That lets you confirm once for a batch, add context, or skip confirmation in a trusted automated flow.
+The server does not confirm an extension's write automatically. Call `request_write_confirmation()` and write only if it returns `True`. That lets you confirm once for a batch, add context, or skip confirmation in a trusted automated flow.
 
 ```python
 from actian_mcp_server.extension_api import request_write_confirmation
@@ -150,23 +150,23 @@ if not has_scope("mcp:write"):
     return {"success": False, "error": "write operations require the 'mcp:write' scope"}
 ```
 
-`has_scope()` and `get_current_scopes()` return values only in read-write mode with OAuth enabled. Without OAuth every scope reads as absent, so do not make the check unconditional. Grant `mcp:write` to the users allowed to write, as described for [Auth0](../authentication/auth0.md) and [Keycloak](../authentication/keycloak.md).
+`has_scope()` and `get_current_scopes()` return values only in read-write mode with OAuth enabled. Without OAuth, every scope reads as absent, so do not make the check unconditional. Grant `mcp:write` to the users allowed to write, as described for [Auth0](../authentication/auth0.md) and [Keycloak](../authentication/keycloak.md).
 
 ### Execution Identity
 
-Every engine request an extension makes runs with the key the extension sends, whoever the caller is. `get_current_user()` still names the caller, so an extension can log who asked, and `request_write_confirmation()` asks them before a write.
+Every engine request an extension makes runs with the key the extension sends, whoever the caller is. `get_current_user()` still names the caller, so an extension can log who asked. `request_write_confirmation()` asks the caller before a write.
 
 ### Confirmation Prompt Behavior
 
 The `write_confirmation` setting does not silence the extension's prompt. If your extension calls `request_write_confirmation()`, the prompt always appears. The `write_confirmation` setting in `conf.json` applies only to the server's built-in write tools. This works both ways:
 
 - You cannot use that setting to skip an approval step your extension asked for.
-- Turning it on for a client that cannot display prompts does not silently approve your extension's writes. The server rejects those writes and nothing is written.
+- Turning it on for a client that cannot display prompts does not silently approve your extension's writes. The server rejects those writes, and nothing is written.
 
 ## Rules and Caveats
 
 !!! warning "A bad extension stops the server from starting"
-    This behavior is deliberate. A misconfigured extension never leaves the server running in a quietly degraded state with fewer tools than you configured. Startup aborts if a module cannot be imported, does not define `register()`, raises during `register()`, or registers a tool whose name matches a built-in tool or an earlier extension. Any tools that extension already registered are rolled back first.
+    This behavior is deliberate. A misconfigured extension never leaves the server running in a quietly degraded state with fewer tools than you configured. Startup aborts in any of these cases: a module cannot be imported, does not define `register()`, raises during `register()`, or registers a tool whose name matches a built-in tool or an earlier extension. The server first rolls back any tools that the extension already registered.
 
 | Point | Detail |
 |-------|--------|
@@ -174,14 +174,14 @@ The `write_confirmation` setting does not silence the extension's prompt. If you
 | No hot reload | Extensions load at startup. Restart the server to pick up changes. |
 
 !!! important "Trust model"
-    Extensions run in the same process with full Python access. Load only extensions you trust, the same way you would treat installing a Python package. Hiding the connection details is encapsulation, not a sandbox.
+    Extensions run in the same process with full Python access. Load only extensions you trust, as you would when you install a Python package. Hiding the connection details is encapsulation, not a sandbox.
 
 ## Next Steps
 
 <div class="grid cards" markdown>
 
 - :material-file-code: **[Examples](examples.md)**  
-  Five runnable extensions written for the SQL plugins; use them as templates for `register()`, tools, resources and the approval prompt.
+  Five runnable extensions written for the SQL plugins. Use them as templates for `register()`, tools, resources, and the approval prompt.
 
 - :material-book-open-variant: **[API reference](api-reference.md)**  
   Every function, signature, and return shape.
