@@ -5,7 +5,7 @@ description: Overview of the tools available when using the Actian MCP Server wi
 
 # Tools
 
-The Actian MCP Server for Actian Ingres provides built-in tools that allow you to discover databases, run queries, and check the operational health of the Ingres installation.
+The Actian MCP Server for Actian Ingres provides built-in tools to discover databases, run queries, and check the operational health of the Ingres installation.
 
 ## Available Tools
 

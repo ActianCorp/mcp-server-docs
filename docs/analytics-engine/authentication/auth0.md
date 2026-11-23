@@ -325,7 +325,7 @@ After starting the MCP server container with OAuth configured:
 
 Skip this section if your `conf.json` has no `targets` block. A single-database deployment uses only the `mcp:write` scope from [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only).
 
-In a multi-target deployment, one server fronts several databases, and each one is reached at its own URL, `https://<mcp-server-host>:8000/mcp/{host}/{instance}/{database}`. Every request to a target URL, read or write, must be covered by a **per-target scope** in the caller's access token. For the deployment model and the `targets` block, see [Multi-Target Deployments](../multi-target.md).
+In a multi-target deployment, one server fronts several databases, and each one is reached at its own URL, `https://<mcp-server-host>:8000/mcp/{host}/{instance}/{database}`. Every request to a target URL, read or write, must be covered by a per-target scope in the caller's access token. For the deployment model and the `targets` block, see [Multi-Target Deployments](../multi-target.md).
 
 ### Scope Grammar
 
@@ -347,7 +347,7 @@ actian:{host}:{instance}:{database}:{read|write}
 | Scope | Grants |
 |-------|--------|
 | `actian:db07.example.com:<installation_id>:sales:read` | Read `sales` on that one target. |
-| `actian:db07.example.com:<installation_id>:sales:write` | Read **and** write `sales` on that one target. |
+| `actian:db07.example.com:<installation_id>:sales:write` | Read and write `sales` on that one target. |
 | `actian:db07.example.com:<installation_id>:*:read` | Read every database on that target. |
 | `actian:*:*:*:read` | Read every database on every target. |
 
@@ -394,7 +394,7 @@ RBAC is required for a multi-target deployment, not optional. The set of possibl
 2. Confirm that both **Enable RBAC** and **Add Permissions in the Access Token** are enabled, as described in [Step 1](#step-1-create-an-auth0-api). If they are not, enable them and select **Save**.
 
 !!! warning "Requesting a scope does not grant it"
-    Auth0 silently drops a requested scope that is not a permission granted to the caller. The token is still issued, the scope is simply absent, and nothing reports an error. A per-target scope reaches the token only when it is defined on the API (Step 1) **and** granted (Step 3 or Step 4).
+    Auth0 silently drops a requested scope that is not a permission granted to the caller. The token is still issued, the scope is simply absent, and nothing reports an error. A per-target scope reaches the token only when it is defined on the API (Step 1) and granted (Step 3 or Step 4).
 
 ### Step 3: Grant Permissions to Users Through Roles
 
@@ -515,7 +515,7 @@ In this mode there is no userinfo lookup and no fallback to `sub`. A token that 
 
 ### Step 5: Configure `conf.json`
 
-Set `auth_mode` at the **top level** of `conf.json`, not inside the `oauth` block. The `oauth` block needs three keys and no client ID or secret:
+Set `auth_mode` at the top level of `conf.json`, not inside the `oauth` block. The `oauth` block needs three keys and no client ID or secret:
 
 | Key | Location | Value |
 |-----|----------|-------|
@@ -565,7 +565,7 @@ docker run -p 8000:8000 \
 
 ### Step 6: Verify Deployment {#step-6-verify-the-deployment}
 
-**Decode a user's access token.** Obtain an access token through your application's login, store it in `TOKEN`, and decode its payload:
+Decode a user's access token. Obtain an access token through your application's login, store it in `TOKEN`, and decode its payload:
 
 ```bash
 python3 -c 'import sys, json, base64; p = sys.argv[1].split(".")[1]; p += "=" * (-len(p) % 4); print(json.dumps(json.loads(base64.urlsafe_b64decode(p)), indent=2))' "$TOKEN"

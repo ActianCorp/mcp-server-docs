@@ -10,7 +10,7 @@ This guide explains how to create and configure a Keycloak Realm and Client for 
 !!! note "Manual client registration"
     This guide focuses on manually created clients. Dynamic Client Registration (DCR) is not covered in this documentation.
 
-By the completion of this guide, you will have obtained the issuer URL needed for `quarkus.oidc.auth-server-url`, as well as the audience value for `quarkus.oidc.token.audience` and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
+This guide shows how to obtain the issuer URL needed for `quarkus.oidc.auth-server-url`, as well as the audience value for `quarkus.oidc.token.audience` and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
 
 !!! note "Keycloak version"
     This guide applies to **Keycloak 22 and later** (Quarkus-based). Versions older than version 17 (WildFly-based) use a different admin interface and URL structure. [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application) requires Keycloak 26.2 or later, the first version with standard token exchange.
@@ -21,7 +21,7 @@ By the completion of this guide, you will have obtained the issuer URL needed fo
 2. **Create a client per flow:** Enable **Standard flow** for Authorization Code. Enable **Client authentication** and **Service accounts roles** for Client Credentials.
 3. **Add the token audience:** create a client scope with an **Audience** mapper whose **Included Custom Audience** is the audience value (for example `nsql-mcp`), and attach it to those clients as **Default**.
 4. **Add the write scope**, in write mode only: create an `mcp:write` client scope under **Client scopes** with **Include in token scope** on, then attach it to the client as **Optional**.
-5. **Create users** for those logging in via the Authorization Code flow. (This is not required for Client Credentials.)
+5. **Create users** for those logging in through the Authorization Code flow. (This is not required for Client Credentials.)
 6. **Note the realm issuer URL**: `http://<keycloak-host>:8080/realms/<realm-name>`.
 7. **Set `quarkus.oidc.auth-server-url`**, **`quarkus.oidc.token.audience`** (the Included Custom Audience value) and **`quarkus.oidc.resource-metadata.scopes`** in `application.properties`. In write mode the scopes list is `mcp:write`, which is what makes the client request it.
 8. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../index.md#start-the-server) documentation.

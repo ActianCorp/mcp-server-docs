@@ -1,6 +1,6 @@
 ---
 title: Deployment Scenarios
-description: Where the Zen engine, the Actian MCP Server container and the agents sit — laptop, containers, remote engine, cloud — and which settings each layout needs.
+description: Where the Zen engine, the Actian MCP Server container and the agents sit (laptop, containers, remote engine, or cloud) and which settings each layout needs.
 ---
 
 # Deployment Scenarios
