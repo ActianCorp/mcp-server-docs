@@ -160,7 +160,7 @@ Visibility is decided per connection, from the capabilities the client advertise
 
 This rule is not tied to specific tool names. It applies to any tool that does not declare itself read-only, including tools contributed by an [extension](extensions/index.md).
 
-## Answering the Prompt from a Python Client
+## Answering Prompt from a Python Client {#answering-the-prompt-from-a-python-client}
 
 A [FastMCP](https://pypi.org/project/fastmcp/) client advertises the elicitation capability only when it is given an elicitation handler. Without one it is a client that cannot confirm, so the write tools are never registered for it — the symptom described above, reached through your own code rather than through a third-party client.
 
@@ -196,7 +196,7 @@ python nosql_hitl_client.py http://localhost:8080/mcp create_objects \
 
 The client takes any tool with any arguments and knows nothing about your schema; `Employee` and the field names above are placeholders, so substitute your own. The [examples README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples-nosql/README.md) has the full usage.
 
-## Skipping the Confirmation Prompt
+## Skipping Confirmation Prompt {#skipping-the-confirmation-prompt}
 
 Some clients cannot display prompts. For those deployments, set `nsql.writes.confirmation-required` to `false`:
 

@@ -1,6 +1,6 @@
 ---
 title: Authentication
-description: Enable OAuth 2.0 / OIDC authentication for the Actian MCP Server — configuration reference, user impersonation, TLS setup, and security best practices.
+description: Enable OAuth 2.0 and OpenID Connect (OIDC) authentication for the Actian MCP Server: configuration reference, user impersonation, TLS setup, and security best practices.
 ---
 
 # Configuring OAuth 2.0 and OIDC Authentication
@@ -104,7 +104,7 @@ The flow above makes the MCP server run the login itself. When the calling appli
 | `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The identity provider's OIDC discovery document, as the **server** reaches it. The server reads `issuer` and `jwks_uri` from it; the issuer written into every token must match exactly. |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | The audience every token must carry. There is no client ID to fall back to in this mode, so it is mandatory. See [Keycloak, Step 3: Add the Audience Mapper](keycloak.md#step-3-add-the-audience-mapper-required). |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | This server's address as the agents see it. Published in the protected-resource metadata; must start with `https://` unless `host` is `localhost`. |
-| `user_impersonation` | No | Inside the `oauth` block. The engine sees only the server's api key, whoever the caller is. With the default `true` every token must name a user (`username`, `preferred_username` or `email` claim); with `false` a token without a user claim (a service or machine token) is accepted too. Either way the token's user name, when there is one, goes to the [call log](../index.md#call-log). A top-level key of this name is silently ignored. |
+| `user_impersonation` | No | Inside the `oauth` block. The engine sees only the server's API key, whoever the caller is. With the default `true` every token must name a user (`username`, `preferred_username` or `email` claim); with `false` a token without a user claim (a service or machine token) is accepted too. Either way the token's user name, when there is one, goes to the [call log](../index.md#call-log). A top-level key of this name is silently ignored. |
 
 The server publishes its protected-resource metadata at `/.well-known/oauth-protected-resource/mcp`, naming the identity provider, and answers `401` to a request without a valid token. It never calls the provider's userinfo endpoint and never falls back to the `sub` claim for a user name.
 
@@ -137,7 +137,7 @@ What the setting does depends on who runs the login. A user claim is `username`,
 In every case reads need a valid token for this server's audience, and writes need the `mcp:write` scope on top, checked before any embedding call, then the approval prompt. An extension's own engine calls carry the key the extension sends, not the server's. See [Extensions](../extensions/index.md#execution-identity).
 
 
-### Which name goes to the call log
+### Resolving Caller Name {#which-name-goes-to-the-call-log}
 
 The user claims are read in the same order everywhere: `username`, then `preferred_username`, then the part of `email` before the `@` (`jdoe@example.com` gives `jdoe`). The flowchart shows where the server looks for them and what happens when none is there:
 
@@ -159,7 +159,7 @@ flowchart TD
     T -- not found --> J["Sanitize sub (auth0|12345 → 12345)"]
     J --> K
     K --> L[Record the name in the call log]
-    L --> E[Send the request to the engine with the server's api key]
+    L --> E[Send the request to the engine with the server's API key]
     N --> E
 ```
 
@@ -204,11 +204,11 @@ Add the `ssl_certfile` and `ssl_keyfile` fields to the top level of the `conf.js
 }
 ```
 
-The `ssl_certfile` and `ssl_keyfile` values are always the fixed **in-container** paths shown above, not the paths to the certificate files on the host. The server reads `ssl_certfile`/`ssl_keyfile` only from `conf.json` — there is no default and no way to supply them via the `docker run` command instead. What varies per deployment is where the certificate and key live on the host; that is set in [Step 3](#step-3-deploy-the-docker), which mounts them to these exact container paths.
+The `ssl_certfile` and `ssl_keyfile` values are always the fixed **in-container** paths shown above, not the paths to the certificate files on the host. The server reads `ssl_certfile`/`ssl_keyfile` only from `conf.json`. There is no default, and the `docker run` command cannot supply them. What varies per deployment is where the certificate and key live on the host; that is set in [Step 3](#step-3-deploy-the-docker), which mounts them to these exact container paths.
 
 The server validates that both paths exist at startup, and that `BASE_URL` uses `https://` when SSL is active.
 
-### Step 3: Deploy the Docker
+### Step 3: Deploy Docker {#step-3-deploy-the-docker}
 
 Mount the certificate and key into the container using volume flags:
 
@@ -238,7 +238,7 @@ Reference the container paths in `conf.json`:
     - **Best practice**: set the permissions of `server.key` and `conf.json` to 600.
 
 
-### Step 4: Trust the Certificate in the MCP Client
+### Step 4: Trust Certificate in MCP Client {#step-4-trust-the-certificate-in-the-mcp-client}
 
 By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed certificates. You must explicitly trust the certificate on your development machine.
 

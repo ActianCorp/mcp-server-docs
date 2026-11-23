@@ -98,7 +98,7 @@ The distinction matters, because not every member means something at startup: `c
 !!! note "`confirm()` and `log()` work only inside a tool handler"
     Both need a live per-call channel to the client. Calling either from `initialize` or from a resource or prompt handler throws `UnsupportedOperationException`.
 
-### Getting the SDK
+### Getting SDK {#getting-the-sdk}
 
 Everything needed to write an extension ships in the **Extension SDK**, a self-contained zip that asks only for Java 21 and Maven. It carries the API JAR, a project you can build immediately, and `SchemaExplorerExtension` — a working example that exercises every contribution kind described on this page, and the easiest starting point for a real extension.
 
@@ -146,7 +146,7 @@ The approval covers only that exact call: the same tool, the same arguments, and
 | `nsql.extensions.jars.<id>.order` | — | Optional load order. See the rule below. |
 | `nsql.extensions.jars.<id>.config.*` | — | Free-form settings for this JAR alone, readable through `ExtensionContext.config()`. |
 
-### The Ordering Rule
+### Ordering Rule {#the-ordering-rule}
 
 `order` is optional, but it is all or nothing: **number every declared JAR, or number none of them.** Numbers must be unique. Declaring `order` on some JARs and not others, or reusing a value, aborts startup with an error naming the problem.
 

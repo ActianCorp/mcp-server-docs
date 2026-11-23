@@ -52,7 +52,7 @@ sequenceDiagram
     end
 ```
 
-## Configuring the `oauth` Block
+## Configuring `oauth` Block {#configuring-the-oauth-block}
 
 To enable authentication, add an `oauth` object to the `conf.json` file. The server reads the following data during startup:
 
@@ -183,7 +183,7 @@ The `ssl_certfile` and `ssl_keyfile` values are always the fixed **in-container*
 
 The server validates that both paths exist at startup, and that `BASE_URL` uses `https://` when SSL is active.
 
-### Step 3: Deploy the Docker
+### Step 3: Deploy Docker {#step-3-deploy-the-docker}
 
 Mount the certificate and key into the container using volume flags:
 
@@ -212,7 +212,7 @@ Reference the container paths in `conf.json`:
     - **Best practice**: `Ensure that server.key and conf.json file permissions are set to 600.
 
 
-### Step 4: Trust the Certificate in the MCP Client
+### Step 4: Trust Certificate in MCP Client {#step-4-trust-the-certificate-in-the-mcp-client}
 
 By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed certificates. You must explicitly trust the certificate on your development machine.
 

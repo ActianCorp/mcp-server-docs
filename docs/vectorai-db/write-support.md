@@ -1,13 +1,13 @@
 ---
 title: Write Support
-description: Enable write operations in the Actian MCP Server for VectorAI DB, and what gates each write - the mcp:write scope and the human approval prompt.
+description: Enable write operations in the Actian MCP Server for VectorAI DB, and what gates each write: the mcp:write scope and the human approval prompt.
 ---
 
-# Write support
+# Write Support
 
 By default, the Actian MCP Server for VectorAI DB permits only reads: listing, searching, counting and paging. Set `query_mode` to `read-write` in `conf.json` to also register the four write tools: `create_collection`, `store`, `store_batch` and `delete_points`. Extensions can write through the same checks.
 
-## What a write is in VectorAI
+## Write Operations in VectorAI DB {#what-a-write-is-in-vectorai}
 
 | Tool | Writes | Approval text shown to the user |
 |------|--------|---------------------------------|
@@ -20,14 +20,14 @@ Every prompt is sent as `Approve this database write?`, the text above, and a `D
 
 Only collections listed in `conf.json` can be created or written. Dropping a collection is not an MCP tool; it stays an operator action against the engine (`DELETE /collections/<name>` on the REST API). Payload updates without re-embedding are not part of this release. `store_batch` stores several texts with one approval, at most `max_batch_size` items (32 by default). Loading a whole corpus belongs in a script against the engine, not in an MCP session.
 
-## Enabling write mode
+## Enabling Write Mode
 
-| Value | Behaviour |
+| Value | Behavior |
 |-------|-----------|
 | `read-only` (default) | Read tools and the `find_information` prompt only. Write tools are not registered, so clients never see them. |
 | `read-write` | Read tools plus `create_collection`, `store`, `store_batch`, `delete_points` and the `store_information` prompt. |
 
-## Authorizing a write
+## Authorizing a Write
 
 Every write passes two independent checks before it reaches the engine.
 
@@ -47,15 +47,15 @@ A declined prompt, a prompt not answered within 60 seconds, or a client that can
 `store` and `store_batch` validate before they ask: the collection must exist on the engine, no text may be empty, ids must be UUID strings or unsigned integers (and unique within a batch), the batch may not exceed `max_batch_size`, a text may not reach `embedding.max_input_tokens` when that is set, and the embedding's dimension must match the collection's vector size. Those failures come back as errors without an approval prompt, so the user is never asked to approve a write that cannot land.
 
 !!! note "Text leaves the server before the prompt"
-    The dimension check needs the vector, so the text goes to the embedding provider before the approval prompt. With `openai` or `gemini` on a hosted endpoint the text has left the host even when the write is then declined; a sidecar through `embedding.base_url` keeps it on your network; `none` and `dev-hash` send nothing.
+    The dimension check needs the vector, so the text goes to the embedding provider before the approval prompt. With `openai` or `gemini` on a hosted endpoint the text has left the host even when the write is then declined; a sidecar through `embedding.base_url` keeps it on the network; `none` and `dev-hash` send nothing.
 
-## Skipping the approval prompt
+## Skipping Approval Prompt {#skipping-the-approval-prompt}
 
 For clients that cannot show an approval prompt, set `write_confirmation` to `false` in `conf.json`. The write tools then run without asking, and the server logs every such write as `WRITE EXECUTED WITHOUT CONFIRMATION`. The `mcp:write` scope check still applies: disabling the prompt does not grant write access to callers that lack the scope.
 
 This removes human oversight of every write. Use it only where the client is itself an automated, trusted pipeline.
 
-## Next steps
+## Next Steps
 
 - [Configuration](index.md#configuration): `query_mode`, `write_confirmation`, `collections`, `max_batch_size`.
 - [Authentication](authentication/index.md): granting the `mcp:write` scope in Auth0 and Keycloak.

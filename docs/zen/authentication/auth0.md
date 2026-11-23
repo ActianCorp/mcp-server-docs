@@ -62,7 +62,7 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
 |---|---|
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** that you entered, for example, `https://<mcp-server-host>:8000/mcp`. |
 
-### Step 1.1: Add the Write Scope (Read-Write Deployments Only)
+### Step 1.1: Add Write Scope (Read-Write Deployments Only) {#step-11-add-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
@@ -157,7 +157,7 @@ All values appear on the **Settings** tab of your application:
     The **Domain** is shown at the top of the Settings tab, for example, `dev-abc123.us.auth0.com`. The OIDC discovery URL is always `https://<domain>/.well-known/openid-configuration`.
 
 
-## Step 3: Authorize the Application for the API
+## Step 3: Authorize Application for API {#step-3-authorize-the-application-for-the-api}
 
 !!! warning "This step is critical"
     Auth0 requires an explicit grant between an application and an API before it issues tokens. Without this authorization, token requests fail with `invalid_request`.
@@ -197,7 +197,7 @@ After saving, the application row on the **Application Access** tab shows a gree
 
 If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database through `SET SESSION AUTHORIZATION`. Each Auth0 user must have a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
 
-### Step 4.1: Create the User in Auth0
+### Step 4.1: Create User in Auth0 {#step-41-create-the-user-in-auth0}
 
 1. In the Auth0 Dashboard, navigate to **User Management** > **Users**.
 2. Select **+ Create User**.
@@ -219,7 +219,7 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
 !!! note "Case sensitivity"
     If the database is case-sensitive, for example, `jdoe` ≠ `Jdoe`, ensure the email prefix exactly matches the database account name.
 
-### Step 4.2: Create the Matching Database User
+### Step 4.2: Create Matching Database User {#step-42-create-the-matching-database-user}
 
 Auth0 handles authentication, but the Actian database still needs the user to exist for impersonation to work:
 
@@ -238,7 +238,7 @@ GRANT SELECT ON TABLE products TO jdoe;
 !!! note "Federated identity caveat"
     If users sign in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0, the `sub` claim looks like `google-oauth2|12345`. The server removes the provider prefix, leaving `12345`, which is unlikely to match a database account. For SSO setups, set `user_impersonation` to `false` unless you can ensure the Auth0 user profile contains a matching username.
 
-### Step 4.3: Grant the Write Scope (Read-Write Deployments Only)
+### Step 4.3: Grant Write Scope (Read-Write Deployments Only) {#step-43-grant-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`.
 
@@ -256,7 +256,7 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
     The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Step 4.2](#step-42-create-the-matching-database-user).
 
 
-## Step 5: Assemble the Final Configuration
+## Step 5: Assemble Final Configuration {#step-5-assemble-the-final-configuration}
 
 ### Mapping Summary
 
@@ -305,7 +305,7 @@ For TLS setup details (certificate generation, Docker deployment, trusting self-
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 After starting the MCP server container with OAuth configured:
 
@@ -318,7 +318,7 @@ After starting the MCP server container with OAuth configured:
 
 ## Troubleshooting
 
-### Verify OIDC Discovery Endpoint
+### Verify OIDC Discovery Endpoint {#verify-oidc-discovery-endpoint}
 
 ```bash
 curl https://dev-abc123.us.auth0.com/.well-known/openid-configuration \

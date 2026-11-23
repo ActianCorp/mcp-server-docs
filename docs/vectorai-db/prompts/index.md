@@ -1,13 +1,13 @@
 ---
 title: Prompts
-description: Built-in prompt templates of the Actian MCP Server for VectorAI DB - find_information and store_information.
+description: Built-in prompt templates of the Actian MCP Server for VectorAI DB: find_information and store_information.
 ---
 
 # Prompts
 
 The Actian MCP Server for VectorAI DB includes two built-in prompt templates. They turn a plain request into instructions that name the tool to use and say how to report the result: quote what was found, say when nothing scored well.
 
-## Available prompts
+## Available Prompts
 
 | Prompt | Mode | Description |
 |--------|------|-------------|
@@ -105,7 +105,7 @@ does not exist yet, call `create_collection` first. Several separate texts go in
 retry a rejected write.
 ```
 
-## Next steps
+## Next Steps
 
 - [Tools](../tools/index.md): `search`, `store`, `store_batch`, `create_collection`.
 - [Write support](../write-support.md): the approval each write triggers.
