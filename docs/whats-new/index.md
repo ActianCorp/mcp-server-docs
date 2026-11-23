@@ -7,7 +7,7 @@ description: New features and changes in Actian MCP Server 1.2.0, including the 
 
 Actian MCP Server 1.2.0 adds the following features and changes:
 
-- [Actian VectorAI DB Support](#actian-vectorai-db-support) (new)
+- [Actian VectorAI DB Support](#actian-vectorai-db-support)
 - [Multi-Target Deployments](#multi-target-deployments)
 - [Resource-Server Mode](#resource-server-mode)
 - [Ingres Health Tools](#ingres-health-tools)
@@ -19,13 +19,13 @@ Actian MCP Server 1.2.0 adds the following features and changes:
 
 ## Actian VectorAI DB Support
 
-Actian MCP Server 1.2.0 introduces the Actian MCP Server for VectorAI DB. An AI agent can run semantic search over the vector collections listed in `conf.json`. The server does not show collections that are not listed.
+Actian MCP Server 1.2.0 introduces the Actian MCP Server for VectorAI DB. An AI agent can run semantic search over vector collections. The server shows only the collections listed in `conf.json`.
 
-- **Tools**: six read tools search, count, and page through collections. `search` embeds a query text, and `search_by_vector` takes a vector from the caller.
+- **Tools**: six read tools search, count, and page through collections. `search` embeds the query text, and `search_by_vector` takes a vector from the caller.
 - **Writes**: writes are off by default. With `query_mode` set to `read-write`, four write tools create collections and store or delete points. Each write needs approval from the person at the MCP client.
-- **Embeddings**: the server embeds text with any server that offers the OpenAI embeddings API, with OpenAI, or with Gemini. With the `none` provider, the caller supplies the vectors.
+- **Embeddings**: the server can embed text with OpenAI, Gemini, or any server that offers the OpenAI embeddings API. With the `none` provider, the caller supplies the vectors.
 - **Resources and prompts**: health, the collection list, and each collection's details are MCP resources. The `find_information` and `store_information` prompts guide an agent.
-- **Security**: the server supports OAuth with Auth0 or Keycloak, and resource-server mode. When authentication is on in the engine, the server sends an engine access token from `vectorai.api_key_secret`.
+- **Security**: the server supports OAuth with Auth0 or Keycloak, and resource-server mode. When the engine requires authentication, the server sends an engine access token from `vectorai.api_key_secret`.
 - **Operations**: a call log writes one record per tool call. Custom extensions add tools and resources.
 
 For more information, see [Actian VectorAI DB](../vectorai-db/index.md).
@@ -35,10 +35,10 @@ For more information, see [Actian VectorAI DB](../vectorai-db/index.md).
 One container can now serve many databases instead of running one container for each database. You list the databases in a `targets` block in `conf.json`. Each database gets its own URL, and OAuth scopes control access to each database separately. You can add or remove targets without restarting the server by using `targets.d` files. A deployment without a `targets` block works as before.
 
 - Each database in a target entry can have its own user name and password.
-- A caller whose token has no grant for a database gets `403 Forbidden` with `insufficient_scope`, naming the scope that is missing.
-- A request that does not name a database tells the client which URL to use.
+- A caller whose token has no grant for a database gets `403 Forbidden` with `insufficient_scope`. The error names the missing scope.
+- If a request does not name a database, the server tells the client which URL to use.
 
-Multi-target deployments work with Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Zen also supports read-only personas.
+Multi-target deployments work with Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Zen also supports read-only personas, which are named connections that open a database in read-only mode.
 
 For more information, see [Ingres](../ingres/multi-target.md), [Analytics Engine](../analytics-engine/multi-target.md), [HCL Informix](../hcl-informix/multi-target.md), and [Zen](../zen/multi-target.md).
 
@@ -46,7 +46,7 @@ For more information, see [Ingres](../ingres/multi-target.md), [Analytics Engine
 
 An application that has already signed the user in can now call the MCP Server with an access token from the identity provider (IdP). The user does not need a second OAuth login. The server checks each token against the IdP's published signing keys and runs the call as the user named in the token. The Auth0 and Keycloak guides describe the IdP setup, including the scopes for each target, and how a calling application gets a token.
 
-For more information, see [Ingres](../ingres/authentication/resource-server.md), [Analytics Engine](../analytics-engine/authentication/resource-server.md), [Zen](../zen/authentication/index.md#resource-server-mode), and [VectorAI DB](../vectorai-db/authentication/index.md#resource-server-mode). HCL Informix enforces per-target grants in resource-server mode. An Informix setup guide is not yet available; see [HCL Informix Authentication](../hcl-informix/authentication/index.md).
+For more information, see [Ingres](../ingres/authentication/resource-server.md), [Analytics Engine](../analytics-engine/authentication/resource-server.md), [Zen](../zen/authentication/index.md#resource-server-mode), and [VectorAI DB](../vectorai-db/authentication/index.md#resource-server-mode). HCL Informix enforces per-target grants in resource-server mode. No Informix setup guide is available yet. See [HCL Informix Authentication](../hcl-informix/authentication/index.md).
 
 ## Ingres Health Tools
 
@@ -62,7 +62,7 @@ For more information, see [Vector Search](../analytics-engine/vector-search.md).
 
 ## HCL Informix Updates
 
-HCL Informix now supports multi-target deployments. Each database in the registry gets its own URL and its own schema resource, and `list_accessible_targets` lists the databases a caller can reach. The server keeps its ODBC connection settings in step with `targets.d` files, so you can add a database without a restart. When a query fails, the server log no longer records the SQL text.
+HCL Informix now supports multi-target deployments. Each database in the registry gets its own URL and its own schema resource, and `list_accessible_targets` lists the databases a caller can reach. The server keeps its Open Database Connectivity (ODBC) connection settings in sync with `targets.d` files, so you can add a database without restarting it. When a query fails, the server log no longer records the SQL text.
 
 For more information, see [Multi-Target Deployments](../hcl-informix/multi-target.md) and [Resources](../hcl-informix/resources/index.md).
 
@@ -70,7 +70,7 @@ For more information, see [Multi-Target Deployments](../hcl-informix/multi-targe
 
 Zen now supports several databases from one server and resource-server mode. It also adds a call log, the `list_accessible_targets` tool, tool annotations for each mode, and a Deployment Scenarios page.
 
-In `orm_operation`, an update or delete no longer accepts `where`: use `entity_id` for a single row, or `execute_write_query` for a conditional `UPDATE` or `DELETE`.
+In `orm_operation`, an update or delete no longer accepts `where`. Use `entity_id` for a single row, or `execute_write_query` for a conditional `UPDATE` or `DELETE`.
 
 For more information, see [Zen](../zen/index.md) and [Deployment Scenarios](../zen/deployment.md).
 
@@ -78,7 +78,7 @@ For more information, see [Zen](../zen/index.md) and [Deployment Scenarios](../z
 
 - The server accepts a token only when its `aud` claim contains a value set in `quarkus.oidc.token.audience`. The Keycloak guide also describes token exchange for a calling application.
 - A new page describes the stateful and stateless versions of the Model Context Protocol (MCP) and how the server confirms a write on each.
-- `get_objects_by_loids` lists the LOIDs it did not find in `notFoundLoids`.
+- `get_objects_by_loids` lists the Logical Object IDs (LOIDs) it did not find in `notFoundLoids`.
 
 For more information, see [Authentication](../nosql/authentication/index.md) and [Protocol Versions](../nosql/protocol-versions.md).
 
