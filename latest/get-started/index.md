@@ -76,7 +76,7 @@ The fields and their meaning differ by database. For the configuration details, 
 !!! note "Configuration File Protection"
     The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control.
 
-## Step 3: Start the Container
+## Step 3: Start Container {#step-3-start-the-container}
 
 !!! warning "Actian NoSQL users"
     The Actian MCP Server for Actian NoSQL Database uses a different startup command. See [Start the Server](../nosql/index.md#start-the-server) for the NoSQL-specific steps.
@@ -108,7 +108,7 @@ For example, if you mapped port 8000 in the previous step, the endpoint is `http
 For configuration examples for Claude Desktop, Cursor, GitHub Copilot, fast-agent, and Codex, see [Connecting MCP Clients](../mcp-clients/index.md).
 
 
-## Step 5: Verify the Connection
+## Step 5: Verify Connection {#step-5-verify-the-connection}
 
 Follow these steps to confirm that the server is running and successfully communicating with the database and AI client:
 

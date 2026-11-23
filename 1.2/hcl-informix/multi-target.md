@@ -52,7 +52,7 @@ Add a `targets` block to `conf.json`. Shared connection settings go in `defaults
 
 Do not include the single-database `servername`, `service`, `dsn`, `server`, `database`, `database_user`, or `database_password` settings alongside a target registry. Keep credentials in a protected configuration or secret store.
 
-### Target fields
+### Target Fields
 
 | Field | Description |
 | :--- | :--- |

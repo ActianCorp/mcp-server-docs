@@ -3446,7 +3446,7 @@
   <a href="#writing-the-module" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing the Module
+        Writing Module
       
     </span>
   </a>
@@ -3457,7 +3457,7 @@
   <a href="#mounting-and-registering-the-module" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Mounting and Registering the Module
+        Mounting and Registering Module
       
     </span>
   </a>
@@ -3479,7 +3479,7 @@
   <a href="#reaching-the-engine" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reaching the Engine
+        Reaching Engine
       
     </span>
   </a>
@@ -3490,7 +3490,7 @@
   <a href="#asking-a-human-to-approve-a-write" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Asking a Human to Approve a Write
+        Requesting Write Approval
       
     </span>
   </a>
@@ -3665,7 +3665,7 @@
 <p>You can extend the Actian MCP Server with <strong>extensions</strong>: your own Python modules that register extra tools, resources, and prompts on the running server, next to the built-in database tools. Use this for business logic you want an AI agent to call through the same endpoint, such as revenue forecasting, compliance checks, or data enrichment.</p>
 <p>An extension <em>adds</em> capabilities. It does not manage the engine connection: the server already talks to the engine and already exposes the built-in tools. The module provides a <code>register()</code> function and uses the extension API for the caller's identity, scopes and the approval prompt.</p>
 <p>Extensions are supported on Actian VectorAI DB.</p>
-<h2 id="writing-the-module">Writing the Module<a class="headerlink" href="#writing-the-module" title="Permanent link">&para;</a></h2>
+<h2 id="writing-the-module">Writing Module<a class="headerlink" href="#writing-the-module" title="Permanent link">&para;</a></h2>
 <p>An extension is a normal Python module exposing one required function and two optional hooks:</p>
 <div class="language-python highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">actian_mcp_server.extension_api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_current_user</span><span class="p">,</span>            <span class="c1"># authenticated identity, or None</span>
@@ -3686,10 +3686,10 @@
 <p>Implement <code>setup(config)</code> and <code>teardown()</code> only if your extension owns something that needs an explicit open and close, such as an HTTP client, a cache, or a connection pool of your own. Either may be <code>async</code> or plain.</p>
 <div class="admonition note">
 <p class="admonition-title">Configuration never contains secrets</p>
-<p>The <code>config</code> argument holds the <code>config</code> block you set in <code>conf.json</code> plus a short list of non-secret values (<code>dbms</code>, <code>max_rows</code>, <code>transport</code>). It never contains the engine api key, the embedding key or OAuth secrets.</p>
+<p>The <code>config</code> argument holds the <code>config</code> block you set in <code>conf.json</code> plus a short list of non-secret values (<code>dbms</code>, <code>max_rows</code>, <code>transport</code>). It never contains the engine API key, the embedding key or OAuth secrets.</p>
 </div>
 <p>Give your tools schema-friendly signatures: typed parameters, and no <code>*args</code> or <code>**kwargs</code>.</p>
-<h2 id="mounting-and-registering-the-module">Mounting and Registering the Module<a class="headerlink" href="#mounting-and-registering-the-module" title="Permanent link">&para;</a></h2>
+<h2 id="mounting-and-registering-the-module">Mounting and Registering Module<a class="headerlink" href="#mounting-and-registering-the-module" title="Permanent link">&para;</a></h2>
 <p>Mount your module into the server's extensions directory, <code>/app/extensions</code>, as a volume. The server makes that directory importable:</p>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-v<span class="w"> </span>./revenue_forecast.py:/app/extensions/revenue_forecast.py:ro<span class="w"> </span><span class="se">\</span>
@@ -3757,9 +3757,9 @@
 </tr>
 </tbody>
 </table>
-<h2 id="reaching-the-engine">Reaching the Engine<a class="headerlink" href="#reaching-the-engine" title="Permanent link">&para;</a></h2>
+<h2 id="reaching-the-engine">Reaching Engine<a class="headerlink" href="#reaching-the-engine" title="Permanent link">&para;</a></h2>
 <p>The extension API's <code>get_database()</code> runs SQL and exists for the SQL plugins. On a VectorAI DB server its <code>query()</code> answers <code>{"success": false, "error": "querying is not supported for dbms 'vectorai'"}</code> and <code>transaction()</code> raises. Do not use it here.</p>
-<p>An extension that needs engine data calls the engine's REST API with its own HTTP client; <code>httpx</code> is installed in the image. Put the engine URL in the extension's <code>config</code> block. When the engine requires an api key, read it from an environment variable: the server does not hand its own key to extensions.</p>
+<p>An extension that needs engine data calls the engine's REST API with its own HTTP client; <code>httpx</code> is installed in the image. Put the engine URL in the extension's <code>config</code> block. When the engine requires an API key, read it from an environment variable: the server does not hand its own key to extensions.</p>
 <div class="language-python highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
 
@@ -3783,7 +3783,7 @@
         <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 </code></pre></div>
 <p>Every request runs with that key, whoever the caller is. The key decides what the extension can read or write, and nothing limits it to the collections listed in <code>conf.json</code>: that limit lives in the built-in tools, not in the engine.</p>
-<h2 id="asking-a-human-to-approve-a-write">Asking a Human to Approve a Write<a class="headerlink" href="#asking-a-human-to-approve-a-write" title="Permanent link">&para;</a></h2>
+<h2 id="asking-a-human-to-approve-a-write">Requesting Write Approval<a class="headerlink" href="#asking-a-human-to-approve-a-write" title="Permanent link">&para;</a></h2>
 <p>Nothing confirms an extension's write automatically. Call <code>request_write_confirmation()</code> and write only if it returns <code>True</code>. That lets you confirm once for a batch, add context, or skip confirmation in a trusted automated flow.</p>
 <div class="language-python highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">actian_mcp_server.extension_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">request_write_confirmation</span>
 
@@ -3882,7 +3882,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 17, 2026 20:15:24 UTC">November 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
   </span>
 
     

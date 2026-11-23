@@ -76,7 +76,7 @@ These settings are needed for the `mcp:write` scope and for per-target scopes in
 |---|---|
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** that you entered, for example, `https://<mcp-server-host>:8000/mcp`. |
 
-### Step 1.1: Add the Write Scope (Read-Write Deployments Only)
+### Step 1.1: Add Write Scope (Read-Write Deployments Only) {#step-11-add-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
@@ -160,7 +160,7 @@ All values appear on the **Settings** tab of your application:
     The **Domain** is shown at the top of the Settings tab, for example, `dev-abc123.us.auth0.com`. The OIDC discovery URL is always `https://<domain>/.well-known/openid-configuration`.
 
 
-## Step 3: Authorize the Application for the API
+## Step 3: Authorize Application for API {#step-3-authorize-the-application-for-the-api}
 
 !!! warning "This step is critical"
     Auth0 requires an explicit grant between an application and an API before it issues tokens. Without this authorization, token requests fail with `invalid_request`.
@@ -190,14 +190,14 @@ After saving, the application row on the **Application Access** tab shows a gree
     If you plan to use `user_impersonation: true`, the application must be authorized for **User-Delegated Access**. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server will not be able to extract a database username.
 
 !!! note "This is not the same as granting the scope to a user"
-    Authorizing the application here means it is *allowed to request* `mcp:write` — not that any particular user's token will carry it. With **Enable RBAC** on (enabled in [Step 1](#step-1-create-an-auth0-api)), whether a specific user's token actually includes `mcp:write` depends on that user holding it through a role, which is a separate, per-user assignment in [Step 4.3](#step-43-grant-the-write-scope-read-write-deployments-only). Both steps are required for read-write deployments.
+    Authorizing the application here means it is *allowed to request* `mcp:write`, not that any particular user's token will carry it. With **Enable RBAC** on (enabled in [Step 1](#step-1-create-an-auth0-api)), whether a specific user's token actually includes `mcp:write` depends on that user holding it through a role, which is a separate, per-user assignment in [Step 4.3](#step-43-grant-the-write-scope-read-write-deployments-only). Both steps are required for read-write deployments.
 
 
 ## Step 4: Create Auth0 Users (If Using User Impersonation)
 
 If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database through `SET SESSION AUTHORIZATION`. Each Auth0 user must have a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
 
-### Step 4.1: Create the User in Auth0
+### Step 4.1: Create User in Auth0 {#step-41-create-the-user-in-auth0}
 
 1. In the Auth0 Dashboard, navigate to **User Management** > **Users**.
 2. Select **+ Create User**.
@@ -219,7 +219,7 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
 !!! note "Case sensitivity"
     If the database is case-sensitive, for example, `jdoe` ≠ `Jdoe`, ensure the email prefix exactly matches the database account name.
 
-### Step 4.2: Create the Matching Database User
+### Step 4.2: Create Matching Database User {#step-42-create-the-matching-database-user}
 
 Auth0 handles authentication, but the Actian database still needs the user to exist for impersonation to work:
 
@@ -238,7 +238,7 @@ GRANT SELECT ON TABLE products TO jdoe;
 !!! note "Federated identity caveat"
     If users sign in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0, the `sub` claim looks like `google-oauth2|12345`. The server removes the provider prefix, leaving `12345`, which is unlikely to match a database account. For SSO setups, set `user_impersonation` to `false` unless you can ensure the Auth0 user profile contains a matching username.
 
-### Step 4.3: Grant the Write Scope (Read-Write Deployments Only)
+### Step 4.3: Grant Write Scope (Read-Write Deployments Only) {#step-43-grant-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`, or if you skipped [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) for a multi-target deployment.
 
@@ -256,7 +256,7 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
     The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Step 4.2](#step-42-create-the-matching-database-user).
 
 
-## Step 5: Assemble the Final Configuration
+## Step 5: Assemble Final Configuration {#step-5-assemble-the-final-configuration}
 
 ### Mapping Summary
 
@@ -310,7 +310,7 @@ For TLS setup details (certificate generation, Docker deployment, trusting self-
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 After starting the MCP server container with OAuth configured:
 
@@ -371,7 +371,7 @@ In both cases, writes are still possible only when `query_mode` allows them. See
 !!! note "Writes are refused when scope checking is off"
     If `allow_unscoped_reads` is set to `true` (intended only for testing routing before OAuth is in place), reads on target URLs are allowed without a grant, but writes on target URLs are refused. The server does not fall back to `mcp:write` for them.
 
-### Step 1: Define the Per-Target Permissions on the API
+### Step 1: Define Per-Target Permissions on API {#step-1-define-the-per-target-permissions-on-the-api}
 
 Auth0 permissions are plain strings, so each scope you intend to grant becomes one permission. Define the specific combinations your roles need, including any wildcard forms, not every possible combination.
 
@@ -386,7 +386,7 @@ Auth0 permissions are plain strings, so each scope you intend to grant becomes o
 
 3. Select **+ Add** for each entry.
 
-### Step 2: Confirm RBAC on the API
+### Step 2: Confirm RBAC on API {#step-2-confirm-rbac-on-the-api}
 
 RBAC is required for a multi-target deployment, not optional. The set of possible per-target scopes is unbounded, so the server cannot advertise them for MCP clients to request. Auth0 delivers the grants instead, in the access token's `permissions` claim, which the server reads together with `scope` and `scp`.
 
@@ -453,11 +453,11 @@ Generic MCP clients, such as Visual Studio Code or Claude Desktop, keep using th
 | Client ID and secret in `conf.json` | Required | Not used |
 | Auth0 Application for the server ([Step 2](#step-2-create-an-auth0-application)) | Required | Not used. Your application is the Auth0 client. |
 
-### Step 1: Create the API
+### Step 1: Create API {#step-1-create-the-api}
 
 Create the API as described in [Step 1: Create an Auth0 API](#step-1-create-an-auth0-api). Its **Identifier** is the `FASTMCP_SERVER_AUTH_AUDIENCE`. If you use `mcp:write` or per-target scopes, define them on this API as in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) and [Multi-Target Deployments: Per-Target Permissions](#multi-target-deployments-per-target-permissions).
 
-### Step 2: Configure the Calling Application
+### Step 2: Configure Calling Application {#step-2-configure-the-calling-application}
 
 The calling application is an Auth0 application of its own. For an application that signs users in through a browser and holds a client secret, create it as a **Regular Web Applications** type, as in [Step 2: Create an Auth0 Application](#step-2-create-an-auth0-application).
 
@@ -476,7 +476,7 @@ Confirm that **Enable RBAC** and **Add Permissions in the Access Token** are ena
 
 The same applies to `mcp:write` for writes in a deployment without a `targets` block. In this mode the server advertises no scopes for clients to request. Auth0 delivers granted permissions in the `permissions` claim.
 
-### Step 4: Add the Username to the Access Token with an Action
+### Step 4: Add Username to Access Token with an Action {#step-4-add-the-username-to-the-access-token-with-an-action}
 
 Skip this step if `user_impersonation` is `false`.
 
@@ -563,7 +563,7 @@ docker run -p 8000:8000 \
   actian/ingres-mcp-server:1.2.0
 ```
 
-### Step 6: Verify the Deployment
+### Step 6: Verify Deployment {#step-6-verify-the-deployment}
 
 **Decode a user's access token.** Obtain an access token through your application's login, store it in `TOKEN`, and decode its payload:
 
@@ -620,7 +620,7 @@ With `user_impersonation` set to `true`, the server log shows `Stored database u
 
 ## Troubleshooting
 
-### Verify OIDC Discovery Endpoint
+### Verify OIDC Discovery Endpoint {#verify-oidc-discovery-endpoint}
 
 ```bash
 curl https://dev-abc123.us.auth0.com/.well-known/openid-configuration \

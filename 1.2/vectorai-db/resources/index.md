@@ -1,13 +1,13 @@
 ---
 title: Resources
-description: MCP resources of the Actian MCP Server for VectorAI DB - engine health, the configured collections and per-collection detail.
+description: MCP resources of the Actian MCP Server for VectorAI DB: engine health, the configured collections and per-collection detail.
 ---
 
 # Resources
 
 The Actian MCP Server for VectorAI DB publishes three JSON resources so a client can read the engine state and the collection summary without calling tools. They are available in both query modes.
 
-## Available resources
+## Available Resources
 
 | Resource URI | Description |
 |--------------|-------------|
@@ -85,7 +85,7 @@ The same detail as the `describe_collection` tool.
 { "error": "collection 'other' is not configured on this server; configured: documents, faq" }
 ```
 
-## Next steps
+## Next Steps
 
 - [Tools](../tools/index.md): `list_collections` and `describe_collection`.
 - [Prompts](../prompts/index.md).

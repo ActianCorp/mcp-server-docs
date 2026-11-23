@@ -76,7 +76,7 @@ These settings are needed for the `mcp:write` scope and for per-target scopes in
 |---|---|
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** that you entered, for example, `https://<mcp-server-host>:8000/mcp`. |
 
-### Step 1.1: Add the Write Scope (Read-Write Deployments Only)
+### Step 1.1: Add Write Scope (Read-Write Deployments Only) {#step-11-add-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`, or if callers use target URLs in a multi-target deployment. Target URLs use per-target permissions instead; see [Multi-Target Deployments: Per-Target Permissions](#multi-target-deployments-per-target-permissions).
 
@@ -171,13 +171,13 @@ All values appear on the **Settings** tab of your application:
     The **Domain** is shown at the top of the Settings tab, for example, `dev-abc123.us.auth0.com`. The OIDC discovery URL is always `https://<domain>/.well-known/openid-configuration`.
 
 
-## Step 3: Authorize the Application for the API
+## Step 3: Authorize Application for API {#step-3-authorize-the-application-for-the-api}
 
 !!! warning "This step is critical"
     Auth0 requires an explicit grant between an application and an API before it issues tokens. Without this authorization, token requests fail with `invalid_request`.
 
 !!! note "Authorizing means selecting permissions"
-    Authorizing the application means selecting, from a permission checklist, which of the API's permissions the application is allowed to request. This may include `mcp:write` for a single-database deployment and the per-target permissions for target URLs. If your API defines no permissions yet, the checklist is empty and there is nothing to select — that is expected for read-only deployments.
+    Authorizing the application means selecting, from a permission checklist, which of the API's permissions the application is allowed to request. This may include `mcp:write` for a single-database deployment and the per-target permissions for target URLs. If your API defines no permissions yet, the checklist is empty and there is nothing to select. This is expected for read-only deployments.
 
 You can authorize from either the application's APIs tab or the API's Application Access tab:
 
@@ -208,7 +208,7 @@ After saving, the application row on the **Application Access** tab shows a gree
 
 If `user_impersonation` is `true`, the authenticated user's identity is forwarded to the database through `SET SESSION AUTHORIZATION`. Each Auth0 user must have a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
 
-### Step 4.1: Create the User in Auth0
+### Step 4.1: Create User in Auth0 {#step-41-create-the-user-in-auth0}
 
 1. In the Auth0 Dashboard, navigate to **User Management** > **Users**.
 2. Select **+ Create User**.
@@ -230,7 +230,7 @@ If `user_impersonation` is `true`, the authenticated user's identity is forwarde
 !!! note "Case sensitivity"
     If the database is case-sensitive, for example, `jdoe` ≠ `Jdoe`, ensure the email prefix exactly matches the database account name.
 
-### Step 4.2: Create the Matching Database User
+### Step 4.2: Create Matching Database User {#step-42-create-the-matching-database-user}
 
 Auth0 handles authentication, but HCL Informix still needs the user to exist for impersonation to work:
 
@@ -253,7 +253,7 @@ GRANT SETSESSIONAUTH ON 'mcpuser' TO 'database_user';
 !!! note "Federated identity caveat"
     If users sign in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0, the `sub` claim looks like `google-oauth2|12345`. The server removes the provider prefix, leaving `12345`, which is unlikely to match a database account. For SSO setups, set `user_impersonation` to `false` unless you can ensure the Auth0 user profile contains a matching username.
 
-### Step 4.3: Grant the Write Scope (Read-Write Deployments Only)
+### Step 4.3: Grant Write Scope (Read-Write Deployments Only) {#step-43-grant-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`.
 
@@ -290,7 +290,7 @@ The host, instance, and database segments must match the target. `*` matches exa
 | `actian:ifx-db.example.com:ol_informix:sales:write` | Read and write the `sales` database on that target. |
 | `actian:ifx-db.example.com:ol_informix:*:read` | Read every database on that Informix instance. |
 
-### Define the permissions
+### Define Permissions {#define-the-permissions}
 
 1. Open the Auth0 API used as `FASTMCP_SERVER_AUTH_AUDIENCE` and add a permission for each grant you intend to issue, such as `actian:ifx-db.example.com:ol_informix:sales:read` and `actian:ifx-db.example.com:ol_informix:sales:write`.
 2. Keep **Enable RBAC** and **Add Permissions in the Access Token** enabled in the API's **RBAC Settings**. Auth0 places granted permissions in the access token's `permissions` claim.
@@ -300,7 +300,7 @@ The host, instance, and database segments must match the target. `*` matches exa
 Auth0 issues a permission only when it is defined on the API and granted to the user or calling application. A missing grant is rejected on the target URL; granting `mcp:write` alone does not authorize a target URL.
 
 
-## Step 5: Assemble the Final Configuration
+## Step 5: Assemble Final Configuration {#step-5-assemble-the-final-configuration}
 
 ### Mapping Summary
 
@@ -354,7 +354,7 @@ For TLS setup details (certificate generation, Docker deployment, trusting self-
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 After starting the MCP server container with OAuth configured:
 
@@ -367,7 +367,7 @@ After starting the MCP server container with OAuth configured:
 
 ## Troubleshooting
 
-### Verify OIDC Discovery Endpoint
+### Verify OIDC Discovery Endpoint {#verify-oidc-discovery-endpoint}
 
 ```bash
 curl https://dev-abc123.us.auth0.com/.well-known/openid-configuration \

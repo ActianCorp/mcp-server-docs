@@ -2322,7 +2322,7 @@
   <a href="#the-token-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Token Flow
+        Token Flow
       
     </span>
   </a>
@@ -2372,7 +2372,7 @@
   <a href="#verify-the-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify the Deployment
+        Verify Deployment
       
     </span>
   </a>
@@ -2383,12 +2383,12 @@
   <a href="#call-the-server-from-a-client" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Call the Server from a Client
+        Call Server from a Client
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Call the Server from a Client">
+    <nav class="md-nav" aria-label="Call Server from a Client">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3650,7 +3650,7 @@
   <a href="#the-token-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Token Flow
+        Token Flow
       
     </span>
   </a>
@@ -3700,7 +3700,7 @@
   <a href="#verify-the-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify the Deployment
+        Verify Deployment
       
     </span>
   </a>
@@ -3711,12 +3711,12 @@
   <a href="#call-the-server-from-a-client" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Call the Server from a Client
+        Call Server from a Client
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Call the Server from a Client">
+    <nav class="md-nav" aria-label="Call Server from a Client">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3972,7 +3972,7 @@
 <li><code>auth_mode</code> is read <strong>only at the top level</strong>. If you place it inside the <code>oauth</code> block, the server ignores it. When the <code>oauth</code> block has no client ID, the server then starts <strong>without authentication</strong> instead of stopping. Always run the <a href="#verify-the-deployment">verification</a> checks after a configuration change.</li>
 </ul>
 <hr />
-<h2 id="the-token-flow">The Token Flow<a class="headerlink" href="#the-token-flow" title="Permanent link">&para;</a></h2>
+<h2 id="the-token-flow">Token Flow<a class="headerlink" href="#the-token-flow" title="Permanent link">&para;</a></h2>
 <ol>
 <li>The user signs in to your application, which receives an access token.</li>
 <li>The application obtains an access token for the MCP Server's audience, for the same user. It can request that audience when the user signs in, or, if your IdP supports it, exchange its own token for one (RFC 8693 token exchange).</li>
@@ -4018,7 +4018,7 @@
 <p>A Keycloak service-account token carries <code>preferred_username: service-account-&lt;client-id&gt;</code>. With <code>user_impersonation</code> set to <code>true</code>, the server tries to run queries as that user, which normally does not exist in the database, so queries fail at the database. Use <code>user_impersonation: false</code> for a deployment that serves service accounts.</p>
 </div>
 <hr />
-<h2 id="verify-the-deployment">Verify the Deployment<a class="headerlink" href="#verify-the-deployment" title="Permanent link">&para;</a></h2>
+<h2 id="verify-the-deployment">Verify Deployment<a class="headerlink" href="#verify-the-deployment" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span class="nv">BASE</span><span class="o">=</span>https://&lt;mcp_server_host&gt;:8000
 
 <span class="c1"># 1. The metadata names your IdP</span>
@@ -4034,7 +4034,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
 <p>If check 3 returns anything other than <code>401</code>, authentication is not active. See the last row of <a href="#troubleshooting">Troubleshooting</a>.</p>
 <p>Then call a tool with a real token from your application; see <a href="#call-the-server-from-a-client">Call the Server from a Client</a>. On success, the server log contains <code>Stored database username (strict claim mode): &lt;name&gt;</code>.</p>
 <hr />
-<h2 id="call-the-server-from-a-client">Call the Server from a Client<a class="headerlink" href="#call-the-server-from-a-client" title="Permanent link">&para;</a></h2>
+<h2 id="call-the-server-from-a-client">Call Server from a Client<a class="headerlink" href="#call-the-server-from-a-client" title="Permanent link">&para;</a></h2>
 <p>A client in this mode sends the access token it already holds in the <code>Authorization: Bearer</code> header. An application runs no login of its own, but a client such as Claude Code can sign the user in itself.</p>
 <h3 id="from-an-application-python">From an Application (Python)<a class="headerlink" href="#from-an-application-python" title="Permanent link">&para;</a></h3>
 <p>The <code>fastmcp</code> Python client sends a token passed as <code>auth</code> as a bearer token:</p>
@@ -4200,7 +4200,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 10, 2026 19:09:54 UTC">November 10, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
   </span>
 
     

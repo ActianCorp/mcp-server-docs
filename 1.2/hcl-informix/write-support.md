@@ -85,7 +85,7 @@ The required write grant depends on the URL the client uses:
 
 A target `:write` grant also permits reads on that target. `query_mode` must still be `read-write`, and human approval remains required unless `write_confirmation` is disabled. See [Multi-Target Deployments](multi-target.md#authentication-and-scope-behavior) and the provider-specific setup for [Auth0](authentication/auth0.md#multi-target-deployments-per-target-permissions) or [Keycloak](authentication/keycloak.md#multi-target-deployments-per-target-scopes).
 
-## Skipping the Approval Prompt
+## Skipping Approval Prompt {#skipping-the-approval-prompt}
 
 Some clients cannot display the approval prompt. For those deployments, set `write_confirmation` to `false` in `conf.json` to run the server's built-in write tools without asking for approval:
 

@@ -52,7 +52,7 @@ The URL selects the database. No tool takes a database or target argument; a cli
 
 ---
 
-## Configure the Target Registry
+## Configure Target Registry {#configure-the-target-registry}
 
 Add a `targets` block to `conf.json`. Values in `defaults` apply to every entry; each entry in `list` describes one Ingres installation and the databases it serves.
 
@@ -136,7 +136,7 @@ An Ingres installation (`host` and `instance`) can appear only **once** in the r
 - With `user_impersonation` enabled, a per-database account needs the same impersonation privileges as the entry's account (see [Service Account Privileges](authentication/index.md#service-account-privileges)). A missing privilege shows up on the first query to that database, not at startup.
 - Objects are not allowed in `defaults.databases`.
 
-### Choosing the Host Name
+### Choosing Host Name {#choosing-the-host-name}
 
 The `host` value appears in client URLs and in every scope your identity provider grants. If the database later moves to another machine and `host` is that machine's name, every URL and grant changes with it.
 
@@ -148,7 +148,7 @@ docker run --add-host sales-db.example.com:10.1.2.3 ...
 
 ---
 
-## Add Databases Without a Restart: `targets.d/`
+## Add Databases Without Restarting Server {#add-databases-without-a-restart-targetsd}
 
 Targets in `conf.json` are read once at startup. To add or remove databases while the server runs, mount a directory of target files at `/app/targets.d` in the container. The server checks the directory about every 10 seconds and applies changes without a restart.
 
@@ -185,7 +185,7 @@ Each `*.json` file in the directory holds either one target entry or a JSON list
 }
 ```
 
-### Do Not Repeat a Server in Both Places
+### Avoid Duplicate Server Entries {#do-not-repeat-a-server-in-both-places}
 
 The server merges `targets.list` from `conf.json` with every file in `targets.d/` into one registry. **An Ingres installation (`host` and `instance`) must appear in only one place.** If the same installation appears in `conf.json` and in a `targets.d/` file, or in two files, the registry is rejected as a duplicate:
 
@@ -202,7 +202,7 @@ To serve another database on an installation that is already listed, add the dat
 - **An unreadable directory** (for example, an unmounted volume) is treated as an error, not as "no targets".
 - **The authentication requirement applies to reloads too.** If the server runs without OAuth, a file that would bring the registry above one target is rejected, and the server logs a warning about this at startup.
 
-### Protecting the Files
+### Protecting Files {#protecting-the-files}
 
 Target files contain database passwords, just like `conf.json`:
 
@@ -267,7 +267,7 @@ This setting turns off per-target scope checks. Any authenticated caller can the
 
 ---
 
-## Discover Which Databases You Can Reach
+## Discover Accessible Databases {#discover-which-databases-you-can-reach}
 
 The `list_accessible_targets` tool returns the databases the caller's token can read, with the path to connect to each one:
 

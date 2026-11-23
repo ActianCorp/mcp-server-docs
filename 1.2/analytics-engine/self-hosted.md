@@ -24,7 +24,7 @@ Before starting the server, ensure the following requirements are met:
 
 The server runs as a Docker container. To configure the server, mount the `conf.json` file to the container at `/app/conf.json`.
 
-### Create the Configuration File
+### Create Configuration File {#create-the-configuration-file}
 
 Create a file named `conf.json` in your working directory using the following structure:
 
@@ -88,7 +88,7 @@ Create a file named `conf.json` in your working directory using the following st
 | `allow_unscoped_reads` | `boolean` | `false` | Multi-target only. Turns off per-target scope checks. For temporary use only. See [Multi-Target Deployments](multi-target.md#running-without-scope-checks-allow_unscoped_reads). |
 
 
-## Start the Server
+## Start Server {#start-the-server}
 
 Once you have created the `conf.json` file, start the container and mount the configuration file:
 

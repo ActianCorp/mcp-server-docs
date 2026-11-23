@@ -90,7 +90,7 @@ When `allow_unscoped_reads` is set in a multi-target deployment, writes on targe
 
 To configure per-target scopes, see [Auth0: Per-Target Permissions](authentication/auth0.md#multi-target-deployments-per-target-permissions) or [Keycloak: Per-Target Scopes](authentication/keycloak.md#multi-target-deployments-per-target-scopes).
 
-## Skipping the Approval Prompt
+## Skipping Approval Prompt {#skipping-the-approval-prompt}
 
 Some clients cannot display the approval prompt. For those deployments, set `write_confirmation` to `false` in `conf.json` to run the server's built-in write tools without asking for approval:
 

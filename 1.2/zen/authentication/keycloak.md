@@ -104,7 +104,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 
 9. Select **Save**.
 
-### Get the Client Secret
+### Get Client Secret {#get-the-client-secret}
 
 1. After creating the client, select the **Credentials** tab.
 2. Copy the **Client secret** value.
@@ -118,7 +118,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 | `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL, for example, `https://<mcp-server-host>:8000` |
 
 
-## Step 3: Add the Audience Mapper (Required)
+## Step 3: Add Audience Mapper (Required) {#step-3-add-the-audience-mapper-required}
 
 !!! danger "This step is critical"
     Without the Audience Mapper, Keycloak does not include the Client ID in the token's `aud` (audience) claim, and the MCP server rejects tokens with an `audience mismatch` error.
@@ -177,7 +177,7 @@ Expected output:
     If you still see a UUID instead of `actian-mcp` in the `aud` claim, the old token may be cached. Wait for it to expire (default 5 minutes) or go to **Sessions** in the Keycloak Admin Console and sign out of all sessions for the service account to force a fresh token.
 
 
-## Step 4 (Optional): Add the Sub Override Mapper
+## Step 4 (Optional): Add Sub Override Mapper {#step-4-optional-add-the-sub-override-mapper}
 
 By default, Keycloak sets the `sub` claim to a UUID. You can override it to contain the login name for easier `user_impersonation` mapping.
 
@@ -218,13 +218,13 @@ After adding the mapper, the token contains the following:
     Instead of overriding `sub`, you can rely on the `preferred_username` claim (included by default when the `profile` scope is present). The MCP server's username extraction priority uses `preferred_username` before `sub`, so it works automatically without any mapper changes.
 
 
-## Step 5: Add the Write Scope (Read-Write Deployments Only)
+## Step 5: Add Write Scope (Read-Write Deployments Only) {#step-5-add-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
 When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
 
-### Step 5.1: Create the Client Scope
+### Step 5.1: Create Client Scope {#step-51-create-the-client-scope}
 
 1. Navigate to **Client scopes** in the left sidebar and select **Create client scope**.
 2. Configure the following fields:
@@ -239,7 +239,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 
 3. Select **Save**.
 
-### Step 5.2: Attach the Scope to the Client as Optional
+### Step 5.2: Attach Scope to Client as Optional {#step-52-attach-the-scope-to-the-client-as-optional}
 
 1. Navigate to **Clients** > your client, for example `actian-mcp`, and select the **Client scopes** tab.
 2. Select **Add client scope**.
@@ -290,7 +290,7 @@ A `write` grant implies `read`. A token without the grant for a URL is refused w
 Keycloak users are still how people sign in, created as in any realm (**Users** > **Add user**, then **Credentials** > **Set password**). They need no matching Zen account: every URL connects to Zen as the login in its target entry or `conn_string`, and the token's `preferred_username` is recorded in the [call log](../index.md#call-log) only. Keycloak puts `preferred_username` into the token when the `profile` scope is present, which it is by default.
 
 
-## Step 7: Assemble the Final Configuration
+## Step 7: Assemble Final Configuration {#step-7-assemble-the-final-configuration}
 
 ### Mapping Summary
 
@@ -336,7 +336,7 @@ For TLS setup details (certificate generation, Docker deployment, trusting self-
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 After starting the MCP server container with OAuth configured:
 
@@ -349,7 +349,7 @@ After starting the MCP server container with OAuth configured:
 
 ## Troubleshooting
 
-### Verify OIDC Discovery Endpoint
+### Verify OIDC Discovery Endpoint {#verify-oidc-discovery-endpoint}
 
 ```bash
 curl http://<keycloak-host>:8080/realms/actian-mcp/.well-known/openid-configuration \

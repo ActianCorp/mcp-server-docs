@@ -135,7 +135,7 @@ Every tool call writes one JSON line to the container log (`docker logs <contain
 SQL text and row values are never recorded unless `call_log_statements` is `true`. The log is a record of what the server did, not an audit trail: nothing in it is tamper-evident. `"call_log": false` turns it off.
 
 
-## Start the Server
+## Start Server {#start-the-server}
 
 Once the `conf.json` is ready, start the container and mount the configuration file:
 

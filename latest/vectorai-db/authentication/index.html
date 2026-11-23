@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Enable OAuth 2.0 / OIDC authentication for the Actian MCP Server — configuration reference, user impersonation, TLS setup, and security best practices.">
+        <meta name="description" content="The Actian MCP Server supports OAuth 2.0 and OpenID Connect (OIDC) authentication. When you enable this feature, every client request must include a valid JSON Web Token (JWT) issued by a trusted identity provider (IdP).">
       
       
       
@@ -27,7 +27,7 @@
     
     
       
-        <title>Authentication - Actian MCP Server</title>
+        <title>Configuring OAuth 2.0 and OIDC Authentication - Actian MCP Server</title>
       
     
     
@@ -154,7 +154,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Authentication
+              Configuring OAuth 2.0 and OIDC Authentication
             
           </span>
         </div>
@@ -3525,7 +3525,7 @@
   <a href="#which-name-goes-to-the-call-log" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Which name goes to the call log
+        Resolving Caller Name
       
     </span>
   </a>
@@ -3575,7 +3575,7 @@
   <a href="#step-3-deploy-the-docker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Deploy the Docker
+        Step 3: Deploy Docker
       
     </span>
   </a>
@@ -3586,7 +3586,7 @@
   <a href="#step-4-trust-the-certificate-in-the-mcp-client" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Trust the Certificate in the MCP Client
+        Step 4: Trust Certificate in MCP Client
       
     </span>
   </a>
@@ -3854,7 +3854,7 @@ sequenceDiagram
 <tr>
 <td style="text-align: left;"><code>user_impersonation</code></td>
 <td style="text-align: left;">No</td>
-<td style="text-align: left;">Inside the <code>oauth</code> block. The engine sees only the server's api key, whoever the caller is. With the default <code>true</code> every token must name a user (<code>username</code>, <code>preferred_username</code> or <code>email</code> claim); with <code>false</code> a token without a user claim (a service or machine token) is accepted too. Either way the token's user name, when there is one, goes to the <a href="../index.html#call-log">call log</a>. A top-level key of this name is silently ignored.</td>
+<td style="text-align: left;">Inside the <code>oauth</code> block. The engine sees only the server's API key, whoever the caller is. With the default <code>true</code> every token must name a user (<code>username</code>, <code>preferred_username</code> or <code>email</code> claim); with <code>false</code> a token without a user claim (a service or machine token) is accepted too. Either way the token's user name, when there is one, goes to the <a href="../index.html#call-log">call log</a>. A top-level key of this name is silently ignored.</td>
 </tr>
 </tbody>
 </table>
@@ -3913,7 +3913,7 @@ sequenceDiagram
 </tbody>
 </table>
 <p>In every case reads need a valid token for this server's audience, and writes need the <code>mcp:write</code> scope on top, checked before any embedding call, then the approval prompt. An extension's own engine calls carry the key the extension sends, not the server's. See <a href="../extensions/index.html#execution-identity">Extensions</a>.</p>
-<h3 id="which-name-goes-to-the-call-log">Which name goes to the call log<a class="headerlink" href="#which-name-goes-to-the-call-log" title="Permanent link">&para;</a></h3>
+<h3 id="which-name-goes-to-the-call-log">Resolving Caller Name<a class="headerlink" href="#which-name-goes-to-the-call-log" title="Permanent link">&para;</a></h3>
 <p>The user claims are read in the same order everywhere: <code>username</code>, then <code>preferred_username</code>, then the part of <code>email</code> before the <code>@</code> (<code>jdoe@example.com</code> gives <code>jdoe</code>). The flowchart shows where the server looks for them and what happens when none is there:</p>
 <pre class="mermaid"><code>%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'arial'}}}%%
 flowchart TD
@@ -3932,7 +3932,7 @@ flowchart TD
     T -- not found --&gt; J["Sanitize sub (auth0|12345 → 12345)"]
     J --&gt; K
     K --&gt; L[Record the name in the call log]
-    L --&gt; E[Send the request to the engine with the server's api key]
+    L --&gt; E[Send the request to the engine with the server's API key]
     N --&gt; E</code></pre>
 <div class="admonition tip">
 <p class="admonition-title">Provider-Specific Behavior</p>
@@ -3970,9 +3970,9 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>The <code>ssl_certfile</code> and <code>ssl_keyfile</code> values are always the fixed <strong>in-container</strong> paths shown above, not the paths to the certificate files on the host. The server reads <code>ssl_certfile</code>/<code>ssl_keyfile</code> only from <code>conf.json</code> — there is no default and no way to supply them via the <code>docker run</code> command instead. What varies per deployment is where the certificate and key live on the host; that is set in <a href="#step-3-deploy-the-docker">Step 3</a>, which mounts them to these exact container paths.</p>
+<p>The <code>ssl_certfile</code> and <code>ssl_keyfile</code> values are always the fixed <strong>in-container</strong> paths shown above, not the paths to the certificate files on the host. The server reads <code>ssl_certfile</code>/<code>ssl_keyfile</code> only from <code>conf.json</code>. There is no default, and the <code>docker run</code> command cannot supply them. What varies per deployment is where the certificate and key live on the host; that is set in <a href="#step-3-deploy-the-docker">Step 3</a>, which mounts them to these exact container paths.</p>
 <p>The server validates that both paths exist at startup, and that <code>BASE_URL</code> uses <code>https://</code> when SSL is active.</p>
-<h3 id="step-3-deploy-the-docker">Step 3: Deploy the Docker<a class="headerlink" href="#step-3-deploy-the-docker" title="Permanent link">&para;</a></h3>
+<h3 id="step-3-deploy-the-docker">Step 3: Deploy Docker<a class="headerlink" href="#step-3-deploy-the-docker" title="Permanent link">&para;</a></h3>
 <p>Mount the certificate and key into the container using volume flags:</p>
 <div class="admonition note">
 <p class="admonition-title">Example</p>
@@ -3998,7 +3998,7 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 <li><strong>Best practice</strong>: set the permissions of <code>server.key</code> and <code>conf.json</code> to 600.</li>
 </ul>
 </div>
-<h3 id="step-4-trust-the-certificate-in-the-mcp-client">Step 4: Trust the Certificate in the MCP Client<a class="headerlink" href="#step-4-trust-the-certificate-in-the-mcp-client" title="Permanent link">&para;</a></h3>
+<h3 id="step-4-trust-the-certificate-in-the-mcp-client">Step 4: Trust Certificate in MCP Client<a class="headerlink" href="#step-4-trust-the-certificate-in-the-mcp-client" title="Permanent link">&para;</a></h3>
 <p>By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed certificates. You must explicitly trust the certificate on your development machine.</p>
 <ol>
 <li>
@@ -4104,7 +4104,7 @@ sudo<span class="w"> </span>update-ca-certificates
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 19, 2026 21:04:33 UTC">November 19, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
   </span>
 
     

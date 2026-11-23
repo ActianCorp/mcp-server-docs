@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Enable write operations in the Actian MCP Server for VectorAI DB, and what gates each write - the mcp:write scope and the human approval prompt.">
+        <meta name="description" content="By default, the Actian MCP Server for VectorAI DB permits only reads: listing, searching, counting and paging. Set query_mode to read-write in conf.json to also register the four write tools: create_collection, store, store_batch and delete_points. Extensions can write through the same checks.">
       
       
       
@@ -3235,7 +3235,7 @@
   <a href="#what-a-write-is-in-vectorai" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What a write is in VectorAI
+        Write Operations in VectorAI DB
       
     </span>
   </a>
@@ -3246,7 +3246,7 @@
   <a href="#enabling-write-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling write mode
+        Enabling Write Mode
       
     </span>
   </a>
@@ -3257,7 +3257,7 @@
   <a href="#authorizing-a-write" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Authorizing a write
+        Authorizing a Write
       
     </span>
   </a>
@@ -3268,7 +3268,7 @@
   <a href="#skipping-the-approval-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Skipping the approval prompt
+        Skipping Approval Prompt
       
     </span>
   </a>
@@ -3279,7 +3279,7 @@
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next steps
+        Next Steps
       
     </span>
   </a>
@@ -3548,7 +3548,7 @@
   <a href="#what-a-write-is-in-vectorai" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What a write is in VectorAI
+        Write Operations in VectorAI DB
       
     </span>
   </a>
@@ -3559,7 +3559,7 @@
   <a href="#enabling-write-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling write mode
+        Enabling Write Mode
       
     </span>
   </a>
@@ -3570,7 +3570,7 @@
   <a href="#authorizing-a-write" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Authorizing a write
+        Authorizing a Write
       
     </span>
   </a>
@@ -3581,7 +3581,7 @@
   <a href="#skipping-the-approval-prompt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Skipping the approval prompt
+        Skipping Approval Prompt
       
     </span>
   </a>
@@ -3592,7 +3592,7 @@
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next steps
+        Next Steps
       
     </span>
   </a>
@@ -3673,9 +3673,9 @@
 
 
 
-<h1 id="write-support">Write support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
+<h1 id="write-support">Write Support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
 <p>By default, the Actian MCP Server for VectorAI DB permits only reads: listing, searching, counting and paging. Set <code>query_mode</code> to <code>read-write</code> in <code>conf.json</code> to also register the four write tools: <code>create_collection</code>, <code>store</code>, <code>store_batch</code> and <code>delete_points</code>. Extensions can write through the same checks.</p>
-<h2 id="what-a-write-is-in-vectorai">What a write is in VectorAI<a class="headerlink" href="#what-a-write-is-in-vectorai" title="Permanent link">&para;</a></h2>
+<h2 id="what-a-write-is-in-vectorai">Write Operations in VectorAI DB<a class="headerlink" href="#what-a-write-is-in-vectorai" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -3709,12 +3709,12 @@
 </table>
 <p>Every prompt is sent as <code>Approve this database write?</code>, the text above, and a <code>Details</code> block in JSON (collection, ids, vector size, and for batches every id and the ids overwritten). The client shows it to the person and returns their answer.</p>
 <p>Only collections listed in <code>conf.json</code> can be created or written. Dropping a collection is not an MCP tool; it stays an operator action against the engine (<code>DELETE /collections/&lt;name&gt;</code> on the REST API). Payload updates without re-embedding are not part of this release. <code>store_batch</code> stores several texts with one approval, at most <code>max_batch_size</code> items (32 by default). Loading a whole corpus belongs in a script against the engine, not in an MCP session.</p>
-<h2 id="enabling-write-mode">Enabling write mode<a class="headerlink" href="#enabling-write-mode" title="Permanent link">&para;</a></h2>
+<h2 id="enabling-write-mode">Enabling Write Mode<a class="headerlink" href="#enabling-write-mode" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Value</th>
-<th>Behaviour</th>
+<th>Behavior</th>
 </tr>
 </thead>
 <tbody>
@@ -3728,7 +3728,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="authorizing-a-write">Authorizing a write<a class="headerlink" href="#authorizing-a-write" title="Permanent link">&para;</a></h2>
+<h2 id="authorizing-a-write">Authorizing a Write<a class="headerlink" href="#authorizing-a-write" title="Permanent link">&para;</a></h2>
 <p>Every write passes two independent checks before it reaches the engine.</p>
 <table>
 <thead>
@@ -3758,12 +3758,12 @@
 <p><code>store</code> and <code>store_batch</code> validate before they ask: the collection must exist on the engine, no text may be empty, ids must be UUID strings or unsigned integers (and unique within a batch), the batch may not exceed <code>max_batch_size</code>, a text may not reach <code>embedding.max_input_tokens</code> when that is set, and the embedding's dimension must match the collection's vector size. Those failures come back as errors without an approval prompt, so the user is never asked to approve a write that cannot land.</p>
 <div class="admonition note">
 <p class="admonition-title">Text leaves the server before the prompt</p>
-<p>The dimension check needs the vector, so the text goes to the embedding provider before the approval prompt. With <code>openai</code> or <code>gemini</code> on a hosted endpoint the text has left the host even when the write is then declined; a sidecar through <code>embedding.base_url</code> keeps it on your network; <code>none</code> and <code>dev-hash</code> send nothing.</p>
+<p>The dimension check needs the vector, so the text goes to the embedding provider before the approval prompt. With <code>openai</code> or <code>gemini</code> on a hosted endpoint the text has left the host even when the write is then declined; a sidecar through <code>embedding.base_url</code> keeps it on the network; <code>none</code> and <code>dev-hash</code> send nothing.</p>
 </div>
-<h2 id="skipping-the-approval-prompt">Skipping the approval prompt<a class="headerlink" href="#skipping-the-approval-prompt" title="Permanent link">&para;</a></h2>
+<h2 id="skipping-the-approval-prompt">Skipping Approval Prompt<a class="headerlink" href="#skipping-the-approval-prompt" title="Permanent link">&para;</a></h2>
 <p>For clients that cannot show an approval prompt, set <code>write_confirmation</code> to <code>false</code> in <code>conf.json</code>. The write tools then run without asking, and the server logs every such write as <code>WRITE EXECUTED WITHOUT CONFIRMATION</code>. The <code>mcp:write</code> scope check still applies: disabling the prompt does not grant write access to callers that lack the scope.</p>
 <p>This removes human oversight of every write. Use it only where the client is itself an automated, trusted pipeline.</p>
-<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="index.html#configuration">Configuration</a>: <code>query_mode</code>, <code>write_confirmation</code>, <code>collections</code>, <code>max_batch_size</code>.</li>
 <li><a href="authentication/index.html">Authentication</a>: granting the <code>mcp:write</code> scope in Auth0 and Keycloak.</li>
@@ -3789,7 +3789,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 17, 2026 20:15:24 UTC">November 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
   </span>
 
     

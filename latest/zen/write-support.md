@@ -81,7 +81,7 @@ The approval prompt uses the Model Context Protocol (MCP) elicitation capability
 
 To configure the `mcp:write` scope in the identity provider, see [Auth0](authentication/auth0.md) or [Keycloak](authentication/keycloak.md).
 
-## Skipping the Approval Prompt
+## Skipping Approval Prompt {#skipping-the-approval-prompt}
 
 Some clients cannot display the approval prompt. For those deployments, set `write_confirmation` to `false` in `conf.json` to run the server's built-in write tools without asking for approval:
 

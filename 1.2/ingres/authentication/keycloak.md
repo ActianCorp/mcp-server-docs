@@ -107,7 +107,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 
 9. Select **Save**.
 
-### Get the Client Secret
+### Get Client Secret {#get-the-client-secret}
 
 1. After creating the client, select the **Credentials** tab.
 2. Copy the **Client secret** value.
@@ -121,7 +121,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 | `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL, for example, `https://<mcp-server-host>:8000` |
 
 
-## Step 3: Add the Audience Mapper (Required)
+## Step 3: Add Audience Mapper (Required) {#step-3-add-the-audience-mapper-required}
 
 !!! danger "This step is critical"
     Without the Audience Mapper, Keycloak does not include the Client ID in the token's `aud` (audience) claim, and the MCP server rejects tokens with an `audience mismatch` error.
@@ -180,7 +180,7 @@ Expected output:
     If you still see a UUID instead of `actian-mcp` in the `aud` claim, the old token may be cached. Wait for it to expire (default 5 minutes) or go to **Sessions** in the Keycloak Admin Console and sign out of all sessions for the service account to force a fresh token.
 
 
-## Step 4 (Optional): Add the Sub Override Mapper
+## Step 4 (Optional): Add Sub Override Mapper {#step-4-optional-add-the-sub-override-mapper}
 
 By default, Keycloak sets the `sub` claim to a UUID. You can override it to contain the login name for easier `user_impersonation` mapping.
 
@@ -221,7 +221,7 @@ After adding the mapper, the token contains the following:
     Instead of overriding `sub`, you can rely on the `preferred_username` claim (included by default when the `profile` scope is present). The MCP server's username extraction priority uses `preferred_username` before `sub`, so it works automatically without any mapper changes.
 
 
-## Step 5: Add the Write Scope (Read-Write Deployments Only)
+## Step 5: Add Write Scope (Read-Write Deployments Only) {#step-5-add-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
@@ -229,7 +229,7 @@ Also skip it for a multi-target deployment with more than one server or more tha
 
 When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
 
-### Step 5.1: Create the Client Scope
+### Step 5.1: Create Client Scope {#step-51-create-the-client-scope}
 
 1. Navigate to **Client scopes** in the left sidebar and select **Create client scope**.
 2. Configure the following fields:
@@ -244,7 +244,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 
 3. Select **Save**.
 
-### Step 5.2: Attach the Scope to the Client as Optional
+### Step 5.2: Attach Scope to Client as Optional {#step-52-attach-the-scope-to-the-client-as-optional}
 
 1. Navigate to **Clients** > your client, for example `actian-mcp`, and select the **Client scopes** tab.
 2. Select **Add client scope**.
@@ -296,7 +296,7 @@ If `user_impersonation` is `true`, each Keycloak user contains a matching databa
 4. Select **Create**.
 5. Navigate to the **Credentials** tab > **Set password** > enter a password > toggle **Temporary** to `Off` > **Save**.
 
-### Creating the Matching Database User
+### Creating Matching Database User {#creating-the-matching-database-user}
 
 ```sql
 -- Create the user account (no DB password needed — Keycloak handles authentication)
@@ -320,7 +320,7 @@ GRANT SELECT ON TABLE products TO jdoe;
     If Keycloak federates users from an external LDAP or social provider, the `sub` claim may be a UUID that does not match a database account. Ensure that the federated users have `preferred_username` set, or add the sub-override mapper ([Step 4](#step-4-optional-add-the-sub-override-mapper)), or set `user_impersonation: false`.
 
 
-## Step 7: Assemble the Final Configuration
+## Step 7: Assemble Final Configuration {#step-7-assemble-the-final-configuration}
 
 ### Mapping Summary
 
@@ -371,7 +371,7 @@ For TLS setup details (certificate generation, Docker deployment, trusting self-
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 After starting the MCP server container with OAuth configured:
 
@@ -384,7 +384,7 @@ After starting the MCP server container with OAuth configured:
 
 ## Troubleshooting
 
-### Verify OIDC Discovery Endpoint
+### Verify OIDC Discovery Endpoint {#verify-oidc-discovery-endpoint}
 
 ```bash
 curl http://<keycloak-host>:8080/realms/actian-mcp/.well-known/openid-configuration \
@@ -493,7 +493,7 @@ The server collects grants from three access-token claims and uses all of them t
 
 Keycloak puts the names of the client scopes it issued into `scope`. To place other values in the token, use a mapper that writes `scp` or `permissions`, as described in Option B below.
 
-### Step 1: Create the Per-Target Scopes
+### Step 1: Create Per-Target Scopes {#step-1-create-the-per-target-scopes}
 
 Choose one of the following options.
 
@@ -539,7 +539,7 @@ Choose one of the following options.
 !!! warning "Two hardcoded mappers writing the same claim collide"
     If a token receives two grouping scopes whose mappers both write `scp`, only one value survives. Either keep each set of grants that can be issued together in one mapper, or give the second grouping scope a different claim name, for example `permissions`.
 
-### Step 2: Attach the Scopes to the Client
+### Step 2: Attach Scopes to Client {#step-2-attach-the-scopes-to-the-client}
 
 1. Navigate to **Clients** > the client that requests tokens, and select the **Client scopes** tab.
 2. Select **Add client scope**, select the per-target scopes from Step 1, then select **Add** > **Default** or **Optional**, as described below.
@@ -618,7 +618,7 @@ Use this mode when an application has already signed the user in with Keycloak a
 
 A single deployment runs one mode. If you need both, run two deployments against the same databases.
 
-### Step 1: Prepare the MCP Client in Keycloak
+### Step 1: Prepare MCP Client in Keycloak {#step-1-prepare-the-mcp-client-in-keycloak}
 
 The MCP client from [Step 2](#step-2-create-a-keycloak-client) now serves only as the **audience**: it is never used to sign anyone in.
 
@@ -626,7 +626,7 @@ The MCP client from [Step 2](#step-2-create-a-keycloak-client) now serves only a
 2. Skip [Step 4](#step-4-optional-add-the-sub-override-mapper). This mode never reads `sub` as a username.
 3. If you need writes on a single-database deployment, complete [Step 5](#step-5-add-the-write-scope-read-write-deployments-only). The server does not request `mcp:write` in this mode, so the calling application must request it.
 
-### Step 2: Register the Calling Application as Its Own Client
+### Step 2: Register Calling Application as Its Own Client {#step-2-register-the-calling-application-as-its-own-client}
 
 The calling application needs a **separate** Keycloak client. It runs the user's login and obtains the token for the MCP server, as described in [Step 5](#step-5-get-a-token-for-the-mcp-server-calling-application).
 
@@ -639,7 +639,7 @@ The calling application needs a **separate** Keycloak client. It runs the user's
     !!! warning "Keycloak version"
         Keycloak 26.2 and later support standard token exchange (RFC 8693) without extra server configuration. On earlier versions token exchange is a preview feature with a different configuration model. Check your Keycloak version before following these steps.
 
-### Step 3: Make the MCP Audience Available to the Calling Client
+### Step 3: Make MCP Audience Available to Calling Client {#step-3-make-the-mcp-audience-available-to-the-calling-client}
 
 Keycloak puts an audience in a token only if the requesting client can reach it through its client scopes. Without this step, a token requested at sign-in has no MCP audience and the server rejects it with `audience mismatch`, and a token exchange fails with `Requested audience not available: actian-mcp`.
 
@@ -666,7 +666,7 @@ Keycloak adds `preferred_username` through the built-in `profile` client scope, 
 !!! note "Federated users"
     If users federated from LDAP or a social provider have no usable `preferred_username`, either set it in Keycloak or run with `"user_impersonation": false`.
 
-### Step 5: Get a Token for the MCP Server (Calling Application)
+### Step 5: Get a Token for MCP Server (Calling Application) {#step-5-get-a-token-for-the-mcp-server-calling-application}
 
 The server accepts any token from the realm that carries the MCP audience and the scopes the call needs. The calling application can obtain one in either of two ways:
 
@@ -678,7 +678,7 @@ The server accepts any token from the realm that carries the MCP audience and th
 
 Choose token exchange when the user's token is also sent to other services and should not grant access to the MCP server.
 
-#### Request the MCP Audience at Sign-In
+#### Request MCP Audience at Sign-In {#request-the-mcp-audience-at-sign-in}
 
 Add the audience scope from [Step 3](#step-3-make-the-mcp-audience-available-to-the-calling-client), and any per-target scopes or `mcp:write` the application needs, to the `scope` parameter of the application's authorization request. For example:
 
@@ -688,7 +688,7 @@ scope=openid mcp-audience actian:<db-host>:<instance>:salesdb:read
 
 The resulting access token's `aud` contains `actian-mcp`. The application sends this token to the MCP server in the `Authorization: Bearer` header.
 
-#### Exchange the User's Token
+#### Exchange User's Token {#exchange-the-users-token}
 
 The calling application exchanges the user's own token for one that carries the MCP audience:
 
@@ -711,7 +711,7 @@ curl -s -X POST \
 
 The user's original token keeps its own audience; only the exchanged token carries `actian-mcp`. The application sends the exchanged token to the MCP server in the `Authorization: Bearer` header.
 
-### Step 6: Configure the MCP Server
+### Step 6: Configure MCP Server {#step-6-configure-the-mcp-server}
 
 ```json
 {

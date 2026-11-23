@@ -2378,12 +2378,12 @@
   <a href="#configure-the-target-registry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configure the Target Registry
+        Configure Target Registry
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configure the Target Registry">
+    <nav class="md-nav" aria-label="Configure Target Registry">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2412,7 +2412,7 @@
   <a href="#choosing-the-host-name" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Choosing the Host Name
+        Choosing Host Name
       
     </span>
   </a>
@@ -2428,12 +2428,12 @@
   <a href="#add-databases-without-a-restart-targetsd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Add Databases Without a Restart: targets.d/
+        Add Databases Without Restarting Server
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Add Databases Without a Restart: targets.d/">
+    <nav class="md-nav" aria-label="Add Databases Without Restarting Server">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2451,7 +2451,7 @@
   <a href="#do-not-repeat-a-server-in-both-places" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Do Not Repeat a Server in Both Places
+        Avoid Duplicate Server Entries
       
     </span>
   </a>
@@ -2473,7 +2473,7 @@
   <a href="#protecting-the-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Protecting the Files
+        Protecting Files
       
     </span>
   </a>
@@ -2528,12 +2528,12 @@
   <a href="#discover-which-databases-you-can-reach" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Discover Which Databases You Can Reach
+        Discover Accessible Databases
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Discover Which Databases You Can Reach">
+    <nav class="md-nav" aria-label="Discover Accessible Databases">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3803,12 +3803,12 @@
   <a href="#configure-the-target-registry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configure the Target Registry
+        Configure Target Registry
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configure the Target Registry">
+    <nav class="md-nav" aria-label="Configure Target Registry">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3837,7 +3837,7 @@
   <a href="#choosing-the-host-name" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Choosing the Host Name
+        Choosing Host Name
       
     </span>
   </a>
@@ -3853,12 +3853,12 @@
   <a href="#add-databases-without-a-restart-targetsd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Add Databases Without a Restart: targets.d/
+        Add Databases Without Restarting Server
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Add Databases Without a Restart: targets.d/">
+    <nav class="md-nav" aria-label="Add Databases Without Restarting Server">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3876,7 +3876,7 @@
   <a href="#do-not-repeat-a-server-in-both-places" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Do Not Repeat a Server in Both Places
+        Avoid Duplicate Server Entries
       
     </span>
   </a>
@@ -3898,7 +3898,7 @@
   <a href="#protecting-the-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Protecting the Files
+        Protecting Files
       
     </span>
   </a>
@@ -3953,12 +3953,12 @@
   <a href="#discover-which-databases-you-can-reach" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Discover Which Databases You Can Reach
+        Discover Accessible Databases
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Discover Which Databases You Can Reach">
+    <nav class="md-nav" aria-label="Discover Accessible Databases">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -4176,7 +4176,7 @@
 <li><strong>A service account per installation.</strong> The <code>username</code> and <code>password</code> in each target entry are used for every connection to that installation. With <code>user_impersonation</code> enabled, this account also needs the privileges to run <code>SET SESSION AUTHORIZATION</code>, exactly as in a single-database deployment. See <a href="authentication/index.html#service-account-privileges">Service Account Privileges</a>.</li>
 </ul>
 <hr />
-<h2 id="configure-the-target-registry">Configure the Target Registry<a class="headerlink" href="#configure-the-target-registry" title="Permanent link">&para;</a></h2>
+<h2 id="configure-the-target-registry">Configure Target Registry<a class="headerlink" href="#configure-the-target-registry" title="Permanent link">&para;</a></h2>
 <p>Add a <code>targets</code> block to <code>conf.json</code>. Values in <code>defaults</code> apply to every entry; each entry in <code>list</code> describes one Analytics Engine installation and the databases it serves.</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
@@ -4291,13 +4291,13 @@
 <li>With <code>user_impersonation</code> enabled, a per-database account needs the same impersonation privileges as the entry's account (see <a href="authentication/index.html#service-account-privileges">Service Account Privileges</a>). A missing privilege shows up on the first query to that database, not at startup.</li>
 <li>Objects are not allowed in <code>defaults.databases</code>.</li>
 </ul>
-<h3 id="choosing-the-host-name">Choosing the Host Name<a class="headerlink" href="#choosing-the-host-name" title="Permanent link">&para;</a></h3>
+<h3 id="choosing-the-host-name">Choosing Host Name<a class="headerlink" href="#choosing-the-host-name" title="Permanent link">&para;</a></h3>
 <p>The <code>host</code> value appears in client URLs and in every scope your identity provider grants. If the database later moves to another machine and <code>host</code> is that machine's name, every URL and grant changes with it.</p>
 <p>Give each installation a stable DNS name, such as a CNAME <code>sales-db.example.com</code>, and use that name in <code>host</code>. A move is then a DNS change plus a restart of the MCP Server container. Where you cannot add a DNS record, a hosts entry in the container works the same way:</p>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--add-host<span class="w"> </span>sales-db.example.com:10.1.2.3<span class="w"> </span>...
 </code></pre></div>
 <hr />
-<h2 id="add-databases-without-a-restart-targetsd">Add Databases Without a Restart: <code>targets.d/</code><a class="headerlink" href="#add-databases-without-a-restart-targetsd" title="Permanent link">&para;</a></h2>
+<h2 id="add-databases-without-a-restart-targetsd">Add Databases Without Restarting Server<a class="headerlink" href="#add-databases-without-a-restart-targetsd" title="Permanent link">&para;</a></h2>
 <p>Targets in <code>conf.json</code> are read once at startup. To add or remove databases while the server runs, mount a directory of target files at <code>/app/targets.d</code> in the container. The server checks the directory about every 10 seconds and applies changes without a restart.</p>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
@@ -4323,7 +4323,7 @@
 <span class="w">  </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;db_password&gt;"</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="do-not-repeat-a-server-in-both-places">Do Not Repeat a Server in Both Places<a class="headerlink" href="#do-not-repeat-a-server-in-both-places" title="Permanent link">&para;</a></h3>
+<h3 id="do-not-repeat-a-server-in-both-places">Avoid Duplicate Server Entries<a class="headerlink" href="#do-not-repeat-a-server-in-both-places" title="Permanent link">&para;</a></h3>
 <p>The server merges <code>targets.list</code> from <code>conf.json</code> with every file in <code>targets.d/</code> into one registry. <strong>An Analytics Engine installation (<code>host</code> and <code>instance</code>) must appear in only one place.</strong> If the same installation appears in <code>conf.json</code> and in a <code>targets.d/</code> file, or in two files, the registry is rejected as a duplicate:</p>
 <ul>
 <li>At startup, the server does not start.</li>
@@ -4338,7 +4338,7 @@
 <li><strong>An unreadable directory</strong> (for example, an unmounted volume) is treated as an error, not as "no targets".</li>
 <li><strong>The authentication requirement applies to reloads too.</strong> If the server runs without OAuth, a file that would bring the registry above one target is rejected, and the server logs a warning about this at startup.</li>
 </ul>
-<h3 id="protecting-the-files">Protecting the Files<a class="headerlink" href="#protecting-the-files" title="Permanent link">&para;</a></h3>
+<h3 id="protecting-the-files">Protecting Files<a class="headerlink" href="#protecting-the-files" title="Permanent link">&para;</a></h3>
 <p>Target files contain database passwords, just like <code>conf.json</code>:</p>
 <ul>
 <li>Mount the directory read-only.</li>
@@ -4426,7 +4426,7 @@
 <p>Use <code>allow_unscoped_reads</code> only temporarily, for example to test routing before scopes are provisioned in your identity provider. The server logs a warning at every startup while it is set.</p>
 </div>
 <hr />
-<h2 id="discover-which-databases-you-can-reach">Discover Which Databases You Can Reach<a class="headerlink" href="#discover-which-databases-you-can-reach" title="Permanent link">&para;</a></h2>
+<h2 id="discover-which-databases-you-can-reach">Discover Accessible Databases<a class="headerlink" href="#discover-which-databases-you-can-reach" title="Permanent link">&para;</a></h2>
 <p>The <code>list_accessible_targets</code> tool returns the databases the caller's token can read, with the path to connect to each one:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -4627,7 +4627,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 00:41:42 UTC">November 18, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
   </span>
 
     

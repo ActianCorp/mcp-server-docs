@@ -114,7 +114,7 @@ Create a file named `conf.json` in the working directory and add the database-sp
 
 ---
 
-## Start the Server
+## Start Server {#start-the-server}
 
 With the `conf.json` file ready, run the following Docker command to start the container. This command mounts the configuration file as a read-only volume.
 

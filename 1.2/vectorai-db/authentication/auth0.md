@@ -62,7 +62,7 @@ The **API** represents the Actian MCP Server as a protected resource in Auth0. T
 |---|---|
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** that you entered, for example, `https://<mcp-server-host>:8000/mcp`. |
 
-### Step 1.1: Add the Write Scope (Read-Write Deployments Only)
+### Step 1.1: Add Write Scope (Read-Write Deployments Only) {#step-11-add-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
@@ -95,7 +95,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 The **Application** represents the MCP server's OAuth client. It holds `client_id` and `client_secret` used during the OAuth handshake.
 
 !!! note "Why Machine to Machine?"
-    The MCP server's OAuth proxy (OIDCProxy) acts as a **confidential client** — it authenticates with Auth0 using a `CLIENT_ID` and `CLIENT_SECRET` pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.
+    The MCP server's OAuth proxy (OIDCProxy) acts as a **confidential client**. It authenticates with Auth0 using a `CLIENT_ID` and `CLIENT_SECRET` pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.
 
 !!! warning "Do not use "Regular Web Application""
     Auth0 enforces PKCE validation differently for Web applications, which conflicts with the forwarding of OIDCProxy authorization requests. This causes `code_challenge: Field required` errors.
@@ -157,13 +157,13 @@ All values appear on the **Settings** tab of your application:
     The **Domain** is shown at the top of the Settings tab, for example, `dev-abc123.us.auth0.com`. The OIDC discovery URL is always `https://<domain>/.well-known/openid-configuration`.
 
 
-## Step 3: Authorize the Application for the API
+## Step 3: Authorize Application for API {#step-3-authorize-the-application-for-the-api}
 
 !!! warning "This step is critical"
     Auth0 requires an explicit grant between an application and an API before it issues tokens. Without this authorization, token requests fail with `invalid_request`.
 
 !!! note "Authorizing means selecting permissions"
-    Authorizing the application means selecting, from a permission checklist, which of the API's permissions (in this guide, just `mcp:write`, defined in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only)) the application is allowed to request. If your API defines no permissions yet, the checklist is empty and there is nothing to select — that is expected for read-only deployments.
+    Authorizing the application means selecting, from a permission checklist, which of the API's permissions (in this guide, just `mcp:write`, defined in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only)) the application is allowed to request. If your API defines no permissions yet, the checklist is empty and there is nothing to select. This is expected for read-only deployments.
 
 You can authorize from either the application's APIs tab or the API's Application Access tab:
 
@@ -187,15 +187,15 @@ After saving, the application row on the **Application Access** tab shows a gree
     If you plan to use `user_impersonation: true`, the application must be authorized for **User-Delegated Access**. Without it, Auth0 will not issue tokens with user identity claims (email, sub) during the Authorization Code flow, and the MCP server has no user name to record in the call log.
 
 !!! note "This is not the same as granting the scope to a user"
-    Authorizing the application here means it is *allowed to request* `mcp:write` — not that any particular user's token will carry it. With **Enable RBAC** on (required in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only)), whether a specific user's token actually includes `mcp:write` depends on that user holding it through a role, which is a separate, per-user assignment in [Step 4.2](#step-42-grant-the-write-scope-read-write-deployments-only). Both steps are required for read-write deployments.
+    Authorizing the application here means it is *allowed to request* `mcp:write`, not that any particular user's token will carry it. With **Enable RBAC** on (required in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only)), whether a specific user's token actually includes `mcp:write` depends on that user holding it through a role, which is a separate, per-user assignment in [Step 4.2](#step-42-grant-the-write-scope-read-write-deployments-only). Both steps are required for read-write deployments.
 
 
 ## Step 4: Create Auth0 Users
 
 !!! note "No database accounts on VectorAI DB"
-    The engine sees only the server's api key, so no Auth0 user needs a matching database account. Create the Auth0 users your people log in with. Which name the server records for each of them in the call log is described under [User Impersonation](index.md#user-impersonation).
+    The engine sees only the server's API key, so no Auth0 user needs a matching database account. Create the Auth0 users your people log in with. Which name the server records for each of them in the call log is described under [User Impersonation](index.md#user-impersonation).
 
-### Step 4.1: Create the User in Auth0
+### Step 4.1: Create User in Auth0 {#step-41-create-the-user-in-auth0}
 
 1. In the Auth0 Dashboard, navigate to **User Management** > **Users**.
 2. Select **+ Create User**.
@@ -215,7 +215,7 @@ After saving, the application row on the **Application Access** tab shows a gree
 !!! note "Federated identity caveat"
     With `user_impersonation: true`, a user who signs in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0 and arrives without an email is recorded by the `sub` claim with the provider prefix removed: `google-oauth2|12345` is logged as `12345`. Add a `username` to the Auth0 user profile if you want readable names in the call log.
 
-### Step 4.2: Grant the Write Scope (Read-Write Deployments Only)
+### Step 4.2: Grant Write Scope (Read-Write Deployments Only) {#step-42-grant-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`.
 
@@ -230,10 +230,10 @@ Defining `mcp:write` on the API in [Step 1.1](#step-11-add-the-write-scope-read-
 Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see [which users can obtain the scope](keycloak.md#user-eligibility) there.
 
 !!! warning "The scope is the only per-user write control"
-    The engine sees only the server's api key and cannot tell users apart, so there are no per-user privileges behind the scope. A user whose token carries `mcp:write` can write to every collection the server exposes; the approval prompt is the only other check. See [Write support](../write-support.md#authorizing-a-write).
+    The engine sees only the server's API key and cannot tell users apart, so there are no per-user privileges behind the scope. A user whose token carries `mcp:write` can write to every collection the server exposes; the approval prompt is the only other check. See [Write support](../write-support.md#authorizing-a-write).
 
 
-## Step 5: Assemble the Final Configuration
+## Step 5: Assemble Final Configuration {#step-5-assemble-the-final-configuration}
 
 ### Mapping Summary
 
@@ -286,7 +286,7 @@ For TLS setup details (certificate generation, Docker deployment, trusting self-
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 After starting the MCP server container with OAuth configured:
 
@@ -299,7 +299,7 @@ After starting the MCP server container with OAuth configured:
 
 ## Troubleshooting
 
-### Verify OIDC Discovery Endpoint
+### Verify OIDC Discovery Endpoint {#verify-oidc-discovery-endpoint}
 
 ```bash
 curl https://dev-abc123.us.auth0.com/.well-known/openid-configuration \

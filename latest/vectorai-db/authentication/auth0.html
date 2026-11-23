@@ -3218,7 +3218,7 @@
   <a href="#step-11-add-the-write-scope-read-write-deployments-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1.1: Add the Write Scope (Read-Write Deployments Only)
+        Step 1.1: Add Write Scope (Read-Write Deployments Only)
       
     </span>
   </a>
@@ -3284,7 +3284,7 @@
   <a href="#step-3-authorize-the-application-for-the-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Authorize the Application for the API
+        Step 3: Authorize Application for API
       
     </span>
   </a>
@@ -3307,7 +3307,7 @@
   <a href="#step-41-create-the-user-in-auth0" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4.1: Create the User in Auth0
+        Step 4.1: Create User in Auth0
       
     </span>
   </a>
@@ -3318,7 +3318,7 @@
   <a href="#step-42-grant-the-write-scope-read-write-deployments-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4.2: Grant the Write Scope (Read-Write Deployments Only)
+        Step 4.2: Grant Write Scope (Read-Write Deployments Only)
       
     </span>
   </a>
@@ -3334,12 +3334,12 @@
   <a href="#step-5-assemble-the-final-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: Assemble the Final Configuration
+        Step 5: Assemble Final Configuration
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 5: Assemble the Final Configuration">
+    <nav class="md-nav" aria-label="Step 5: Assemble Final Configuration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3373,7 +3373,7 @@
   <a href="#verify-end-to-end" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify End-to-End
+        Verify Setup End-to-End
       
     </span>
   </a>
@@ -3823,7 +3823,7 @@
   <a href="#step-11-add-the-write-scope-read-write-deployments-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1.1: Add the Write Scope (Read-Write Deployments Only)
+        Step 1.1: Add Write Scope (Read-Write Deployments Only)
       
     </span>
   </a>
@@ -3889,7 +3889,7 @@
   <a href="#step-3-authorize-the-application-for-the-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Authorize the Application for the API
+        Step 3: Authorize Application for API
       
     </span>
   </a>
@@ -3912,7 +3912,7 @@
   <a href="#step-41-create-the-user-in-auth0" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4.1: Create the User in Auth0
+        Step 4.1: Create User in Auth0
       
     </span>
   </a>
@@ -3923,7 +3923,7 @@
   <a href="#step-42-grant-the-write-scope-read-write-deployments-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4.2: Grant the Write Scope (Read-Write Deployments Only)
+        Step 4.2: Grant Write Scope (Read-Write Deployments Only)
       
     </span>
   </a>
@@ -3939,12 +3939,12 @@
   <a href="#step-5-assemble-the-final-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: Assemble the Final Configuration
+        Step 5: Assemble Final Configuration
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 5: Assemble the Final Configuration">
+    <nav class="md-nav" aria-label="Step 5: Assemble Final Configuration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3978,7 +3978,7 @@
   <a href="#verify-end-to-end" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify End-to-End
+        Verify Setup End-to-End
       
     </span>
   </a>
@@ -4236,7 +4236,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="step-11-add-the-write-scope-read-write-deployments-only">Step 1.1: Add the Write Scope (Read-Write Deployments Only)<a class="headerlink" href="#step-11-add-the-write-scope-read-write-deployments-only" title="Permanent link">&para;</a></h3>
+<h3 id="step-11-add-the-write-scope-read-write-deployments-only">Step 1.1: Add Write Scope (Read-Write Deployments Only)<a class="headerlink" href="#step-11-add-the-write-scope-read-write-deployments-only" title="Permanent link">&para;</a></h3>
 <p>Skip this step if <code>query_mode</code> is <code>read-only</code>. A read-only server never requests the <code>mcp:write</code> scope.</p>
 <p>When <code>query_mode</code> is <code>read-write</code>, the server requests <code>mcp:write</code> and rejects any write whose token does not carry it. For more information, see <a href="../write-support.html">Write support</a>.</p>
 <ol>
@@ -4298,7 +4298,7 @@
 <p>The <strong>Application</strong> represents the MCP server's OAuth client. It holds <code>client_id</code> and <code>client_secret</code> used during the OAuth handshake.</p>
 <div class="admonition note">
 <p class="admonition-title">Why Machine to Machine?</p>
-<p>The MCP server's OAuth proxy (OIDCProxy) acts as a <strong>confidential client</strong> — it authenticates with Auth0 using a <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code> pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.</p>
+<p>The MCP server's OAuth proxy (OIDCProxy) acts as a <strong>confidential client</strong>. It authenticates with Auth0 using a <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code> pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Do not use "Regular Web Application"</p>
@@ -4413,14 +4413,14 @@
 <p class="admonition-title">Finding the Domain</p>
 <p>The <strong>Domain</strong> is shown at the top of the Settings tab, for example, <code>dev-abc123.us.auth0.com</code>. The OIDC discovery URL is always <code>https://&lt;domain&gt;/.well-known/openid-configuration</code>.</p>
 </div>
-<h2 id="step-3-authorize-the-application-for-the-api">Step 3: Authorize the Application for the API<a class="headerlink" href="#step-3-authorize-the-application-for-the-api" title="Permanent link">&para;</a></h2>
+<h2 id="step-3-authorize-the-application-for-the-api">Step 3: Authorize Application for API<a class="headerlink" href="#step-3-authorize-the-application-for-the-api" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">This step is critical</p>
 <p>Auth0 requires an explicit grant between an application and an API before it issues tokens. Without this authorization, token requests fail with <code>invalid_request</code>.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Authorizing means selecting permissions</p>
-<p>Authorizing the application means selecting, from a permission checklist, which of the API's permissions (in this guide, just <code>mcp:write</code>, defined in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>) the application is allowed to request. If your API defines no permissions yet, the checklist is empty and there is nothing to select — that is expected for read-only deployments.</p>
+<p>Authorizing the application means selecting, from a permission checklist, which of the API's permissions (in this guide, just <code>mcp:write</code>, defined in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>) the application is allowed to request. If your API defines no permissions yet, the checklist is empty and there is nothing to select. This is expected for read-only deployments.</p>
 </div>
 <p>You can authorize from either the application's APIs tab or the API's Application Access tab:</p>
 <p><strong>Option A - Authorize from Application:</strong></p>
@@ -4444,14 +4444,14 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">This is not the same as granting the scope to a user</p>
-<p>Authorizing the application here means it is <em>allowed to request</em> <code>mcp:write</code> — not that any particular user's token will carry it. With <strong>Enable RBAC</strong> on (required in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>), whether a specific user's token actually includes <code>mcp:write</code> depends on that user holding it through a role, which is a separate, per-user assignment in <a href="#step-42-grant-the-write-scope-read-write-deployments-only">Step 4.2</a>. Both steps are required for read-write deployments.</p>
+<p>Authorizing the application here means it is <em>allowed to request</em> <code>mcp:write</code>, not that any particular user's token will carry it. With <strong>Enable RBAC</strong> on (required in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a>), whether a specific user's token actually includes <code>mcp:write</code> depends on that user holding it through a role, which is a separate, per-user assignment in <a href="#step-42-grant-the-write-scope-read-write-deployments-only">Step 4.2</a>. Both steps are required for read-write deployments.</p>
 </div>
 <h2 id="step-4-create-auth0-users">Step 4: Create Auth0 Users<a class="headerlink" href="#step-4-create-auth0-users" title="Permanent link">&para;</a></h2>
 <div class="admonition note">
 <p class="admonition-title">No database accounts on VectorAI DB</p>
-<p>The engine sees only the server's api key, so no Auth0 user needs a matching database account. Create the Auth0 users your people log in with. Which name the server records for each of them in the call log is described under <a href="index.html#user-impersonation">User Impersonation</a>.</p>
+<p>The engine sees only the server's API key, so no Auth0 user needs a matching database account. Create the Auth0 users your people log in with. Which name the server records for each of them in the call log is described under <a href="index.html#user-impersonation">User Impersonation</a>.</p>
 </div>
-<h3 id="step-41-create-the-user-in-auth0">Step 4.1: Create the User in Auth0<a class="headerlink" href="#step-41-create-the-user-in-auth0" title="Permanent link">&para;</a></h3>
+<h3 id="step-41-create-the-user-in-auth0">Step 4.1: Create User in Auth0<a class="headerlink" href="#step-41-create-the-user-in-auth0" title="Permanent link">&para;</a></h3>
 <ol>
 <li>In the Auth0 Dashboard, navigate to <strong>User Management</strong> &gt; <strong>Users</strong>.</li>
 <li>Select <strong>+ Create User</strong>.</li>
@@ -4496,7 +4496,7 @@
 <p class="admonition-title">Federated identity caveat</p>
 <p>With <code>user_impersonation: true</code>, a user who signs in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0 and arrives without an email is recorded by the <code>sub</code> claim with the provider prefix removed: <code>google-oauth2|12345</code> is logged as <code>12345</code>. Add a <code>username</code> to the Auth0 user profile if you want readable names in the call log.</p>
 </div>
-<h3 id="step-42-grant-the-write-scope-read-write-deployments-only">Step 4.2: Grant the Write Scope (Read-Write Deployments Only)<a class="headerlink" href="#step-42-grant-the-write-scope-read-write-deployments-only" title="Permanent link">&para;</a></h3>
+<h3 id="step-42-grant-the-write-scope-read-write-deployments-only">Step 4.2: Grant Write Scope (Read-Write Deployments Only)<a class="headerlink" href="#step-42-grant-the-write-scope-read-write-deployments-only" title="Permanent link">&para;</a></h3>
 <p>Skip this step if <code>query_mode</code> is <code>read-only</code>.</p>
 <p>Defining <code>mcp:write</code> on the API in <a href="#step-11-add-the-write-scope-read-write-deployments-only">Step 1.1</a> does not give it to anyone. Auth0 issues the scope only to users who hold it through a role, so grant it to each user who is allowed to write.</p>
 <ol>
@@ -4509,9 +4509,9 @@
 <p>Users without this role can still read. Their tokens do not carry <code>mcp:write</code>, so the server rejects their writes. Because the permission is granted per user, a user cannot obtain the scope by asking for it. Keycloak works differently, so if you also run Keycloak, see <a href="keycloak.html#user-eligibility">which users can obtain the scope</a> there.</p>
 <div class="admonition warning">
 <p class="admonition-title">The scope is the only per-user write control</p>
-<p>The engine sees only the server's api key and cannot tell users apart, so there are no per-user privileges behind the scope. A user whose token carries <code>mcp:write</code> can write to every collection the server exposes; the approval prompt is the only other check. See <a href="../write-support.html#authorizing-a-write">Write support</a>.</p>
+<p>The engine sees only the server's API key and cannot tell users apart, so there are no per-user privileges behind the scope. A user whose token carries <code>mcp:write</code> can write to every collection the server exposes; the approval prompt is the only other check. See <a href="../write-support.html#authorizing-a-write">Write support</a>.</p>
 </div>
-<h2 id="step-5-assemble-the-final-configuration">Step 5: Assemble the Final Configuration<a class="headerlink" href="#step-5-assemble-the-final-configuration" title="Permanent link">&para;</a></h2>
+<h2 id="step-5-assemble-the-final-configuration">Step 5: Assemble Final Configuration<a class="headerlink" href="#step-5-assemble-the-final-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="mapping-summary">Mapping Summary<a class="headerlink" href="#mapping-summary" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4591,7 +4591,7 @@
 </div>
 <p>For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see <a href="index.html#secure-remote-deployments-with-https-and-tls">HTTPS / TLS for Remote Deployments</a>.</p>
 <p>For security best practices (file permissions, <code>.gitignore</code>, secrets management), see <a href="index.html#security-best-practices">Security Best Practices</a>.</p>
-<h2 id="verify-end-to-end">Verify End-to-End<a class="headerlink" href="#verify-end-to-end" title="Permanent link">&para;</a></h2>
+<h2 id="verify-end-to-end">Verify Setup End-to-End<a class="headerlink" href="#verify-end-to-end" title="Permanent link">&para;</a></h2>
 <p>After starting the MCP server container with OAuth configured:</p>
 <ol>
 <li>Open a browser and navigate to your server's <code>/mcp</code> endpoint, for example, <code>https://&lt;your-server-host&gt;:8000/mcp</code>.</li>
@@ -4790,7 +4790,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 19, 2026 21:08:14 UTC">November 19, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
   </span>
 
     
@@ -4879,7 +4879,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Authentication">
+          <a href="index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configuring OAuth 2.0 and OIDC Authentication">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -4889,7 +4889,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Authentication
+                Configuring OAuth 2.0 and OIDC Authentication
               </div>
             </div>
           </a>
