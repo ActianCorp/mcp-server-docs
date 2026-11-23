@@ -11,7 +11,7 @@ An extension *adds* capabilities. It does not manage the engine connection: the 
 
 Extensions are supported on Actian VectorAI DB.
 
-## Writing the Module
+## Writing Module {#writing-the-module}
 
 An extension is a normal Python module exposing one required function and two optional hooks:
 
@@ -37,11 +37,11 @@ async def teardown(): ...              # OPTIONAL, release them at shutdown
 Implement `setup(config)` and `teardown()` only if your extension owns something that needs an explicit open and close, such as an HTTP client, a cache, or a connection pool of your own. Either may be `async` or plain.
 
 !!! note "Configuration never contains secrets"
-    The `config` argument holds the `config` block you set in `conf.json` plus a short list of non-secret values (`dbms`, `max_rows`, `transport`). It never contains the engine api key, the embedding key or OAuth secrets.
+    The `config` argument holds the `config` block you set in `conf.json` plus a short list of non-secret values (`dbms`, `max_rows`, `transport`). It never contains the engine API key, the embedding key or OAuth secrets.
 
 Give your tools schema-friendly signatures: typed parameters, and no `*args` or `**kwargs`.
 
-## Mounting and Registering the Module
+## Mounting and Registering Module {#mounting-and-registering-the-module}
 
 Mount your module into the server's extensions directory, `/app/extensions`, as a volume. The server makes that directory importable:
 
@@ -82,11 +82,11 @@ Then list it by module name in `conf.json`. Paths are not used, because the loca
 | Transport and protocol | The server serves MCP over HTTP. You do not implement any of it. |
 | Logging | Extension loading, tool registration, and approval outcomes go to the server log, and so do your own `logging.getLogger(__name__)` messages. There is no automatic per-call audit log. If you need a record of who called what, log it in your tool. |
 
-## Reaching the Engine
+## Reaching Engine {#reaching-the-engine}
 
 The extension API's `get_database()` runs SQL and exists for the SQL plugins. On a VectorAI DB server its `query()` answers `{"success": false, "error": "querying is not supported for dbms 'vectorai'"}` and `transaction()` raises. Do not use it here.
 
-An extension that needs engine data calls the engine's REST API with its own HTTP client; `httpx` is installed in the image. Put the engine URL in the extension's `config` block. When the engine requires an api key, read it from an environment variable: the server does not hand its own key to extensions.
+An extension that needs engine data calls the engine's REST API with its own HTTP client; `httpx` is installed in the image. Put the engine URL in the extension's `config` block. When the engine requires an API key, read it from an environment variable: the server does not hand its own key to extensions.
 
 ```python
 import os
@@ -114,7 +114,7 @@ def register(server, config):
 
 Every request runs with that key, whoever the caller is. The key decides what the extension can read or write, and nothing limits it to the collections listed in `conf.json`: that limit lives in the built-in tools, not in the engine.
 
-## Asking a Human to Approve a Write
+## Requesting Write Approval {#asking-a-human-to-approve-a-write}
 
 Nothing confirms an extension's write automatically. Call `request_write_confirmation()` and write only if it returns `True`. That lets you confirm once for a batch, add context, or skip confirmation in a trusted automated flow.
 

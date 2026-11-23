@@ -11,7 +11,7 @@ An extension *adds* capabilities. It does not manage the database connection. Th
 
 Extensions are supported on Actian Analytics Engine.
 
-## Writing the Module
+## Writing Module {#writing-the-module}
 
 An extension is a normal Python module exposing one required function and two optional hooks:
 
@@ -41,7 +41,7 @@ Implement `setup(config)` and `teardown()` only if your extension owns something
 
 Give your tools schema-friendly signatures: typed parameters, and no `*args` or `**kwargs`.
 
-## Mounting and Registering the Module
+## Mounting and Registering Module {#mounting-and-registering-the-module}
 
 Mount your module into the server's extensions directory, `/app/extensions`, as a volume. The server makes that directory importable:
 

@@ -118,7 +118,7 @@ Describes the schema of a specific class, including its direct superclasses, dec
 }
 ```
 
-### Reading field types
+### Reading Field Types
 
 The `type` string tells you whether a field holds a scalar, a reference, or a container.
 

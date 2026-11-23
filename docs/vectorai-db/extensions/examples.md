@@ -27,7 +27,7 @@ The examples query SQL tables through `get_database()`, which does not work on a
 
 The schema file creates seven tables with seed data, and enforces the rule that stock cannot go negative with a trigger. The schema file's header lists the grant statements to run afterwards for the account the server connects as.
 
-## Running the Examples
+## Running Examples {#running-the-examples}
 
 !!! note "Read-write mode required"
     The two transaction examples and the approval example need `"query_mode": "read-write"`. See [Write support](../write-support.md).
@@ -54,7 +54,7 @@ docker run -d --rm -p 8000:8000 \
 
 The startup log shows a `Loaded extension` line for each module and one line per registered tool. Those tools then appear in your MCP client's tool list next to the built-in ones.
 
-## Answering the Approval Prompt
+## Answering Approval Prompt {#answering-the-approval-prompt}
 
 Claude Desktop and GitHub Copilot cannot display the write-approval prompt, so writes through them fail closed. To test an approval-gated tool such as `adjust_stock`, use [`hitl_demo_client.py`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/clients/hitl_demo_client.py), which prints the request and asks you at the console:
 

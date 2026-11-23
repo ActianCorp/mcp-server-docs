@@ -82,13 +82,13 @@ The API represents the Actian MCP Server as a protected resource in Auth0. Token
 !!! important "The Identifier is the audience the server checks"
     Set `quarkus.oidc.token.audience` to the Identifier exactly, with a trailing `/` included or excluded in the same way.
 
-### Step 3.1: Add the Write Scope (Write Mode Only)
+### Step 3.1: Add Write Scope (Write Mode Only) {#step-31-add-the-write-scope-write-mode-only}
 
 Skip this step when `nsql.writes.enabled` is `false`. A read-only server never inspects the scope.
 
 In write mode, the server checks every write call for the `mcp:write` scope and rejects a token that lacks it. Auth0 models that scope as a **permission** on the API, so this step defines the permission and turns on the setting that lets Auth0 issue it. You choose which applications receive it later, in [Grant API Access](#grant-api-access). For what the server does with the scope, see [Write support](../../write-support.md#what-each-call-must-clear).
 
-#### Define the Permission
+#### Define Permission {#define-the-permission}
 
 1. Open the API you just created, for example `Actian MCP Server`, and select the **Permissions** tab.
 2. Under **Add a Permission**, enter the following and select **+ Add**:
@@ -197,7 +197,7 @@ This is a **tenant-level** setting required for MCP clients to pass the audience
 
 MCP clients name the server they want a token for in the standard `resource` parameter, not in the Auth0-specific `audience` parameter. With this profile on, Auth0 treats `resource` as the audience, so the API Identifier must match the server URL that clients send, for example `https://<mcp-server-host>:8443/mcp`.
 
-## Step 6: Configure and Start the Server
+## Step 6: Configure and Start Server {#step-6-configure-and-start-the-server}
 
 The Actian MCP Server requires the Auth0 issuer URL to validate incoming tokens.
 
@@ -231,7 +231,7 @@ quarkus.oidc.resource-metadata.scopes=mcp:write
 ```
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 ### Authorization Code Flow
 

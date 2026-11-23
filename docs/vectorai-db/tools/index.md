@@ -1,13 +1,13 @@
 ---
 title: Tools
-description: Reference for the VectorAI DB tools of the Actian MCP Server - collection listing, semantic search, counting, paging, and the gated write tools.
+description: Reference for the VectorAI DB tools of the Actian MCP Server: collection listing, semantic search, counting, paging, and the gated write tools.
 ---
 
 # Tools
 
 The server registers six read tools in every mode and four write tools only when `query_mode` is `read-write` (see [Write support](../write-support.md)). Every tool except `list_collections` takes a `collection` name and answers only for collections listed in `conf.json`; any other name returns an error that lists the configured ones.
 
-## Available tools
+## Available Tools
 
 | Tool | read-only | read-write | Description |
 |------|-----------|------------|-------------|
@@ -24,7 +24,7 @@ The server registers six read tools in every mode and four write tools only when
 
 Writes require the `mcp:write` scope when OAuth is enabled and an approval prompt at the client. `search`, `store` and `store_batch` need an embedding provider. With `embedding.provider: none` they answer with an error; use `search_by_vector` instead.
 
-### Common output
+### Common Output
 
 Every tool returns a JSON object with `success`. On failure:
 
@@ -380,7 +380,7 @@ Read-write mode only. Deletes points by id from a configured collection. The ser
 
 A collection left with few live points shows `status: "red"` until new points are added (see [Engine behaviour](../index.md#engine-behaviour)).
 
-## Next steps
+## Next Steps
 
 - [Resources](../resources/index.md): the same collection information as MCP resources.
 - [Prompts](../prompts/index.md): `find_information` and `store_information`.

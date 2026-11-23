@@ -58,7 +58,7 @@ Add your database settings, or a [`targets` block](../multi-target.md), as usual
 
 ---
 
-## The Token Flow
+## Token Flow {#the-token-flow}
 
 1. The user signs in to your application, which receives an access token.
 2. The application obtains an access token for the MCP Server's audience, for the same user. It can request that audience when the user signs in, or, if your IdP supports it, exchange its own token for one (RFC 8693 token exchange).
@@ -116,7 +116,7 @@ When the caller is a service rather than a user, set `user_impersonation` to `fa
 
 ---
 
-## Verify the Deployment
+## Verify Deployment {#verify-the-deployment}
 
 ```bash
 BASE=https://<mcp_server_host>:8000
@@ -138,7 +138,7 @@ Then call a tool with a real token from your application; see [Call the Server f
 
 ---
 
-## Call the Server from a Client
+## Call Server from a Client {#call-the-server-from-a-client}
 
 A client in this mode sends the access token it already holds in the `Authorization: Bearer` header. An application runs no login of its own, but a client such as Claude Code can sign the user in itself.
 

@@ -50,11 +50,11 @@ For a vector column, `column_datatype` is `VECTOR`. For the other columns in the
 
 `column_length` and `column_scale` for a vector column come from the database catalog and describe how the column is stored. Use `vector_dimensions` and `vector_element_type` for the vector's shape.
 
-### In the Schema Resource
+### In Schema Resource {#in-the-schema-resource}
 
 The schema resource reports a vector column's `dtype` as the full declaration, for example `VECTOR(4, FLOAT4)` or `VECTOR(3, DECIMAL(5,2))`. See [Resources](resources/index.md#vector-columns).
 
-## The vector_search Tool
+## vector_search Tool {#the-vector_search-tool}
 
 `vector_search` computes the distance between a query vector and the vector column in every candidate row, and returns the nearest rows in ascending order of distance. The first row is always the closest match, whichever metric you choose.
 

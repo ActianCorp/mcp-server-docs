@@ -104,7 +104,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 
 9. Select **Save**.
 
-### Get the Client Secret
+### Get Client Secret {#get-the-client-secret}
 
 1. After creating the client, select the **Credentials** tab.
 2. Copy the **Client secret** value.
@@ -118,7 +118,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 | `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL, for example, `https://<mcp-server-host>:8000` |
 
 
-## Step 3: Add the Audience Mapper (Required)
+## Step 3: Add Audience Mapper (Required) {#step-3-add-the-audience-mapper-required}
 
 !!! danger "This step is critical"
     Without the Audience Mapper, Keycloak does not include the Client ID in the token's `aud` (audience) claim, and the MCP server rejects tokens with an `audience mismatch` error.
@@ -177,7 +177,7 @@ Expected output:
     If you still see a UUID instead of `actian-mcp` in the `aud` claim, the old token may be cached. Wait for it to expire (default 5 minutes) or go to **Sessions** in the Keycloak Admin Console and sign out of all sessions for the service account to force a fresh token.
 
 
-## Step 4 (Optional): Add the Sub Override Mapper
+## Step 4 (Optional): Add Sub Override Mapper {#step-4-optional-add-the-sub-override-mapper}
 
 By default, Keycloak sets the `sub` claim to a UUID. You can override it to contain the login name, which the call log then shows when a token carries no other user claim.
 
@@ -218,13 +218,13 @@ After adding the mapper, the token contains the following:
     Instead of overriding `sub`, you can rely on the `preferred_username` claim (included by default when the `profile` scope is present). The MCP server's username extraction priority uses `preferred_username` before `sub`, so it works automatically without any mapper changes.
 
 
-## Step 5: Add the Write Scope (Read-Write Deployments Only)
+## Step 5: Add Write Scope (Read-Write Deployments Only) {#step-5-add-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
 When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
 
-### Step 5.1: Create the Client Scope
+### Step 5.1: Create Client Scope {#step-51-create-the-client-scope}
 
 1. Navigate to **Client scopes** in the left sidebar and select **Create client scope**.
 2. Configure the following fields:
@@ -239,7 +239,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 
 3. Select **Save**.
 
-### Step 5.2: Attach the Scope to the Client as Optional
+### Step 5.2: Attach Scope to Client as Optional {#step-52-attach-the-scope-to-the-client-as-optional}
 
 1. Navigate to **Clients** > your client, for example `actian-mcp`, and select the **Client scopes** tab.
 2. Select **Add client scope**.
@@ -253,7 +253,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 In Keycloak a client scope is attached to a **client**, not to a user. Any user who authenticates through this client and requests `scope=openid mcp:write` receives it. Keycloak roles do not change that, because the server authorizes writes from the token's `scope` claim rather than from roles.
 
 !!! important "Every user of this client can obtain `mcp:write`"
-    Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. VectorAI DB has no per-user privileges to fall back on either: the engine sees only the server's api key. A user who obtains `mcp:write` can write to every collection the server exposes; the approval prompt is the only other check. See [Write support](../write-support.md#authorizing-a-write).
+    Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. VectorAI DB has no per-user privileges to fall back on either: the engine sees only the server's API key. A user who obtains `mcp:write` can write to every collection the server exposes; the approval prompt is the only other check. See [Write support](../write-support.md#authorizing-a-write).
 
     This differs from Auth0, where the permission is assigned through a role and users without that role cannot obtain it at all. If you need the scope withheld per user, use a separate Keycloak client for read-only callers and attach `mcp:write` only to the client used by writers.
 
@@ -272,7 +272,7 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
 ## Step 6: Create Keycloak Users
 
 !!! note "No database accounts on VectorAI DB"
-    The engine sees only the server's api key, so no Keycloak user needs a matching database account. Create the Keycloak users your people log in with. Which name the server records for each of them in the call log is described under [User Impersonation](index.md#user-impersonation).
+    The engine sees only the server's API key, so no Keycloak user needs a matching database account. Create the Keycloak users your people log in with. Which name the server records for each of them in the call log is described under [User Impersonation](index.md#user-impersonation).
 
 1. Navigate to **Users** in the left panel.
 2. Select **Add user**.
@@ -299,7 +299,7 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
     With `user_impersonation: true`, a user whom Keycloak federates from an external LDAP or social provider and who arrives without `preferred_username` or an email is recorded by the `sub` claim, a UUID by default. Ensure that the federated users have `preferred_username` set, or add the sub-override mapper ([Step 4](#step-4-optional-add-the-sub-override-mapper)).
 
 
-## Step 7: Assemble the Final Configuration
+## Step 7: Assemble Final Configuration {#step-7-assemble-the-final-configuration}
 
 ### Mapping Summary
 
@@ -349,7 +349,7 @@ For TLS setup details (certificate generation, Docker deployment, trusting self-
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 After starting the MCP server container with OAuth configured:
 
@@ -362,7 +362,7 @@ After starting the MCP server container with OAuth configured:
 
 ## Troubleshooting
 
-### Verify OIDC Discovery Endpoint
+### Verify OIDC Discovery Endpoint {#verify-oidc-discovery-endpoint}
 
 ```bash
 curl http://<keycloak-host>:8080/realms/actian-mcp/.well-known/openid-configuration \
