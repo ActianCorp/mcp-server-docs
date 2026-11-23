@@ -5,7 +5,7 @@ description: Serve several Zen databases and personas from one Actian MCP Server
 
 # Serving Multiple Databases from One Server
 
-Without a `targets` block, one container serves one database at one URL, `/mcp`. With a `targets` block, the same container serves a list of entries — engine, persona, database — each at its own URL and each with its own connection to Zen. Nothing else changes: same image, same `docker run` command, one more block in `conf.json`.
+Without a `targets` block, one container serves one database at one URL, `/mcp`. With a `targets` block, the same container serves a list of entries (engine, persona, database), each at its own URL and each with its own connection to Zen. Nothing else changes: same image, same `docker run` command, one more block in `conf.json`.
 
 ## How an Entry Becomes a URL
 
@@ -73,7 +73,7 @@ Three entries: a read-only persona and an admin persona on `DEMODATA`, and an ap
 | `targets.defaults` | `object` | — | Values shared by every entry. `driver` and `port` as in the connection string (`port` defaults to `1583`). `username` and `password` must be non-empty — Zen ignores them when database security is off, so a placeholder is fine. `max_connections` is required by the framework and not applied to Zen, see [Limits](#limits). |
 | `targets.list` | `array` | — | One object per engine and persona. `host`, `instance` and `databases` are mandatory; any key from `defaults` may be repeated to override it for that entry, for example a `username` and `password` for an engine with Zen security on. |
 | `zen_readonly_personas` | `array` | `[]` | Persona labels whose connections are opened read-only. See [Read-Only Personas](#read-only-personas). |
-| `allow_unscoped_reads` | `boolean` | `false` | Lets a caller without a per-target grant read. Required to run more than one target **without** authentication; with authentication it disables per-target enforcement and is for test setups only. See [Authentication](authentication/index.md#per-target-scopes). |
+| `allow_unscoped_reads` | `boolean` | `false` | Lets a caller without a per-target grant read. Required to run more than one target without authentication; with authentication it disables per-target enforcement and is for test setups only. See [Authentication](authentication/index.md#per-target-scopes). |
 | `targets_dir` | `string` | `/app/targets.d` | Directory of additional target files, see [Adding a Database Without a Restart](#adding-a-database-without-a-restart). The directory must exist when the server starts. |
 | `targets_reload_interval` | `integer` | `10` | Seconds between checks of `targets_dir`. `0` loads the directory once at start and never again. |
 | `target_path_prefix` | `string` | `mcp` | First segment of every routed URL. |
@@ -86,7 +86,7 @@ Three entries: a read-only persona and an admin persona on `DEMODATA`, and an ap
 
 ## Read-Only Personas
 
-A persona listed in `zen_readonly_personas` is opened read-only even when `query_mode` is `read-write`: every connection of that target carries the Open Database Connectivity (ODBC) attribute `SQL_ATTR_ACCESS_MODE=READ_ONLY` and `OPENMODE=1` in its connection string. The server refuses the write tools on that URL before anything reaches Zen: `target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL`. The engine's own `Access denied to a READ-ONLY data source` is the backstop for a statement that reaches the connection anyway. The word `readonly` is not special — `zen_readonly_personas: ["analyst"]` with `"instance": "analyst"` works the same.
+A persona listed in `zen_readonly_personas` is opened read-only even when `query_mode` is `read-write`: every connection of that target carries the Open Database Connectivity (ODBC) attribute `SQL_ATTR_ACCESS_MODE=READ_ONLY` and `OPENMODE=1` in its connection string. The server refuses the write tools on that URL before anything reaches Zen: `target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL`. The engine's own `Access denied to a READ-ONLY data source` is the backstop for a statement that reaches the connection anyway. The word `readonly` is not special: `zen_readonly_personas: ["analyst"]` with `"instance": "analyst"` works the same.
 
 What a read-only persona does not do:
 

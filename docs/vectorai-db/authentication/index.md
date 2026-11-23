@@ -101,7 +101,7 @@ The flow above makes the MCP server run the login itself. When the calling appli
 | Field | Required | Description |
 | :---- | :------- | :---------- |
 | `auth_mode` | Yes | `resource-server`. A top-level key, next to `host` and `port`. Without it, an `oauth` block with a client ID runs the login flow described above. |
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The identity provider's OIDC discovery document, as the **server** reaches it. The server reads `issuer` and `jwks_uri` from it; the issuer written into every token must match exactly. |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The identity provider's OIDC discovery document, as the server reaches it. The server reads `issuer` and `jwks_uri` from it; the issuer written into every token must match exactly. |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | The audience every token must carry. There is no client ID to fall back to in this mode, so it is mandatory. See [Keycloak, Step 3: Add the Audience Mapper](keycloak.md#step-3-add-the-audience-mapper-required). |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | This server's address as the agents see it. Published in the protected-resource metadata; must start with `https://` unless `host` is `localhost`. |
 | `user_impersonation` | No | Inside the `oauth` block. The engine sees only the server's API key, whoever the caller is. With the default `true` every token must name a user (`username`, `preferred_username` or `email` claim); with `false` a token without a user claim (a service or machine token) is accepted too. Either way the token's user name, when there is one, goes to the [call log](../index.md#call-log). A top-level key of this name is silently ignored. |
@@ -125,7 +125,7 @@ The server reads scopes from the `scope`, `scp` and `permissions` claims. Matchi
 ## User Impersonation
 
 !!! note "There is nothing to impersonate on VectorAI DB"
-    The engine authenticates the server, not the person: every engine request carries the configured `vectorai.api_key_secret`, whoever the caller is. The OAuth token therefore protects the MCP Server. `user_impersonation` only decides where the server looks for the caller's name for the [call log](../index.md#call-log) and, in resource-server mode, whether a token must name a user. Set it **inside** the `oauth` block; a top-level key is ignored.
+    The engine authenticates the server, not the person: every engine request carries the configured `vectorai.api_key_secret`, whoever the caller is. The OAuth token therefore protects the MCP Server. `user_impersonation` only decides where the server looks for the caller's name for the [call log](../index.md#call-log) and, in resource-server mode, whether a token must name a user. Set it inside the `oauth` block; a top-level key is ignored.
 
 What the setting does depends on who runs the login. A user claim is `username`, `preferred_username` or `email`.
 
@@ -204,7 +204,7 @@ Add the `ssl_certfile` and `ssl_keyfile` fields to the top level of the `conf.js
 }
 ```
 
-The `ssl_certfile` and `ssl_keyfile` values are always the fixed **in-container** paths shown above, not the paths to the certificate files on the host. The server reads `ssl_certfile`/`ssl_keyfile` only from `conf.json`. There is no default, and the `docker run` command cannot supply them. What varies per deployment is where the certificate and key live on the host; that is set in [Step 3](#step-3-deploy-the-docker), which mounts them to these exact container paths.
+The `ssl_certfile` and `ssl_keyfile` values are always the fixed in-container paths shown above, not the paths to the certificate files on the host. The server reads `ssl_certfile`/`ssl_keyfile` only from `conf.json`. There is no default, and the `docker run` command cannot supply them. What varies per deployment is where the certificate and key live on the host; that is set in [Step 3](#step-3-deploy-the-docker), which mounts them to these exact container paths.
 
 The server validates that both paths exist at startup, and that `BASE_URL` uses `https://` when SSL is active.
 

@@ -101,10 +101,10 @@ The flow above makes the MCP server run the login itself. When the calling appli
 | Field | Required | Description |
 | :---- | :------- | :---------- |
 | `auth_mode` | Yes | `resource-server`. A top-level key, next to `host` and `port`. Without it, an `oauth` block with a client ID runs the login flow described above. |
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The identity provider's OIDC discovery document, as the **server** reaches it. The server reads `issuer` and `jwks_uri` from it; the issuer written into every token must match exactly. |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The identity provider's OIDC discovery document, as the server reaches it. The server reads `issuer` and `jwks_uri` from it; the issuer written into every token must match exactly. |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | The audience every token must carry. There is no client ID to fall back to in this mode, so it is mandatory. See [Keycloak, Step 3: Add the Audience Mapper](keycloak.md#step-3-add-the-audience-mapper-required). |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | This server's address as the agents see it. Published in the protected-resource metadata; must start with `https://` unless `host` is `localhost`. |
-| `user_impersonation` | Yes, for Zen | Must be `false`, **inside** the `oauth` block. Zen cannot switch the database user per request; every URL connects as the login in its configuration. With `false`, a token without a user claim (a service or machine token) is accepted and the token's user name, when there is one, goes to the [call log](../index.md#call-log). A top-level key of this name is silently ignored and the default `true` stays in effect, which refuses every token without a user claim. |
+| `user_impersonation` | Yes, for Zen | Must be `false`, inside the `oauth` block. Zen cannot switch the database user per request; every URL connects as the login in its configuration. With `false`, a token without a user claim (a service or machine token) is accepted and the token's user name, when there is one, goes to the [call log](../index.md#call-log). A top-level key of this name is silently ignored and the default `true` stays in effect, which refuses every token without a user claim. |
 
 The server publishes its protected-resource metadata at `/.well-known/oauth-protected-resource/mcp`, naming the identity provider, and answers `401` to a request without a valid token. It never calls the provider's userinfo endpoint and never falls back to the `sub` claim for a user name.
 
@@ -141,7 +141,7 @@ Without an identity provider there is no token to check, and a URL that names no
 ## User Impersonation
 
 !!! warning "Not supported on Zen"
-    Zen does not support `SET SESSION AUTHORIZATION`, so user impersonation is unavailable. Set `user_impersonation` to `false` **inside** the `oauth` block; a top-level key is ignored. JWT authentication still works; only per-user database switching is skipped. The rest of this section describes the impersonation behavior that does not apply to Zen.
+    Zen does not support `SET SESSION AUTHORIZATION`, so user impersonation is unavailable. Set `user_impersonation` to `false` inside the `oauth` block; a top-level key is ignored. JWT authentication still works; only per-user database switching is skipped. The rest of this section describes the impersonation behavior that does not apply to Zen.
 
 By default, the `user_impersonation` field is set to `true`. The server extracts a username from the authenticated user's JWT and runs `SET SESSION AUTHORIZATION "<username>"` before executing a database query. This ensures users only interact with data their specific database account is permitted to see.
 

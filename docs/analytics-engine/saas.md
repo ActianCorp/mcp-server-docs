@@ -55,8 +55,8 @@ A warehouse offers the same tools as a self-hosted deployment: `execute_query`, 
 
 Write queries are enabled on a warehouse. Two conditions must be met before a write runs:
 
-1. **Your database privileges allow it.** The warehouse enforces your existing grants on each table, so the MCP Server cannot perform any write that your grants do not permit.
-2. **You approve the write.** The server describes the statement and waits for your confirmation before running it.
+1. Your database privileges allow it. The warehouse enforces your existing grants on each table, so the MCP Server cannot perform any write that your grants do not permit.
+2. You approve the write. The server describes the statement and waits for your confirmation before running it.
 
 !!! warning "A client that cannot prompt cannot write"
     The approval request uses the Model Context Protocol (MCP) elicitation capability, which not every client implements. If the client does not support it, the server rejects the write exactly as if you had declined it. There is no silent approval, and the approval step cannot be turned off for a warehouse. Read queries are not affected.

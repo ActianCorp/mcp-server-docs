@@ -23,7 +23,7 @@ One container per database remains fully supported. Use multi-target when the nu
 
 ## How It Works
 
-1. You list your Analytics Engine installations and their databases in the `targets` block of `conf.json`, in files under `targets.d/`, or both. This list is the **target registry**.
+1. You list your Analytics Engine installations and their databases in the `targets` block of `conf.json`, in files under `targets.d/`, or both. This list is the target registry.
 2. Each database is reached through its own URL:
 
     ```text
@@ -121,7 +121,7 @@ With a `targets` block, the single-database keys `driver`, `server`, `database`,
 
 ### Per-Database Credentials
 
-An Analytics Engine installation (`host` and `instance`) can appear only **once** in the registry. When databases on the same installation need different accounts, keep one entry and give those databases an object instead of a plain name:
+An Analytics Engine installation (`host` and `instance`) can appear only once in the registry. When databases on the same installation need different accounts, keep one entry and give those databases an object instead of a plain name:
 
 ```json
 "databases": [
@@ -187,7 +187,7 @@ Each `*.json` file in the directory holds either one target entry or a JSON list
 
 ### Avoid Duplicate Server Entries {#do-not-repeat-a-server-in-both-places}
 
-The server merges `targets.list` from `conf.json` with every file in `targets.d/` into one registry. **An Analytics Engine installation (`host` and `instance`) must appear in only one place.** If the same installation appears in `conf.json` and in a `targets.d/` file, or in two files, the registry is rejected as a duplicate:
+The server merges `targets.list` from `conf.json` with every file in `targets.d/` into one registry. An Analytics Engine installation (`host` and `instance`) must appear in only one place. If the same installation appears in `conf.json` and in a `targets.d/` file, or in two files, the registry is rejected as a duplicate:
 
 - At startup, the server does not start.
 - During a reload, the change is rejected and the server keeps serving the previous registry.
@@ -196,15 +196,15 @@ To serve another database on an installation that is already listed, add the dat
 
 ### Reload Behavior
 
-- **A new or changed file** is applied on the next check.
-- **A removed file** removes its targets on the next check. Requests already running finish normally.
-- **An invalid file** (malformed JSON, a duplicate, a missing field) is rejected. The server keeps serving the previous registry and logs an error once.
-- **An unreadable directory** (for example, an unmounted volume) is treated as an error, not as "no targets".
+- A new or changed file is applied on the next check.
+- A removed file removes its targets on the next check. Requests already running finish normally.
+- An invalid file (malformed JSON, a duplicate, a missing field) is rejected. The server keeps serving the previous registry and logs an error once.
+- An unreadable directory (for example, an unmounted volume) is treated as an error, not as "no targets".
 - **The authentication requirement applies to reloads too.** If the server runs without OAuth, a file that would bring the registry above one target is rejected, and the server logs a warning about this at startup.
 
 ### Protecting Files {#protecting-the-files}
 
-Target files contain database passwords, just like `conf.json`:
+Target files contain database passwords, like `conf.json`:
 
 - Mount the directory read-only.
 - In Kubernetes, mount a **Secret**, not a ConfigMap.
@@ -245,7 +245,7 @@ How to deliver these scopes depends on your identity provider:
 | :--- | :--- |
 | No token, or an invalid token | `401 Unauthorized` |
 | Valid token without a read scope for the target | `403 Forbidden` with `WWW-Authenticate: Bearer error="insufficient_scope"`, naming the scope that is missing |
-| Valid token, target not in the registry | The **same** `403` as above |
+| Valid token, target not in the registry | The same `403` as above |
 
 The server answers an unknown target and an ungranted one identically, so the responses cannot be used to discover which databases exist. The server log records the actual reason.
 
@@ -360,7 +360,7 @@ By default, an extension's tools, resources, and prompts are offered on every ta
 - An entry without `targets` is offered on every target.
 - A malformed selector stops the server from starting. A selector that names a target not in the registry only logs a warning, so you can configure an extension before its target is added to `targets.d/`.
 - The filter follows the live registry, including `targets.d/` changes, without a restart.
-- The filter controls where an extension is **offered**. It is not an access control: scopes and database privileges still decide what a caller can reach.
+- The filter controls where an extension is offered. It is not an access control: scopes and database privileges still decide what a caller can reach.
 
 A complete example is in [`examples/conf.example.multi-target-with-extensions.json`](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/conf.example.multi-target-with-extensions.json). For writing extensions, see [Extensions](extensions/index.md).
 
