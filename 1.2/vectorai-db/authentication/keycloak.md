@@ -305,7 +305,7 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
 
 | `conf.json` Field | Keycloak Source | Example Value |
 |---|---|---|
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | `http://<keycloak-host>:8080/realms/<realm>/.well-known/openid-configuration` | `http://10.100.11.187:8080/realms/actian-mcp/.well-known/openid-configuration` |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | `http://<keycloak-host>:8080/realms/<realm>/.well-known/openid-configuration` | `http://<keycloak-host>:8080/realms/actian-mcp/.well-known/openid-configuration` |
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | Clients > your client > **Client ID**| `actian-mcp` |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Clients > your client > **Credentials**| (your secret) |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL | `https://<mcp-server-host>:8000` |
