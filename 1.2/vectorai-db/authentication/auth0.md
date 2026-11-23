@@ -95,7 +95,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 The **Application** represents the MCP server's OAuth client. It holds `client_id` and `client_secret` used during the OAuth handshake.
 
 !!! note "Why Machine to Machine?"
-    The MCP server's OAuth proxy (OIDCProxy) acts as a **confidential client**. It authenticates with Auth0 using a `CLIENT_ID` and `CLIENT_SECRET` pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.
+    The MCP server's OAuth proxy (OIDCProxy) acts as a confidential client. It authenticates with Auth0 using a `CLIENT_ID` and `CLIENT_SECRET` pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.
 
 !!! warning "Do not use "Regular Web Application""
     Auth0 enforces PKCE validation differently for Web applications, which conflicts with the forwarding of OIDCProxy authorization requests. This causes `code_challenge: Field required` errors.
@@ -210,7 +210,7 @@ After saving, the application row on the **Application Access** tab shows a gree
 4. Select **Create**.
 
 !!! note "Call log name = email prefix"
-    Auth0's userinfo endpoint does not return a `username` or `preferred_username` claim by default, so with `user_impersonation: true` the server records the **email prefix** (the value before `@`): `jdoe@example.com` is logged as `jdoe`.
+    Auth0's userinfo endpoint does not return a `username` or `preferred_username` claim by default, so with `user_impersonation: true` the server records the email prefix (the value before `@`): `jdoe@example.com` is logged as `jdoe`.
 
 !!! note "Federated identity caveat"
     With `user_impersonation: true`, a user who signs in through Google, Microsoft Entra, SAML, or corporate SSO through Auth0 and arrives without an email is recorded by the `sub` claim with the provider prefix removed: `google-oauth2|12345` is logged as `12345`. Add a `username` to the Auth0 user profile if you want readable names in the call log.
@@ -291,7 +291,7 @@ For security best practices (file permissions, `.gitignore`, secrets management)
 After starting the MCP server container with OAuth configured:
 
 1. Open a browser and navigate to your server's `/mcp` endpoint, for example, `https://<your-server-host>:8000/mcp`.
-2. You should be **redirected to the Auth0 login page**.
+2. You should be redirected to the Auth0 login page.
 3. Log in with an Auth0 user, for example, the user you created in [Step 4](#step-4-create-auth0-users).
 4. After logging in, Auth0 redirects you back to the MCP server with a valid token.
 5. Call a tool from the MCP client, for example `list_collections`, and look at the container log: the [call log](../index.md#call-log) record for the call has the caller's name in `user`, or `null` when `user_impersonation` is `false` and the token carries no user claim.
@@ -317,7 +317,7 @@ You should see `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`,
 | `invalid_request` when requesting a token | Application not authorized for the API. | [Step 3](#step-3-authorize-the-application-for-the-api) - authorize the application. |
 | `audience mismatch` | `FASTMCP_SERVER_AUTH_AUDIENCE` does not match the API Identifier. | Ensure they are identical strings. |
 | `invalid_client` | Wrong `client_id` or `client_secret`. | Re-copy from Application > Settings. |
-| `KeyError` on startup (for example, `CLIENT_SECRET`). | Some OAuth fields are present but others missing. | Provide **all** required fields or remove `oauth` entirely. |
+| `KeyError` on startup (for example, `CLIENT_SECRET`). | Some OAuth fields are present but others missing. | Provide all required fields or remove `oauth` entirely. |
 | `Could not extract username` | Token lacks `username`, `preferred_username`, or `email`. | Add email/profile scopes or set `user_impersonation: false`. |
 | `unauthorized` / 401 on every request | OAuth misconfigured or token expired. | Check server logs and verify OIDC discovery URL is reachable. |
 | `redirect_uri_mismatch` | Callback URL does not match `<BASE_URL>/auth/callback`. | Fix **Allowed Callback URLs** in Auth0 - scheme, host, and port must match exactly. |
@@ -358,7 +358,7 @@ If the MCP server's Docker container is recreated, Visual Studio Code's cached O
           "DELETE FROM ItemTable WHERE key LIKE '%dynamicAuth%<your-server-host>%';"
         ```
 
-3. Reopen Visual Studio Code. It will re-register with the server automatically.
+3. Reopen Visual Studio Code. It re-registers with the server automatically.
 
 Replace `<your-server-host>` with your server's IP or hostname, for example, `35.185.60.76`. This only clears the registration for that specific server.
 

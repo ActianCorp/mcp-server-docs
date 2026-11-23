@@ -4298,7 +4298,7 @@
 <p>The <strong>Application</strong> represents the MCP server's OAuth client. It holds <code>client_id</code> and <code>client_secret</code> used during the OAuth handshake.</p>
 <div class="admonition note">
 <p class="admonition-title">Why Machine to Machine?</p>
-<p>The MCP server's OAuth proxy (OIDCProxy) acts as a <strong>confidential client</strong>. It authenticates with Auth0 using a <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code> pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.</p>
+<p>The MCP server's OAuth proxy (OIDCProxy) acts as a confidential client. It authenticates with Auth0 using a <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code> pair, which is exactly the Machine to Machine pattern. The browser-based user login flow is handled between MCP clients such as Visual Studio Code, Claude Desktop, and similar, and the OIDCProxy itself. MCP clients never talk to Auth0 directly.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Do not use "Regular Web Application"</p>
@@ -4490,7 +4490,7 @@
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Call log name = email prefix</p>
-<p>Auth0's userinfo endpoint does not return a <code>username</code> or <code>preferred_username</code> claim by default, so with <code>user_impersonation: true</code> the server records the <strong>email prefix</strong> (the value before <code>@</code>): <code>jdoe@example.com</code> is logged as <code>jdoe</code>.</p>
+<p>Auth0's userinfo endpoint does not return a <code>username</code> or <code>preferred_username</code> claim by default, so with <code>user_impersonation: true</code> the server records the email prefix (the value before <code>@</code>): <code>jdoe@example.com</code> is logged as <code>jdoe</code>.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Federated identity caveat</p>
@@ -4595,7 +4595,7 @@
 <p>After starting the MCP server container with OAuth configured:</p>
 <ol>
 <li>Open a browser and navigate to your server's <code>/mcp</code> endpoint, for example, <code>https://&lt;your-server-host&gt;:8000/mcp</code>.</li>
-<li>You should be <strong>redirected to the Auth0 login page</strong>.</li>
+<li>You should be redirected to the Auth0 login page.</li>
 <li>Log in with an Auth0 user, for example, the user you created in <a href="#step-4-create-auth0-users">Step 4</a>.</li>
 <li>After logging in, Auth0 redirects you back to the MCP server with a valid token.</li>
 <li>Call a tool from the MCP client, for example <code>list_collections</code>, and look at the container log: the <a href="../index.html#call-log">call log</a> record for the call has the caller's name in <code>user</code>, or <code>null</code> when <code>user_impersonation</code> is <code>false</code> and the token carries no user claim.</li>
@@ -4644,7 +4644,7 @@
 <tr>
 <td><code>KeyError</code> on startup (for example, <code>CLIENT_SECRET</code>).</td>
 <td>Some OAuth fields are present but others missing.</td>
-<td>Provide <strong>all</strong> required fields or remove <code>oauth</code> entirely.</td>
+<td>Provide all required fields or remove <code>oauth</code> entirely.</td>
 </tr>
 <tr>
 <td><code>Could not extract username</code></td>
@@ -4730,7 +4730,7 @@
 </div>
 </li>
 <li>
-<p>Reopen Visual Studio Code. It will re-register with the server automatically.</p>
+<p>Reopen Visual Studio Code. It re-registers with the server automatically.</p>
 </li>
 </ol>
 <p>Replace <code>&lt;your-server-host&gt;</code> with your server's IP or hostname, for example, <code>35.185.60.76</code>. This only clears the registration for that specific server.</p>
@@ -4790,7 +4790,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
   </span>
 
     

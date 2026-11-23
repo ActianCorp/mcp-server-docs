@@ -2795,7 +2795,7 @@
   <a href="#step-4-make-sure-the-token-carries-a-username" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Make Sure the Token Carries a Username
+        Step 4: Confirm the Token Carries a Username
       
     </span>
   </a>
@@ -4629,7 +4629,7 @@
   <a href="#step-4-make-sure-the-token-carries-a-username" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Make Sure the Token Carries a Username
+        Step 4: Confirm the Token Carries a Username
       
     </span>
   </a>
@@ -5593,7 +5593,7 @@
 </ol>
 <h2 id="multi-target-deployments-per-target-scopes">Multi-Target Deployments: Per-Target Scopes<a class="headerlink" href="#multi-target-deployments-per-target-scopes" title="Permanent link">&para;</a></h2>
 <p>Skip this section if your <code>conf.json</code> serves a single database. It applies when the server is configured with a <code>targets</code> registry that serves several databases, each reached through its own target URL. For the deployment model and the <code>targets</code> configuration, see <a href="../multi-target.html">Multi-Target Deployments</a>.</p>
-<p>In a multi-target deployment, every request to a target URL is authorized by a <strong>per-target scope</strong> in the caller's access token. A token without a matching grant is refused, even if it is otherwise valid.</p>
+<p>In a multi-target deployment, every request to a target URL is authorized by a per-target scope in the caller's access token. A token without a matching grant is refused, even if it is otherwise valid.</p>
 <h3 id="scope-grammar">Scope Grammar<a class="headerlink" href="#scope-grammar" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code>actian:{host}:{instance}:{database}:{read|write}
 </code></pre></div>
@@ -5625,7 +5625,7 @@
 </table>
 <p>The following rules apply:</p>
 <ul>
-<li><code>*</code> matches <strong>exactly one</strong> segment, never zero and never more than one.</li>
+<li><code>*</code> matches exactly one segment, never zero and never more than one.</li>
 <li><code>write</code> implies <code>read</code>. A <code>:write</code> grant also satisfies a read of the same host, instance, and database.</li>
 <li>Scopes are grants only. There are no deny scopes; a request is refused only because no grant covers it.</li>
 </ul>
@@ -5643,7 +5643,7 @@
 </tr>
 <tr>
 <td><code>actian:&lt;db-host&gt;:&lt;instance&gt;:salesdb:write</code></td>
-<td>Read <strong>and</strong> write <code>salesdb</code> on that one target</td>
+<td>Read and write <code>salesdb</code> on that one target</td>
 </tr>
 <tr>
 <td><code>actian:&lt;db-host&gt;:&lt;instance&gt;:*:read</code></td>
@@ -5867,15 +5867,15 @@
 <p>The <code>/mcp</code> endpoint without a target accepts writes only in a single-database deployment, or when the <code>targets</code> block has exactly one server with one database. <code>mcp:write</code> does not apply to a multi-target deployment with more than one server or more than one database.</p>
 <p>A <code>:write</code> grant does not bypass the other write controls. <code>query_mode</code> must still be <code>read-write</code>, each write still needs approval when <code>write_confirmation</code> is enabled, and with <code>user_impersonation</code> enabled the database user still needs the table privileges. See <a href="../write-support.html">Write support</a>.</p>
 <h3 id="what-a-caller-without-a-grant-sees">What a Caller Without a Grant Sees<a class="headerlink" href="#what-a-caller-without-a-grant-sees" title="Permanent link">&para;</a></h3>
-<p>When an authenticated caller requests a target its token has no read grant for, the server answers <strong>403</strong> with <code>error="insufficient_scope"</code>. The <code>WWW-Authenticate</code> header names the missing scope:</p>
+<p>When an authenticated caller requests a target its token has no read grant for, the server answers 403 with <code>error="insufficient_scope"</code>. The <code>WWW-Authenticate</code> header names the missing scope:</p>
 <div class="language-text highlight"><pre><span></span><code>WWW-Authenticate: Bearer error="insufficient_scope",
     error_description="Required scope: actian:&lt;db-host&gt;:&lt;instance&gt;:salesdb:read",
     scope="actian:&lt;db-host&gt;:&lt;instance&gt;:salesdb:read",
     resource_metadata="https://&lt;mcp-server-host&gt;:8000/.well-known/oauth-protected-resource/mcp"
 </code></pre></div>
 <ul>
-<li>The response is <strong>identical for a target that does not exist</strong>, so the endpoint cannot be used to discover which targets are configured. A path that cannot name any target gets the same 403 without a <code>scope</code> value.</li>
-<li>A caller with no valid token gets <strong>401</strong>, not 403, for every target path.</li>
+<li>The response is identical for a target that does not exist, so the endpoint cannot be used to discover which targets are configured. A path that cannot name any target gets the same 403 without a <code>scope</code> value.</li>
+<li>A caller with no valid token gets 401, not 403, for every target path.</li>
 <li>Behind the OAuth login proxy, <code>scope</code> names only the missing scope. In resource-server mode it also lists the scopes the token already holds, so that a client requesting exactly that set keeps its existing grants.</li>
 <li>The server log records the refusal as <code>Target scope enforcement rejected request</code>.</li>
 </ul>
@@ -5944,18 +5944,18 @@
 </table>
 <p>A single deployment runs one mode. If you need both, run two deployments against the same databases.</p>
 <h3 id="step-1-prepare-the-mcp-client-in-keycloak">Step 1: Prepare MCP Client in Keycloak<a class="headerlink" href="#step-1-prepare-the-mcp-client-in-keycloak" title="Permanent link">&para;</a></h3>
-<p>The MCP client from <a href="#step-2-create-a-keycloak-client">Step 2</a> now serves only as the <strong>audience</strong>: it is never used to sign anyone in.</p>
+<p>The MCP client from <a href="#step-2-create-a-keycloak-client">Step 2</a> now serves only as the audience: it is never used to sign anyone in.</p>
 <ol>
 <li>Complete <a href="#step-1-create-a-keycloak-realm">Step 1</a> to <a href="#step-3-add-the-audience-mapper-required">Step 3</a>. The audience mapper is still required. Without it, the token's <code>aud</code> carries only internal audiences such as <code>account</code>, and every call is rejected.</li>
 <li>Skip <a href="#step-4-optional-add-the-sub-override-mapper">Step 4</a>. This mode never reads <code>sub</code> as a username.</li>
 <li>If you need writes on a single-database deployment, complete <a href="#step-5-add-the-write-scope-read-write-deployments-only">Step 5</a>. The server does not request <code>mcp:write</code> in this mode, so the calling application must request it.</li>
 </ol>
 <h3 id="step-2-register-the-calling-application-as-its-own-client">Step 2: Register Calling Application as Its Own Client<a class="headerlink" href="#step-2-register-the-calling-application-as-its-own-client" title="Permanent link">&para;</a></h3>
-<p>The calling application needs a <strong>separate</strong> Keycloak client. It runs the user's login and obtains the token for the MCP server, as described in <a href="#step-5-get-a-token-for-the-mcp-server-calling-application">Step 5</a>.</p>
+<p>The calling application needs a separate Keycloak client. It runs the user's login and obtains the token for the MCP server, as described in <a href="#step-5-get-a-token-for-the-mcp-server-calling-application">Step 5</a>.</p>
 <ol>
 <li>Create a client for the application as in <a href="#step-2-create-a-keycloak-client">Step 2</a>, with <strong>Client authentication</strong> set to <code>On</code>.</li>
 <li>
-<p>If the application will use <a href="#exchange-the-users-token">token exchange</a>, go to the new client's <strong>Settings</strong> tab, under <strong>Capability config</strong>, enable <strong>Standard token exchange</strong>, and select <strong>Save</strong>. Token exchange requires a confidential client, which is why <strong>Client authentication</strong> must be <code>On</code>.</p>
+<p>If the application uses <a href="#exchange-the-users-token">token exchange</a>, go to the new client's <strong>Settings</strong> tab, under <strong>Capability config</strong>, enable <strong>Standard token exchange</strong>, and select <strong>Save</strong>. Token exchange requires a confidential client, which is why <strong>Client authentication</strong> must be <code>On</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Enable the exchange on the calling client</p>
 <p>The <strong>Standard token exchange</strong> switch belongs to the client that <em>sends</em> the exchange request, which is the calling application's client. Enabling it on the MCP client has no effect.</p>
@@ -5972,16 +5972,16 @@
 <li>Navigate to <strong>Client scopes</strong> &gt; <strong>Create client scope</strong>, name it, for example, <code>mcp-audience</code>, set <strong>Type</strong> to <code>None</code>, and select <strong>Save</strong>.</li>
 <li>On its <strong>Mappers</strong> tab, select <strong>Configure a new mapper</strong> &gt; <strong>Audience</strong>, and set <strong>Included Custom Audience</strong> to the MCP audience, for example <code>actian-mcp</code>, with <strong>Add to access token</strong> set to <code>On</code>. These are the same values as in <a href="#step-3-add-the-audience-mapper-required">Step 3</a>.</li>
 <li>Navigate to <strong>Clients</strong> &gt; the calling application's client &gt; <strong>Client scopes</strong> tab &gt; <strong>Add client scope</strong>, select <code>mcp-audience</code>, then select <strong>Add</strong> &gt; <strong>Optional</strong>.</li>
-<li>Attach the scopes the calling application will request to its client as <strong>Optional</strong> in the same way: the per-target scopes from <a href="#step-1-create-the-per-target-scopes">Step 1</a> for a multi-target deployment, or the <code>mcp:write</code> scope from <a href="#step-5-add-the-write-scope-read-write-deployments-only">Step 5</a> for writes on a single-database deployment. Keycloak cannot issue a scope the calling client cannot reach.</li>
+<li>Attach the scopes the calling application requests to its client as <strong>Optional</strong> in the same way: the per-target scopes from <a href="#step-1-create-the-per-target-scopes">Step 1</a> for a multi-target deployment, or the <code>mcp:write</code> scope from <a href="#step-5-add-the-write-scope-read-write-deployments-only">Step 5</a> for writes on a single-database deployment. Keycloak cannot issue a scope the calling client cannot reach.</li>
 </ol>
-<h3 id="step-4-make-sure-the-token-carries-a-username">Step 4: Make Sure the Token Carries a Username<a class="headerlink" href="#step-4-make-sure-the-token-carries-a-username" title="Permanent link">&para;</a></h3>
-<p>With <code>user_impersonation</code> enabled (the default), each query runs as the database user named in the token. In this mode the server reads the username <strong>only from the token itself</strong>, in this order:</p>
+<h3 id="step-4-make-sure-the-token-carries-a-username">Step 4: Confirm the Token Carries a Username<a class="headerlink" href="#step-4-make-sure-the-token-carries-a-username" title="Permanent link">&para;</a></h3>
+<p>With <code>user_impersonation</code> enabled (the default), each query runs as the database user named in the token. In this mode the server reads the username only from the token itself, in this order:</p>
 <ol>
 <li><code>username</code></li>
 <li><code>preferred_username</code></li>
 <li><code>email</code> (the part before <code>@</code>)</li>
 </ol>
-<p>There is no userinfo lookup and no fallback to <code>sub</code>. A token that carries none of these claims is rejected with <strong>401</strong>. The reason, naming the missing claims, is written to the server log only.</p>
+<p>There is no userinfo lookup and no fallback to <code>sub</code>. A token that carries none of these claims is rejected with 401. The reason, naming the missing claims, is written to the server log only.</p>
 <p>Keycloak adds <code>preferred_username</code> through the built-in <code>profile</code> client scope, which Keycloak assigns to new clients by default. Nothing requests <code>profile</code> in this mode, so keep it assigned as a <strong>Default</strong> client scope and confirm the claim is present in the token the application sends (see <a href="#verification-resource-server-mode">Verification</a>).</p>
 <div class="admonition warning">
 <p class="admonition-title">Keycloak service-account tokens carry a username</p>
@@ -6076,7 +6076,7 @@
 <tbody>
 <tr>
 <td><code>auth_mode</code></td>
-<td>Top level of <code>conf.json</code>, <strong>not</strong> inside <code>oauth</code></td>
+<td>Top level of <code>conf.json</code>, not inside <code>oauth</code></td>
 <td>Set to <code>resource-server</code>.</td>
 </tr>
 <tr>
@@ -6097,7 +6097,7 @@
 <tr>
 <td><code>FASTMCP_SERVER_AUTH_SCOPE</code></td>
 <td><code>oauth</code></td>
-<td>Optional. Scopes required on <strong>every</strong> token. Unlike proxy mode, <code>openid</code>, <code>email</code>, and <code>profile</code> are not added automatically.</td>
+<td>Optional. Scopes required on every token. Unlike proxy mode, <code>openid</code>, <code>email</code>, and <code>profile</code> are not added automatically.</td>
 </tr>
 <tr>
 <td><code>user_impersonation</code></td>
@@ -6109,7 +6109,7 @@
 <ul>
 <li>Do not set <code>FASTMCP_SERVER_AUTH_CLIENT_ID</code> or <code>FASTMCP_SERVER_AUTH_CLIENT_SECRET</code>. A client ID is ignored with a warning in the log.</li>
 <li>The same HTTPS rules as proxy mode apply: on a non-localhost host, set <code>ssl_certfile</code> and <code>ssl_keyfile</code>, and use <code>https://</code> in <code>FASTMCP_SERVER_AUTH_BASE_URL</code>.</li>
-<li>Every configuration error in this mode is <strong>fatal</strong>. If a required key is missing or the discovery document cannot be fetched, the server refuses to start rather than starting without authentication.</li>
+<li>Every configuration error in this mode is fatal. If a required key is missing or the discovery document cannot be fetched, the server refuses to start rather than starting without authentication.</li>
 </ul>
 <h3 id="verification-resource-server-mode">Verification (Resource-Server Mode)<a class="headerlink" href="#verification-resource-server-mode" title="Permanent link">&para;</a></h3>
 <ol>
@@ -6317,7 +6317,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:21:48 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
   </span>
 
     

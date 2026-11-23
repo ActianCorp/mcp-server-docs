@@ -5,7 +5,7 @@ description: Add your own tools, resources, and prompts to the Actian MCP Server
 
 # Extensions
 
-You can extend the Actian MCP Server with **extensions**: your own Python modules that register extra tools, resources, and prompts on the running server, next to the built-in database tools. Use this for business logic you want an AI agent to call through the same endpoint, such as revenue forecasting, compliance checks, or data enrichment.
+You can extend the Actian MCP Server with extensions: your own Python modules that register extra tools, resources, and prompts on the running server, next to the built-in database tools. Use this for business logic you want an AI agent to call through the same endpoint, such as revenue forecasting, compliance checks, or data enrichment.
 
 An extension *adds* capabilities. It does not manage the engine connection: the server already talks to the engine and already exposes the built-in tools. The module provides a `register()` function and uses the extension API for the caller's identity, scopes and the approval prompt.
 

@@ -4151,7 +4151,7 @@
 <hr />
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <ol>
-<li>You list your Ingres installations and their databases in the <code>targets</code> block of <code>conf.json</code>, in files under <code>targets.d/</code>, or both. This list is the <strong>target registry</strong>.</li>
+<li>You list your Ingres installations and their databases in the <code>targets</code> block of <code>conf.json</code>, in files under <code>targets.d/</code>, or both. This list is the target registry.</li>
 <li>
 <p>Each database is reached through its own URL:</p>
 <div class="language-text highlight"><pre><span></span><code>https://&lt;mcp_server_host&gt;:&lt;port&gt;/mcp/{host}/{instance}/{database}
@@ -4278,7 +4278,7 @@
 </tbody>
 </table>
 <h3 id="per-database-credentials">Per-Database Credentials<a class="headerlink" href="#per-database-credentials" title="Permanent link">&para;</a></h3>
-<p>An Ingres installation (<code>host</code> and <code>instance</code>) can appear only <strong>once</strong> in the registry. When databases on the same installation need different accounts, keep one entry and give those databases an object instead of a plain name:</p>
+<p>An Ingres installation (<code>host</code> and <code>instance</code>) can appear only once in the registry. When databases on the same installation need different accounts, keep one entry and give those databases an object instead of a plain name:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="nt">"databases"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">  </span><span class="s2">"salesmart"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"finance"</span><span class="p">,</span><span class="w"> </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;finance_db_username&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;finance_db_password&gt;"</span><span class="p">}</span>
@@ -4324,7 +4324,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="do-not-repeat-a-server-in-both-places">Avoid Duplicate Server Entries<a class="headerlink" href="#do-not-repeat-a-server-in-both-places" title="Permanent link">&para;</a></h3>
-<p>The server merges <code>targets.list</code> from <code>conf.json</code> with every file in <code>targets.d/</code> into one registry. <strong>An Ingres installation (<code>host</code> and <code>instance</code>) must appear in only one place.</strong> If the same installation appears in <code>conf.json</code> and in a <code>targets.d/</code> file, or in two files, the registry is rejected as a duplicate:</p>
+<p>The server merges <code>targets.list</code> from <code>conf.json</code> with every file in <code>targets.d/</code> into one registry. An Ingres installation (<code>host</code> and <code>instance</code>) must appear in only one place. If the same installation appears in <code>conf.json</code> and in a <code>targets.d/</code> file, or in two files, the registry is rejected as a duplicate:</p>
 <ul>
 <li>At startup, the server does not start.</li>
 <li>During a reload, the change is rejected and the server keeps serving the previous registry.</li>
@@ -4332,14 +4332,14 @@
 <p>To serve another database on an installation that is already listed, add the database to that entry's <code>databases</code> list instead of creating a second entry.</p>
 <h3 id="reload-behavior">Reload Behavior<a class="headerlink" href="#reload-behavior" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>A new or changed file</strong> is applied on the next check.</li>
-<li><strong>A removed file</strong> removes its targets on the next check. Requests already running finish normally.</li>
-<li><strong>An invalid file</strong> (malformed JSON, a duplicate, a missing field) is rejected. The server keeps serving the previous registry and logs an error once.</li>
-<li><strong>An unreadable directory</strong> (for example, an unmounted volume) is treated as an error, not as "no targets".</li>
+<li>A new or changed file is applied on the next check.</li>
+<li>A removed file removes its targets on the next check. Requests already running finish normally.</li>
+<li>An invalid file (malformed JSON, a duplicate, a missing field) is rejected. The server keeps serving the previous registry and logs an error once.</li>
+<li>An unreadable directory (for example, an unmounted volume) is treated as an error, not as "no targets".</li>
 <li><strong>The authentication requirement applies to reloads too.</strong> If the server runs without OAuth, a file that would bring the registry above one target is rejected, and the server logs a warning about this at startup.</li>
 </ul>
 <h3 id="protecting-the-files">Protecting Files<a class="headerlink" href="#protecting-the-files" title="Permanent link">&para;</a></h3>
-<p>Target files contain database passwords, just like <code>conf.json</code>:</p>
+<p>Target files contain database passwords, like <code>conf.json</code>:</p>
 <ul>
 <li>Mount the directory read-only.</li>
 <li>In Kubernetes, mount a <strong>Secret</strong>, not a ConfigMap.</li>
@@ -4407,7 +4407,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Valid token, target not in the registry</td>
-<td style="text-align: left;">The <strong>same</strong> <code>403</code> as above</td>
+<td style="text-align: left;">The same <code>403</code> as above</td>
 </tr>
 </tbody>
 </table>
@@ -4498,7 +4498,7 @@
 <li>An entry without <code>targets</code> is offered on every target.</li>
 <li>A malformed selector stops the server from starting. A selector that names a target not in the registry only logs a warning, so you can configure an extension before its target is added to <code>targets.d/</code>.</li>
 <li>The filter follows the live registry, including <code>targets.d/</code> changes, without a restart.</li>
-<li>The filter controls where an extension is <strong>offered</strong>. It is not an access control: scopes and database privileges still decide what a caller can reach.</li>
+<li>The filter controls where an extension is offered. It is not an access control: scopes and database privileges still decide what a caller can reach.</li>
 </ul>
 <p>A complete example is in <a href="https://github.com/ActianCorp/mcp-server-docs/blob/main/examples/conf.example.multi-target-with-extensions.json"><code>examples/conf.example.multi-target-with-extensions.json</code></a>. For writing extensions, see <a href="extensions/index.html">Extensions</a>.</p>
 <hr />
@@ -4627,7 +4627,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
   </span>
 
     

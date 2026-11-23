@@ -4285,7 +4285,7 @@
 
 <h1 id="configuring-keycloak">Configuring Keycloak<a class="headerlink" href="#configuring-keycloak" title="Permanent link">&para;</a></h1>
 <p>This guide describes the creation and configuration of a Keycloak Realm, Client, and Audience Mapper. It enables the Actian MCP Server to authenticate users through OAuth 2.0 and OpenID Connect (OIDC). </p>
-<p>By the completion of this guide, you will have obtained the values that are required to populate the <code>oauth</code> block in the <code>conf.json</code> file. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see  <a href="index.html">Authentication Overview</a>.</p>
+<p>This guide shows how to obtain the values required to populate the <code>oauth</code> block in the <code>conf.json</code> file. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see  <a href="index.html">Authentication Overview</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Generic OIDC provider</p>
 <p>FastMCP uses a generic OIDC provider. While there is no dedicated Keycloak class, the server uses the <code>OIDCProxy</code> provider, which is compatible with any OIDC-compliant identity provider.</p>
@@ -4303,7 +4303,7 @@
 </div>
 </li>
 <li>
-<p><strong>(Optional)</strong> Add a <strong>sub override mapper</strong> to the <code>sub</code> claim containing the username instead of a UUID.</p>
+<p><strong>(Optional)</strong> Add a sub override mapper to the <code>sub</code> claim containing the username instead of a UUID.</p>
 </li>
 <li><strong>Create an <code>mcp:write</code> client scope</strong> and attach it to the client as <strong>Optional</strong>, if <code>query_mode</code> is <code>read-write</code>. See <a href="#step-5-add-the-write-scope-read-write-deployments-only">Step 5</a>.</li>
 <li><strong>Create users</strong> in the realm.</li>
@@ -4517,7 +4517,7 @@
 <p class="admonition-title">Included Client Audience versus Included Custom Audience</p>
 <p>The Audience mapper uses two audience fields:</p>
 <ul>
-<li><strong>Included Client Audience</strong> - Resolves the selected client name to its <strong>internal UUID</strong>, for example, <code>16f502e4-483e-4b0d-adbd-4d20e6e33e73</code>. It does not match the audience string that MCP server expects and causes <code>audience mismatch</code> errors.</li>
+<li><strong>Included Client Audience</strong> - Resolves the selected client name to its internal UUID, for example, <code>16f502e4-483e-4b0d-adbd-4d20e6e33e73</code>. It does not match the audience string that MCP server expects and causes <code>audience mismatch</code> errors.</li>
 <li><strong>Included Custom Audience</strong> - Inserts the literal string, for example, <code>actian-mcp</code>. This is required by the MCP server and the recommended option.</li>
 </ul>
 </div>
@@ -4727,7 +4727,7 @@
 <p>An optional scope is issued only when the caller asks for it, which is what the MCP server does when <code>query_mode</code> is <code>read-write</code>. If you add <code>mcp:write</code> as a default scope instead, every token issued to this client carries write access whether it was requested or not, and the scope no longer distinguishes read-only callers from write-capable ones.</p>
 </div>
 <h3 id="user-eligibility">User Eligibility<a class="headerlink" href="#user-eligibility" title="Permanent link">&para;</a></h3>
-<p>In Keycloak a client scope is attached to a <strong>client</strong>, not to a user. Any user who authenticates through this client and requests <code>scope=openid mcp:write</code> receives it. Keycloak roles do not change that, because the server authorizes writes from the token's <code>scope</code> claim rather than from roles.</p>
+<p>In Keycloak a client scope is attached to a client, not to a user. Any user who authenticates through this client and requests <code>scope=openid mcp:write</code> receives it. Keycloak roles do not change that, because the server authorizes writes from the token's <code>scope</code> claim rather than from roles.</p>
 <div class="admonition important">
 <p class="admonition-title">Every user of this client can obtain <code>mcp:write</code></p>
 <p>Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. VectorAI DB has no per-user privileges to fall back on either: the engine sees only the server's API key. A user who obtains <code>mcp:write</code> can write to every collection the server exposes; the approval prompt is the only other check. See <a href="../write-support.html#authorizing-a-write">Write support</a>.</p>
@@ -4797,7 +4797,7 @@
 </div>
 <div class="admonition important">
 <p class="admonition-title">Keycloak does not produce a <code>username</code> claim automatically</p>
-<p>The MCP server's username extraction priority is - <code>username</code> &gt; <code>preferred_username</code> &gt; email prefix &gt; sanitized <code>sub</code>. Keycloak <strong>does not</strong> produce a <code>username</code> claim by default. It only appears if you explicitly configure a User Attribute mapper. In practice, <code>preferred_username</code> (second in the priority) is the reliable choice for Keycloak, and it works automatically when the <code>profile</code> scope is present.</p>
+<p>The MCP server's username extraction priority is - <code>username</code> &gt; <code>preferred_username</code> &gt; email prefix &gt; sanitized <code>sub</code>. Keycloak does not produce a <code>username</code> claim by default. It only appears if you explicitly configure a User Attribute mapper. In practice, <code>preferred_username</code> (second in the priority) is the reliable choice for Keycloak, and it works automatically when the <code>profile</code> scope is present.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Federated identity (LDAP / Social login)</p>
@@ -4883,7 +4883,7 @@
 <p>After starting the MCP server container with OAuth configured:</p>
 <ol>
 <li>Open a browser and navigate to the server's <code>/mcp</code> endpoint, for example, <code>https://&lt;mcp-server-host&gt;:8000/mcp</code>.</li>
-<li>You are <strong>redirected to the Keycloak login page</strong>.</li>
+<li>You are redirected to the Keycloak login page.</li>
 <li>Log in with a Keycloak user, for example, <code>jdoe</code>.</li>
 <li>After logging in, Keycloak redirects you back to the MCP server with a valid token.</li>
 <li>Call a tool from the MCP client, for example <code>list_collections</code>, and look at the container log: the <a href="../index.html#call-log">call log</a> record for the call has the caller's name in <code>user</code>, or <code>null</code> when <code>user_impersonation</code> is <code>false</code> and the token carries no user claim.</li>
@@ -4938,7 +4938,7 @@
 <tr>
 <td><code>KeyError</code> on startup (for example, <code>CLIENT_SECRET</code>)</td>
 <td>Some OAuth fields are present but others missing.</td>
-<td>Provide <strong>all</strong> required fields or remove <code>oauth</code> entirely.</td>
+<td>Provide all required fields or remove <code>oauth</code> entirely.</td>
 </tr>
 <tr>
 <td><code>Could not extract username</code></td>
@@ -5115,7 +5115,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:21:48 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
   </span>
 
     

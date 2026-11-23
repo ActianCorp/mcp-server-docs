@@ -5,14 +5,14 @@ description: Accept access tokens issued by your own identity provider, so an ap
 
 # Resource-Server Mode
 
-By default, the Actian MCP Server runs the OAuth login itself: it signs the user in through your identity provider (IdP), issues its own token, and accepts only that token. This suits general-purpose MCP clients, such as Claude Desktop and GitHub Copilot, which register with the server and run the login.
+By default, the Actian MCP Server runs the OAuth login itself: it signs the user in through the identity provider (IdP), issues its own token, and accepts only that token. This suits general-purpose MCP clients, such as Claude Desktop and GitHub Copilot. These clients register with the server and run the login.
 
-**Resource-server mode** is for an application that has **already signed the user in**. Instead of running a second login, the application calls the MCP Server with an access token from your IdP. The server does not run a login at all. It verifies each token against your IdP's published signing keys and runs the call as the user named in the token.
+Resource-server mode is for an application that has already signed the user in. Instead of running a second login, the application calls the MCP Server with an access token from the IdP. The server runs no login of its own. It verifies each token against the IdP's published signing keys and runs the call as the user named in the token.
 
 | | OAuth login (default) | Resource-server mode |
 | :--- | :--- | :--- |
 | Who signs the user in | The MCP Server | Your application or gateway |
-| Tokens accepted | Only its own | Tokens from your IdP that carry the MCP Server's audience |
+| Tokens accepted | Only its own | Tokens from the IdP that carry the MCP Server's audience |
 | Client registration | Each MCP client registers with the server | None |
 | Suits | General-purpose MCP clients | Applications that already hold the user's token |
 
@@ -22,7 +22,7 @@ A deployment runs one mode. To serve both kinds of client, run two deployments a
 
 ## Configuration
 
-Set `auth_mode` at the **top level** of `conf.json`, not inside the `oauth` block:
+Set `auth_mode` at the top level of `conf.json`, not inside the `oauth` block:
 
 ```json
 {
@@ -45,8 +45,8 @@ Add your database settings, or a [`targets` block](../multi-target.md), as usual
 | Key | Required | Description |
 | :--- | :--- | :--- |
 | `auth_mode` | Yes | `resource-server`. When omitted, the server runs the default OAuth login if the `oauth` block sets a client ID, and otherwise runs without authentication. |
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | Your IdP's OpenID Connect discovery document. The server reads the token issuer and the signing keys from it. |
-| `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | The audience every token must carry, normally the identifier of the API that represents the MCP Server in your IdP. |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | The IdP's OpenID Connect discovery document. The server reads the token issuer and the signing keys from it. |
+| `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | The audience every token must carry, normally the identifier of the API that represents the MCP Server in the IdP. |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | The server's public address. It must use `https://` unless `host` is `localhost`, `127.0.0.1`, or `::1`. |
 | `user_impersonation` | No | Default `true`: every query runs as the database user named in the token. See [The Username Must Be in the Token](#the-username-must-be-in-the-token). |
 | `FASTMCP_SERVER_AUTH_SCOPE` | No | Space-separated scopes that every token must carry. |
@@ -54,20 +54,20 @@ Add your database settings, or a [`targets` block](../multi-target.md), as usual
 - No client ID or client secret is used. If `FASTMCP_SERVER_AUTH_CLIENT_ID` is set, it is ignored and the server logs a warning.
 - When `host` is not `localhost`, `127.0.0.1`, or `::1`, set `ssl_certfile` and `ssl_keyfile`; the server does not start without them. See [Secure Remote Deployments with HTTPS and TLS](index.md#secure-remote-deployments-with-https-and-tls).
 - Every configuration error in this mode stops the server from starting. A missing key, or a discovery document that cannot be fetched, never results in a server that runs without authentication.
-- `auth_mode` is read **only at the top level**. If you place it inside the `oauth` block, the server ignores it. When the `oauth` block has no client ID, the server then starts **without authentication** instead of stopping. Always run the [verification](#verify-the-deployment) checks after a configuration change.
+- `auth_mode` is read only at the top level. If you place it inside the `oauth` block, the server ignores it. When the `oauth` block has no client ID, the server then starts without authentication instead of stopping. Always run the [verification](#verify-the-deployment) checks after a configuration change.
 
 ---
 
 ## Token Flow {#the-token-flow}
 
 1. The user signs in to your application, which receives an access token.
-2. The application obtains an access token for the MCP Server's audience, for the same user. It can request that audience when the user signs in, or, if your IdP supports it, exchange its own token for one (RFC 8693 token exchange).
+2. The application obtains an access token for the MCP Server's audience, for the same user. It can request that audience when the user signs in, or, if the IdP supports it, exchange its own token for one (RFC 8693 token exchange).
 3. The application calls the MCP Server with that token in the `Authorization: Bearer` header.
 4. The server checks the token's issuer, signature, audience, and scopes, and runs the call as the user named in the token.
 
 The server verifies the token it receives and does not depend on how the application obtained it. Whichever way you choose, the token must carry the MCP Server's audience, the scopes the call needs, and, with `user_impersonation` on, a username claim.
 
-The server publishes the standard protected-resource metadata (RFC 9728) at `/.well-known/oauth-protected-resource/mcp`. It names your IdP, so a client can find out where to get a token.
+The server publishes the standard protected-resource metadata (RFC 9728) at `/.well-known/oauth-protected-resource/mcp`. It names the IdP, so a client can find out where to get a token.
 
 The server has no login endpoints in this mode. `/mcp/authorize` and `/mcp/oauth/token` return `404`.
 
@@ -75,7 +75,7 @@ The server has no login endpoints in this mode. `/mcp/authorize` and `/mcp/oauth
 
 ## Required Scopes
 
-The default OAuth login requires `openid`, `email`, and `profile` on every token. **Resource-server mode does not**, because an access token issued for an API normally carries none of them.
+The default OAuth login requires `openid`, `email`, and `profile` on every token. Resource-server mode does not, because an access token issued for an API normally carries none of them.
 
 A token needs:
 
@@ -85,7 +85,7 @@ A token needs:
 
 The server reads scopes from the token's `scope`, `scp`, and `permissions` claims, combined.
 
-The calling application requests these scopes, at sign-in or in a token exchange, and your IdP issues only the scopes that the application's client is allowed to request. If a grant is missing from the token, check first that the scope is available to the application's client.
+The calling application requests these scopes, at sign-in or in a token exchange, and the IdP issues only the scopes that the application's client is allowed to request. If a grant is missing from the token, check first that the scope is available to the application's client.
 
 !!! warning "The application decides which grants a user receives"
     The server trusts the grants in the token. If one application client serves many users, any of those users can receive any scope that client is allowed to request. Request only the grants the signed-in user is entitled to, or use a separate client for each group of users with different access.
@@ -94,15 +94,15 @@ The calling application requests these scopes, at sign-in or in a token exchange
 
 ## The Username Must Be in the Token
 
-With `user_impersonation` set to `true`, every query runs as the authenticated user (`SET SESSION AUTHORIZATION`), so the server needs that user's **database user name** from the token. The service account in `conf.json` must also be allowed to run that statement; see [Service Account Privileges](index.md#service-account-privileges). The server reads the first of these claims that is present:
+With `user_impersonation` set to `true`, every query runs as the authenticated user (`SET SESSION AUTHORIZATION`), so the server needs that user's database user name from the token. The service account in `conf.json` must also be allowed to run that statement; see [Service Account Privileges](index.md#service-account-privileges). The server reads the first of these claims that is present:
 
 1. `username`
 2. `preferred_username`
 3. `email`, using the part before `@`
 
-In this mode the server does **not** call the IdP's userinfo endpoint and does **not** fall back to the `sub` claim, because `sub` is an IdP identifier, not a database user. A token with none of the three claims is rejected with `401`. The server log records which claims were missing; the caller gets no detail.
+In this mode the server does not call the IdP's userinfo endpoint and does not fall back to the `sub` claim, because `sub` is an IdP identifier, not a database user. A token with none of the three claims is rejected with `401`. The server log records which claims were missing; the caller gets no detail.
 
-The value must match a database user. Configure your IdP to add the claim to the access token:
+The value must match a database user. Configure the IdP to add the claim to the access token:
 
 - **Auth0:** add a Post-Login Action. See [Auth0: Resource-Server Mode](auth0.md#resource-server-mode).
 - **Keycloak:** see [Keycloak: Resource-Server Mode](keycloak.md#resource-server-mode).
@@ -172,7 +172,7 @@ Claude Code can sign users in to a resource-server deployment when you register 
 
     The port must match the `--callback-port` value you pass to Claude Code.
 
-2. Make sure the access token carries the MCP Server's audience. One way is to set the tenant's **Default Audience** to the API **Identifier**, so that a sign-in that does not name an audience gets an access token for the MCP API. In the Auth0 Dashboard, the setting is under **Settings** > **General** > **API Authorization Settings**.
+2. Confirm that the access token carries the MCP Server's audience. One way is to set the tenant's **Default Audience** to the API **Identifier**, so that a sign-in that does not name an audience gets an access token for the MCP API. In the Auth0 Dashboard, the setting is under **Settings** > **General** > **API Authorization Settings**.
 
     !!! warning "The Default Audience applies to the whole tenant"
         Auth0 uses the Default Audience for every sign-in that does not request an audience, in every application of the tenant. Check the effect on the other applications in the tenant before you set it, or use a separate tenant.
@@ -214,7 +214,7 @@ The user's token must also carry the username claim and any per-target or write 
 
 ## Known Limits
 
-- **Token exchange is optional and depends on your IdP.** Keycloak supports it, and also lets the application request the MCP Server's audience at sign-in. Auth0 has no token exchange for this purpose, so the application requests the audience directly.
+- **Token exchange is optional and depends on the IdP.** Keycloak supports it, and also lets the application request the MCP Server's audience at sign-in. Auth0 has no token exchange for this purpose, so the application requests the audience directly.
 - **Revoking access takes effect when the token expires.** Tokens are verified locally against the IdP's published keys.
 - **A withdrawn signing key stays trusted for up to an hour.** The server caches the IdP's keys for one hour, so a token signed with a key the IdP has removed is still accepted until the cache expires.
 - **Write approval still uses the MCP approval prompt.** A calling application that cannot display it has its writes declined. See [Write Support](../write-support.md).

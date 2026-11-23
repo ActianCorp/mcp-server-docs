@@ -10,7 +10,7 @@ This guide describes how to create and configure an Auth0 API and Application fo
 !!! note "Manual client registration"
     This guide focuses on manually created clients. Dynamic Client Registration (DCR) is not covered in this documentation.
 
-By the completion of this guide, you will have obtained the issuer URL needed for `quarkus.oidc.auth-server-url`, the audience value for `quarkus.oidc.token.audience`, as well as the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
+This guide shows how to obtain the issuer URL needed for `quarkus.oidc.auth-server-url`, the audience value for `quarkus.oidc.token.audience`, as well as the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
 
 !!! info "Reference"
     [Auth0 OpenID Connect documentation](https://auth0.com/docs/authenticate/protocols/openid-connect-protocol)

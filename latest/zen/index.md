@@ -104,7 +104,7 @@ Use this format when the database requires authentication. This bypasses the con
 | `extensions` | `array` | — | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md). |
 
 !!! note "OAuth and user impersonation"
-    Actian Zen does not support `SET SESSION AUTHORIZATION`. If you use OAuth, set `user_impersonation` to `false` **inside** the `oauth` block; a top-level key of that name is ignored. The server records the authenticated user in the call log but every query runs as the login in the connection string.
+    Actian Zen does not support `SET SESSION AUTHORIZATION`. If you use OAuth, set `user_impersonation` to `false` inside the `oauth` block; a top-level key of that name is ignored. The server records the authenticated user in the call log but every query runs as the login in the connection string.
 
 ## Several Databases from One Server
 

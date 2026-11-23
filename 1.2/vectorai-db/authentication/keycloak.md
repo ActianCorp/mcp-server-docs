@@ -7,7 +7,7 @@ description: Step-by-step guide to configure Keycloak as the OAuth identity prov
 
 This guide describes the creation and configuration of a Keycloak Realm, Client, and Audience Mapper. It enables the Actian MCP Server to authenticate users through OAuth 2.0 and OpenID Connect (OIDC). 
 
-By the completion of this guide, you will have obtained the values that are required to populate the `oauth` block in the `conf.json` file. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see  [Authentication Overview](index.md).
+This guide shows how to obtain the values required to populate the `oauth` block in the `conf.json` file. For the full configuration reference and shared concepts such as TLS, user impersonation, and security practices, see  [Authentication Overview](index.md).
 
 !!! info "Generic OIDC provider"
     FastMCP uses a generic OIDC provider. While there is no dedicated Keycloak class, the server uses the `OIDCProxy` provider, which is compatible with any OIDC-compliant identity provider.
@@ -24,7 +24,7 @@ The checklist below is the whole procedure in brief. Use it if you are already f
     !!! warning
         If you skip this step, the MCP Server rejects tokens with `audience mismatch`.
 
-4. **(Optional)** Add a **sub override mapper** to the `sub` claim containing the username instead of a UUID.
+4. **(Optional)** Add a sub override mapper to the `sub` claim containing the username instead of a UUID.
 5. **Create an `mcp:write` client scope** and attach it to the client as **Optional**, if `query_mode` is `read-write`. See [Step 5](#step-5-add-the-write-scope-read-write-deployments-only).
 6. **Create users** in the realm.
 7. **Fill `conf.json`** file with the values from [Step 1](#step-1-create-a-keycloak-realm) to [Step 3](#step-3-add-the-audience-mapper-required).
@@ -128,7 +128,7 @@ By default, Keycloak tokens only include internal audiences like `account`. The 
 !!! warning "Included Client Audience versus Included Custom Audience"
     The Audience mapper uses two audience fields:
 
-    - **Included Client Audience** - Resolves the selected client name to its **internal UUID**, for example, `16f502e4-483e-4b0d-adbd-4d20e6e33e73`. It does not match the audience string that MCP server expects and causes `audience mismatch` errors.
+    - **Included Client Audience** - Resolves the selected client name to its internal UUID, for example, `16f502e4-483e-4b0d-adbd-4d20e6e33e73`. It does not match the audience string that MCP server expects and causes `audience mismatch` errors.
     - **Included Custom Audience** - Inserts the literal string, for example, `actian-mcp`. This is required by the MCP server and the recommended option.
 
 1. Navigate to **Clients** and select your client, for example, `actian-mcp`.
@@ -250,7 +250,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 
 ### User Eligibility
 
-In Keycloak a client scope is attached to a **client**, not to a user. Any user who authenticates through this client and requests `scope=openid mcp:write` receives it. Keycloak roles do not change that, because the server authorizes writes from the token's `scope` claim rather than from roles.
+In Keycloak a client scope is attached to a client, not to a user. Any user who authenticates through this client and requests `scope=openid mcp:write` receives it. Keycloak roles do not change that, because the server authorizes writes from the token's `scope` claim rather than from roles.
 
 !!! important "Every user of this client can obtain `mcp:write`"
     Keycloak cannot limit an optional client scope to particular users, so do not rely on it to decide who may write. VectorAI DB has no per-user privileges to fall back on either: the engine sees only the server's API key. A user who obtains `mcp:write` can write to every collection the server exposes; the approval prompt is the only other check. See [Write support](../write-support.md#authorizing-a-write).
@@ -293,7 +293,7 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
     Keycloak's userinfo endpoint only returns `preferred_username` when the token includes the `profile` scope. Without it, the endpoint returns only the `sub` claim (a UUID by default).
 
 !!! important "Keycloak does not produce a `username` claim automatically"
-    The MCP server's username extraction priority is - `username` > `preferred_username` > email prefix > sanitized `sub`. Keycloak **does not** produce a `username` claim by default. It only appears if you explicitly configure a User Attribute mapper. In practice, `preferred_username` (second in the priority) is the reliable choice for Keycloak, and it works automatically when the `profile` scope is present.
+    The MCP server's username extraction priority is - `username` > `preferred_username` > email prefix > sanitized `sub`. Keycloak does not produce a `username` claim by default. It only appears if you explicitly configure a User Attribute mapper. In practice, `preferred_username` (second in the priority) is the reliable choice for Keycloak, and it works automatically when the `profile` scope is present.
 
 !!! note "Federated identity (LDAP / Social login)"
     With `user_impersonation: true`, a user whom Keycloak federates from an external LDAP or social provider and who arrives without `preferred_username` or an email is recorded by the `sub` claim, a UUID by default. Ensure that the federated users have `preferred_username` set, or add the sub-override mapper ([Step 4](#step-4-optional-add-the-sub-override-mapper)).
@@ -354,7 +354,7 @@ For security best practices (file permissions, `.gitignore`, secrets management)
 After starting the MCP server container with OAuth configured:
 
 1. Open a browser and navigate to the server's `/mcp` endpoint, for example, `https://<mcp-server-host>:8000/mcp`.
-2. You are **redirected to the Keycloak login page**.
+2. You are redirected to the Keycloak login page.
 3. Log in with a Keycloak user, for example, `jdoe`.
 4. After logging in, Keycloak redirects you back to the MCP server with a valid token.
 5. Call a tool from the MCP client, for example `list_collections`, and look at the container log: the [call log](../index.md#call-log) record for the call has the caller's name in `user`, or `null` when `user_impersonation` is `false` and the token carries no user claim.
@@ -396,7 +396,7 @@ Decode the `access_token` at [jwt.io](https://jwt.io) and verify the following:
 | `audience mismatch` | Audience string not in the token's `aud` claim. | [Step 3](#step-3-add-the-audience-mapper-required) - add the audience mapper using **Included Custom Audience** (not Included Client Audience, which resolves to a UUID). |
 | `invalid_client` | Wrong `client_id` or `client_secret`. | Re-copy from Clients > Credentials tab. |
 | `invalid_grant` | Wrong username/password, or user disabled. | Check user exists and is enabled. |
-| `KeyError` on startup (for example, `CLIENT_SECRET`) | Some OAuth fields are present but others missing. | Provide **all** required fields or remove `oauth` entirely. |
+| `KeyError` on startup (for example, `CLIENT_SECRET`) | Some OAuth fields are present but others missing. | Provide all required fields or remove `oauth` entirely. |
 | `Could not extract username` | No usable username claim in token. | Add sub-override mapper ([Step 4](#step-4-optional-add-the-sub-override-mapper)). Ensure `preferred_username` is present or set `user_impersonation: false`. |
 | `unauthorized` / 401 on every request | OAuth misconfigured or token expired. | Check server logs and verify the OIDC discovery URL is reachable. |
 | `Client not enabled` / `Realm not found` | Realm or client is disabled. | Ensure both  Realm and client are enabled in the Admin console. |

@@ -3774,7 +3774,7 @@
 
 
 <h1 id="serving-multiple-databases-from-one-server">Serving Multiple Databases from One Server<a class="headerlink" href="#serving-multiple-databases-from-one-server" title="Permanent link">&para;</a></h1>
-<p>Without a <code>targets</code> block, one container serves one database at one URL, <code>/mcp</code>. With a <code>targets</code> block, the same container serves a list of entries — engine, persona, database — each at its own URL and each with its own connection to Zen. Nothing else changes: same image, same <code>docker run</code> command, one more block in <code>conf.json</code>.</p>
+<p>Without a <code>targets</code> block, one container serves one database at one URL, <code>/mcp</code>. With a <code>targets</code> block, the same container serves a list of entries (engine, persona, database), each at its own URL and each with its own connection to Zen. Nothing else changes: same image, same <code>docker run</code> command, one more block in <code>conf.json</code>.</p>
 <h2 id="how-an-entry-becomes-a-url">How an Entry Becomes a URL<a class="headerlink" href="#how-an-entry-becomes-a-url" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code>{"host": "zen16", "instance": "admin", "databases": ["DEMODATA"]}
           |                   |                      |
@@ -3900,7 +3900,7 @@ http://&lt;mcp-host&gt;:8000/mcp/zen16/admin/DEMODATA/mcp
 <td><code>allow_unscoped_reads</code></td>
 <td><code>boolean</code></td>
 <td><code>false</code></td>
-<td>Lets a caller without a per-target grant read. Required to run more than one target <strong>without</strong> authentication; with authentication it disables per-target enforcement and is for test setups only. See <a href="authentication/index.html#per-target-scopes">Authentication</a>.</td>
+<td>Lets a caller without a per-target grant read. Required to run more than one target without authentication; with authentication it disables per-target enforcement and is for test setups only. See <a href="authentication/index.html#per-target-scopes">Authentication</a>.</td>
 </tr>
 <tr>
 <td><code>targets_dir</code></td>
@@ -3931,7 +3931,7 @@ http://&lt;mcp-host&gt;:8000/mcp/zen16/admin/DEMODATA/mcp
 <p>Several targets without an identity provider and without <code>allow_unscoped_reads: true</code> stop the server at start: <code>N targets are configured, but per-target scope enforcement ... is not active</code>. With the hatch, anyone who can reach a URL may use it, exactly as a single-database server without Open Authorization (OAuth). For a deployment with real users, configure <a href="authentication/index.html#resource-server-mode">resource-server mode</a> and leave <code>allow_unscoped_reads</code> out.</p>
 </div>
 <h2 id="read-only-personas">Read-Only Personas<a class="headerlink" href="#read-only-personas" title="Permanent link">&para;</a></h2>
-<p>A persona listed in <code>zen_readonly_personas</code> is opened read-only even when <code>query_mode</code> is <code>read-write</code>: every connection of that target carries the Open Database Connectivity (ODBC) attribute <code>SQL_ATTR_ACCESS_MODE=READ_ONLY</code> and <code>OPENMODE=1</code> in its connection string. The server refuses the write tools on that URL before anything reaches Zen: <code>target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL</code>. The engine's own <code>Access denied to a READ-ONLY data source</code> is the backstop for a statement that reaches the connection anyway. The word <code>readonly</code> is not special — <code>zen_readonly_personas: ["analyst"]</code> with <code>"instance": "analyst"</code> works the same.</p>
+<p>A persona listed in <code>zen_readonly_personas</code> is opened read-only even when <code>query_mode</code> is <code>read-write</code>: every connection of that target carries the Open Database Connectivity (ODBC) attribute <code>SQL_ATTR_ACCESS_MODE=READ_ONLY</code> and <code>OPENMODE=1</code> in its connection string. The server refuses the write tools on that URL before anything reaches Zen: <code>target zen16/readonly/DEMODATA is read-only (zen_readonly_personas); writes need the read-write target URL</code>. The engine's own <code>Access denied to a READ-ONLY data source</code> is the backstop for a statement that reaches the connection anyway. The word <code>readonly</code> is not special: <code>zen_readonly_personas: ["analyst"]</code> with <code>"instance": "analyst"</code> works the same.</p>
 <p>What a read-only persona does not do:</p>
 <ul>
 <li>It does not hide the write tools. Under multi-target the server publishes one tool list for all URLs, so <code>execute_write_query</code> is listed on the read-only URL as well; the server refuses it.</li>
@@ -4001,7 +4001,7 @@ http://&lt;mcp-host&gt;:8000/mcp/zen16/admin/DEMODATA/mcp
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 18, 2026 15:50:44 UTC">November 18, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
   </span>
 
     

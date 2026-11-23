@@ -4915,7 +4915,7 @@ configuration.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Date and timestamp literals</p>
-<p>Compare a date or timestamp field using a JDBC escape literal. A plain quoted string is <strong>not</strong> coerced to a date, and is rejected.</p>
+<p>Compare a date or timestamp field using a JDBC escape literal. A plain quoted string is not coerced to a date, and is rejected.</p>
 <ul>
 <li><code>{ts 'yyyy-MM-dd HH:mm:ss'}</code> for a timestamp. The time part is required, and an optional fractional part of up to nine digits is allowed — for example, <code>{ts '2000-01-01 00:00:00.123'}</code>.</li>
 <li><code>{d 'yyyy-MM-dd'}</code> for a date alone.</li>
@@ -4972,8 +4972,8 @@ configuration.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>A query that selects whole entities (<code>select e from Employee e</code>) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values positionally, not wrapped in <code>fields</code>. Each value is rendered by the same rules either way, so a 64-bit integer is a decimal string whichever form you select it in, and a referenced object inside a collection or map is an LOID string.</p>
-<p>Two shapes differ between the two forms. A collection or map selected on its own (<code>select e.skillMap from Employee e</code>) is returned in its natural JSON form — an array, or an object keyed by the map's own keys — rather than the <code>{keys, values}</code> pair the whole-entity shape uses. And a reference field selected on its own (<code>select e.address from Employee e</code>) returns the whole referenced object, where the whole-entity shape gives its LOID.</p>
+<p>A query that selects whole entities (<code>select e from Employee e</code>) returns each object in the shape above, the same shape the fetch tools return for the same object. A query that selects individual fields returns those values positionally, not wrapped in <code>fields</code>. Each value is rendered by the same rules either way, so a 64-bit integer is a decimal string whichever form you select it in, and a referenced object inside a collection or map is an LOID string.</p>
+<p>Two shapes differ between the two forms. A collection or map selected on its own (<code>select e.skillMap from Employee e</code>) is returned in its natural JSON form (an array, or an object keyed by the map's own keys) rather than the <code>{keys, values}</code> pair the whole-entity shape uses. And a reference field selected on its own (<code>select e.address from Employee e</code>) returns the whole referenced object, where the whole-entity shape gives its LOID.</p>
 <p>To change an object you read here, pass its <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <p><strong>User Request</strong></p>
@@ -5015,7 +5015,7 @@ configuration.</p>
 <span class="p">}</span>
 </code></pre></div>
 <p>This response shows the complete <code>fields</code> object for one object: every field the class declares is
-present, and the two the object has no value for — <code>technicalTags</code> and <code>metadata</code> — are reported as
+present, and the two the object has no value for (<code>technicalTags</code> and <code>metadata</code>) are reported as
 <code>null</code> rather than left out. <code>annualSalary</code> is an <code>int</code> and stays a bare number, while
 <code>badgeSerialNumber</code> is a <code>long</code> and is quoted. <code>cursorId</code> is absent because <code>hasMore</code> is <code>false</code>. To
 keep them readable, the remaining examples on this page show only a few fields per object.</p>
@@ -5194,7 +5194,7 @@ keep them readable, the remaining examples on this page show only a few fields p
 <span class="p">}</span>
 </code></pre></div>
 <p>LOIDs that match no object are left out of <code>objects</code>, so <code>count</code> may be lower than the number of LOIDs you asked for. Each one is named in <code>notFoundLoids</code>, so you can tell which references are dead without comparing counts. The array is always present, and empty when every LOID was found.</p>
-<p>A LOID you ask for twice is named once if it is absent — the response has no positional relationship to the LOIDs you sent, since a missing one leaves no gap in <code>objects</code>. A LOID that <em>is</em> found and asked for twice is returned twice.</p>
+<p>A LOID you ask for twice is named once if it is absent. The response has no positional relationship to the LOIDs you sent, since a missing one leaves no gap in <code>objects</code>. A LOID that <em>is</em> found and asked for twice is returned twice.</p>
 <p>A malformed LOID is a different case: it fails the whole call with an error rather than appearing in <code>notFoundLoids</code>, which only ever reports well-formed LOIDs that matched nothing.</p>
 <p>To change any of the objects you read, pass each one's <code>version</code> back as <code>expectedVersion</code>. See <a href="../write-support.html#optimistic-concurrency">Optimistic concurrency</a>.</p>
 <h3 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h3>
@@ -5335,8 +5335,8 @@ keep them readable, the remaining examples on this page show only a few fields p
 <p>The <code>type</code> string tells you whether a field holds a scalar, a reference, or a container.</p>
 <ul>
 <li><strong>Containers</strong> are <code>java.util.List&lt;X&gt;</code>, <code>java.util.Map&lt;K,V&gt;</code> and <code>X[]</code>. Strip the wrapper to get the element type(s), then read each one by the rules below.</li>
-<li><strong>Scalars</strong> are Java primitives (<code>int</code>, <code>long</code>, <code>short</code>, <code>double</code>, <code>float</code>, <code>boolean</code>, <code>byte</code>, <code>char</code>) and any type starting with <code>java.</code> — send the value itself. A <code>long</code> or <code>java.math.BigInteger</code> is the exception: as a <strong>field value</strong> send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form — an unquoted literal with an <code>L</code> suffix, never a quoted string. See <a href="#execute_query">Large integer literals</a>.</li>
-<li><strong>References</strong> are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object — <code>"address": "1.0.5"</code>, not <code>"address": { "city": "..." }</code>.</li>
+<li><strong>Scalars</strong> are Java primitives (<code>int</code>, <code>long</code>, <code>short</code>, <code>double</code>, <code>float</code>, <code>boolean</code>, <code>byte</code>, <code>char</code>) and any type starting with <code>java.</code>. Send the value itself. A <code>long</code> or <code>java.math.BigInteger</code> is the exception: as a field value send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form: an unquoted literal with an <code>L</code> suffix, never a quoted string. See <a href="#execute_query">Large integer literals</a>.</li>
+<li><strong>References</strong> are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object: <code>"address": "1.0.5"</code>, not <code>"address": { "city": "..." }</code>.</li>
 </ul>
 <p>So <code>java.util.List&lt;Worker&gt;</code> holds LOID strings, <code>java.util.List&lt;java.lang.String&gt;</code> holds plain strings, and <code>java.util.Map&lt;java.lang.String,Skill&gt;</code> has scalar keys and LOID-string values.</p>
 <div class="admonition warning">
@@ -5766,7 +5766,7 @@ current 8273402). Re-read the object and retry.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
   </span>
 
     

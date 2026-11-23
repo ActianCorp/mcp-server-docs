@@ -3872,8 +3872,8 @@
 
 
 <h1 id="resource-server-mode">Resource-Server Mode<a class="headerlink" href="#resource-server-mode" title="Permanent link">&para;</a></h1>
-<p>By default, the Actian MCP Server runs the OAuth login itself: it signs the user in through your identity provider (IdP), issues its own token, and accepts only that token. This suits general-purpose MCP clients, such as Claude Desktop and GitHub Copilot, which register with the server and run the login.</p>
-<p><strong>Resource-server mode</strong> is for an application that has <strong>already signed the user in</strong>. Instead of running a second login, the application calls the MCP Server with an access token from your IdP. The server does not run a login at all. It verifies each token against your IdP's published signing keys and runs the call as the user named in the token.</p>
+<p>By default, the Actian MCP Server runs the OAuth login itself: it signs the user in through the identity provider (IdP), issues its own token, and accepts only that token. This suits general-purpose MCP clients, such as Claude Desktop and GitHub Copilot. These clients register with the server and run the login.</p>
+<p>Resource-server mode is for an application that has already signed the user in. Instead of running a second login, the application calls the MCP Server with an access token from the IdP. The server runs no login of its own. It verifies each token against the IdP's published signing keys and runs the call as the user named in the token.</p>
 <table>
 <thead>
 <tr>
@@ -3891,7 +3891,7 @@
 <tr>
 <td style="text-align: left;">Tokens accepted</td>
 <td style="text-align: left;">Only its own</td>
-<td style="text-align: left;">Tokens from your IdP that carry the MCP Server's audience</td>
+<td style="text-align: left;">Tokens from the IdP that carry the MCP Server's audience</td>
 </tr>
 <tr>
 <td style="text-align: left;">Client registration</td>
@@ -3908,7 +3908,7 @@
 <p>A deployment runs one mode. To serve both kinds of client, run two deployments against the same databases.</p>
 <hr />
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<p>Set <code>auth_mode</code> at the <strong>top level</strong> of <code>conf.json</code>, not inside the <code>oauth</code> block:</p>
+<p>Set <code>auth_mode</code> at the top level of <code>conf.json</code>, not inside the <code>oauth</code> block:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="p">,</span>
@@ -3941,12 +3941,12 @@
 <tr>
 <td style="text-align: left;"><code>FASTMCP_SERVER_AUTH_CONFIG_URL</code></td>
 <td style="text-align: left;">Yes</td>
-<td style="text-align: left;">Your IdP's OpenID Connect discovery document. The server reads the token issuer and the signing keys from it.</td>
+<td style="text-align: left;">The IdP's OpenID Connect discovery document. The server reads the token issuer and the signing keys from it.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>FASTMCP_SERVER_AUTH_AUDIENCE</code></td>
 <td style="text-align: left;">Yes</td>
-<td style="text-align: left;">The audience every token must carry, normally the identifier of the API that represents the MCP Server in your IdP.</td>
+<td style="text-align: left;">The audience every token must carry, normally the identifier of the API that represents the MCP Server in the IdP.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>FASTMCP_SERVER_AUTH_BASE_URL</code></td>
@@ -3969,22 +3969,22 @@
 <li>No client ID or client secret is used. If <code>FASTMCP_SERVER_AUTH_CLIENT_ID</code> is set, it is ignored and the server logs a warning.</li>
 <li>When <code>host</code> is not <code>localhost</code>, <code>127.0.0.1</code>, or <code>::1</code>, set <code>ssl_certfile</code> and <code>ssl_keyfile</code>; the server does not start without them. See <a href="index.html#secure-remote-deployments-with-https-and-tls">Secure Remote Deployments with HTTPS and TLS</a>.</li>
 <li>Every configuration error in this mode stops the server from starting. A missing key, or a discovery document that cannot be fetched, never results in a server that runs without authentication.</li>
-<li><code>auth_mode</code> is read <strong>only at the top level</strong>. If you place it inside the <code>oauth</code> block, the server ignores it. When the <code>oauth</code> block has no client ID, the server then starts <strong>without authentication</strong> instead of stopping. Always run the <a href="#verify-the-deployment">verification</a> checks after a configuration change.</li>
+<li><code>auth_mode</code> is read only at the top level. If you place it inside the <code>oauth</code> block, the server ignores it. When the <code>oauth</code> block has no client ID, the server then starts without authentication instead of stopping. Always run the <a href="#verify-the-deployment">verification</a> checks after a configuration change.</li>
 </ul>
 <hr />
 <h2 id="the-token-flow">Token Flow<a class="headerlink" href="#the-token-flow" title="Permanent link">&para;</a></h2>
 <ol>
 <li>The user signs in to your application, which receives an access token.</li>
-<li>The application obtains an access token for the MCP Server's audience, for the same user. It can request that audience when the user signs in, or, if your IdP supports it, exchange its own token for one (RFC 8693 token exchange).</li>
+<li>The application obtains an access token for the MCP Server's audience, for the same user. It can request that audience when the user signs in, or, if the IdP supports it, exchange its own token for one (RFC 8693 token exchange).</li>
 <li>The application calls the MCP Server with that token in the <code>Authorization: Bearer</code> header.</li>
 <li>The server checks the token's issuer, signature, audience, and scopes, and runs the call as the user named in the token.</li>
 </ol>
 <p>The server verifies the token it receives and does not depend on how the application obtained it. Whichever way you choose, the token must carry the MCP Server's audience, the scopes the call needs, and, with <code>user_impersonation</code> on, a username claim.</p>
-<p>The server publishes the standard protected-resource metadata (RFC 9728) at <code>/.well-known/oauth-protected-resource/mcp</code>. It names your IdP, so a client can find out where to get a token.</p>
+<p>The server publishes the standard protected-resource metadata (RFC 9728) at <code>/.well-known/oauth-protected-resource/mcp</code>. It names the IdP, so a client can find out where to get a token.</p>
 <p>The server has no login endpoints in this mode. <code>/mcp/authorize</code> and <code>/mcp/oauth/token</code> return <code>404</code>.</p>
 <hr />
 <h2 id="required-scopes">Required Scopes<a class="headerlink" href="#required-scopes" title="Permanent link">&para;</a></h2>
-<p>The default OAuth login requires <code>openid</code>, <code>email</code>, and <code>profile</code> on every token. <strong>Resource-server mode does not</strong>, because an access token issued for an API normally carries none of them.</p>
+<p>The default OAuth login requires <code>openid</code>, <code>email</code>, and <code>profile</code> on every token. Resource-server mode does not, because an access token issued for an API normally carries none of them.</p>
 <p>A token needs:</p>
 <ul>
 <li>Any scopes listed in <code>FASTMCP_SERVER_AUTH_SCOPE</code>.</li>
@@ -3992,21 +3992,21 @@
 <li>For writes, the write scope described in <a href="../write-support.html#authorizing-a-write">Write Support</a>.</li>
 </ul>
 <p>The server reads scopes from the token's <code>scope</code>, <code>scp</code>, and <code>permissions</code> claims, combined.</p>
-<p>The calling application requests these scopes, at sign-in or in a token exchange, and your IdP issues only the scopes that the application's client is allowed to request. If a grant is missing from the token, check first that the scope is available to the application's client.</p>
+<p>The calling application requests these scopes, at sign-in or in a token exchange, and the IdP issues only the scopes that the application's client is allowed to request. If a grant is missing from the token, check first that the scope is available to the application's client.</p>
 <div class="admonition warning">
 <p class="admonition-title">The application decides which grants a user receives</p>
 <p>The server trusts the grants in the token. If one application client serves many users, any of those users can receive any scope that client is allowed to request. Request only the grants the signed-in user is entitled to, or use a separate client for each group of users with different access.</p>
 </div>
 <hr />
 <h2 id="the-username-must-be-in-the-token">The Username Must Be in the Token<a class="headerlink" href="#the-username-must-be-in-the-token" title="Permanent link">&para;</a></h2>
-<p>With <code>user_impersonation</code> set to <code>true</code>, every query runs as the authenticated user (<code>SET SESSION AUTHORIZATION</code>), so the server needs that user's <strong>database user name</strong> from the token. The service account in <code>conf.json</code> must also be allowed to run that statement; see <a href="index.html#service-account-privileges">Service Account Privileges</a>. The server reads the first of these claims that is present:</p>
+<p>With <code>user_impersonation</code> set to <code>true</code>, every query runs as the authenticated user (<code>SET SESSION AUTHORIZATION</code>), so the server needs that user's database user name from the token. The service account in <code>conf.json</code> must also be allowed to run that statement; see <a href="index.html#service-account-privileges">Service Account Privileges</a>. The server reads the first of these claims that is present:</p>
 <ol>
 <li><code>username</code></li>
 <li><code>preferred_username</code></li>
 <li><code>email</code>, using the part before <code>@</code></li>
 </ol>
-<p>In this mode the server does <strong>not</strong> call the IdP's userinfo endpoint and does <strong>not</strong> fall back to the <code>sub</code> claim, because <code>sub</code> is an IdP identifier, not a database user. A token with none of the three claims is rejected with <code>401</code>. The server log records which claims were missing; the caller gets no detail.</p>
-<p>The value must match a database user. Configure your IdP to add the claim to the access token:</p>
+<p>In this mode the server does not call the IdP's userinfo endpoint and does not fall back to the <code>sub</code> claim, because <code>sub</code> is an IdP identifier, not a database user. A token with none of the three claims is rejected with <code>401</code>. The server log records which claims were missing; the caller gets no detail.</p>
+<p>The value must match a database user. Configure the IdP to add the claim to the access token:</p>
 <ul>
 <li><strong>Auth0:</strong> add a Post-Login Action. See <a href="auth0.html#resource-server-mode">Auth0: Resource-Server Mode</a>.</li>
 <li><strong>Keycloak:</strong> see <a href="keycloak.html#resource-server-mode">Keycloak: Resource-Server Mode</a>.</li>
@@ -4059,7 +4059,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
 <p>The port must match the <code>--callback-port</code> value you pass to Claude Code.</p>
 </li>
 <li>
-<p>Make sure the access token carries the MCP Server's audience. One way is to set the tenant's <strong>Default Audience</strong> to the API <strong>Identifier</strong>, so that a sign-in that does not name an audience gets an access token for the MCP API. In the Auth0 Dashboard, the setting is under <strong>Settings</strong> &gt; <strong>General</strong> &gt; <strong>API Authorization Settings</strong>.</p>
+<p>Confirm that the access token carries the MCP Server's audience. One way is to set the tenant's <strong>Default Audience</strong> to the API <strong>Identifier</strong>, so that a sign-in that does not name an audience gets an access token for the MCP API. In the Auth0 Dashboard, the setting is under <strong>Settings</strong> &gt; <strong>General</strong> &gt; <strong>API Authorization Settings</strong>.</p>
 <div class="admonition warning">
 <p class="admonition-title">The Default Audience applies to the whole tenant</p>
 <p>Auth0 uses the Default Audience for every sign-in that does not request an audience, in every application of the tenant. Check the effect on the other applications in the tenant before you set it, or use a separate tenant.</p>
@@ -4157,7 +4157,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
 <hr />
 <h2 id="known-limits">Known Limits<a class="headerlink" href="#known-limits" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Token exchange is optional and depends on your IdP.</strong> Keycloak supports it, and also lets the application request the MCP Server's audience at sign-in. Auth0 has no token exchange for this purpose, so the application requests the audience directly.</li>
+<li><strong>Token exchange is optional and depends on the IdP.</strong> Keycloak supports it, and also lets the application request the MCP Server's audience at sign-in. Auth0 has no token exchange for this purpose, so the application requests the audience directly.</li>
 <li><strong>Revoking access takes effect when the token expires.</strong> Tokens are verified locally against the IdP's published keys.</li>
 <li><strong>A withdrawn signing key stays trusted for up to an hour.</strong> The server caches the IdP's keys for one hour, so a token signed with a key the IdP has removed is still accepted until the cache expires.</li>
 <li><strong>Write approval still uses the MCP approval prompt.</strong> A calling application that cannot display it has its writes declined. See <a href="../write-support.html">Write Support</a>.</li>
@@ -4200,7 +4200,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 09:18:47 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 12:52:50 UTC">November 23, 2026</span>
   </span>
 
     
