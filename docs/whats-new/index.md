@@ -19,7 +19,7 @@ Actian MCP Server 1.2.0 adds the following features and changes:
 
 ## Actian VectorAI DB Support
 
-Actian MCP Server 1.2.0 introduces the Actian MCP Server for VectorAI DB, the vector engine of Actian Zen AI DB. An AI agent can run semantic search over the vector collections listed in `conf.json`. The server does not show collections that are not listed.
+Actian MCP Server 1.2.0 introduces the Actian MCP Server for VectorAI DB. An AI agent can run semantic search over the vector collections listed in `conf.json`. The server does not show collections that are not listed.
 
 - **Tools**: six read tools search, count, and page through collections. `search` embeds a query text, and `search_by_vector` takes a vector from the caller.
 - **Writes**: writes are off by default. With `query_mode` set to `read-write`, four write tools create collections and store or delete points. Each write needs approval from the person at the MCP client.
