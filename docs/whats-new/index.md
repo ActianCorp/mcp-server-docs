@@ -87,7 +87,6 @@ For more information, see [Authentication](../nosql/authentication/index.md) and
 - Each tool declares MCP tool annotations. Clients can use them to decide whether to run a tool without asking first.
 - For Ingres, `list_indexes` lists the indexes on a table.
 - For Ingres, `list_tables` shows each table's owner, and `describe_table` accepts an owner-qualified name.
-- For Ingres and Analytics Engine, a failed connection, for example to a locked database, returns the driver's error after `Failed to get database connection or cursor`, with a hint when the session limit is reached.
 
 For more information, see [Ingres Tools](../ingres/tools/index.md#tool-annotations).
 
