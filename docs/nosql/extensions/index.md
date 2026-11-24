@@ -25,7 +25,7 @@ A tool argument does not have to be a scalar. A record, a POJO, a list or set of
 !!! warning "An omitted `mimeType()` is blank, not JSON"
     On `@Resource` and `@ResourceTemplate`, leaving `mimeType()` unset registers an empty MIME type rather than defaulting to `application/json`. If your resource returns JSON and clients need that advertised, set it yourself.
 
-For records, POJOs, maps and other plain types, a handler never serializes its own return value — the server does it, so an extension needs no JSON library of its own. A handler that returns text, content blocks, a `ToolResponse`, a `ResourceResponse`, a `PromptMessage` or a `PromptResponse` has already decided its own content, and the server usually sends what it built. Some declared types change this, and the return-type tables below spell each one out: a neutral `ResourceContents` (`TextResourceContents` or `BlobResourceContents`), on its own or in a list, and a `ResourceResponse` returned from a method declared `Object` are serialized as JSON text, and a `List<ToolResponse>` is not merged into one result. Declare `ResourceResponse` to send resource contents as built.
+For records, POJOs, maps and other plain types, a handler never serializes its own return value. The server does it, so an extension needs no JSON library of its own. A handler that returns text, content blocks, a `ToolResponse`, a `ResourceResponse`, a `PromptMessage` or a `PromptResponse` has already decided its own content, and the server usually sends what it built. Some declared types change this, and the return-type tables below spell each one out: a neutral `ResourceContents` (`TextResourceContents` or `BlobResourceContents`), on its own or in a list, and a `ResourceResponse` returned from a method declared `Object` are serialized as JSON text, and a `List<ToolResponse>` is not merged into one result. Declare `ResourceResponse` to send resource contents as built.
 
 ### Tool Return Types
 
@@ -64,7 +64,7 @@ As the server ships, structured content also arrives as a text block carrying th
 
 ### Resource Return Types
 
-The declared return type of a `@Resource` or `@ResourceTemplate` method decides what the client receives. A plain return is delivered under the resource's own URI — for a template, the concrete URI that was requested — and the annotation's `mimeType()`.
+The declared return type of a `@Resource` or `@ResourceTemplate` method decides what the client receives. A plain return is delivered under the resource's own URI (for a template, the concrete URI that was requested) and the annotation's `mimeType()`.
 
 | Declared return type | What the client receives |
 |----------------------|--------------------------|
@@ -183,7 +183,7 @@ The distinction matters, because not every member means something at startup: `c
 !!! note "`confirm()` and `log()` work only inside a tool handler"
     Both need a live per-call channel to the client. Calling either from `initialize` or from a resource or prompt handler throws `UnsupportedOperationException`.
 
-### Signalling Errors
+### Signaling Errors {#signalling-errors}
 
 **From a tool.** A tool reports a failure in one of two ways: return `ToolResponse.ofError(message)`, or throw a `RuntimeException`. Either way the client gets an error result carrying your message. An exception thrown without a message carries its class name instead.
 
