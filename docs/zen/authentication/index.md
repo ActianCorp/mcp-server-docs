@@ -119,7 +119,7 @@ actian:{host}:{instance}:{database}:read
 actian:{host}:{instance}:{database}:write
 ```
 
-The three middle parts come from the target entry. For the entry `{"host": "zen16", "instance": "admin", "databases": ["DEMODATA"]}`, the read grant is `actian:zen16:admin:DEMODATA:read` and the write grant is `actian:zen16:admin:DEMODATA:write`. The server reads grants from the `scope`, `scp`, and `permissions` claims. Matching is exact.
+The three middle parts come from the target entry. For the entry `{"host": "zen16", "instance": "admin", "databases": ["DEMODATA"]}`, the read grant is `actian:zen16:admin:DEMODATA:read` and the write grant is `actian:zen16:admin:DEMODATA:write`. The server reads grants from the `scope`, `scp`, and `permissions` claims. A `*` in the host, instance, or database part matches exactly one segment: `actian:zen16:*:*:read` reads every database on `zen16`, and `actian:*:*:*:read` reads every target. The server writes a WARNING line to its log for each request that a host wildcard authorizes, so keep such grants for admin roles.
 
 | Caller | Result |
 |--------|--------|
