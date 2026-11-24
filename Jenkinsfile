@@ -37,6 +37,8 @@ pipeline {
         DOC_VERSION=1.2
         DOCNAME="${JOB_NAME}"
         DOC_NAME_VERSION="mcp-server-${DOC_VERSION}.doc"
+        // Set to 'true' to log the versions.json/latest changes without applying them.
+        VERSIONS_DRY_RUN='false'
 
         EMAIL_RECIPIENTS='jim.mccaskey@hcl-software.com, ' +
             'bipinkumar.pandey@hcl-software.com, cody.kern@hcl-software.com, mike.zayour@hcl-software.com'
@@ -97,6 +99,8 @@ pipeline {
                 sh 'zip -r output.zip site'
                 archiveArtifacts artifacts: 'output.zip', onlyIfSuccessful: true
                 stash includes: 'output.zip', name: 'output.zip', useDefaultExcludes: false
+                // The publish agent skips checkout, so ship the versions script with the build.
+                stash includes: 'scripts/update-versions.ps1', name: 'update-versions'
             }
         }
 
@@ -112,6 +116,13 @@ pipeline {
                 fileOperations([fileUnZipOperation(filePath: 'output.zip', targetLocation: '.')])
                 bat "move D:\\Sites\\mcp-server\\${DOC_VERSION} D:\\backups\\mcp-server-${DOC_VERSION}-${BUILD_NUMBER}.backup"
                 bat "move ${WORKSPACE}\\site D:\\Sites\\mcp-server\\${DOC_VERSION}"
+
+                // Register this version in versions.json and refresh "latest" if this is the highest version.
+                unstash 'update-versions'
+                script {
+                    def dryRunFlag = (VERSIONS_DRY_RUN == 'true') ? '-DryRun' : ''
+                    bat "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\update-versions.ps1 -SiteRoot D:\\Sites\\mcp-server -Version ${DOC_VERSION} -BuildNumber ${BUILD_NUMBER} ${dryRunFlag}"
+                }
             }
         }
     }
