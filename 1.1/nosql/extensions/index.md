@@ -92,7 +92,7 @@ The distinction matters, because not every member means something at startup: `c
 | `newEntityManager()` | A new `EntityManager` on the same factory the server uses. You close it. Note the package is `javax.persistence`, not `jakarta.persistence` — the Versant JPA provider predates the Jakarta namespace change. |
 | `currentUser()` | The authenticated principal, or empty when the caller is anonymous or authentication is off server-wide. |
 | `currentScopes()`, `hasScope(scope)` | The caller's OAuth scopes, and a convenience check for one of them. |
-| `confirm(message)` | Asks a person to approve an operation, with a message you compose. See [Write Gating for Extension Tools](#write-gating-for-extension-tools). |
+| `confirm(message)` | Asks a person to approve an operation, with a message you compose. Behaves slightly differently for stateless clients; see [Write Gating for Extension Tools](#write-gating-for-extension-tools). |
 | `log()` | Sends MCP log notifications to the connected client, at a level you choose. |
 
 !!! note "`confirm()` and `log()` work only inside a tool handler"
@@ -123,6 +123,14 @@ annotations = @Tool.Annotations(readOnlyHint = false)  // write tool
 That default is deliberate. Omitting the annotation gives you gating rather than a bypass, so forgetting to think about it fails safe. Once classified as a write, the tool is subject to `nsql.writes.enabled` and, when authentication is on, the caller's `mcp:write` scope — both enforced at the tool boundary, before your handler runs. [Write support](../write-support.md) describes both checks, and the same page explains why the tool may not appear in the client's tool list at all.
 
 Confirmation works differently from the built-in tools. It is opt-in: nothing prompts the user unless your handler calls `context.confirm(...)`, and you write the message. What you cannot do is influence the answer — the server enforces it, throwing if the user declines, cancels, leaves it unconfirmed, does not respond in time, or is on a client that cannot show prompts at all. An operator who sets `nsql.writes.confirmation-required=false` silences your prompt along with the built-in ones, since both use the same mechanism.
+
+A client on the stateless 2026-07-28 protocol cannot be asked while your handler is running. It answers by repeating the tool call, so your handler runs again from the start once the person approves. Write your handler with that in mind:
+
+- Keep side effects after `confirm()`. Anything done before it happens once for the question and again for the approved call.
+- Do not catch exceptions around `confirm()`. On a stateless client the question reaches the client as an exception, and a handler that swallows it carries on without approval.
+- Call `confirm()` at most once per tool call. A second `confirm()` in one stateless call is refused and the handler does not continue.
+
+The approval covers only that exact call: the same tool, the same arguments, and the same user when authentication is on. It lasts `nsql.writes.confirmation-timeout-seconds`. The same code works on both protocols. For how the two differ, see [Protocol Versions](../protocol-versions.md#write-confirmation-on-each-protocol).
 
 ## Enabling and Declaring Extensions
 

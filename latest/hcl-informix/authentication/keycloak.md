@@ -25,7 +25,7 @@ The checklist below is the whole procedure in brief. Use it if you are already f
         If you skip this step, the MCP Server rejects tokens with `audience mismatch`.
 
 4. **(Optional)** Add a **sub override mapper** to the `sub` claim containing the username instead of a UUID.
-5. **Create an `mcp:write` client scope** and attach it to the client as **Optional**, if `query_mode` is `read-write`. See [Step 5](#step-5-add-the-write-scope-read-write-deployments-only).
+5. **Configure write grants**, if `query_mode` is `read-write`: use `mcp:write` for the single-database `/mcp` endpoint. For target URLs, create per-target scopes. See [Step 5](#step-5-add-the-write-scope-read-write-deployments-only) and [Multi-Target Deployments: Per-Target Scopes](#multi-target-deployments-per-target-scopes).
 6. **Create users** in the realm, if using `user_impersonation: true`.
 7. **Fill `conf.json`** file with the values from [Step 1](#step-1-create-a-keycloak-realm) to [Step 3](#step-3-add-the-audience-mapper-required).
 8. **Start the server** with `--transport sse`or `http` / `streamable-http`.
@@ -104,7 +104,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 
 9. Select **Save**.
 
-### Get the Client Secret
+### Get Client Secret {#get-the-client-secret}
 
 1. After creating the client, select the **Credentials** tab.
 2. Copy the **Client secret** value.
@@ -118,7 +118,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 | `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL, for example, `https://<mcp-server-host>:8000` |
 
 
-## Step 3: Add the Audience Mapper (Required)
+## Step 3: Add Audience Mapper (Required) {#step-3-add-the-audience-mapper-required}
 
 !!! danger "This step is critical"
     Without the Audience Mapper, Keycloak does not include the Client ID in the token's `aud` (audience) claim, and the MCP server rejects tokens with an `audience mismatch` error.
@@ -177,7 +177,7 @@ Expected output:
     If you still see a UUID instead of `actian-mcp` in the `aud` claim, the old token may be cached. Wait for it to expire (default 5 minutes) or go to **Sessions** in the Keycloak Admin Console and sign out of all sessions for the service account to force a fresh token.
 
 
-## Step 4 (Optional): Add the Sub Override Mapper
+## Step 4 (Optional): Add Sub Override Mapper {#step-4-optional-add-the-sub-override-mapper}
 
 By default, Keycloak sets the `sub` claim to a UUID. You can override it to contain the login name for easier `user_impersonation` mapping.
 
@@ -218,13 +218,13 @@ After adding the mapper, the token contains the following:
     Instead of overriding `sub`, you can rely on the `preferred_username` claim (included by default when the `profile` scope is present). The MCP server's username extraction priority uses `preferred_username` before `sub`, so it works automatically without any mapper changes.
 
 
-## Step 5: Add the Write Scope (Read-Write Deployments Only)
+## Step 5: Add Write Scope (Read-Write Deployments Only) {#step-5-add-the-write-scope-read-write-deployments-only}
 
-Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
+Skip this step if `query_mode` is `read-only`, or if callers use target URLs in a multi-target deployment. Target URLs use per-target scopes instead. See [Multi-Target Deployments: Per-Target Scopes](#multi-target-deployments-per-target-scopes).
 
-When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
+For a single-database deployment that uses `/mcp`, when `query_mode` is `read-write`, the server requests `mcp:write`. It rejects any write whose token does not carry that scope. For more information, see [Write support](../write-support.md).
 
-### Step 5.1: Create the Client Scope
+### Step 5.1: Create Client Scope {#step-51-create-the-client-scope}
 
 1. Navigate to **Client scopes** in the left sidebar and select **Create client scope**.
 2. Configure the following fields:
@@ -239,7 +239,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 
 3. Select **Save**.
 
-### Step 5.2: Attach the Scope to the Client as Optional
+### Step 5.2: Attach Scope to Client as Optional {#step-52-attach-the-scope-to-the-client-as-optional}
 
 1. Navigate to **Clients** > your client, for example `actian-mcp`, and select the **Client scopes** tab.
 2. Select **Add client scope**.
@@ -271,6 +271,32 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
 !!! warning "The database still decides what a user can change"
     The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Creating the Matching Database User](#creating-the-matching-database-user).
 
+## Multi-Target Deployments: Per-Target Scopes
+
+For a deployment with a `targets` registry, every request to a target URL needs a matching scope in the caller's access token. Target URLs use the format documented in [Multi-Target Deployments](../multi-target.md#connect-to-a-database).
+
+```text
+actian:{host}:{instance}:{database}:{read|write}
+```
+
+The host, instance, and database segments must match the target. `*` matches exactly one complete segment. A `write` scope also grants read access to that same target. Examples of scope names:
+
+```text
+actian:ifx-db.example.com:ol_informix:sales:read
+actian:ifx-db.example.com:ol_informix:sales:write
+actian:ifx-db.example.com:ol_informix:*:read
+```
+
+Create each per-target scope as a Keycloak client scope with **Include in token scope** enabled. Then attach it to the client used for authentication.
+
+For the MCP OAuth login flow, attach the target scopes as **Default** so Keycloak includes them in issued tokens. The login proxy does not request these target-specific names as optional scopes.
+
+In resource-server mode, attach the needed scopes to the calling application's client. Request them when you get its token.
+
+Per-target scopes are grants on the client. Any user of that client may have them. Database privileges and client separation therefore remain important controls.
+
+Do not use `mcp:write` to authorize writes to a target URL. Create and grant that target's `:write` scope instead. `mcp:write` is still the write scope for the single-database `/mcp` endpoint. See [Write support](../write-support.md#which-scope-authorizes-a-write) and [Multi-Target Deployments](../multi-target.md#authentication-and-scope-behavior).
+
 
 ## Step 6: Create Keycloak Users (If Using User Impersonation)
 
@@ -291,7 +317,7 @@ If `user_impersonation` is `true`, each Keycloak user contains a matching databa
 4. Select **Create**.
 5. Navigate to the **Credentials** tab > **Set password** > enter a password > toggle **Temporary** to `Off` > **Save**.
 
-### Creating the Matching Database User
+### Creating Matching Database User {#creating-the-matching-database-user}
 
 ```sql
 -- Create the user account (no DB password needed — Keycloak handles authentication)
@@ -315,13 +341,13 @@ GRANT SELECT ON TABLE products TO jdoe;
     If Keycloak federates users from an external LDAP or social provider, the `sub` claim may be a UUID that does not match a database account. Ensure that the federated users have `preferred_username` set, or add the sub-override mapper ([Step 4](#step-4-optional-add-the-sub-override-mapper)), or set `user_impersonation: false`.
 
 
-## Step 7: Assemble the Final Configuration
+## Step 7: Assemble Final Configuration {#step-7-assemble-the-final-configuration}
 
 ### Mapping Summary
 
 | `conf.json` Field | Keycloak Source | Example Value |
 |---|---|---|
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | `http://<keycloak-host>:8080/realms/<realm>/.well-known/openid-configuration` | `http://10.100.11.187:8080/realms/actian-mcp/.well-known/openid-configuration` |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | `http://<keycloak-host>:8080/realms/<realm>/.well-known/openid-configuration` | `http://<keycloak-host>:8080/realms/actian-mcp/.well-known/openid-configuration` |
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | Clients > your client > **Client ID**| `actian-mcp` |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Clients > your client > **Credentials**| (your secret) |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL | `https://<mcp-server-host>:8000` |
@@ -366,7 +392,7 @@ For TLS setup details (certificate generation, Docker deployment, trusting self-
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 After starting the MCP server container with OAuth configured:
 
@@ -379,7 +405,7 @@ After starting the MCP server container with OAuth configured:
 
 ## Troubleshooting
 
-### Verify OIDC Discovery Endpoint
+### Verify OIDC Discovery Endpoint {#verify-oidc-discovery-endpoint}
 
 ```bash
 curl http://<keycloak-host>:8080/realms/actian-mcp/.well-known/openid-configuration \

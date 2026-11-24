@@ -1,0 +1,388 @@
+---
+title: Auth0 Setup Guide
+description: Step-by-step guide to configure Auth0 as the OAuth identity provider for the Actian MCP Server.
+---
+
+# Configuring Auth0
+
+Set up an Auth0 application and API to enable OAuth 2.0 and OpenID Connect (OIDC) authentication for the Actian MCP Server. After you complete these steps, you have the credentials that the `oauth` block in `conf.json` needs.
+
+For details on shared security concepts like TLS and user impersonation, see [Authentication Overview](index.md).
+
+
+!!! info "Reference"
+    [FastMCP Auth0 Integration](https://gofastmcp.com/integrations/auth0)
+
+
+## Quick Start
+
+The checklist below is the whole procedure in brief. Use it if you are already familiar with the Auth0 Dashboard. Otherwise, work through the numbered steps that follow, which give the full navigation for each item.
+
+1. **Create an API:** Navigate to **Applications** > **APIs** > **Create API**. The **Identifier** serves as the `FASTMCP_SERVER_AUTH_AUDIENCE`.
+2. **Create an Application:** Navigate to **Applications** > **Applications** > **Create Application**. Select **Machine to Machine**. Authorize it for the API when prompted. Copy the **Client ID** and **Client Secret**.
+3. **Authorize the Application:** In your API's **Application Access** tab, select `mcp:write` under both **User-Delegated Access** and **Client Access** for your application.
+
+    !!! warning
+        If you skip this step, Auth0 returns an `invalid_request` error.
+
+4. **Enable Authorization Code Grant:** In **Advanced Settings** > **Grant Types**, select **Authorization Code**.
+5. **Set Callback URLs:** Add `<BASE_URL>/auth/callback` to **Allowed Callback URLs**.
+6. **Add the write scope**, if `query_mode` is `read-write`: define the `mcp:write` permission on the API, enable both **RBAC Settings** toggles, then grant it to users through a role. See [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) and [Step 4.2](#step-42-grant-the-write-scope-read-write-deployments-only).
+7. **Update Configuration:** Add your Auth0 domain and credentials to `conf.json`.
+8. **Start the server:** Run the server with the `--transport sse` or `http` / `streamable-http` flag.
+
+
+## Prerequisites
+
+- An Auth0 account ([sign up free](https://auth0.com/signup)).
+- An Auth0 **Tenant** (created automatically on sign-up, for example, `dev-abc123`). Every API, Application, and user that you create in this guide lives inside this tenant. The tenant's domain (for example, `dev-abc123.us.auth0.com`) becomes part of the `FASTMCP_SERVER_AUTH_CONFIG_URL` that you set in `conf.json`.
+- Actian MCP Server installed and ready to run.
+
+
+## Step 1: Create an Auth0 API
+
+The **API** represents the Actian MCP Server as a protected resource in Auth0. Tokens issued by Auth0 include the API's identifier as the `audience` claim.
+
+1. Log in to the [Auth0 Dashboard](https://manage.auth0.com/).
+2. In the left sidebar, navigate to **Applications** > **APIs**.
+1. Select **+ Create API**.
+4. Fill the form as follows:
+
+     | Field | Value | Notes |
+     |-------|-------|-------|
+     | **Name** | `Actian MCP Server` | Display name (any descriptive string). |
+     | **Identifier (Audience)** | `https://<mcp-server-host>:8000/mcp` | Logical identifier (it may not be a reachable URL). This becomes the `FASTMCP_SERVER_AUTH_AUDIENCE`. |
+     | **Signing Algorithm** | `RS256` | Default. Leave the value as is. |
+
+5. Select **Create**.
+
+### Output of Step 1
+
+| Config Field | Where to find it |
+|---|---|
+| `FASTMCP_SERVER_AUTH_AUDIENCE` | The **Identifier** that you entered, for example, `https://<mcp-server-host>:8000/mcp`. |
+
+### Step 1.1: Add Write Scope (Read-Write Deployments Only) {#step-11-add-the-write-scope-read-write-deployments-only}
+
+Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
+
+When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
+
+1. Open your API, for example `Actian MCP Server`, and select the **Permissions** tab.
+2. Under **Add a Permission**, enter the following and select **+ Add**:
+
+     | Field | Value |
+     |-------|-------|
+     | **Permission** | `mcp:write` |
+     | **Description** | `Write access` |
+
+3. Select the **Settings** tab and scroll to **RBAC Settings**.
+4. Enable both of the following:
+
+     | Setting | Why it is required |
+     |---------|--------------------|
+     | **Enable RBAC** | Auth0 evaluates role and permission assignments during login. |
+     | **Add Permissions in the Access Token** | Auth0 adds the granted permissions to the access token, where the server reads them. Available only after you enable RBAC. |
+
+5. Select **Save**.
+
+!!! note "Defining the permission does not grant it"
+    At this point `mcp:write` exists on the API, but no user holds it yet. Assign it to users through a role in [Step 4.2](#step-42-grant-the-write-scope-read-write-deployments-only).
+
+
+## Step 2: Create an Auth0 Application
+
+The **Application** represents the MCP server's OAuth client. It holds `client_id` and `client_secret` used during the OAuth handshake.
+
+!!! note "Why Machine to Machine?"
+    The MCP server's OAuth proxy (OIDCProxy) acts as a confidential client. It authenticates with Auth0 with a `CLIENT_ID` and `CLIENT_SECRET` pair, which is exactly the Machine to Machine pattern. The browser-based user login flow runs between the OIDCProxy and MCP clients such as Visual Studio Code or Claude Desktop. MCP clients never talk to Auth0 directly.
+
+!!! warning "Do not use "Regular Web Application""
+    Auth0 enforces Proof Key for Code Exchange (PKCE) validation differently for Web applications. This conflicts with how OIDCProxy forwards authorization requests and causes `code_challenge: Field required` errors.
+
+1. In the Auth0 Dashboard, navigate to **Applications** > **Applications**.
+2. Select **+ Create Application**.
+3. Enter the values for the following fields:
+
+     | Field | Value |
+     |-------|-------|
+     | **Name** | `Actian MCP Server App` |
+     | **Application Type** | Machine to Machine Applications |
+
+4. Select **Create**.
+5. When prompted, select your **Actian MCP Server** API, grant all scopes, and select **Authorize** (you can also do this later in [Step 3](#step-3-authorize-the-application-for-the-api)).
+6. The application's **Quickstart** tab opens.
+
+### Configure Application Settings
+
+On the **Settings** tab, configure the following:
+
+| Setting | Value | Notes |
+|---------|-------|-------|
+| **Allowed Callback URLs** | `https://<mcp-server-host>:8000/auth/callback` | Must exactly match `<BASE_URL>/auth/callback`. Separate multiple URLs with commas. |
+| **Allowed Logout URLs** | `https://<mcp-server-host>:8000` | (Optional) For logout redirect |
+| **Allowed Web Origins** | `https://<mcp-server-host>:8000` | (Optional) For CORS |
+
+!!! warning "Callback URL must match exactly"
+    The **Allowed Callback URLs** value must match `<FASTMCP_SERVER_AUTH_BASE_URL>/auth/callback` exactly, including scheme (`http` or `https`), host, and port. A mismatch causes Auth0 to reject the login with a `redirect_uri_mismatch` error.
+
+Select **Save Changes**.
+
+### Configure Grant Types
+
+Machine to Machine applications have **Authorization Code** enabled by default. Verify it anyway, because some tenants or configurations differ.
+
+1. On the **Settings** tab, select **Show Advanced Settings**.
+2. Select the **Grant Types** tab.
+3. Enable **Authorization Code** (required for the browser-based OAuth login flow).
+4. Keep **Client Credentials** enabled.
+5. Optionally enable **Refresh Token** for token refresh support.
+6. Select **Save Changes**.
+
+!!! warning "Authorization Code grant is required"
+    Without **Authorization Code** enabled, Auth0 returns `Grant type 'authorization_code' not allowed for the client`. This grant type is enabled by default for Machine to Machine applications. If not, re-enable it.
+
+### Output of Step 2
+
+All values appear on the **Settings** tab of the application:
+
+| Config Field | Where to find it in Auth0 |
+|---|---|
+| `FASTMCP_SERVER_AUTH_CLIENT_ID` | **Client ID** (at the top of the Settings tab) |
+| `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | **Client Secret** (select the eye icon to show it) |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | Constructed from **Domain**: `https://<your-domain>/.well-known/openid-configuration` |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL, for example, `https://<mcp-server-host>:8000`. |
+
+!!! tip "Finding the Domain"
+    The **Domain** is shown at the top of the Settings tab, for example, `dev-abc123.us.auth0.com`. The OIDC discovery URL is always `https://<domain>/.well-known/openid-configuration`.
+
+
+## Step 3: Authorize Application for API {#step-3-authorize-the-application-for-the-api}
+
+!!! warning "This step is critical"
+    Auth0 requires an explicit grant between an application and an API before it issues tokens. Without this authorization, token requests fail with `invalid_request`.
+
+!!! note "Authorizing means selecting permissions"
+    Authorizing the application means selecting, from a permission checklist, the API permissions that the application may request (in this guide, only `mcp:write`, defined in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only)). If the API defines no permissions yet, the checklist is empty and there is nothing to select. This is expected for read-only deployments.
+
+You can authorize from either the application's APIs tab or the API's Application Access tab:
+
+**Option A - Authorize from Application:**
+
+1. Navigate to **Applications** > **Applications** > **your app** > **APIs** tab. For example, `Actian MCP Server App`.
+2. Select your API from the list. For example, `mcp_server` with the identifier `https://<mcp-server-host>:8000/mcp`.
+3. On the **User-Delegated Access** tab, select `mcp:write` from the permission checklist (or **Select: All**), then select **Save**.
+4. Switch to the **Client Access** tab, select `mcp:write` from its own permission checklist the same way, then select **Save**.
+
+**Option B - Authorize From API:**
+
+1. Navigate to **Applications** > **APIs** > **your API**. For example, `mcp_server`.
+2. Select the **Application Access** tab.
+3. Select your application from the list. For example, `mcp_server (Test Application)`.
+4. Authorize both **User-Delegated Access** and **Client Access** as described in Option A, steps 3-4.
+
+After saving, the application row on the **Application Access** tab shows a green checkmark and "1 / 1 permissions granted" under both **User-Delegated Access** and **Client Access**.
+
+!!! important "User-Delegated Access is required for user impersonation"
+    If you plan to use `user_impersonation: true`, the application must be authorized for **User-Delegated Access**. Without it, Auth0 does not issue tokens with user identity claims (email and sub) during the Authorization Code flow, so the MCP server has no user name to record in the call log.
+
+!!! note "This is not the same as granting the scope to a user"
+    Authorizing the application here means it is *allowed to request* `mcp:write`. It does not mean that any particular user's token carries it. With **Enable RBAC** on (required in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only)), a user's token includes `mcp:write` only when that user holds it through a role. That is a separate, per-user assignment in [Step 4.2](#step-42-grant-the-write-scope-read-write-deployments-only). Both steps are required for read-write deployments.
+
+
+## Step 4: Create Auth0 Users
+
+!!! note "No database accounts on VectorAI DB"
+    The engine sees only the server's API key, so no Auth0 user needs a matching database account. Create the Auth0 users that your people sign in with. [User Impersonation](index.md#user-impersonation) describes which name the server records for each of them in the call log.
+
+### Step 4.1: Create User in Auth0 {#step-41-create-the-user-in-auth0}
+
+1. In the Auth0 Dashboard, navigate to **User Management** > **Users**.
+2. Select **+ Create User**.
+3. Enter the values for the following fields:
+
+     | Field | Value | Notes |
+     |-------|-------|-------|
+     | **Email** | `jdoe@example.com` | The value before `@` (`jdoe`) is the name the call log shows |
+     | **Password** | A secure password | Used for Auth0 sign-in |
+     | **Connection** | `Username-Password-Authentication` | Default database connection |
+
+4. Select **Create**.
+
+!!! note "Call log name = email prefix"
+    Auth0's userinfo endpoint does not return a `username` or `preferred_username` claim by default, so with `user_impersonation: true` the server records the email prefix (the value before `@`): `jdoe@example.com` is logged as `jdoe`.
+
+!!! note "Federated identity caveat"
+    With `user_impersonation: true`, a user who signs in to Auth0 through Google, Microsoft Entra, SAML, or corporate single sign-on and arrives without an email is recorded by the `sub` claim, with the provider prefix removed. For example, `google-oauth2|12345` is logged as `12345`. Add a `username` to the Auth0 user profile if you want readable names in the call log.
+
+### Step 4.2: Grant Write Scope (Read-Write Deployments Only) {#step-42-grant-the-write-scope-read-write-deployments-only}
+
+Skip this step if `query_mode` is `read-only`.
+
+Defining `mcp:write` on the API in [Step 1.1](#step-11-add-the-write-scope-read-write-deployments-only) does not give it to anyone. Auth0 issues the scope only to users who hold it through a role, so grant it to each user who is allowed to write.
+
+1. In the Auth0 Dashboard, navigate to **User Management** > **Roles**.
+2. Select **+ Create Role**, name it, for example `MCP Writer`, and select **Create**.
+3. On the role's **Permissions** tab, select **Add Permissions**.
+4. Select your API, for example `Actian MCP Server`, select the `mcp:write` permission, and add it.
+5. On the role's **Users** tab, select **Add Users** and assign the users who are allowed to write.
+
+Users without this role can still read. Their tokens do not carry `mcp:write`, so the server rejects their writes. Because the permission is granted per user, a user cannot get the scope by asking for it. Keycloak works differently. If you also run Keycloak, see [which users can obtain the scope](keycloak.md#user-eligibility) there.
+
+!!! warning "The scope is the only per-user write control"
+    The engine sees only the server's API key and cannot tell users apart, so there are no per-user privileges behind the scope. A user whose token carries `mcp:write` can write to every collection that the server exposes. The approval prompt is the only other check. See [Write support](../write-support.md#authorizing-a-write).
+
+
+## Step 5: Assemble Final Configuration {#step-5-assemble-the-final-configuration}
+
+### Mapping Summary
+
+| `conf.json` Field | Auth0 Source | Example Value |
+|---|---|---|
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | `https://<Domain>/.well-known/openid-configuration` | `https://dev-abc123.us.auth0.com/.well-known/openid-configuration` |
+| `FASTMCP_SERVER_AUTH_CLIENT_ID` | Application → Settings → **Client ID** | `wNXUdrp9aBcDeFgHiJkLmN` |
+| `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Application → Settings → **Client Secret** | `a1B2c3D4e5F6g7H8i9J0...` |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | The MCP server's external URL | `https://<mcp-server-host>:8000` |
+| `FASTMCP_SERVER_AUTH_AUDIENCE` | API → **Identifier** | `https://<mcp-server-host>:8000/mcp` |
+| `user_impersonation` | No | `true` (the default) or `false`. It decides where the server looks for the caller's name for the call log. VectorAI DB has no per-user identity either way. See [User Impersonation](index.md#user-impersonation) |
+
+!!! info "Audience fallback"
+    If you omit `FASTMCP_SERVER_AUTH_AUDIENCE`, the server uses `FASTMCP_SERVER_AUTH_CLIENT_ID` as the audience. This is common for Keycloak setups. For Auth0, always set an explicit audience, because the Client ID does not match the API Identifier.
+
+!!! note
+    The `AUDIENCE` is a logical identifier used for token validation. It does not need to be a reachable HTTPS URL.
+
+### Example `conf.json`
+
+```json
+{
+    "host": "0.0.0.0",
+    "port": 8000,
+    "query_mode": "read-write",
+    "write_confirmation": true,
+    "vectorai": { "url": "http://host.docker.internal:6573" },
+    "embedding": { "provider": "openai", "model": "BAAI/bge-m3", "base_url": "http://embedding:80/v1" },
+    "collections": [
+        { "name": "documents", "description": "Product manuals, one chunk per point" }
+    ],
+    "ssl_certfile": "/app/server.crt",
+    "ssl_keyfile":  "/app/server.key",
+    "oauth": {
+        "FASTMCP_SERVER_AUTH_CONFIG_URL": "https://<your-auth0-domain>/.well-known/openid-configuration",
+        "FASTMCP_SERVER_AUTH_CLIENT_ID": "<your-client-id>",
+        "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<your-client-secret>",
+        "FASTMCP_SERVER_AUTH_BASE_URL": "https://<your-server-host>:8000",
+        "FASTMCP_SERVER_AUTH_AUDIENCE": "<your-api-identifier>",
+        "user_impersonation": false
+    }
+}
+```
+
+!!! note
+    `vectorai.url` is the engine's address as the container sees it: the Docker host's name or IP (`host.docker.internal` on Docker Desktop), or the engine container's network alias. Do not use `localhost` or `127.0.0.1`, which refer to the container itself. The `embedding` and `collections` blocks are described on the [overview](../index.md).
+
+For TLS setup details (certificate generation, Docker deployment, trusting self-signed certs), see [HTTPS / TLS for Remote Deployments](index.md#secure-remote-deployments-with-https-and-tls).
+
+For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
+
+
+## Verify Setup End-to-End {#verify-end-to-end}
+
+After starting the MCP server container with OAuth configured:
+
+1. Open a browser and go to the server's `/mcp` endpoint, for example, `https://<your-server-host>:8000/mcp`.
+2. The browser redirects you to the Auth0 sign-in page.
+3. Sign in with an Auth0 user, for example, the user you created in [Step 4](#step-4-create-auth0-users).
+4. After you sign in, Auth0 redirects you back to the MCP server with a valid token.
+5. Call a tool from the MCP client, for example `list_collections`, and look at the container log: the [call log](../index.md#call-log) record for the call has the caller's name in `user`, or `null` when `user_impersonation` is `false` and the token carries no user claim.
+
+
+## Troubleshooting
+
+### Verify OIDC Discovery Endpoint {#verify-oidc-discovery-endpoint}
+
+```bash
+curl https://dev-abc123.us.auth0.com/.well-known/openid-configuration \
+  | python3 -m json.tool
+```
+
+The output includes `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`, and other fields.
+
+### Common Errors
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `code_challenge: Field required` | Auth0 Application type is "Regular Web Application". | Recreate as **Machine to Machine** application. Auth0 does not allow changing app type after creation. See [Step 2](#step-2-create-an-auth0-application). |
+| `Grant type 'authorization_code' not allowed` | Machine to Machine application is missing Authorization Code grant. | Enable **Authorization Code** in Advanced Settings > Grant Types. See [Configure Grant Types](#configure-grant-types). |
+| `invalid_request` when requesting a token | Application not authorized for the API. | [Step 3](#step-3-authorize-the-application-for-the-api) - authorize the application. |
+| `audience mismatch` | `FASTMCP_SERVER_AUTH_AUDIENCE` does not match the API Identifier. | Use identical strings. |
+| `invalid_client` | Wrong `client_id` or `client_secret`. | Re-copy from Application > Settings. |
+| `KeyError` on startup (for example, `CLIENT_SECRET`). | Some OAuth fields are present but others missing. | Provide all required fields or remove `oauth` entirely. |
+| `Could not extract username` | Token lacks `username`, `preferred_username`, or `email`. | Add email/profile scopes or set `user_impersonation: false`. |
+| `unauthorized` / 401 on every request | OAuth misconfigured or token expired. | Check server logs and verify OIDC discovery URL is reachable. |
+| `redirect_uri_mismatch` | Callback URL does not match `<BASE_URL>/auth/callback`. | Fix **Allowed Callback URLs** in Auth0 - scheme, host, and port must match exactly. |
+| `ValueError: Issuer URL must be HTTPS` | OAuth without TLS configured. | Add `ssl_certfile`/`ssl_keyfile` and use `https://` for `BASE_URL`. |
+| `ValueError: BASE_URL must start with https://` | SSL configured but `BASE_URL` still uses `http://`. | Update `BASE_URL` to `https://`. |
+| `ssl.SSLError: PEM lib` | Missing certificate and key environment variables before Docker starts. | Mount the certificate and key as volumes when you start the container (see [Docker Deployment](index.md#step-3-deploy-the-docker)). |
+| `ERR_TLS_CERT_ALTNAME_INVALID` | Certificate missing SAN. | Regenerate with `-addext "subjectAltName=IP:<ip>"`. |
+| `TypeError: fetch failed` (VS Code) | Self-signed certificate not trusted by `Node.js`. | Launch Visual Studio Code with `NODE_EXTRA_CA_CERTS=/path/to/server.crt code .` |
+| `Client Not Registered` (VS Code) | Server's Docker container was recreated, wiping client registrations, but Visual Studio Code caches the old client ID. | Quit Visual Studio Code, then delete stale registrations from the state DB (see [Clearing Visual Studio Code OAuth cache](#clearing-visual-studio-code-oauth-cache) below) and reopen Visual Studio Code. To prevent this, mount a Docker volume for `/root/.local/share/fastmcp`. |
+| `Service not found: https://...` / `access_denied` | `AUDIENCE` mismatch between client request and server config (often `http` versus `https`). | Confirm that `FASTMCP_SERVER_AUTH_AUDIENCE` in `conf.json` exactly matches the Auth0 API Identifier. |
+| Token validation behaves unexpectedly | OIDC endpoint is unreachable at startup. | Restart the server after the endpoint is reachable. |
+
+### Clearing Visual Studio Code OAuth Cache
+
+If the MCP server's Docker container is recreated, Visual Studio Code's cached OAuth client registration becomes stale. To clear it:
+
+1. Quit Visual Studio Code completely (Cmd+Q on macOS, or close all windows on Linux/Windows).
+2. Run the appropriate command for your OS:
+
+    === "macOS"
+
+        ```bash
+        sqlite3 ~/Library/"Application Support"/Code/User/globalStorage/state.vscdb \
+          "DELETE FROM ItemTable WHERE key LIKE '%dynamicAuth%<your-server-host>%';"
+        ```
+
+    === "Linux"
+
+        ```bash
+        sqlite3 ~/.config/Code/User/globalStorage/state.vscdb \
+          "DELETE FROM ItemTable WHERE key LIKE '%dynamicAuth%<your-server-host>%';"
+        ```
+
+    === "Windows"
+
+        ```powershell
+        sqlite3 "$env:APPDATA\Code\User\globalStorage\state.vscdb" `
+          "DELETE FROM ItemTable WHERE key LIKE '%dynamicAuth%<your-server-host>%';"
+        ```
+
+3. Reopen Visual Studio Code. It re-registers with the server automatically.
+
+Replace `<your-server-host>` with your server's IP or hostname, for example, `35.185.60.76`. This clears only the registration for that server.
+
+!!! tip "Prevent recurrence"
+    Mount a Docker volume for the server's OAuth state, so client registrations survive container recreation:
+    ```bash
+    docker run ... -v mcp-auth-data:/root/.local/share/fastmcp ...
+    ```
+
+### Token Expiration
+
+Auth0 tokens have a configurable lifetime:
+
+1. Navigate to **Applications** > **APIs** > **your API** > **Settings**.
+2. Check **Token Expiration (Seconds)**. The default is 86400 (24 hours).
+3. Adjust as needed.
+
+!!! note
+    The OAuth flow refreshes tokens automatically when you use browser-based authentication.
+
+
+## Staging Versus Production
+
+| Environment | Recommendation |
+|---|---|
+| **Development** | Use a free Auth0 tenant. |
+| **Staging / Production** | Use a dedicated Auth0 tenant or separate Application and API. Always use HTTPS for `BASE_URL` and callback URLs. |

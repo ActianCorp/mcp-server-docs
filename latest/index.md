@@ -95,6 +95,11 @@ hide:
         <td><a href="https://hub.docker.com/r/actian/analytics-engine-mcp-server"><code>actian/analytics-engine-mcp-server</code></a></td>
         <td>Large-scale retrieval-augmented generation (RAG) and high-performance vector analysis</td>
       </tr>
+      <tr>
+        <td><a href="./vectorai-db/index.html">Actian VectorAI DB</a></td>
+        <td><a href="https://hub.docker.com/r/actian/vectorai-mcp-server"><code>actian/vectorai-mcp-server</code></a></td>
+        <td>Semantic search and approved writes over vector collections</td>
+      </tr>
     </tbody>
   </table>
 </div>

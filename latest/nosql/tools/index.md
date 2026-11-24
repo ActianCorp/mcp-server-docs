@@ -54,7 +54,7 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
     - The `in` operator on collections
 
 !!! note "Date and timestamp literals"
-    Compare a date or timestamp field using a JDBC escape literal. A plain quoted string is **not** coerced to a date, and is rejected.
+    Compare a date or timestamp field using a JDBC escape literal. A plain quoted string is not coerced to a date, and is rejected.
 
     - `{ts 'yyyy-MM-dd HH:mm:ss'}` for a timestamp. The time part is required, and an optional fractional part of up to nine digits is allowed — for example, `{ts '2000-01-01 00:00:00.123'}`.
     - `{d 'yyyy-MM-dd'}` for a date alone.
@@ -98,9 +98,9 @@ Runs a read-only JPQL query against the connected Actian NoSQL Database and retu
 }
 ```
 
-A query that selects whole entities (`select e from Employee e`) returns each object in the shape above — the same shape the fetch tools return for the same object. A query that selects individual fields returns those values positionally, not wrapped in `fields`. Each value is rendered by the same rules either way, so a 64-bit integer is a decimal string whichever form you select it in, and a referenced object inside a collection or map is an LOID string.
+A query that selects whole entities (`select e from Employee e`) returns each object in the shape above, the same shape the fetch tools return for the same object. A query that selects individual fields returns those values positionally, not wrapped in `fields`. Each value is rendered by the same rules either way, so a 64-bit integer is a decimal string whichever form you select it in, and a referenced object inside a collection or map is an LOID string.
 
-Two shapes differ between the two forms. A collection or map selected on its own (`select e.skillMap from Employee e`) is returned in its natural JSON form — an array, or an object keyed by the map's own keys — rather than the `{keys, values}` pair the whole-entity shape uses. And a reference field selected on its own (`select e.address from Employee e`) returns the whole referenced object, where the whole-entity shape gives its LOID.
+Two shapes differ between the two forms. A collection or map selected on its own (`select e.skillMap from Employee e`) is returned in its natural JSON form (an array, or an object keyed by the map's own keys) rather than the `{keys, values}` pair the whole-entity shape uses. And a reference field selected on its own (`select e.address from Employee e`) returns the whole referenced object, where the whole-entity shape gives its LOID.
 
 To change an object you read here, pass its `version` back as `expectedVersion`. See [Optimistic concurrency](../write-support.md#optimistic-concurrency).
 
@@ -154,7 +154,7 @@ Show me all employees
 ```
 
 This response shows the complete `fields` object for one object: every field the class declares is
-present, and the two the object has no value for — `technicalTags` and `metadata` — are reported as
+present, and the two the object has no value for (`technicalTags` and `metadata`) are reported as
 `null` rather than left out. `annualSalary` is an `int` and stays a bare number, while
 `badgeSerialNumber` is a `long` and is quoted. `cursorId` is absent because `hasMore` is `false`. To
 keep them readable, the remaining examples on this page show only a few fields per object.
@@ -325,7 +325,7 @@ Retrieves multiple objects from the database by their LOIDs (Logical Object IDs)
 
 LOIDs that match no object are left out of `objects`, so `count` may be lower than the number of LOIDs you asked for. Each one is named in `notFoundLoids`, so you can tell which references are dead without comparing counts. The array is always present, and empty when every LOID was found.
 
-A LOID you ask for twice is named once if it is absent — the response has no positional relationship to the LOIDs you sent, since a missing one leaves no gap in `objects`. A LOID that *is* found and asked for twice is returned twice.
+A LOID you ask for twice is named once if it is absent. The response has no positional relationship to the LOIDs you sent, since a missing one leaves no gap in `objects`. A LOID that *is* found and asked for twice is returned twice.
 
 A malformed LOID is a different case: it fails the whole call with an error rather than appearing in `notFoundLoids`, which only ever reports well-formed LOIDs that matched nothing.
 
@@ -489,13 +489,13 @@ Describes the schema of a specific class, including its direct superclasses, dec
 }
 ```
 
-### Reading field types
+### Reading Field Types
 
 The `type` string tells you whether a field holds a scalar, a reference, or a container.
 
 - **Containers** are `java.util.List<X>`, `java.util.Map<K,V>` and `X[]`. Strip the wrapper to get the element type(s), then read each one by the rules below.
-- **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.` — send the value itself. A `long` or `java.math.BigInteger` is the exception: as a **field value** send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form — an unquoted literal with an `L` suffix, never a quoted string. See [Large integer literals](#execute_query).
-- **References** are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object — `"address": "1.0.5"`, not `"address": { "city": "..." }`.
+- **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.`. Send the value itself. A `long` or `java.math.BigInteger` is the exception: as a field value send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form: an unquoted literal with an `L` suffix, never a quoted string. See [Large integer literals](#execute_query).
+- **References** are everything else, because any remaining name is a database class. Send the target object's LOID string, never a nested object: `"address": "1.0.5"`, not `"address": { "city": "..." }`.
 
 So `java.util.List<Worker>` holds LOID strings, `java.util.List<java.lang.String>` holds plain strings, and `java.util.Map<java.lang.String,Skill>` has scalar keys and LOID-string values.
 

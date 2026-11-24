@@ -1,0 +1,177 @@
+---
+title: Get Started
+description: Get the Actian MCP Server running in your environment with Docker.
+---
+
+# Getting Started with Actian MCP Server
+
+The Actian MCP Server is distributed as Docker container images, with one dedicated image for each supported Actian database. This guide explains the process of starting the server instance and connecting it to an MCP-compatible artificial intelligence (AI) client.
+
+## Prerequisites
+
+Before you begin, ensure that the following requirements are met:
+
+- **Container runtime**: Docker or Podman is installed on the host machine
+- **Database access**: There is network connectivity to a supported Actian database (Ingres, HCL Informix®, Zen, NoSQL, Analytics Engine, or VectorAI DB). VectorAI DB also needs an embedding endpoint for text search. See [VectorAI DB prerequisites](../vectorai-db/index.md#prerequisites).
+- **AI client**: An MCP-compatible client, such as Claude Desktop, Cursor, GitHub Copilot, or Codex already exists
+
+## Step 1: Select a Database Image
+
+Each Actian database uses a specific container image that is preconfigured with the required drivers. Choose the correct image for the database:
+
+| Database | Container image |
+|----------|----------------|
+| Ingres | [`actian/ingres-mcp-server`](https://hub.docker.com/r/actian/ingres-mcp-server) |
+| HCL Informix® | [`actian/informix-mcp-server`](https://hub.docker.com/r/actian/informix-mcp-server) |
+| Zen | [`actian/zen-mcp-server`](https://hub.docker.com/r/actian/zen-mcp-server) |
+| NoSQL | [`actian/nsql-mcp-server`](https://hub.docker.com/r/actian/nsql-mcp-server) |
+| Analytics Engine | [`actian/analytics-engine-mcp-server`](https://hub.docker.com/r/actian/analytics-engine-mcp-server) |
+| VectorAI DB | [`actian/vectorai-mcp-server`](https://hub.docker.com/r/actian/vectorai-mcp-server) |
+
+## Step 2: Create a Configuration File
+
+Each self-hosted database requires a `conf.json` file that contains the connection details. Two cases differ: Actian NoSQL is configured through `application.properties` instead, and the SaaS deployment of Analytics Engine needs no configuration file at all, because the MCP Server is configured for you.
+
+Each database has unique settings. For more information, see the database configuration document:
+
+- [Ingres Configuration](../ingres/index.md#configuration)
+- [HCL Informix® Configuration](../hcl-informix/index.md#configuration)
+- [Zen Configuration](../zen/index.md#configuration)
+- [NoSQL Configuration](../nosql/index.md#configuration)
+- [Analytics Engine Configuration](../analytics-engine/self-hosted.md#configuration)
+- [VectorAI DB Configuration](../vectorai-db/index.md#configuration)
+- [SaaS deployment](../analytics-engine/saas.md) (no configuration file required)
+
+### Server Settings
+
+All database configurations except NoSQL share the following server fields:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `host` | String | Yes | Host address the MCP server listens to in the container |
+| `port` | Integer | Yes | Port the MCP server listens to in the container |
+| `ssl_certfile` | String| No | Path to the TLS certificate file. In the container, this is always mapped to `/app/server.crt`|
+| `ssl_keyfile` | String | No | Path to the TLS private key file. In the container, this is always mapped to `/app/server.key` |
+| `log_level` | String | No | Server log verbosity. Valid values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. Defaults to `INFO` |
+| `oauth` | Object | No | OAuth 2.0 configuration settings for authentication. For more information, see [Authentication Guide](../ingres/authentication/index.md)|
+| `auth_mode` | String | No | Set to `resource-server` to accept access tokens issued by the identity provider instead of running the OAuth login. Set it at the top level of `conf.json`, not inside `oauth`. For more information, see [Resource-Server Mode](../ingres/authentication/resource-server.md)|
+| `query_mode` | String | No | Whether writes are permitted: data-modifying SQL, or the write tools on VectorAI DB. Valid values: `read-only`, `read-write`. Defaults to `read-only`. For more information, see [Write support](../ingres/write-support.md) and [VectorAI DB write support](../vectorai-db/write-support.md)|
+| `write_confirmation` | Boolean | No | Whether a write requires human approval before it runs. Defaults to `true`. Applies only when `query_mode` is `read-write`. For more information, see [Write support](../ingres/write-support.md#skipping-the-approval-prompt)|
+| `extensions` | Array | No | Extension modules that add your own tools to the server. For more information, see [Extensions](../ingres/extensions/index.md)|
+
+### Single-Database Deployments
+
+To connect to one database, use the database's own connection fields, described on its configuration page:
+
+- Ingres and Analytics Engine: `driver`, `server`, `database`, `database_user`, and `database_password`
+- HCL Informix®: `server`, `servername`, `service`, `database`, `database_user`, and `database_password`
+- Zen: `conn_string`
+- VectorAI DB: `vectorai.url` (the engine's REST API), plus the `embedding` and `collections` blocks
+
+### Multi-Target Deployments
+
+Ingres, Analytics Engine, HCL Informix®, and Zen can serve several databases from one server. You list the database servers and their databases in a `targets` block in `conf.json`, instead of the single-database fields. Each database has its own URL, `/mcp/{host}/{instance}/{database}`, and a client connects to that URL. When the block lists more than one database server, the server requires authentication to check a scope for each database. VectorAI DB does not accept a `targets` block. One container serves one engine.
+
+The fields and their meaning differ by database. For the configuration details, see the multi-target documentation for your database: [Ingres](../ingres/multi-target.md), [Analytics Engine](../analytics-engine/multi-target.md), [Zen](../zen/multi-target.md), or Actian NoSQL.
+
+!!! note "Configuration File Protection"
+    The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control.
+
+## Step 3: Start Container {#step-3-start-the-container}
+
+!!! warning "Actian NoSQL users"
+    The Actian MCP Server for Actian NoSQL Database uses a different startup command. See [Start the Server](../nosql/index.md#start-the-server) for the NoSQL-specific steps.
+
+To start the server, run the container and mount the configuration file to `/app/conf.json`. Use the `:ro` (read-only) flag in the `mount` command to ensure that the configuration file cannot be modified from inside the container.
+
+Run the following command (replace the image name with the database image as per [Step 1](#step-1-select-a-database-image)): 
+
+!!! note "Analytics Engine example"
+    The following example demonstrates how to start the Analytics Engine server.
+
+```bash
+docker run -d \
+    -v $(pwd)/conf.json:/app/conf.json:ro \
+    -p 8000:8000 \
+    --name=actian-mcp \
+    actian/analytics-engine-mcp-server:1.2.0
+```
+
+!!! note "Engines on the Docker host"
+    Zen and VectorAI DB engines often run on the Docker host itself. On Linux, add `--add-host=host.docker.internal:host-gateway` so the container can reach the engine through `host.docker.internal`. For more information, see [Finding Zen](../zen/deployment.md#finding-zen) and, for VectorAI DB, [Start Server](../vectorai-db/index.md#start-the-server).
+
+## Step 4: Connect to an MCP Client
+
+The server operates in HTTP transport mode. Configure the AI client to connect to the following endpoint:
+
+```
+http://localhost:<port>/mcp
+```
+For example, if you mapped port 8000 in the previous step, the endpoint is `http://localhost:8000/mcp`.
+
+For configuration examples for Claude Desktop, Cursor, GitHub Copilot, fast-agent, and Codex, see [Connecting MCP Clients](../mcp-clients/index.md).
+
+
+## Step 5: Verify Connection {#step-5-verify-the-connection}
+
+Follow these steps to confirm that the server is running and successfully communicating with the database and AI client:
+
+**1. Verify the container status**
+
+Run the following command to ensure that the container is actively running:
+
+```bash
+docker ps --filter "name=actian-mcp"
+```
+
+Confirm that the container status is `Up`.
+
+**2. Verify the endpoint**
+
+Ping the server to confirm that it is listening for requests:
+
+```bash
+curl -i http://localhost:<port>/mcp
+```
+
+If the server is ready, it returns a `200` or `307` status code instead of a `connection refused` error.
+
+**3. Test the client integration**
+
+Open the configured MCP client. It automatically detects the Actian MCP Server and displays its available tools.
+Prompt the AI with a standard database request, such as:
+
+> "List all tables in the database"
+
+The client will invoke the server's `list_tables` tool. If the AI client returns a list of the database tables, the end-to-end connection is working correctly. On VectorAI DB, ask for the collections instead, for example "List the collections". The client invokes `list_collections`, which returns the configured collections with their state on the engine.
+
+For the complete list of available tools for each database, see database-specific documentation:
+
+- [Ingres tools](../ingres/tools/index.md)
+- [HCL Informix® tools](../hcl-informix/tools/index.md)
+- [Zen tools](../zen/tools/index.md)
+- [NoSQL tools](../nosql/tools/index.md)
+- [Analytics Engine tools](../analytics-engine/tools/index.md)
+- [VectorAI DB tools](../vectorai-db/tools/index.md)
+
+## Step 6 (Optional): Add Authentication
+
+If you are deploying the server outside a secure, trusted local environment, it is recommended to use OAuth 2.0 authentication. You can secure the server using an external identity provider like Keycloak or Auth0. See the following authentication documentation for detailed setup instructions:
+
+- [Authentication overview](../ingres/authentication/index.md)
+- [Keycloak setup](../ingres/authentication/keycloak.md)
+- [Auth0 setup](../ingres/authentication/auth0.md)
+
+If you also set `query_mode` to `read-write`, define the `mcp:write` scope in the identity provider. The server requests it automatically, and a token without it cannot write.
+
+## Next Steps
+
+<div class="grid cards" markdown>
+
+- :material-connection: **[MCP clients](../mcp-clients/index.md)**  
+  Configuration examples for Claude Desktop, Cursor, GitHub Copilot, and fast-agent.
+
+- :material-shield-check: **[Authentication](../ingres/authentication/index.md)**  
+  Secure the server with OAuth 2.0 and an external identity provider.
+
+</div>

@@ -7,7 +7,8 @@ description: Built-in tools available when using the Actian MCP Server with Acti
 
 The Actian MCP Server for Actian Zen registers a different set of built-in tools per `query_mode` —
 six in `read-only`, five in `read-write` — so the tool list a client discovers differs between the
-two deployments. See [Write support](../write-support.md).
+two deployments. See [Write support](../write-support.md). A server that
+[serves several databases](../multi-target.md) adds [`list_accessible_targets`](#list_accessible_targets).
 
 ## Available Tools
 
@@ -30,6 +31,21 @@ Writes are authorized by the `mcp:write` scope and a human approval prompt, both
 [Write support](../write-support.md). Data Definition Language, explicit transactions, and
 bulk `batch_operation` are not available in any mode in this release.
 
+## Tool Annotations
+
+Every tool declares what a call does, so a client can decide whether to ask the human before a call. The annotations follow the mode that the tool is registered in:
+
+| Tool | `read-only` | `read-write` |
+|------|-------------|--------------|
+| `list_tables`, `describe_table`, `execute_query` | read-only | read-only. Zen's `execute_query` rejects every write in both modes |
+| `orm_operation` | read-only. Insert, update, and delete are refused | destructive write |
+| `blob_operation` | read-only | — |
+| `database_manage` | destructive write. `switch` and `release_locks` change server state, so the whole tool is marked | — |
+| `execute_write_query` | — | destructive write |
+| `list_accessible_targets` | read-only | read-only |
+
+"Read-only" is `readOnlyHint: true`, `idempotentHint: true`, `openWorldHint: false`. "Destructive write" is `readOnlyHint: false`, `destructiveHint: true`, `idempotentHint: false`, `openWorldHint: false`. In a multi-target deployment, the server publishes one tool list for all URLs, so a read-only persona still lists the write tools. The engine refuses them. Annotations are hints for the client, not a control. The write scope, the approval prompt, and the tool handlers do the enforcing.
+
 ---
 
 ## execute_query
@@ -49,11 +65,11 @@ Executes a read-only SQL query against Actian Zen with automatic dialect transla
     }
     ```
 
-    Data Definition Language is rejected the same way, and is not enabled in any mode:
+    Data Definition Language is rejected the same way:
 
     ```json
     {
-      "error": "DDL not allowed in this mode. Schema changes are blocked in 1.1 (deferred to full mode).",
+      "error": "DDL not allowed in execute_query. Schema changes (CREATE/ALTER/DROP) are not available in read-write mode.",
       "sql_classification": "DDL"
     }
     ```
@@ -256,7 +272,7 @@ In `read-write` mode this tool also performs single-row writes. Those go through
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `columns` | `list` | All columns | Columns to return. Supports aggregates like `COUNT(*) AS total`. |
-| `where` | `dict` | — | Filter conditions, for example, `{"field": "salary", "operator": ">", "value": 50000}`. |
+| `where` | `dict` | — | Filter conditions for `select`, for example, `{"field": "salary", "operator": ">", "value": 50000}`. Not accepted for `update` or `delete`. Those take `entity_id`. For a conditional UPDATE or DELETE, use `execute_write_query`. |
 | `order_by` | `list` | — | Column names to sort by. |
 | `limit` | `integer` | `max_rows` | Maximum rows to return. Capped at `max_rows`. |
 | `offset` | `integer` | — | Number of rows to skip. |
@@ -495,6 +511,37 @@ Provides server management operations: list available databases, list DSNs with 
   "features": ["sql", "blobs"]
 }
 ```
+
+---
+
+## list_accessible_targets
+
+Returns the databases that a client can reach on a server that [serves several databases](../multi-target.md), with the path of each. The server registers this tool only when `conf.json` has a `targets` block. The URL that a session connects to selects the target, never a tool argument. A client that knows a database name uses this tool to find its URL.
+
+With authentication on, the list contains only the targets that the caller's token grants. A token without any grant gets an empty list, but only on the plain `/mcp` URL. Every target URL answers `403` to such a token, so call the tool on the plain `/mcp` URL.
+
+### Parameters
+
+This tool takes no input parameters.
+
+### Output Schema
+
+```json
+{
+  "targets": [
+    {
+      "host": "zen16",
+      "instance": "admin",
+      "alias": null,
+      "databases": [
+        {"name": "DEMODATA", "path": "/mcp/zen16/admin/DEMODATA", "url": "https://mcp.example.com:8000/mcp/zen16/admin/DEMODATA"}
+      ]
+    }
+  ]
+}
+```
+
+`path` is always present. `url` is `null` unless `FASTMCP_SERVER_AUTH_BASE_URL` is configured. Append `/mcp` to the path to get the MCP endpoint of that target. The resource `targets://accessible` returns the same list.
 
 ---
 

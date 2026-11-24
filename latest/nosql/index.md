@@ -101,7 +101,7 @@ quarkus.log.category."com.actian.nsql".level=DEBUG
 
 See the [Quarkus logging guide](https://quarkus.io/guides/logging) for the full reference.
 
-## Start the Server
+## Start Server {#start-the-server}
 
 Add settings to `application.properties` and mount it into the container:
 

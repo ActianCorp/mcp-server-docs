@@ -24,7 +24,7 @@ Before starting the server, ensure the following requirements are met:
 
 The server runs as a Docker container. To configure the server, mount the `conf.json` file to the container at `/app/conf.json`.
 
-### Create the Configuration File
+### Create Configuration File {#create-the-configuration-file}
 
 Create a file named `conf.json` in your working directory using the following structure:
 
@@ -78,13 +78,17 @@ Create a file named `conf.json` in your working directory using the following st
 | `log_level` | `string` | `INFO` | Server log verbosity. Valid values are `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 | `ssl_certfile` | `string` | None | Path to the TLS certificate file. Add `/app/server.crt` in the container. |
 | `ssl_keyfile` | `string` | None | Path to the TLS private key file. Add `/app/server.key` in the container. |
-| `oauth` | `object` | None | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-oauth-block).|
+| `oauth` | `object` | None | OAuth configuration block for protected deployments. For more information, see [OAuth configuration](authentication/index.md#configuring-the-oauth-block).|
 | `query_mode` | `string` | `read-only` | Controls whether data-modifying SQL is permitted. Valid values are `read-only` and `read-write`. See [Write support](write-support.md).|
 | `write_confirmation` | `boolean` | `true` | Whether a write requires human approval before it runs. Set to `false` only for clients that cannot display the approval prompt. See [Write support](write-support.md#skipping-the-approval-prompt). Applies only when `query_mode` is `read-write`. |
-| `extensions` | `array` | None | Extension modules to load, each an object with a required `module` and an optional `config`. For more information, see [Extensions](extensions/index.md).|
+| `extensions` | `array` | None | Extension modules to load, each an object with a required `module`, an optional `config`, and an optional `targets` list (multi-target deployments only). For more information, see [Extensions](extensions/index.md).|
+| `connect_timeout` | `number` | `10` | Seconds to wait for a new database connection. `0` waits without limit. |
+| `auth_mode` | `string` | None | Set to `resource-server` to accept access tokens from the identity provider instead of running the OAuth login. See [Resource-Server Mode](authentication/resource-server.md). |
+| `targets` | `object` | None | A registry of Analytics Engine installations and databases for a multi-target deployment. Replaces `driver`, `server`, `database`, `database_user`, and `database_password`. See [Multi-Target Deployments](multi-target.md). |
+| `allow_unscoped_reads` | `boolean` | `false` | Multi-target only. Turns off per-target scope checks. For temporary use only. See [Multi-Target Deployments](multi-target.md#running-without-scope-checks-allow_unscoped_reads). |
 
 
-## Start the Server
+## Start Server {#start-the-server}
 
 Once you have created the `conf.json` file, start the container and mount the configuration file:
 
@@ -93,7 +97,7 @@ docker run -d \
     -v $(pwd)/conf.json:/app/conf.json:ro \
     -p 8000:8000 \
     --name=actian-mcp \
-    actian/analytics-engine-mcp-server:1.1.0
+    actian/analytics-engine-mcp-server:1.2.0
 ```
 
 
@@ -124,5 +128,8 @@ Once connected, the MCP client automatically discovers the server capabilities. 
 
 - :material-puzzle: **[Extensions](extensions/index.md)**  
   Add custom tools to the server with a Python extension.
+
+- :material-server-network: **[Multi-Target Deployments](multi-target.md)**  
+  Serve many Analytics Engine databases from one server, with a scope per database.
 
 </div>
