@@ -21,12 +21,12 @@ Actian MCP Server 1.2.0 adds the following features and changes:
 
 Actian MCP Server 1.2.0 introduces the Actian MCP Server for VectorAI DB. An AI agent can run semantic search over vector collections. The server shows only the collections listed in `conf.json`.
 
-- **Tools**: six read tools search, count, and page through collections. `search` embeds the query text, and `search_by_vector` takes a vector from the caller.
-- **Writes**: writes are off by default. With `query_mode` set to `read-write`, four write tools create collections and store or delete points. Each write needs approval from the person at the MCP client.
-- **Embeddings**: the server can embed text with OpenAI, Gemini, or any server that offers the OpenAI embeddings API. With the `none` provider, the caller supplies the vectors.
-- **Resources and prompts**: health, the collection list, and each collection's details are MCP resources. The `find_information` and `store_information` prompts guide an agent.
-- **Security**: the server supports OAuth with Auth0 or Keycloak, and resource-server mode. When the engine requires authentication, the server sends an engine access token from `vectorai.api_key_secret`.
-- **Operations**: a call log writes one record per tool call. Custom extensions add tools and resources.
+- **Tools**: Six read tools search, count, and page through collections. `search` embeds the query text, and `search_by_vector` takes a vector from the caller.
+- **Writes**: Writes are off by default. With `query_mode` set to `read-write`, four write tools create collections and store or delete points. Each write needs approval from the person at the Model Context Protocol (MCP) client.
+- **Embeddings**: The server can embed text with OpenAI, Gemini, or any server that offers the OpenAI embeddings API. With the `none` provider, the caller supplies the vectors.
+- **Resources and prompts**: Health, the collection list, and each collection's details are MCP resources. The `find_information` and `store_information` prompts guide an agent.
+- **Security**: The server supports OAuth with Auth0 or Keycloak, and resource-server mode. When the engine requires authentication, the server sends an engine access token from `vectorai.api_key_secret`.
+- **Operations**: A call log writes one record per tool call. Custom extensions add tools and resources.
 
 For more information, see [Actian VectorAI DB](../vectorai-db/index.md).
 
@@ -77,7 +77,7 @@ For more information, see [Zen](../zen/index.md) and [Deployment Scenarios](../z
 ## NoSQL Updates
 
 - The server accepts a token only when its `aud` claim contains a value set in `quarkus.oidc.token.audience`. The Keycloak guide also describes token exchange for a calling application.
-- A new page describes the stateful and stateless versions of the Model Context Protocol (MCP) and how the server confirms a write on each.
+- A new page describes the stateful and stateless versions of MCP and how the server confirms a write on each.
 - `get_objects_by_loids` lists the Logical Object IDs (LOIDs) it did not find in `notFoundLoids`.
 
 For more information, see [Authentication](../nosql/authentication/index.md) and [Protocol Versions](../nosql/protocol-versions.md).
