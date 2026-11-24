@@ -44,6 +44,7 @@ The declared return type of a `@Tool` method decides what the client receives.
 A few rules apply across the table:
 
 - Only a return type declared as `List` is split into one block per element. A `Set`, an array or another collection arrives as one JSON text block. To get plain text blocks from a list of strings, declare `List<String>`.
+- To get a single JSON text block from a list, declare a return type other than `List`, for example a record that holds the list.
 - A `List<ToolResponse>` is not merged into one result. Each response arrives as its own JSON text block and the call is not an error result, so return a single `ToolResponse` when you need to control the result.
 - A method declared `Object` is matched by the value it returns only when that value is a `ToolResponse` or a content block, which arrive as in the table. Any other value arrives as one JSON text block, so a returned `String` arrives quoted and a returned list is not split. Declare `String` or `List<String>` to get plain text.
 - Returning `null` produces an error result that names the handler.
@@ -318,46 +319,6 @@ Extension loading is all or nothing. Anything that goes wrong stops the server r
 | Startup aborts with an exception from your own code | `initialize` threw a `RuntimeException`. | Fix the underlying condition. Throwing from `initialize` is a legitimate way to refuse to start on bad configuration. |
 
 Shutdown is more forgiving: an exception from `destroy` is logged, and the remaining extensions are still torn down.
-
-## Upgrading Extensions from 1.1
-
-Release 1.2 sends an extension method's return value the way the platform sends the return value of a built-in method declared the same way. Most 1.1 extensions load and behave as before, but the cases below changed. Check each extension against these tables before you upgrade.
-
-### Extensions That No Longer Start
-
-Each of these loaded in 1.1. In 1.2, startup aborts with a message naming the method.
-
-| A 1.1 extension declares | In 1.1 | What to do for 1.2 |
-|--------------------------|--------|--------------------|
-| A `@Tool`, `@Resource` or `@ResourceTemplate` method returning a primitive, such as `int` or `boolean` | The value was sent as JSON text, for example `7`. | Declare the boxed type, for example `Integer`. The client receives the same text as before. |
-| A `@Tool`, `@Resource` or `@ResourceTemplate` method returning `void` | The client received the text `null`. | Return a value: a `String`, or a `ToolResponse` for a tool. |
-| A `@Prompt` method returning any type other than `String` or `Object`, for example `Integer`, a record or a `List` | The value's `String.valueOf` form was sent as one user message. | Return a `String` built from the value, or a `PromptMessage` or `PromptResponse`. |
-| A non-public method carrying one of these annotations | The method was skipped without a word and never offered to clients. | Declare it `public`, or remove the annotation. |
-
-### Results That Reach Clients Differently
-
-These extensions still start, but a client receives a different result.
-
-| Declared return type | In 1.1 | In 1.2 |
-|----------------------|--------|--------|
-| A tool returning `String` | One text block holding the string as JSON, so `hello` arrived quoted as `"hello"`. | One text block holding the string as it is: `hello`. |
-| A tool returning `List<String>` | One text block holding a JSON array. | One text block per string. |
-| A tool returning a `List` of any other type | One text block holding a JSON array. | One JSON text block per element. |
-| A resource or resource template returning a `List` | One text content holding a JSON array. | One content per element. |
-| A resource or resource template declared `Object` | Always JSON text, so a returned `String` arrived quoted and a returned `byte[]` as a quoted Base64 string. | Matched by the value returned: a `String` is one text content as it is, a `byte[]` one blob. |
-| A prompt declared `Object` that returns a `String` | One user message holding the string. | The call fails with `No encoder found for class java.lang.String`. Declare the method `String`. |
-
-A client or script that parses a tool's text as JSON, or expects a single block, needs updating for the first three rows. To keep a single JSON text block from a list, declare the method's return type as something other than `List`, for example a record that holds the list.
-
-### Null Results and Exceptions
-
-| What the handler does | In 1.1 | In 1.2 |
-|-----------------------|--------|--------|
-| A tool returns `null` | The client received the text `null`. | An error result that names the handler. |
-| A prompt returns `null` | One user message holding the text `null`. | An error that names the handler. |
-| A static `@Resource` declared other than `String` or `byte[]` returns `null` | One text content holding `null`. | The read fails with an error that names the handler. |
-| A `@ResourceTemplate` returns `null` | An internal error for a `String` or `byte[]` method, otherwise one text content holding `null`. | The JSON-RPC error `-32002` with the message `Resource not found: <uri>`, or `-32602` on a stateless protocol version. |
-| A handler throws an exception that has no message | The client received an error without a message. | The error carries the exception's class name. |
 
 ## Security and Trust Model
 
