@@ -115,20 +115,20 @@ pipeline {
             }
         }
 
-        stage('Copy to latest on aws-docserver') {
-            when {
-                branch "release/mcp-server-${DOC_VERSION}.doc"
-            }
-            agent { label 'aws-docserver' }
-            // We don't need the source checked out to the web server
-            options { skipDefaultCheckout true }
-            steps {
-                unstash 'output.zip'
-                fileOperations([fileUnZipOperation(filePath: 'output.zip', targetLocation: '.')])
-                bat "if exist D:\\Sites\\mcp-server\\latest move D:\\Sites\\mcp-server\\latest D:\\backups\\mcp-server-latest-${BUILD_NUMBER}.backup"
-                bat "move ${WORKSPACE}\\site D:\\Sites\\mcp-server\\latest"
-            }
-        }
+        // stage('Copy to latest on aws-docserver') {
+        //     when {
+        //         branch "release/mcp-server-${DOC_VERSION}.doc"
+        //     }
+        //     agent { label 'aws-docserver' }
+        //     // We don't need the source checked out to the web server
+        //     options { skipDefaultCheckout true }
+        //     steps {
+        //         unstash 'output.zip'
+        //         fileOperations([fileUnZipOperation(filePath: 'output.zip', targetLocation: '.')])
+        //         bat "if exist D:\\Sites\\mcp-server\\latest move D:\\Sites\\mcp-server\\latest D:\\backups\\mcp-server-latest-${BUILD_NUMBER}.backup"
+        //         bat "move ${WORKSPACE}\\site D:\\Sites\\mcp-server\\latest"
+        //     }
+        // }
     }
 
     post
