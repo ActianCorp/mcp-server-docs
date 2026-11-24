@@ -80,7 +80,7 @@ A few rules apply across the table:
 
 - Only a return type declared as `List` is split into one content per element. A `Set`, another collection or an array arrives as one JSON text content.
 - Only a return type declared as `ResourceResponse` itself is sent as built. A type of your own that extends or implements it is serialized as JSON text.
-- Metadata set on a `ResourceResponse` goes to the `_meta` of the result, and metadata set on a content goes to the `_meta` of that content. A metadata key needs at least two characters: letters, digits, `_`, `.` and `-`, starting and ending with a letter or digit.
+- Metadata set on a `ResourceResponse` goes to the `_meta` of the result, and metadata set on a content goes to the `_meta` of that content. A metadata key needs at least two characters: letters, digits, `_`, `.` and `-`, starting and ending with a letter or digit. A key may also start with a prefix such as `com.example/`, which keeps your keys apart from other people's: `com.example/region`.
 - A `@ResourceTemplate` method that returns `null`, whatever its declared type, answers the JSON-RPC error `-32002` with the message `Resource not found: <uri>`, naming the requested URI. A client on a stateless protocol version gets `-32602` instead, as it would from a built-in template. This is the way for a lookup template to say that nothing exists at that URI.
 - A static `@Resource` that returns `null`, or any resource or template whose returned list holds a `null` element, fails the read with an error that names the handler.
 
