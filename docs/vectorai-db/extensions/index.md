@@ -49,7 +49,7 @@ Mount your module into the server's extensions directory, `/app/extensions`, as 
 docker run -d \
     -v ./revenue_forecast.py:/app/extensions/revenue_forecast.py:ro \
     -v ./conf.json:/app/conf.json:ro \
-    -p 8000:8000 \
+    -p 127.0.0.1:8000:8000 \
     <actian-mcp-image>
 ```
 
