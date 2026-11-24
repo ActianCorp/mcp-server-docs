@@ -22,7 +22,12 @@ Expected schema (table names are configurable — see register()):
 
 import json
 
-from actian_mcp_server.extension_api import get_current_user, get_database
+from actian_mcp_server.extension_api import (
+    READ_ONLY,
+    WRITE,
+    get_current_user,
+    get_database,
+)
 
 
 def register(server, config):
@@ -32,7 +37,7 @@ def register(server, config):
     products_t = config.get("products_table", "products")
     cart_t = config.get("cart_table", "cart")
 
-    @server.tool(name="place_order")
+    @server.tool(name="place_order", annotations=WRITE)
     async def place_order(customer_id: int, product_id: int, quantity: int) -> str:
         """Place an order for `quantity` units of a product.
 
@@ -87,7 +92,7 @@ def register(server, config):
                            "unit_price": unit_price, "total": total,
                            "placed_by": get_current_user()})
 
-    @server.tool(name="cancel_order")
+    @server.tool(name="cancel_order", annotations=WRITE)
     async def cancel_order(order_id: int) -> str:
         """Cancel an order and restore its stock, atomically.
 
@@ -111,7 +116,7 @@ def register(server, config):
         return json.dumps({"success": True, "cancelled_order": order_id,
                            "restored_lines": lines["row_count"]})
 
-    @server.tool(name="order_summary")
+    @server.tool(name="order_summary", annotations=READ_ONLY)
     async def order_summary(order_id: int) -> str:
         """Return an order with its line items (read-only), as a tidy object."""
         db = get_database()

@@ -1,0 +1,10 @@
+{
+    "host": "db07.corp",
+    "instance": "VW",
+    "databases": [
+        "salesmart",
+        {"name": "finance", "username": "<finance_db_username>", "password": "<FINANCE_DB_PASSWORD>"}
+    ],
+    "username": "<db_username>",
+    "password": "<DEFAULT_DB_PASSWORD>"
+}

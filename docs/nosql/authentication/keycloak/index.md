@@ -10,7 +10,7 @@ This guide explains how to create and configure a Keycloak Realm and Client for 
 !!! note "Manual client registration"
     This guide focuses on manually created clients. Dynamic Client Registration (DCR) is not covered in this documentation.
 
-By the completion of this guide, you will have obtained the issuer URL needed for `quarkus.oidc.auth-server-url`, as well as the audience value for `quarkus.oidc.token.audience` and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
+This guide shows how to get these values: the issuer URL for `quarkus.oidc.auth-server-url`, the audience value for `quarkus.oidc.token.audience`, and the Client ID and Client Secret (for Client Credentials flow) for the MCP client configuration.
 
 !!! note "Keycloak version"
     This guide applies to **Keycloak 22 and later** (Quarkus-based). Versions older than version 17 (WildFly-based) use a different admin interface and URL structure. [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application) requires Keycloak 26.2 or later, the first version with standard token exchange.
@@ -21,7 +21,7 @@ By the completion of this guide, you will have obtained the issuer URL needed fo
 2. **Create a client per flow:** Enable **Standard flow** for Authorization Code. Enable **Client authentication** and **Service accounts roles** for Client Credentials.
 3. **Add the token audience:** create a client scope with an **Audience** mapper whose **Included Custom Audience** is the audience value (for example `nsql-mcp`), and attach it to those clients as **Default**.
 4. **Add the write scope**, in write mode only: create an `mcp:write` client scope under **Client scopes** with **Include in token scope** on, then attach it to the client as **Optional**.
-5. **Create users** for those logging in via the Authorization Code flow. (This is not required for Client Credentials.)
+5. **Create users** for those logging in through the Authorization Code flow. (This is not required for Client Credentials.)
 6. **Note the realm issuer URL**: `http://<keycloak-host>:8080/realms/<realm-name>`.
 7. **Set `quarkus.oidc.auth-server-url`**, **`quarkus.oidc.token.audience`** (the Included Custom Audience value) and **`quarkus.oidc.resource-metadata.scopes`** in `application.properties`. In write mode the scopes list is `mcp:write`, which is what makes the client request it.
 8. **Start the server:** Follow the standard server startup instructions as described in [Start the Server](../../index.md#start-the-server) documentation.
@@ -123,11 +123,11 @@ Create one client for each required flow:
 | **Client ID** | The **Client ID** entered for each client.                                             |
 | **Client Secret** | Clients > [your client] > **Credentials** tab. Only needed for the Client Credentials client |
 
-### Step 2.1: Add the Token Audience
+### Step 2.1: Add Token Audience {#step-21-add-the-token-audience}
 
 The server rejects any token whose `aud` claim does not contain the value of `quarkus.oidc.token.audience`. Keycloak does not add such an audience on its own, so tokens carry no audience for this server until you add one.
 
-#### Create the Client Scope
+#### Create Client Scope {#create-the-client-scope}
 
 1. Navigate to **Client scopes** in the left sidebar and select **Create client scope**.
 2. Complete the following fields:
@@ -141,7 +141,7 @@ The server rejects any token whose `aud` claim does not contain the value of `qu
 
 3. Select **Save**.
 
-#### Add the Audience Mapper
+#### Add Audience Mapper {#add-the-audience-mapper}
 
 1. Open the new scope and select the **Mappers** tab.
 2. Select **Configure a new mapper**, then choose **Audience**.
@@ -163,7 +163,7 @@ The server rejects any token whose `aud` claim does not contain the value of `qu
 !!! warning "Never use the MCP client's own ID as the audience"
     Do not select the MCP client's own ID (for example `nosql-mcp-client`) under **Included Client Audience**. The `aud` claim must name this server, not the application that requests the token.
 
-#### Attach It to the Clients
+#### Attach Client Scope to Clients {#attach-it-to-the-clients}
 
 1. Navigate to **Clients >** your client, and select the **Client scopes** tab.
 2. Select **Add client scope**, select `nsql-mcp-audience`, then select **Add > Default**.
@@ -171,7 +171,7 @@ The server rejects any token whose `aud` claim does not contain the value of `qu
 
 Attached as **Default**, the scope puts the audience in every token the client issues, without the client having to request it.
 
-#### Check the Audience (Optional)
+#### Check Audience (Optional) {#check-the-audience-optional}
 
 Keycloak can show the token it would issue, without a login:
 
@@ -183,13 +183,13 @@ Keycloak can show the token it would issue, without a login:
     If a calling application will use token exchange, the audience value must also be the Client ID of a Keycloak client, because the `audience` parameter of a Keycloak token exchange takes a client ID. Using `nsql-mcp` here keeps the two aligned. See [Token Exchange for a Calling Application](#token-exchange-for-a-calling-application).
 
 
-## Step 3: Add the Write Scope (Write Mode Only)
+## Step 3: Add Write Scope (Write Mode Only) {#step-3-add-the-write-scope-write-mode-only}
 
 Skip this step when `nsql.writes.enabled` is `false`. A read-only server never inspects the scope.
 
 In write mode, the server checks every write call for the `mcp:write` scope and rejects a token that lacks it. In Keycloak, you create that scope once as a client scope, then attach it to the client that your writers authenticate through. For what the server does with the scope, see [Write support](../../write-support.md#what-each-call-must-clear).
 
-### Create the Client Scope
+### Create Client Scope {#create-the-client-scope_1}
 
 1. Navigate to **Client scopes** in the left sidebar and select **Create client scope**.
 2. Complete the following fields:
@@ -204,7 +204,7 @@ In write mode, the server checks every write call for the `mcp:write` scope and 
 
 3. Select **Save**.
 
-### Attach It to the Client as Optional
+### Attach Client Scope to Client as Optional {#attach-it-to-the-client-as-optional}
 
 1. Navigate to **Clients >** your client, for example `nosql-mcp-client`, and select the **Client scopes** tab.
 2. Select **Add client scope**.
@@ -250,7 +250,7 @@ Create users in Keycloak who will sign in through your MCP client.
     Some MCP clients add `offline_access` to their scope request to obtain a refresh token. Keycloak grants that scope only to a user who holds the `offline_access` **realm role**; making the client scope available is not enough. The failure looks like a client misconfiguration when it is really a user configuration problem. Assign the role under **Users >** the user **> Role mapping > Assign role > Realm roles**.
 
 
-## Step 5: Configure and Start the Server
+## Step 5: Configure and Start Server {#step-5-configure-and-start-the-server}
 
 The Actian MCP Server requires the Keycloak realm issuer URL and the audience value from [Step 2.1](#step-21-add-the-token-audience) to validate tokens. It does not require the client ID or secret; those are used exclusively by the MCP client.
 
@@ -286,10 +286,10 @@ quarkus.oidc.resource-metadata.scopes=openid,profile,email
 
 ## Token Exchange for a Calling Application
 
-Use this section for an application that has already signed the user in and calls this server for that user. For the concept, see [Calling Applications](../index.md#calling-applications). The recipe uses Keycloak 26.2 standard token exchange (RFC 8693).
+Use this section for an application that has already signed the user in and calls this server for that user. For the concept, see [Calling Applications](../index.md#calling-applications). The steps use Keycloak 26.2 standard token exchange (RFC 8693).
 
 1. **Create a client for the audience.** Create a client whose Client ID equals the audience value, `nsql-mcp`, with every flow off: **Client authentication** `Off`, and **Standard flow**, **Direct access grants** and **Service accounts roles** unchecked. The client exists only so that the `audience` parameter of the exchange request can name it.
-2. **Configure the calling application's client.** For the calling application's client (example Client ID `actian-agentic`), set **Client authentication** to `On`, because only confidential clients may exchange tokens, and check **Standard Token Exchange**.
+2. **Configure the calling application's client.** For the calling application's client (example Client ID `actian-agentic`), set **Client authentication** to `On`, because only confidential clients may exchange tokens, and select **Standard Token Exchange**.
 3. **Attach the scopes as Optional.** On the calling client's **Client scopes** tab, add `nsql-mcp-audience` and `mcp:write` as **Optional**.
 
     !!! warning "Optional, not Default"
@@ -299,7 +299,7 @@ Use this section for an application that has already signed the user in and call
         invalid_scope: Invalid scopes: nsql-mcp-audience mcp:write
         ```
 
-4. **Send the exchange request.** The calling application posts the user's existing access token to the realm's token endpoint, `<issuer-url>/protocol/openid-connect/token`, authenticating with its client ID and secret and sending these form parameters:
+4. **Send the exchange request.** The calling application sends the user's existing access token to the realm's token endpoint, `<issuer-url>/protocol/openid-connect/token`. It authenticates with its client ID and secret and sends these form parameters:
 
     | Parameter | Value |
     |---|---|
@@ -309,12 +309,12 @@ Use this section for an application that has already signed the user in and call
     | `audience` | `nsql-mcp` |
     | `scope` | `nsql-mcp-audience mcp:write` |
 
-5. **Check the result.** In the returned token, `aud` is exactly `nsql-mcp` (the original audience, for example `account`, is dropped), `azp` is the calling client, and the user is the same (`preferred_username`). Omit `mcp:write` from `scope` to get a read-only token.
+5. **Check the result.** In the returned token, `aud` is exactly `nsql-mcp`. The original audience, for example `account`, is dropped. The `azp` claim is the calling client, and the user is the same (`preferred_username`). To get a read-only token, omit `mcp:write` from `scope`.
 
 The server validates the audience, not how the token was obtained.
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 ### Authorization Code Flow
 

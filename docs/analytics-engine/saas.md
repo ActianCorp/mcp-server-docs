@@ -47,12 +47,16 @@ After you sign in, queries run under your own database identity. The privileges 
 
 ![](../assets/connection-url.png)
 
+## Tools
+
+A warehouse offers the same tools as a self-hosted deployment: `execute_query`, `list_tables`, `describe_table`, `list_functions`, and `vector_search`. Every tool tells the client whether it only reads data, so a client can decide which calls to run without asking you first. For details, see [Tools](tools/index.md) and [Vector Search](vector-search.md).
+
 ## Write Operations
 
 Write queries are enabled on a warehouse. Two conditions must be met before a write runs:
 
-1. **Your database privileges allow it.** The warehouse enforces your existing grants on each table, so the MCP Server cannot perform any write that your grants do not permit.
-2. **You approve the write.** The server describes the statement and waits for your confirmation before running it.
+1. Your database privileges allow it. The warehouse enforces your existing grants on each table. The MCP Server cannot run any write that your grants do not permit.
+2. You approve the write. The server describes the statement and waits for your confirmation before running it.
 
 !!! warning "A client that cannot prompt cannot write"
     The approval request uses the Model Context Protocol (MCP) elicitation capability, which not every client implements. If the client does not support it, the server rejects the write exactly as if you had declined it. There is no silent approval, and the approval step cannot be turned off for a warehouse. Read queries are not affected.
@@ -70,6 +74,8 @@ The following are configured and maintained by Actian, and cannot be changed for
 - The OAuth provider used for sign-in
 
 Custom extensions are not supported on a warehouse. To load custom Python extensions, run the server yourself. See [Self-Hosted](self-hosted.md).
+
+Multi-target deployments and resource-server mode are available only when you run the server yourself.
 
 
 ## Related Documentation

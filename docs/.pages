@@ -1,4 +1,4 @@
-title: Actian MCP Server
+title: Actian MCP Server Documentation
 nav:
   - index.md
   - intro
@@ -11,3 +11,4 @@ nav:
   - zen
   - nosql
   - analytics-engine
+  - vectorai-db

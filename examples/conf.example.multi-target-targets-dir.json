@@ -1,0 +1,21 @@
+{
+    "host": "0.0.0.0",
+    "port": 8000,
+    "query_mode": "read-only",
+    "max_rows": 100,
+    "connect_timeout": 10,
+    "targets": {
+        "defaults": {
+            "driver": "{Ingres}",
+            "max_connections": 10
+        }
+    },
+    "oauth": {
+        "FASTMCP_SERVER_AUTH_CONFIG_URL": "https://<your-tenant>.us.auth0.com/.well-known/openid-configuration",
+        "FASTMCP_SERVER_AUTH_CLIENT_ID": "<client_id>",
+        "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<client_secret>",
+        "FASTMCP_SERVER_AUTH_BASE_URL": "https://<your_mcp_host>:8000",
+        "FASTMCP_SERVER_AUTH_AUDIENCE": "https://<your_mcp_host>:8000/mcp",
+        "user_impersonation": false
+    }
+}

@@ -83,6 +83,7 @@ flowchart TB
         zen["Zen"]
         informix["HCL Informix®"]
         nosql["NoSQL"]
+        vectorai["VectorAI DB"]
     end
 
     subgraph Security["Security Controls"]
@@ -102,7 +103,7 @@ flowchart TB
     tools & resources --> plugins
     plugins --> pool
 
-    pool --> ae & ingres & zen & informix & nosql
+    pool --> ae & ingres & zen & informix & nosql & vectorai
 
     Security -.-> MCP
 ```

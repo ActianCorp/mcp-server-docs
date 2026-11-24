@@ -13,6 +13,15 @@ The Actian MCP Server supports OAuth 2.0 and OpenID Connect (OIDC) authenticatio
 
 
 
+## Authentication Modes
+
+In a multi-target deployment, both the OAuth login flow and resource-server mode enforce the per-target grant on requests to a target URL. The `allow_unscoped_reads` setting may change read checks. Its exact Informix behavior still needs confirmation. This documentation does not yet include an Informix deployment guide for resource-server mode. The scope format is documented in [Multi-Target Deployments](../multi-target.md#authentication-and-scope-behavior).
+
+| Mode | How it works |
+| :--- | :--- |
+| **OAuth login** (default) | The server signs the user in through the configured identity provider and validates its access token. |
+| **Resource-server mode** | The server validates an access token issued to the calling application. Informix-specific setup instructions are not available yet. |
+
 ## Working with OAuth
 
 The Actian MCP Server acts as an `OIDC Relying Party` by redirecting unauthenticated AI clients to the identity provider for secure login and token issuance. Once authenticated, the client includes this bearer token in all subsequent requests, allowing the server to validate the session and securely fulfill database queries.
@@ -77,7 +86,7 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 !!! info "Scopes"
     For read access you do not need to configure specific scopes. The server automatically requests the `openid`, `email`, and `profile` scopes.
 
-    If you set `query_mode` to `read-write`, the server also requests the `mcp:write` scope, and a token without it cannot perform writes. You must define that scope in the identity provider first. See [Write support](../write-support.md) for how writes are authorized, and [Auth0](auth0.md) or [Keycloak](keycloak.md) for the setup steps.
+  For a single-database deployment that uses the unqualified `/mcp` URL, `query_mode: read-write` requires the `mcp:write` scope. In a multi-target deployment, requests to a target URL use per-target grants instead: `actian:{host}:{instance}:{database}:{read|write}`. A `:write` grant also allows reads on that target. See [Multi-Target Deployments](../multi-target.md#authentication-and-scope-behavior), [Write support](../write-support.md#which-scope-authorizes-a-write), and the provider setup for [Auth0](auth0.md#multi-target-deployments-per-target-permissions) or [Keycloak](keycloak.md#multi-target-deployments-per-target-scopes).
 
 
 ## User Impersonation
@@ -160,7 +169,7 @@ The `ssl_certfile` and `ssl_keyfile` values are always the fixed **in-container*
 
 The server validates that both paths exist at startup, and that `BASE_URL` uses `https://` when SSL is active.
 
-### Step 3: Deploy the Docker
+### Step 3: Deploy Docker {#step-3-deploy-the-docker}
 
 Mount the certificate and key into the container using volume flags:
 
@@ -189,7 +198,7 @@ Reference the container paths in `conf.json`:
     - **Best practice**: `Ensure that server.key and conf.json file permissions are set to 600.
 
 
-### Step 4: Trust the Certificate in the MCP Client
+### Step 4: Trust Certificate in MCP Client {#step-4-trust-the-certificate-in-the-mcp-client}
 
 By default, Node.js-based MCP clients (VS Code and Cursor) reject self-signed certificates. You must explicitly trust the certificate on your development machine.
 

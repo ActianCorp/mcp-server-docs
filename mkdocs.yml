@@ -1,5 +1,5 @@
 # Project Information
-site_name: Actian MCP Server
+site_name: Actian MCP Server Documentation
 site_url: https://docs.actian.com/mcp-server/
 site_description: >-
   Documentation for the Actian MCP Server — connect AI agents to Actian data sources via the Model Context Protocol.
@@ -20,12 +20,15 @@ nav:
           - ingres/authentication/index.md
           - Auth0: ingres/authentication/auth0.md
           - Keycloak: ingres/authentication/keycloak.md
+          - Resource-Server Mode: ingres/authentication/resource-server.md
+      - Multi-Target Deployments: ingres/multi-target.md
       - Write Support: ingres/write-support.md
       - Extensions:
           - ingres/extensions/index.md
           - Examples: ingres/extensions/examples.md
           - API Reference: ingres/extensions/api-reference.md
       - Tools: ingres/tools/index.md
+      - Health Tools: ingres/health-tools.md
       - Resources: ingres/resources/index.md
       - Prompts: ingres/prompts/index.md
   - HCL Informix®:
@@ -35,6 +38,7 @@ nav:
           - Auth0: hcl-informix/authentication/auth0.md
           - Keycloak: hcl-informix/authentication/keycloak.md
       - Write Support: hcl-informix/write-support.md
+      - Multi-Target Deployments: hcl-informix/multi-target.md
       - Extensions:
           - hcl-informix/extensions/index.md
           - Examples: hcl-informix/extensions/examples.md
@@ -49,6 +53,8 @@ nav:
           - Auth0: zen/authentication/auth0.md
           - Keycloak: zen/authentication/keycloak.md
       - Write Support: zen/write-support.md
+      - Multiple Databases: zen/multi-target.md
+      - Deployment Scenarios: zen/deployment.md
       - Extensions:
           - zen/extensions/index.md
           - Examples: zen/extensions/examples.md
@@ -64,12 +70,15 @@ nav:
           - analytics-engine/authentication/index.md
           - Auth0: analytics-engine/authentication/auth0.md
           - Keycloak: analytics-engine/authentication/keycloak.md
+          - Resource-Server Mode: analytics-engine/authentication/resource-server.md
+      - Multi-Target Deployments: analytics-engine/multi-target.md
       - Write Support: analytics-engine/write-support.md
       - Extensions:
           - analytics-engine/extensions/index.md
           - Examples: analytics-engine/extensions/examples.md
           - API Reference: analytics-engine/extensions/api-reference.md
       - Tools: analytics-engine/tools/index.md
+      - Vector Search: analytics-engine/vector-search.md
       - Resources: analytics-engine/resources/index.md
       - Prompts: analytics-engine/prompts/index.md
   - NoSQL:
@@ -84,6 +93,20 @@ nav:
       - Tools: nosql/tools/index.md
       - Resources: nosql/resources/index.md
       - Prompts: nosql/prompts/index.md
+  - VectorAI DB:
+      - Overview: vectorai-db/index.md
+      - Authentication:
+          - vectorai-db/authentication/index.md
+          - Auth0: vectorai-db/authentication/auth0.md
+          - Keycloak: vectorai-db/authentication/keycloak.md
+      - Write Support: vectorai-db/write-support.md
+      - Extensions:
+          - vectorai-db/extensions/index.md
+          - Examples: vectorai-db/extensions/examples.md
+          - API Reference: vectorai-db/extensions/api-reference.md
+      - Tools: vectorai-db/tools/index.md
+      - Resources: vectorai-db/resources/index.md
+      - Prompts: vectorai-db/prompts/index.md
 
 # Theme Configuration
 theme:

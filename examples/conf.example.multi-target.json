@@ -1,0 +1,48 @@
+{
+    "host": "0.0.0.0",
+    "port": 8000,
+    "query_mode": "read-only",
+    "max_rows": 100,
+    "connect_timeout": 10,
+    "targets": {
+        "defaults": {
+            "driver": "{Ingres}",
+            "max_connections": 10
+        },
+        "list": [
+            {
+                "alias": "server1",
+                "host": "<db_host_1>",
+                "instance": "<installation_id_1>",
+                "databases": [
+                    "salesmart",
+                    {
+                        "name": "finance",
+                        "username": "<finance_db_username>",
+                        "password": "<FINANCE_DB_PASSWORD>"
+                    }
+                ],
+                "username": "<db_username_1>",
+                "password": "<DEFAULT_DB_PASSWORD>"
+            },
+            {
+                "alias": "server2",
+                "host": "<db_host_2>",
+                "instance": "<installation_id_2>",
+                "databases": [
+                    "hr"
+                ],
+                "username": "<db_username_2>",
+                "password": "<db_password_2>"
+            }
+        ]
+    },
+    "oauth": {
+        "FASTMCP_SERVER_AUTH_CONFIG_URL": "https://<your-tenant>.us.auth0.com/.well-known/openid-configuration",
+        "FASTMCP_SERVER_AUTH_CLIENT_ID": "<client_id>",
+        "FASTMCP_SERVER_AUTH_CLIENT_SECRET": "<client_secret>",
+        "FASTMCP_SERVER_AUTH_BASE_URL": "https://<your_mcp_host>:8000",
+        "FASTMCP_SERVER_AUTH_AUDIENCE": "https://<your_mcp_host>:8000/mcp",
+        "user_impersonation": false
+    }
+}

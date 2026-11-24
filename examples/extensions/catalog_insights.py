@@ -13,14 +13,14 @@ Expected schema: products(product_id, name, unit_price, stock_qty) — same tabl
 
 import json
 
-from actian_mcp_server.extension_api import get_current_user, get_database
+from actian_mcp_server.extension_api import READ_ONLY, get_current_user, get_database
 
 
 def register(server, config):
     products_t = config.get("products_table", "products")
     default_threshold = int(config.get("low_stock_threshold", 10))
 
-    @server.tool(name="low_stock_products")
+    @server.tool(name="low_stock_products", annotations=READ_ONLY)
     async def low_stock_products(threshold: int = default_threshold) -> str:
         """List products at or below a stock threshold (read-only)."""
         res = await get_database().query(
@@ -37,7 +37,7 @@ def register(server, config):
             "checked_by": get_current_user(),  # None unless OAuth + impersonation
         }, default=str)
 
-    @server.tool(name="inventory_value")
+    @server.tool(name="inventory_value", annotations=READ_ONLY)
     async def inventory_value() -> str:
         """Aggregate stock across the catalog (read-only)."""
         res = await get_database().query(

@@ -137,7 +137,7 @@ WARN  Confirmation not received within 60s; rejecting operation.
 
 Sixty seconds suits someone watching the conversation as it happens. Raise it when approvals go to a person who may be away from the screen. On the stateful protocol the tool call stays open for the whole wait, so the agent making the request is blocked until somebody answers or the timeout closes it. Lower it if you would rather a batch fail fast than sit pending.
 
-For a client on the stateless 2026-07-28 protocol, the same setting is how long the person has to answer; a later answer is refused and the operation must be run again. The tool call does not stay open: the first call returns the question, and the client repeats the call with the answer. See [Protocol Versions](protocol-versions.md#write-confirmation-on-each-protocol).
+For a client on the stateless 2026-07-28 protocol, the same setting is how long the person has to answer. The server refuses a later answer, and the operation must be run again. The tool call does not stay open. The first call returns the question, and the client repeats the call with the answer. See [Protocol Versions](protocol-versions.md#write-confirmation-on-each-protocol).
 
 The timeout plays no part when `nsql.writes.confirmation-required` is `false`, because no prompt is sent.
 
@@ -156,11 +156,11 @@ Write tools go missing because one of the two [registration conditions](#tools-p
 
 A hidden tool is unlisted **and** uncallable, so the usual sign of trouble is a protocol-level error about an unknown tool rather than a message from the server explaining itself. The server's own refusal, `Write operations are disabled on this server.`, is a backstop for a call that somehow bypasses the tool list; in normal use nobody sees it.
 
-Visibility is decided per connection, from the capabilities the client advertised when it connected. A stateless client has no connection, so for it visibility is decided per request, from the capabilities that request declares. After changing either setting, restart the server and reconnect the client.
+Visibility is decided per connection, from the capabilities the client advertised when it connected. A stateless client has no connection, so the server decides visibility for each request, from the capabilities that the request declares. After changing either setting, restart the server and reconnect the client.
 
 This rule is not tied to specific tool names. It applies to any tool that does not declare itself read-only, including tools contributed by an [extension](extensions/index.md).
 
-## Answering the Prompt from a Python Client
+## Answering Prompt from a Python Client {#answering-the-prompt-from-a-python-client}
 
 A [FastMCP](https://pypi.org/project/fastmcp/) client advertises the elicitation capability only when it is given an elicitation handler. Without one it is a client that cannot confirm, so the write tools are never registered for it — the symptom described above, reached through your own code rather than through a third-party client.
 
@@ -196,7 +196,7 @@ python nosql_hitl_client.py http://localhost:8080/mcp create_objects \
 
 The client takes any tool with any arguments and knows nothing about your schema; `Employee` and the field names above are placeholders, so substitute your own. The [examples README](https://github.com/ActianCorp/mcp-server-docs/blob/main/examples-nosql/README.md) has the full usage.
 
-## Skipping the Confirmation Prompt
+## Skipping Confirmation Prompt {#skipping-the-confirmation-prompt}
 
 Some clients cannot display prompts. For those deployments, set `nsql.writes.confirmation-required` to `false`:
 
@@ -220,7 +220,7 @@ WARN  nsql-mcp-server Mode: READ-WRITE. Write tools are exposed; writes execute 
 
 ## Optimistic Concurrency
 
-Every object a read returns carries a `version` field: an opaque token that changes whenever the object is modified. It is returned as a string so that large values survive JSON without losing precision — the same reason 64-bit integer fields are, as described under [Response format](tools/index.md). Do not parse it or compare it for ordering — the only thing to do with it is hand it back.
+Every object a read returns carries a `version` field: an opaque token that changes whenever the object is modified. It is returned as a string so that large values survive JSON without losing precision, the same reason 64-bit integer fields are, as described under [Response format](tools/index.md). Do not parse it or compare it for ordering. The only thing to do with it is hand it back.
 
 `update_objects` requires it. Each update item carries the target `loid`, the `expectedVersion` you read earlier, and the `fields` to change:
 

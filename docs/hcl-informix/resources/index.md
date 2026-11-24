@@ -15,6 +15,8 @@ Use the following resource to retrieve metadata for the database:
 | Resource URI | Description |
 |--------------|-------------|
 | [`resource://database/schema`](#resourcedatabaseschema) | Returns JSON metadata for the connected database, including table names, column definitions, and constraints. |
+| [`resource://database/{host}/{instance}/{database}/schema`](#multi-target-deployments) | In a multi-target deployment, the schema of one target database. The output is the same as `resource://database/schema`. |
+| [`targets://accessible`](#targetsaccessible) | In a multi-target deployment, the databases the caller can read. |
 
 ## resource://database/schema
 
@@ -77,6 +79,23 @@ resource://database/schema
         }
 }
 ```
+## Multi-Target Deployments
+
+In a [multi-target deployment](../multi-target.md), each database has its own schema resource, named after the target's URL segments:
+
+```text
+resource://database/{host}/{instance}/{database}/schema
+```
+
+For example, `resource://database/sales-db.example.com/II/salesmart/schema`. The output is the same as for `resource://database/schema`.
+
+- A session connected to a target's URL lists only that target's schema resource.
+- Reading another target's schema URI in that session returns "resource not found", the same as a URI that does not exist.
+- After you add or remove targets through `targets.d/`, list the resources again to see the change.
+
+## targets://accessible
+
+In a multi-target deployment, this resource returns the databases that the caller's token can read, with the URL path for each one. It returns the same data as the `list_accessible_targets` tool. For the output format, see [Discover Which Databases You Can Reach](../multi-target.md#discover-which-databases-you-can-reach).
 
 ## Next Steps
 

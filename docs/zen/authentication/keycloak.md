@@ -104,7 +104,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 
 9. Select **Save**.
 
-### Get the Client Secret
+### Get Client Secret {#get-the-client-secret}
 
 1. After creating the client, select the **Credentials** tab.
 2. Copy the **Client secret** value.
@@ -118,7 +118,7 @@ The client represents the MCP server’s OAuth credentials and holds `client_id`
 | `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL, for example, `https://<mcp-server-host>:8000` |
 
 
-## Step 3: Add the Audience Mapper (Required)
+## Step 3: Add Audience Mapper (Required) {#step-3-add-the-audience-mapper-required}
 
 !!! danger "This step is critical"
     Without the Audience Mapper, Keycloak does not include the Client ID in the token's `aud` (audience) claim, and the MCP server rejects tokens with an `audience mismatch` error.
@@ -177,7 +177,7 @@ Expected output:
     If you still see a UUID instead of `actian-mcp` in the `aud` claim, the old token may be cached. Wait for it to expire (default 5 minutes) or go to **Sessions** in the Keycloak Admin Console and sign out of all sessions for the service account to force a fresh token.
 
 
-## Step 4 (Optional): Add the Sub Override Mapper
+## Step 4 (Optional): Add Sub Override Mapper {#step-4-optional-add-the-sub-override-mapper}
 
 By default, Keycloak sets the `sub` claim to a UUID. You can override it to contain the login name for easier `user_impersonation` mapping.
 
@@ -218,13 +218,13 @@ After adding the mapper, the token contains the following:
     Instead of overriding `sub`, you can rely on the `preferred_username` claim (included by default when the `profile` scope is present). The MCP server's username extraction priority uses `preferred_username` before `sub`, so it works automatically without any mapper changes.
 
 
-## Step 5: Add the Write Scope (Read-Write Deployments Only)
+## Step 5: Add Write Scope (Read-Write Deployments Only) {#step-5-add-the-write-scope-read-write-deployments-only}
 
 Skip this step if `query_mode` is `read-only`. A read-only server never requests the `mcp:write` scope.
 
 When `query_mode` is `read-write`, the server requests `mcp:write` and rejects any write whose token does not carry it. For more information, see [Write support](../write-support.md).
 
-### Step 5.1: Create the Client Scope
+### Step 5.1: Create Client Scope {#step-51-create-the-client-scope}
 
 1. Navigate to **Client scopes** in the left sidebar and select **Create client scope**.
 2. Configure the following fields:
@@ -239,7 +239,7 @@ When `query_mode` is `read-write`, the server requests `mcp:write` and rejects a
 
 3. Select **Save**.
 
-### Step 5.2: Attach the Scope to the Client as Optional
+### Step 5.2: Attach Scope to Client as Optional {#step-52-attach-the-scope-to-the-client-as-optional}
 
 1. Navigate to **Clients** > your client, for example `actian-mcp`, and select the **Client scopes** tab.
 2. Select **Add client scope**.
@@ -272,59 +272,31 @@ The output contains `mcp:write`. Then, on the client's **Client scopes** tab, co
     The `mcp:write` scope permits write statements in general. It does not grant table privileges. With `user_impersonation` enabled, each write also runs as that user's own database account, so grant the matching `INSERT`, `UPDATE`, and `DELETE` privileges in the database as well. See [Creating the Matching Database User](#creating-the-matching-database-user).
 
 
+### Step 5.3: Per-Target Scopes (Resource-Server Mode)
+
+A server that [serves several databases](../multi-target.md) in [resource-server mode](index.md#resource-server-mode) checks a grant per URL, `actian:{host}:{instance}:{database}:read` or `:write`, instead of `mcp:write`. Keycloak issues them in the same way:
+
+1. For each grant, create a client scope as in Step 5.1. Set **Name** to the grant itself, for example `actian:zen16:admin:DEMODATA:read`. Set **Include in token scope** to `On`.
+2. Attach each scope as **Optional** to the client that requests the tokens, as in Step 5.2. In resource-server mode, that is the calling application's client. The MCP server runs no login of its own.
+3. Request the grants by name in the token request, for example `scope=openid actian:zen16:admin:DEMODATA:read`. They arrive in the token's `scope` claim, where the server reads them. The server also reads `scp` and `permissions`, so a hardcoded-claim mapper that writes the grants into `scp` also works.
+
+A `write` grant implies `read`. The server refuses a token without the grant for a URL with `403 insufficient_scope`. The `WWW-Authenticate` header names the grant to request. See [Per-Target Scopes](index.md#per-target-scopes).
+
 ## Step 6: Create Keycloak Users (If Using User Impersonation)
 
 !!! warning "Not applicable to Zen"
     Zen does not support `SET SESSION AUTHORIZATION`, so user impersonation is unavailable and `user_impersonation` must be `false`. Skip this step. See [User Impersonation](index.md#user-impersonation).
 
-If `user_impersonation` is `true`, each Keycloak user contains a matching database account. For more information, see [User Impersonation](index.md#user-impersonation).
-
-1. Navigate to **Users** in the left panel.
-2. Select **Add user**.
-3. Fill the form as follows:
-
-    | Field | Value | Notes |
-    |-------|-------|-------|
-    | **Username** | `jdoe` | Must match with the database account name |
-    | **Email** | `jdoe@example.com` | Optional but recommended |
-    | **First Name** | `John` | Optional |
-    | **Last Name** | `Doe` | Optional |
-    | **Enabled** | `On` | A disabled user cannot log in or receive tokens, even with correct credentials. Leave this `On`. If your Keycloak version does not show this field on the Add User form, the account is enabled by default; you can still find and toggle it later from the user's Details tab. |
-
-4. Select **Create**.
-5. Navigate to the **Credentials** tab > **Set password** > enter a password > toggle **Temporary** to `Off` > **Save**.
-
-### Creating the Matching Database User
-
-```sql
--- Create the user account (no DB password needed — Keycloak handles authentication)
-CREATE USER jdoe;
-
--- Grant access to the database
-GRANT ACCESS ON DATABASE mydb TO jdoe;
-
--- Grant the necessary table permissions (adjust per your schema)
-GRANT SELECT ON TABLE orders TO jdoe;
-GRANT SELECT ON TABLE products TO jdoe;
-```
-
-!!! note "`profile` scope is required"
-    Keycloak's userinfo endpoint only returns `preferred_username` when the token includes the `profile` scope. Without it, the endpoint returns only the `sub` claim (a UUID by default).
-
-!!! important "Keycloak does not produce a `username` claim automatically"
-    The MCP server's username extraction priority is - `username` > `preferred_username` > email prefix > sanitized `sub`. Keycloak **does not** produce a `username` claim by default. It only appears if you explicitly configure a User Attribute mapper. In practice, `preferred_username` (second in the priority) is the reliable choice for Keycloak, and it works automatically when the `profile` scope is present.
-
-!!! note "Federated identity (LDAP / Social login)"
-    If Keycloak federates users from an external LDAP or social provider, the `sub` claim may be a UUID that does not match a database account. Ensure that the federated users have `preferred_username` set, or add the sub-override mapper ([Step 4](#step-4-optional-add-the-sub-override-mapper)), or set `user_impersonation: false`.
+People still sign in as Keycloak users. Create them as in any realm (**Users** > **Add user**, then **Credentials** > **Set password**). They need no matching Zen account. Every URL connects to Zen as the login in its target entry or `conn_string`. The server records the token's `preferred_username` in the [call log](../index.md#call-log) only. Keycloak adds `preferred_username` to the token when the `profile` scope is present. That scope is present by default.
 
 
-## Step 7: Assemble the Final Configuration
+## Step 7: Assemble Final Configuration {#step-7-assemble-the-final-configuration}
 
 ### Mapping Summary
 
 | `conf.json` Field | Keycloak Source | Example Value |
 |---|---|---|
-| `FASTMCP_SERVER_AUTH_CONFIG_URL` | `http://<keycloak-host>:8080/realms/<realm>/.well-known/openid-configuration` | `http://10.100.11.187:8080/realms/actian-mcp/.well-known/openid-configuration` |
+| `FASTMCP_SERVER_AUTH_CONFIG_URL` | `http://<keycloak-host>:8080/realms/<realm>/.well-known/openid-configuration` | `http://<keycloak-host>:8080/realms/actian-mcp/.well-known/openid-configuration` |
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | Clients > your client > **Client ID**| `actian-mcp` |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Clients > your client > **Credentials**| (your secret) |
 | `FASTMCP_SERVER_AUTH_BASE_URL` | MCP server's external URL | `https://<mcp-server-host>:8000` |
@@ -338,12 +310,7 @@ GRANT SELECT ON TABLE products TO jdoe;
 
 ```json
 {
-    "driver": "{Ingres}",
-    "server": "@<db-host>,tcp_ip,<port>",
-    "database": "mydb",
-    "database_user": "<database_user>",
-    "database_password": "<database_password>",
-    "max_connections": 10,
+    "conn_string": "Driver=/opt/actianzen/lib64/libodbcci.so;ServerName=host.docker.internal:1583;DBQ=DEMODATA",
     "host": "0.0.0.0",
     "port": 8000,
     "query_mode": "read-write",
@@ -362,14 +329,14 @@ GRANT SELECT ON TABLE products TO jdoe;
 ```
 
 !!! note
-    Replace `<db-host>` with the database server address. In the Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
+    `ServerName` in `conn_string` is the Zen engine address as the container reaches it. Use the Docker host's name or IP (`host.docker.internal` on Docker Desktop), or the engine container's network alias. Never use `localhost` or `127.0.0.1`, which refer to the container itself. A server for [several databases](../multi-target.md) adds a `targets` block. `conn_string` is still required.
 
 For TLS setup details (certificate generation, Docker deployment, trusting self-signed certifications), see [HTTPS / TLS for Remote Deployments](index.md#secure-remote-deployments-with-https-and-tls).
 
 For security best practices (file permissions, `.gitignore`, secrets management), see [Security Best Practices](index.md#security-best-practices).
 
 
-## Verify End-to-End
+## Verify Setup End-to-End {#verify-end-to-end}
 
 After starting the MCP server container with OAuth configured:
 
@@ -382,7 +349,7 @@ After starting the MCP server container with OAuth configured:
 
 ## Troubleshooting
 
-### Verify OIDC Discovery Endpoint
+### Verify OIDC Discovery Endpoint {#verify-oidc-discovery-endpoint}
 
 ```bash
 curl http://<keycloak-host>:8080/realms/actian-mcp/.well-known/openid-configuration \

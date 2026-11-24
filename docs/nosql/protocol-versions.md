@@ -5,7 +5,7 @@ description: Which Model Context Protocol versions the Actian MCP Server for NoS
 
 # Protocol Versions
 
-The Actian MCP Server for NoSQL speaks two families of the Model Context Protocol (MCP) on the same endpoint. Most of what a client does is identical on both. Two things differ, and this page covers them: how a write is confirmed, and a few details in the server log and in one error code.
+The Actian MCP Server for NoSQL supports two families of the Model Context Protocol (MCP) on the same endpoint. Most client actions are identical on both. This page covers what differs: how a write is confirmed, plus a few details in the server log and in one error code.
 
 ## Accepted Protocol Versions
 
@@ -31,10 +31,10 @@ For a stateless client, the approval the server records when it asks has these p
 
 - It is valid only for that exact call: the same tool, the same arguments, and, when authentication is on, the same signed-in user.
 - It can be used once.
-- It lasts `nsql.writes.confirmation-timeout-seconds` (default `60`). For a stateless client this is how long the person has to answer; a later answer is refused and the operation must be run again.
-- A retry with a changed argument, or with an expired, unknown, or already used approval, is refused and nothing is written. The client must run the operation again from the start, which asks the question afresh. A "yes" sent without an approval is not accepted either: the server asks the question instead of writing.
-- Declining and cancelling are refused with the same messages as on the stateful protocol, for example `Create not performed: the client declined the confirmation prompt.`
-- A client that declares only URL-mode elicitation cannot show the confirmation form, so it never sees the write tools, on either protocol. For a stateless client this is decided on every request, from the capabilities that request declares.
+- It stays valid for the time set in `nsql.writes.confirmation-timeout-seconds` (default `60`). This is how long the person has to answer. The server refuses a later answer, and the client must run the operation again.
+- The server refuses a retry that changes an argument or uses an expired, unknown, or already used approval, and it writes nothing. The client must run the operation again from the start, which asks the question again. The server also does not accept a "yes" sent without an approval. It asks the question instead of writing.
+- Declining or cancelling gets the same refusal messages as on the stateful protocol, for example `Create not performed: the client declined the confirmation prompt.`
+- A client that declares only URL-mode elicitation cannot show the confirmation form, so it never sees the write tools, on either protocol. For a stateless client, the server decides this on every request, from the capabilities that the request declares.
 
 ## Running More Than One Server Instance
 
@@ -43,7 +43,7 @@ For a stateless client, the approval the server records when it asks has these p
 
 ## Resource Not Found
 
-Reading `db://schema/class/{className}` for a class that does not exist answers with JSON-RPC error `-32602` (invalid params) to a stateless client and `-32002` (resource not found) to a stateful one. The 2026-07-28 specification changed the code, and the server follows the code of the protocol the client is using.
+Reading `db://schema/class/{className}` for a class that does not exist returns JSON-RPC error `-32602` (invalid params) to a stateless client and `-32002` (resource not found) to a stateful client. The 2026-07-28 specification changed the code. The server uses the code for the protocol that the client uses.
 
 ## Server Log
 
@@ -53,8 +53,8 @@ For each stateless `server/discover`, the server writes one line at `INFO`:
 INFO  MCP client connected [stateless]: client=<name>/<version>, protocol=2026-07-28, elicitation=true, write tools exposed.
 ```
 
-The server writes nothing of its own for the calls that follow. A stateful client still produces the same line once per handshake, with the connection in place of the word `stateless`. How often a stateless client sends `server/discover` again is up to the client.
+The server logs nothing of its own for the calls that follow. A stateful client still produces the same line once per handshake, with the connection in place of the word `stateless`. Each stateless client decides how often to send `server/discover` again.
 
 ## For Extension Authors
 
-An extension write tool that calls `context.confirm(...)` works on both protocols without any change. On the stateless protocol the handler runs again from the start after the person approves, so keep side effects after `confirm()`, do not catch exceptions around it, and call it at most once per tool call: a second call in one stateless call is refused. The details are in [Write Gating for Extension Tools](extensions/index.md#write-gating-for-extension-tools).
+An extension write tool that calls `context.confirm(...)` works on both protocols without changes. On the stateless protocol, the handler runs again from the start after the person approves. So keep side effects after `confirm()`, do not catch exceptions around it, and call it at most once for each tool call. The server refuses a second call in one stateless call. For details, see [Write Gating for Extension Tools](extensions/index.md#write-gating-for-extension-tools).
