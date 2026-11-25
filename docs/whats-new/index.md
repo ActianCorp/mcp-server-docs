@@ -40,7 +40,9 @@ One container can now serve many databases instead of running one container for 
 
 Multi-target deployments work with Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Zen also supports read-only personas, which are named connections that open a database in read-only mode.
 
-For more information, see [Ingres](../ingres/multi-target.md), [Analytics Engine](../analytics-engine/multi-target.md), [HCL Informix](../hcl-informix/multi-target.md), and [Zen](../zen/multi-target.md).
+Actian NoSQL also serves several databases from one server, through named targets in `application.properties`. Each target gets its own URL, `/mcp/{target}`, and its own read and write scopes. Targets kept in a directory are added, changed, and removed without a restart.
+
+For more information, see [Ingres](../ingres/multi-target.md), [Analytics Engine](../analytics-engine/multi-target.md), [HCL Informix](../hcl-informix/multi-target.md), [Zen](../zen/multi-target.md), and [NoSQL](../nosql/targets/index.md).
 
 ## Resource-Server Mode
 
@@ -76,11 +78,14 @@ For more information, see [Zen](../zen/index.md) and [Deployment Scenarios](../z
 
 ## NoSQL Updates
 
+- One server can serve several NoSQL databases through named targets. Each target has its own URL, `/mcp/{target}`, and its own read and write scopes, and targets kept in a directory are added, changed, and removed without a restart. See [Multi-Target Deployments](#multi-target-deployments).
+- Each database has a call cap, `nsql.db.max-calls` (default `10`), and a deadline for read calls, `nsql.db.call-deadline` (default `30s`). A call beyond the cap is refused as busy, and a read that runs past the deadline is stopped. The server reconnects to a database that comes back, without a restart.
 - The server accepts a token only when its `aud` claim contains a value set in `quarkus.oidc.token.audience`. The Keycloak guide also describes token exchange for a calling application.
-- A new page describes the stateful and stateless versions of MCP and how the server confirms a write on each.
+- The server supports the stateless 2026-07-28 version of MCP. A client on it confirms a write by repeating the tool call.
 - `get_objects_by_loids` lists the Logical Object IDs (LOIDs) it did not find in `notFoundLoids`.
+- For extension authors, the declared return type of a tool, resource, resource template, or prompt decides what the client receives, and some return types stop the server at startup.
 
-For more information, see [Authentication](../nosql/authentication/index.md) and [Protocol Versions](../nosql/protocol-versions.md).
+For more information, see [Targets](../nosql/targets/index.md), [Database Availability](../nosql/database-availability.md), [Authentication](../nosql/authentication/index.md), [Protocol Versions](../nosql/protocol-versions.md), and [Extensions](../nosql/extensions/index.md).
 
 ## Tool Annotations and Tool Changes
 
