@@ -3908,14 +3908,14 @@
 <p>Once the <code>conf.json</code> is ready, start the container and mount the configuration file:</p>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>zen-mcp<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">127</span>.0.0.1:8000:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--add-host<span class="o">=</span>host.docker.internal:host-gateway<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Container networking</p>
-<p><code>-p 8000:8000</code> exposes the server port on the host. <code>--add-host=host.docker.internal:host-gateway</code> allows the container to reach services on the host machine (such as the Zen engine on port 1583). Docker Desktop on Windows and macOS resolves <code>host.docker.internal</code> automatically; Linux requires the <code>--add-host</code> flag.</p>
+<p><code>-p 127.0.0.1:8000:8000</code> publishes the server port on this machine only. Without an <code>oauth</code> block in <code>conf.json</code> the server has no authentication, so open the port to other machines (<code>-p 8000:8000</code>) only with OAuth or behind an authenticating gateway; see <a href="deployment.html">Deployment</a>. <code>--add-host=host.docker.internal:host-gateway</code> allows the container to reach services on the host machine (such as the Zen engine on port 1583). Docker Desktop on Windows and macOS resolves <code>host.docker.internal</code> automatically; Linux requires the <code>--add-host</code> flag.</p>
 </div>
 <p>Once the container is running, connect the MCP client to the exposed server endpoint using the host and port from the configuration.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
@@ -3982,7 +3982,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 24, 2026 18:08:46 UTC">November 24, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 24, 2026 18:08:45 UTC">November 24, 2026</span>
   </span>
 
     

@@ -3906,7 +3906,7 @@
 <h3 id="b-engine-and-server-in-containers">B. Engine and Server in Containers<a class="headerlink" href="#b-engine-and-server-in-containers" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>network<span class="w"> </span>create<span class="w"> </span>zentest
 docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen16<span class="w"> </span>--network<span class="w"> </span>zentest<span class="w"> </span>--network-alias<span class="w"> </span>zen16<span class="w"> </span>&lt;zen-engine-image&gt;
-docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen-mcp<span class="w"> </span>--network<span class="w"> </span>zentest<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen-mcp<span class="w"> </span>--network<span class="w"> </span>zentest<span class="w"> </span>-p<span class="w"> </span><span class="m">127</span>.0.0.1:8000:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>actian/zen-mcp-server:1.2.0
 </code></pre></div>
@@ -3914,7 +3914,7 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <h3 id="c-several-urls-without-authentication">C. Several URLs Without Authentication<a class="headerlink" href="#c-several-urls-without-authentication" title="Permanent link">&para;</a></h3>
 <p>Use the configuration from <a href="multi-target.html#configuration">Multiple Databases</a>, with <code>allow_unscoped_reads: true</code> and a folder for adding and removing targets while the server runs:</p>
 <div class="language-bash highlight"><pre><span></span><code>mkdir<span class="w"> </span>targets.d
-docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen-mcp<span class="w"> </span>--network<span class="w"> </span>zentest<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>zen-mcp<span class="w"> </span>--network<span class="w"> </span>zentest<span class="w"> </span>-p<span class="w"> </span><span class="m">127</span>.0.0.1:8000:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/targets.d:/app/targets.d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>actian/zen-mcp-server:1.2.0
@@ -4014,7 +4014,7 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 24, 2026 18:08:45 UTC">November 24, 2026</span>
   </span>
 
     

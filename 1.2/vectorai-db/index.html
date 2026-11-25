@@ -4119,19 +4119,20 @@
 <p>Once <code>conf.json</code> is ready, start the container and mount the configuration file:</p>
 <div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>vectorai-mcp<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">127</span>.0.0.1:8000:8000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--add-host<span class="o">=</span>host.docker.internal:host-gateway<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/conf.json:/app/conf.json:ro<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>actian/vectorai-mcp-server:1.2.0
 </code></pre></div>
-<p>The MCP endpoint is <code>http://&lt;host&gt;:8000/mcp</code> (streamable HTTP).</p>
+<p>The MCP endpoint is <code>http://localhost:8000/mcp</code> (streamable HTTP).</p>
 <div class="admonition note">
 <p class="admonition-title">Container networking</p>
-<p><code>-p 8000:8000</code> exposes the server port on the host. <code>--add-host=host.docker.internal:host-gateway</code> lets the container reach services on the host machine (such as the engine on port 6573). Docker Desktop on Windows and macOS resolves <code>host.docker.internal</code> automatically. Linux requires the <code>--add-host</code> flag.</p>
+<p><code>-p 127.0.0.1:8000:8000</code> publishes the server port on this machine only. Without an <code>oauth</code> block in <code>conf.json</code> the server has no authentication, so open the port to other machines (<code>-p 8000:8000</code>) only with OAuth or behind an authenticating gateway. <code>--add-host=host.docker.internal:host-gateway</code> lets the container reach services on the host machine (such as the engine on port 6573). Docker Desktop on Windows and macOS resolves <code>host.docker.internal</code> automatically. Linux requires the <code>--add-host</code> flag.</p>
 </div>
 <p>With the embedding sidecar, use the compose file shipped with the image sources (<code>src/vectorai/docker/docker-compose.yml</code>):</p>
 <div class="language-bash highlight"><pre><span></span><code><span class="nv">CONF_FILE</span><span class="o">=</span>./conf.json<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>embedding<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
+<p>The compose file publishes the port on <code>127.0.0.1</code> as well; <code>MCP_SERVER_BIND_ADDRESS=0.0.0.0</code> opens it to the network, for OAuth deployments only.</p>
 <p>This starts Text Embeddings Inference (CPU build) with <code>BAAI/bge-m3</code> next to the server. It downloads the model once into the <code>tei-cache</code> volume (2.2 GB). The sidecar reports <code>healthy</code> a few minutes after the first start. Point <code>embedding.base_url</code> at <code>http://embedding:80/v1</code> and set <code>embedding.model</code> to the same model name. For another model, set <code>EMBEDDING_MODEL=&lt;huggingface id&gt;</code>. bge-m3 is multilingual. <code>BAAI/bge-small-en-v1.5</code> is English-only. The sidecar runs with <code>AUTO_TRUNCATE=false</code>, so it refuses a text that is longer than the model accepts instead of cutting it.</p>
 <p>Wait for these log lines: the engine check, <code>VectorAI: &lt;engine version&gt; at &lt;url&gt;, N/M configured collection(s) present, mode=read-only</code>, and then <code>Uvicorn running on http://0.0.0.0:8000</code>.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
@@ -4247,7 +4248,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 24, 2026 18:08:45 UTC">November 24, 2026</span>
   </span>
 
     
