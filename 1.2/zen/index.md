@@ -32,7 +32,7 @@ The Actian MCP Server for Zen supports the following operations:
 Before starting the server, ensure the following requirements are met:
 
 - **Container Engine:** Docker installed and running on the host machine.
-- **Actian Zen Instance:** A running instance that the container can reach.
+- **Actian Zen Instance:** A running Zen 16 or Zen 17 engine that the container can reach.
 - **Credentials (Optional):** Required if the Zen database uses authentication.
 - **OIDC provider (Optional):** Required if you are using OAuth authentication.
 

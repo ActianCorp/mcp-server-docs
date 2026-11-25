@@ -50,7 +50,7 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 | `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL, for example `https://domain/.well-known/openid-configuration`. Use `https://` in production |
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | Yes | OAuth client ID provided by the identity provider |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | OAuth client secret |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | External URL of the MCP server, for example `https://<mcp-server-host>:8000`. It must use `https://`. |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | External URL of the MCP server, for example `https://<mcp-server-host>:8000`. It must start with `https://` unless `host` is `localhost`. |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | Token audience |
 | `user_impersonation` | No | Boolean, default `true`. VectorAI DB has no per-user identity, so this only decides where the server looks for the caller's name for the call log. In this flow, the server refuses no token for lacking a user claim. See [User Impersonation](#user-impersonation). |
 
