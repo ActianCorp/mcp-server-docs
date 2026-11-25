@@ -187,22 +187,24 @@ Once `conf.json` is ready, start the container and mount the configuration file:
 ```bash
 docker run -d \
   --name vectorai-mcp \
-  -p 8000:8000 \
+  -p 127.0.0.1:8000:8000 \
   --add-host=host.docker.internal:host-gateway \
   -v $(pwd)/conf.json:/app/conf.json:ro \
   actian/vectorai-mcp-server:1.2.0
 ```
 
-The MCP endpoint is `http://<host>:8000/mcp` (streamable HTTP).
+The MCP endpoint is `http://localhost:8000/mcp` (streamable HTTP).
 
 !!! note "Container networking"
-    `-p 8000:8000` exposes the server port on the host. `--add-host=host.docker.internal:host-gateway` lets the container reach services on the host machine (such as the engine on port 6573). Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically. Linux requires the `--add-host` flag.
+    `-p 127.0.0.1:8000:8000` publishes the server port on this machine only. Without an `oauth` block in `conf.json` the server has no authentication, so open the port to other machines (`-p 8000:8000`) only with OAuth or behind an authenticating gateway. `--add-host=host.docker.internal:host-gateway` lets the container reach services on the host machine (such as the engine on port 6573). Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically. Linux requires the `--add-host` flag.
 
 With the embedding sidecar, use the compose file shipped with the image sources (`src/vectorai/docker/docker-compose.yml`):
 
 ```bash
 CONF_FILE=./conf.json docker compose --profile embedding up -d
 ```
+
+The compose file publishes the port on `127.0.0.1` as well; `MCP_SERVER_BIND_ADDRESS=0.0.0.0` opens it to the network, for OAuth deployments only.
 
 This starts Text Embeddings Inference (CPU build) with `BAAI/bge-m3` next to the server. It downloads the model once into the `tei-cache` volume (2.2 GB). The sidecar reports `healthy` a few minutes after the first start. Point `embedding.base_url` at `http://embedding:80/v1` and set `embedding.model` to the same model name. For another model, set `EMBEDDING_MODEL=<huggingface id>`. bge-m3 is multilingual. `BAAI/bge-small-en-v1.5` is English-only. The sidecar runs with `AUTO_TRUNCATE=false`, so it refuses a text that is longer than the model accepts instead of cutting it.
 

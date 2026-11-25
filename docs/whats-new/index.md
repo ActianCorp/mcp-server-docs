@@ -27,6 +27,7 @@ Actian MCP Server 1.2.0 introduces the Actian MCP Server for VectorAI DB. An AI 
 - **Resources and prompts**: Health, the collection list, and each collection's details are MCP resources. The `find_information` and `store_information` prompts guide an agent.
 - **Security**: The server supports OAuth with Auth0 or Keycloak, and resource-server mode. When the engine requires authentication, the server sends an engine access token from `vectorai.api_key_secret`.
 - **Operations**: A call log writes one record per tool call. Custom extensions add tools and resources.
+- **Container defaults**: The image has no built-in `conf.json`; a container started without a mounted configuration exits with `Configuration file not found`. The compose file and the Quick Start publish port 8000 on `127.0.0.1`; `MCP_SERVER_BIND_ADDRESS` opens it for OAuth deployments.
 
 For more information, see [Actian VectorAI DB](../vectorai-db/index.md).
 
@@ -71,6 +72,8 @@ For more information, see [Multi-Target Deployments](../hcl-informix/multi-targe
 Zen now supports several databases from one server and resource-server mode. It also adds a call log, the `list_accessible_targets` tool, tool annotations for each mode, and a Deployment Scenarios page.
 
 In `orm_operation`, an update or delete no longer accepts `where`. Use `entity_id` for a single row, or `execute_write_query` for a conditional `UPDATE` or `DELETE`.
+
+The image no longer contains a default `conf.json`: a container started without a mounted configuration exits with `Configuration file not found` instead of serving `DEMODATA`. The compose file, the `start-zen-mcp.ps1` launcher, and the Quick Start publish port 8000 on `127.0.0.1` by default; `MCP_SERVER_BIND_ADDRESS` (compose) and `-BindAddress` (launcher) open it for OAuth deployments.
 
 For more information, see [Zen](../zen/index.md) and [Deployment Scenarios](../zen/deployment.md).
 
