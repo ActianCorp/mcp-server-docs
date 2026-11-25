@@ -45,7 +45,7 @@ Mount each file under `/app/extensions/`, mount your configuration at `/app/conf
 ```
 
 ```bash
-docker run -d --rm -p 8000:8000 \
+docker run -d --rm -p 127.0.0.1:8000:8000 \
     -e DATABASE_USER=<user> -e DATABASE_PASSWORD=<password> \
     -v ./revenue_extension.py:/app/extensions/revenue_extension.py:ro \
     -v ./conf.json:/app/conf.json:ro \
