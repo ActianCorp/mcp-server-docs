@@ -9,7 +9,7 @@ The Actian MCP Server for Actian NoSQL is read-only by default. Setting `nsql.wr
 
 Turning writes on does not give the connected AI agent unrestricted access to the database. Every write clears three independent checks: the server setting, the caller's write scope, and a person confirming the operation. Each of them can stop it. This page covers all three, the properties that tune them, and what to do when the write tools do not appear in the client at all.
 
-For each tool's parameters, batch limits, and result shape, see [Tools](tools/index.md). Tools contributed by an [extension](extensions/index.md) pass the same three checks.
+For each tool's parameters, batch limits, and result shape, see [Tools](tools/index.md). Tools contributed by an [extension](extensions/index.md) pass the setting and scope checks too; a person confirms only when the extension asks. See [Write Gating for Extension Tools](extensions/index.md#write-gating-for-extension-tools).
 
 !!! note "Writes are never expressed as JPQL"
     Enabling write mode does not change `execute_query`. It still accepts `SELECT` only, and still rejects anything that could modify state. Every mutation goes through one of the three write tools instead.
