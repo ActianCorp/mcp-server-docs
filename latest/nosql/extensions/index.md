@@ -224,7 +224,7 @@ The SDK is available from [esd.actian.com](https://esd.actian.com/) under Actian
 
 ## Write Gating for Extension Tools
 
-An extension tool that changes data passes the same checks as a built-in one. There is no separate extension permission model and no way for an extension to opt out.
+An extension tool that changes data passes the same setting and scope checks as a built-in one, and is hidden the same way from a client that cannot show a confirmation. Whether a person confirms is up to the extension, as described below. There is no separate extension permission model and no way for an extension to opt out of these checks.
 
 The server decides which is which from one signal: a tool is a **write** unless it declares `readOnlyHint = true`.
 

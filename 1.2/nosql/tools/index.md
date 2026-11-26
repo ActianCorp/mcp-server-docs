@@ -12,7 +12,7 @@ The Actian MCP Server for Actian NoSQL registers eight tools for exploring the s
 
     Optional response properties — such as `cursorId` when there are no more pages, or `data` when an object was not found — are omitted rather than sent as `null`.
 
-    Field values behave differently. A field whose stored value is `null` is reported as an explicit `null`, so you can tell it apart from a field the object's class does not declare. Every field the class declares is present in `fields`.
+    Field values behave differently. A field whose stored value is `null` is reported as an explicit `null`, so you can tell it apart from a field the object's class does not have. Every field in the class's `allFields`, inherited ones included, is present in `fields`, under that field's `key`.
 
     Integer fields wider than 32 bits — `long`, and the unsigned 64-bit domain that surfaces as `java.math.BigInteger` — are returned as decimal strings rather than bare JSON numbers, for the same reason `version` is. The server writes exact digits either way; the loss happens in the client, where a JSON number becomes a double and silently rounds anything above 2^53. The rule applies wherever such a value appears: a field value, an element of an array or collection, a map key or value, and a field selected on its own by a query. Write the value back unchanged — the server parses these strings exactly. To use one in a JPQL comparison, see [Large integer literals](#execute_query).
 
@@ -514,7 +514,7 @@ Describes the schema of a specific class, including its direct superclasses, dec
 The `type` string tells you whether a field holds a scalar, a reference, or a container.
 
 - **Containers** are `java.util.List<X>`, `java.util.Map<K,V>` and `X[]`. Strip the wrapper to get the element type(s), then read each one by the rules below.
-- **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.`. Send the value itself. A `long` or `java.math.BigInteger` is the exception: as a field value send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form: an unquoted literal with an `L` suffix, never a quoted string. See [Large integer literals](#execute_query).
+- **Scalars** are Java primitives (`int`, `long`, `short`, `double`, `float`, `boolean`, `byte`, `char`) and any type starting with `java.`. Send the value itself. A `long` or `java.math.BigInteger` field also accepts a quoted string, which is how it is returned. Send it that way: a value outside ±2^53 sent as a JSON number is rounded by the client before the server sees it. In a JPQL comparison the same number takes a different form: an unquoted literal with an `L` suffix, never a quoted string. See [Large integer literals](#execute_query).
 - **References** are everything else, because any remaining name is a database class. Send the referenced object's LOID string, never a nested object: `"address": "1.0.5"`, not `"address": { "city": "..." }`.
 
 So `java.util.List<Worker>` holds LOID strings, `java.util.List<java.lang.String>` holds plain strings, and `java.util.Map<java.lang.String,Skill>` has scalar keys and LOID-string values.

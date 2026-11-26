@@ -5187,7 +5187,7 @@
 <p class="admonition-title">Response format</p>
 <p>All tools return results as structured content (<code>structuredContent</code>). For compatibility with older MCP clients, each response also includes the same data serialized as a JSON string in a text content item within the <code>content</code> array.</p>
 <p>Optional response properties — such as <code>cursorId</code> when there are no more pages, or <code>data</code> when an object was not found — are omitted rather than sent as <code>null</code>.</p>
-<p>Field values behave differently. A field whose stored value is <code>null</code> is reported as an explicit <code>null</code>, so you can tell it apart from a field the object's class does not declare. Every field the class declares is present in <code>fields</code>.</p>
+<p>Field values behave differently. A field whose stored value is <code>null</code> is reported as an explicit <code>null</code>, so you can tell it apart from a field the object's class does not have. Every field in the class's <code>allFields</code>, inherited ones included, is present in <code>fields</code>, under that field's <code>key</code>.</p>
 <p>Integer fields wider than 32 bits — <code>long</code>, and the unsigned 64-bit domain that surfaces as <code>java.math.BigInteger</code> — are returned as decimal strings rather than bare JSON numbers, for the same reason <code>version</code> is. The server writes exact digits either way; the loss happens in the client, where a JSON number becomes a double and silently rounds anything above 2^53. The rule applies wherever such a value appears: a field value, an element of an array or collection, a map key or value, and a field selected on its own by a query. Write the value back unchanged — the server parses these strings exactly. To use one in a JPQL comparison, see <a href="#execute_query">Large integer literals</a>.</p>
 </div>
 <h2 id="available-tools">Available Tools<a class="headerlink" href="#available-tools" title="Permanent link">&para;</a></h2>
@@ -5719,7 +5719,7 @@ keep them readable, the remaining examples on this page show only a few fields p
 <p>The <code>type</code> string tells you whether a field holds a scalar, a reference, or a container.</p>
 <ul>
 <li><strong>Containers</strong> are <code>java.util.List&lt;X&gt;</code>, <code>java.util.Map&lt;K,V&gt;</code> and <code>X[]</code>. Strip the wrapper to get the element type(s), then read each one by the rules below.</li>
-<li><strong>Scalars</strong> are Java primitives (<code>int</code>, <code>long</code>, <code>short</code>, <code>double</code>, <code>float</code>, <code>boolean</code>, <code>byte</code>, <code>char</code>) and any type starting with <code>java.</code>. Send the value itself. A <code>long</code> or <code>java.math.BigInteger</code> is the exception: as a field value send it as a quoted string, which is also how it is returned. In a JPQL comparison the same number takes a different form: an unquoted literal with an <code>L</code> suffix, never a quoted string. See <a href="#execute_query">Large integer literals</a>.</li>
+<li><strong>Scalars</strong> are Java primitives (<code>int</code>, <code>long</code>, <code>short</code>, <code>double</code>, <code>float</code>, <code>boolean</code>, <code>byte</code>, <code>char</code>) and any type starting with <code>java.</code>. Send the value itself. A <code>long</code> or <code>java.math.BigInteger</code> field also accepts a quoted string, which is how it is returned. Send it that way: a value outside ±2^53 sent as a JSON number is rounded by the client before the server sees it. In a JPQL comparison the same number takes a different form: an unquoted literal with an <code>L</code> suffix, never a quoted string. See <a href="#execute_query">Large integer literals</a>.</li>
 <li><strong>References</strong> are everything else, because any remaining name is a database class. Send the referenced object's LOID string, never a nested object: <code>"address": "1.0.5"</code>, not <code>"address": { "city": "..." }</code>.</li>
 </ul>
 <p>So <code>java.util.List&lt;Worker&gt;</code> holds LOID strings, <code>java.util.List&lt;java.lang.String&gt;</code> holds plain strings, and <code>java.util.Map&lt;java.lang.String,Skill&gt;</code> has scalar keys and LOID-string values.</p>
@@ -6181,7 +6181,7 @@ Confirm?
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 10:25:06 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 16:55:24 UTC">November 26, 2026</span>
   </span>
 
     
