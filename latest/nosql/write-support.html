@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="How to let the Actian MCP Server for NoSQL create, update, and delete objects, and the three checks — the setting, the mcp:write scope, and human confirmation — that authorize every write.">
+        <meta name="description" content="How to let the Actian MCP Server for NoSQL create, update, and delete objects, and the three checks (the setting, the write scope, and human confirmation) that authorize every write.">
       
       
       
@@ -2605,6 +2605,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -2669,8 +2675,6 @@
       
         
       
-        
-      
     
     
     
@@ -2683,14 +2687,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="authentication/index.html" class="md-nav__link ">
+            <a href="targets/index.html" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Authentication
+    Targets
   
 
     
@@ -2712,7 +2716,259 @@
             <span class="md-nav__icon md-icon"></span>
             
   
+    Targets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="targets/without-restart.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changing Targets Without a Restart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="database-availability.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Database Availability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="limits.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="authentication/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
     Authentication
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_5" id="__nav_10_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="authentication/scopes.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_5_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="authentication/identity-providers/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identity Providers
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_5_3" id="__nav_10_5_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_10_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Identity Providers
   
 
           </label>
@@ -2771,6 +3027,14 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -3853,7 +4117,7 @@
 
 <h1 id="write-support">Write Support<a class="headerlink" href="#write-support" title="Permanent link">&para;</a></h1>
 <p>The Actian MCP Server for Actian NoSQL is read-only by default. Setting <code>nsql.writes.enabled</code> to <code>true</code> adds three tools that change data: <code>create_objects</code>, <code>update_objects</code>, and <code>delete_objects</code>. A deployment that never sets it is not affected by anything on this page.</p>
-<p>Turning writes on does not give the connected AI agent unrestricted access to the database. Every write clears three independent checks — the server setting, the caller's <code>mcp:write</code> scope, and a person confirming the operation — and each of them can stop it. This page covers all three, the properties that tune them, and what to do when the write tools do not appear in the client at all.</p>
+<p>Turning writes on does not give the connected AI agent unrestricted access to the database. Every write clears three independent checks: the server setting, the caller's write scope, and a person confirming the operation. Each of them can stop it. This page covers all three, the properties that tune them, and what to do when the write tools do not appear in the client at all.</p>
 <p>For each tool's parameters, batch limits, and result shape, see <a href="tools/index.html">Tools</a>. Tools contributed by an <a href="extensions/index.html">extension</a> pass the same three checks.</p>
 <div class="admonition note">
 <p class="admonition-title">Writes are never expressed as JPQL</p>
@@ -3889,15 +4153,16 @@
 <h2 id="authorizing-a-write">Authorizing a Write<a class="headerlink" href="#authorizing-a-write" title="Permanent link">&para;</a></h2>
 <p>Authorization happens at two separate moments: the server decides which write tools a client may have when that client connects, and then vets each call as it arrives.</p>
 <h3 id="tools-provided-at-connect-time">Tools Provided at Connect Time<a class="headerlink" href="#tools-provided-at-connect-time" title="Permanent link">&para;</a></h3>
-<p>A write tool is registered for a connection only when <strong>both</strong> of these hold:</p>
+<p>A write tool is registered for a connection (for a stateless client, for a request) only when <strong>all three</strong> of these hold:</p>
 <ol>
-<li><code>nsql.writes.enabled</code> is <code>true</code>; and</li>
-<li>the client advertised the MCP elicitation capability, so the server has a way to ask a person for confirmation.</li>
+<li><code>nsql.writes.enabled</code> is <code>true</code>;</li>
+<li>the client advertised the MCP elicitation capability, so the server has a way to ask a person for confirmation; and</li>
+<li>the caller may write here. With authentication on, that means the <code>mcp:write</code> scope without targets, or, with targets, the <code>actian:{target}:write</code> scope of the target the request is routed to (see <a href="authentication/scopes.html#scopes-per-target">Scopes per Target</a>). With authentication off, any caller may write.</li>
 </ol>
-<p>The second condition is waived when <code>nsql.writes.confirmation-required</code> is <code>false</code> — with no prompt to show, there is no reason to withhold the tools from a client that could not show one.</p>
+<p>The second condition is waived when <code>nsql.writes.confirmation-required</code> is <code>false</code>. With no prompt to show, there is no reason to withhold the tools from a client that could not show one.</p>
 <p>A tool the server withholds is unlisted <strong>and</strong> uncallable: calling it anyway fails at the protocol layer with an unknown-tool error, before any server-side logic runs. If the write tools are missing when you expected them, <a href="#missing-write-tools">Missing Write Tools</a> is the troubleshooting guide.</p>
 <h3 id="what-each-call-must-clear">What Each Call Must Clear<a class="headerlink" href="#what-each-call-must-clear" title="Permanent link">&para;</a></h3>
-<p>Every call that does reach the server passes three independent checks, in the order below — so a caller on a read-only server, or one whose token lacks the scope, is turned away before anybody is asked to confirm anything.</p>
+<p>Every call that does reach the server passes three independent checks, in the order below, so a caller on a read-only server, or one whose token lacks the write scope, is turned away before anybody is asked to confirm anything. The write scope also decides whether the tools are listed, so the check here is the backstop for a call that reaches a tool the list did not hide.</p>
 <table>
 <thead>
 <tr>
@@ -3913,8 +4178,8 @@
 <td>Always. Re-checked here as a backstop, having already governed registration.</td>
 </tr>
 <tr>
-<td><code>mcp:write</code> scope</td>
-<td>The access token must carry the <code>mcp:write</code> scope.</td>
+<td>Write scope</td>
+<td>The access token must carry the write scope of the mode: <code>mcp:write</code> without targets, or, with targets, <code>actian:{target}:write</code> for the target the request is routed to, where <code>mcp:write</code> grants nothing.</td>
 <td>Only when authentication is enabled (<code>mcp.auth.enabled=true</code>). An unauthenticated server does not check scopes.</td>
 </tr>
 <tr>
@@ -3924,7 +4189,7 @@
 </tr>
 </tbody>
 </table>
-<p>The sequence below picks up at this second stage, with the tool already registered:</p>
+<p>On the stateful protocol, the sequence below picks up at this second stage, with the tool already registered:</p>
 <pre class="mermaid"><code>%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial'}}}%%
 sequenceDiagram
     participant User as User
@@ -3937,7 +4202,7 @@ sequenceDiagram
     alt Writes disabled
         Server--&gt;&gt;Client: Rejected (write operations are disabled)
     else Writes enabled
-        Server-&gt;&gt;Server: Check mcp:write scope
+        Server-&gt;&gt;Server: Check write scope
         alt Scope missing
             Server--&gt;&gt;Client: Rejected (missing scope)
         else Scope present or authentication disabled
@@ -3949,21 +4214,24 @@ sequenceDiagram
                 Server-&gt;&gt;DB: Run one atomic transaction
                 DB--&gt;&gt;Server: Committed
                 Server--&gt;&gt;Client: Result with the affected LOIDs
-            else Declined, cancelled, no response, or client cannot prompt
+            else Declined, canceled, or client cannot prompt
                 Client--&gt;&gt;Server: Not confirmed
                 Server--&gt;&gt;Client: Rejected (write not performed)
+            else No answer within the timeout
+                Server--&gt;&gt;Client: Rejected (timed out)
             end
         end
     end</code></pre>
-<p>To grant the <code>mcp:write</code> scope in your identity provider, see <a href="authentication/auth0/index.html">Auth0</a> or <a href="authentication/keycloak/index.html">Keycloak</a>.</p>
+<p>On the stateless 2026-07-28 protocol, the checks are the same, but the confirmation travels in two calls: the first returns the question and writes nothing, and the client repeats the call with the answer. See <a href="protocol-versions.html#write-confirmation-on-each-protocol">Write Confirmation on Each Protocol</a>.</p>
+<p>The write scope is <code>mcp:write</code> without targets and the target's <code>actian:{target}:write</code> with targets; see <a href="authentication/scopes.html#scopes-per-target">Scopes per Target</a>. To grant it in your identity provider, see <a href="authentication/auth0/index.html">Auth0</a> or <a href="authentication/keycloak/index.html">Keycloak</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">The server checks the scope; it never asks for it</p>
-<p>Nothing on the server requests <code>mcp:write</code> — it only reads whatever the presented token carries, so the request has to come from the MCP client. A client that lets you set its scopes can be told to ask for it directly. One that works them out from the server's resource metadata asks for whatever is advertised there, which is a server setting: see <a href="authentication/index.html#advertising-scopes-to-mcp-clients">Advertising scopes to MCP clients</a>.</p>
+<p>Nothing on the server requests the write scope. It only reads whatever the presented token carries. The scope reaches the token in one of two ways: the client requests it from its own configuration, or the identity provider assigns it without a request. A client that takes its scopes only from the server needs the second. See <a href="authentication/scopes.html#how-a-scope-reaches-the-token">How a Scope Reaches the Token</a>.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">The scope is the only per-caller write control</p>
-<p>The server authenticates to Actian NoSQL Database with the credentials carried in its connection URL, so every statement it runs — read or write — runs as that one configured database user. There is no per-user impersonation, and so no database-privilege layer underneath that could narrow what an authorized caller may change. <code>mcp:write</code> is all or nothing: a caller who holds it can create, update, or delete objects of any class in the database.</p>
-<p>Grant <code>mcp:write</code> only to the callers that should be able to modify data, and treat the database user in <code>nsql.connectionURL</code> as the true limit of what any caller can reach.</p>
+<p>The server authenticates to Actian NoSQL Database with the credentials carried in the connection URL of the database the call reaches, so every statement it runs, read or write, runs as that one configured database user. There is no per-user impersonation, and so no database-privilege layer underneath that could narrow what an authorized caller may change. The write scope is all or nothing: a caller who holds it can create, update, or delete objects of any class in that database. With targets, that holds for each target separately, because the write scope of a target covers that target's database only.</p>
+<p>Grant the write scope only to the callers that should be able to modify data, and treat the database user in the connection URL as the true limit of what any caller can reach. Without targets that is <code>nsql.connectionURL</code>. With targets each target has its own URL; see <a href="targets/index.html#target-names-and-connection-urls">Target Names and Connection URLs</a>.</p>
 </div>
 <h2 id="confirmation-prompts">Confirmation Prompts<a class="headerlink" href="#confirmation-prompts" title="Permanent link">&para;</a></h2>
 <p>The server requests confirmation through the Model Context Protocol (MCP) elicitation capability, and enforces the answer server-side. The write tool does not run until an explicit acceptance comes back — the client is never trusted to gate the operation on the server's behalf.</p>
@@ -4006,17 +4274,12 @@ sequenceDiagram
 <p>Nothing is written in any of those cases. The rejection message names the reason, so a declined write is distinguishable from one that timed out.</p>
 <h3 id="prompt-timeout">Prompt Timeout<a class="headerlink" href="#prompt-timeout" title="Permanent link">&para;</a></h3>
 <p>The server waits a fixed window for an answer. The clock starts when the prompt is sent and runs for <code>nsql.writes.confirmation-timeout-seconds</code>, 60 by default. Silence is not consent: when the window closes the write is rejected outright, and the tool call returns naming the reason.</p>
-<div class="language-text highlight"><pre><span></span><code>Create not performed: no confirmation was received within the timeout.
-</code></pre></div>
-<p>The server records the same event:</p>
-<div class="language-text highlight"><pre><span></span><code>WARN  Confirmation not received within 60s; rejecting operation.
-</code></pre></div>
 <p>Sixty seconds suits someone watching the conversation as it happens. Raise it when approvals go to a person who may be away from the screen. On the stateful protocol the tool call stays open for the whole wait, so the agent making the request is blocked until somebody answers or the timeout closes it. Lower it if you would rather a batch fail fast than sit pending.</p>
 <p>For a client on the stateless 2026-07-28 protocol, the same setting is how long the person has to answer. The server refuses a later answer, and the operation must be run again. The tool call does not stay open. The first call returns the question, and the client repeats the call with the answer. See <a href="protocol-versions.html#write-confirmation-on-each-protocol">Protocol Versions</a>.</p>
 <p>The timeout plays no part when <code>nsql.writes.confirmation-required</code> is <code>false</code>, because no prompt is sent.</p>
 <p>Not every MCP client implements elicitation. For which clients can display the prompt, see <a href="../mcp-clients/index.html#elicitation-support-for-write-approval">Connecting MCP Clients</a>.</p>
 <h2 id="missing-write-tools">Missing Write Tools<a class="headerlink" href="#missing-write-tools" title="Permanent link">&para;</a></h2>
-<p>Write tools go missing because one of the two <a href="#tools-provided-at-connect-time">registration conditions</a> was not met. Withholding them is deliberate: a tool the server could never get confirmed would fail on every call, so a client that cannot confirm simply never sees one. The startup log tells you which condition to look at.</p>
+<p>Write tools go missing because one of the three <a href="#tools-provided-at-connect-time">registration conditions</a> was not met. Withholding them is deliberate: a tool the server could never get confirmed would fail on every call, so a client that cannot confirm simply never sees one. The startup log tells you which condition to look at.</p>
 <table>
 <thead>
 <tr>
@@ -4037,18 +4300,23 @@ sequenceDiagram
 <td>Connect a client that supports it, or set <code>nsql.writes.confirmation-required=false</code>.</td>
 </tr>
 <tr>
-<td>A write tool call fails with a protocol error naming the tool, such as <code>-32602 Invalid tool name</code></td>
-<td>The tool is not registered for this connection, for one of the two reasons above. The MCP runtime rejects the call as unknown; it never reaches the server's write logic.</td>
-<td>Fix the cause of the hiding, then reconnect the client so it re-reads the tool list.</td>
+<td>No write tools, reads work, authentication is on, and the client can show the confirmation</td>
+<td>The access token does not carry the write scope of the mode: <code>mcp:write</code> without targets, or, with targets, <code>actian:{target}:write</code> for the target of the URL, where <code>mcp:write</code> grants nothing.</td>
+<td>Grant the write scope in your identity provider, then reconnect the client. See <a href="authentication/scopes.html#scopes-per-target">Scopes per Target</a>.</td>
 </tr>
 <tr>
-<td>A write tool call is rejected for a missing scope</td>
-<td>The access token does not carry <code>mcp:write</code>.</td>
-<td>Grant the scope in your identity provider.</td>
+<td>With targets, only <code>list_accessible_targets</code> is offered, and no write tools</td>
+<td>The client is connected to plain <code>/mcp</code>, where no target is routed.</td>
+<td>Connect to <code>/mcp/{target}</code>. See <a href="targets/index.html#what-an-agent-sees">What an Agent Sees</a>.</td>
+</tr>
+<tr>
+<td>A write tool call fails with a protocol error naming the tool, such as <code>-32602 Invalid tool name</code></td>
+<td>The tool is not offered to this caller, for one of the reasons above. The MCP runtime rejects the call as unknown; it never reaches the server's write logic.</td>
+<td>Fix the cause of the hiding, then reconnect the client so it re-reads the tool list.</td>
 </tr>
 </tbody>
 </table>
-<p>A hidden tool is unlisted <strong>and</strong> uncallable, so the usual sign of trouble is a protocol-level error about an unknown tool rather than a message from the server explaining itself. The server's own refusal, <code>Write operations are disabled on this server.</code>, is a backstop for a call that somehow bypasses the tool list; in normal use nobody sees it.</p>
+<p>A hidden tool is unlisted <strong>and</strong> uncallable, so the usual sign of trouble is a protocol-level error about an unknown tool rather than a message from the server explaining itself. The server's own refusal, which includes the check of the write scope at the call, is a backstop for a call that somehow bypasses the tool list; in normal use nobody sees it. It is the scope that controls writes, and hiding the tools only keeps them out of the client's view.</p>
 <p>Visibility is decided per connection, from the capabilities the client advertised when it connected. A stateless client has no connection, so the server decides visibility for each request, from the capabilities that the request declares. After changing either setting, restart the server and reconnect the client.</p>
 <p>This rule is not tied to specific tool names. It applies to any tool that does not declare itself read-only, including tools contributed by an <a href="extensions/index.html">extension</a>.</p>
 <h2 id="answering-the-prompt-from-a-python-client">Answering Prompt from a Python Client<a class="headerlink" href="#answering-the-prompt-from-a-python-client" title="Permanent link">&para;</a></h2>
@@ -4085,15 +4353,13 @@ python<span class="w"> </span>nosql_hitl_client.py<span class="w"> </span>http:/
 <div class="admonition warning">
 <p class="admonition-title">This removes human oversight of every write</p>
 <p>With <code>nsql.writes.confirmation-required</code> set to <code>false</code>, the server creates, updates, and deletes objects as soon as it is asked. Nobody is asked first. Use it only when the client cannot prompt and you accept that the AI agent writes unattended.</p>
-<p>The other two checks still apply. Disabling confirmation does not enable writes, and it does not grant write access to callers that lack the <code>mcp:write</code> scope.</p>
+<p>The other two checks still apply. Disabling confirmation does not enable writes, and it does not grant write access to callers that lack the write scope.</p>
 <p>This setting is deployment-wide: it applies to the built-in write tools <strong>and</strong> to any extension tool that asks for confirmation. Both share the same confirmation mechanism, so turning it off silences both.</p>
 </div>
-<p>The setting is visible in the log. At startup the server records the mode it is running in, and it raises that line to a warning when writes are unconfirmed:</p>
-<div class="language-text highlight"><pre><span></span><code>WARN  nsql-mcp-server Mode: READ-WRITE. Write tools are exposed; writes execute without confirmation.
-</code></pre></div>
+<p>The setting is visible in the log: at startup the server logs the mode it runs in, as a warning when writes run without confirmation.</p>
 <h2 id="optimistic-concurrency">Optimistic Concurrency<a class="headerlink" href="#optimistic-concurrency" title="Permanent link">&para;</a></h2>
 <p>Every object a read returns carries a <code>version</code> field: an opaque token that changes whenever the object is modified. It is returned as a string so that large values survive JSON without losing precision, the same reason 64-bit integer fields are, as described under <a href="tools/index.html">Response format</a>. Do not parse it or compare it for ordering. The only thing to do with it is hand it back.</p>
-<p><code>update_objects</code> requires it. Each update item carries the target <code>loid</code>, the <code>expectedVersion</code> you read earlier, and the <code>fields</code> to change:</p>
+<p><code>update_objects</code> requires it. Each update item carries the <code>loid</code> of the object to change, the <code>expectedVersion</code> you read earlier, and the <code>fields</code> to change:</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"loid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"135.0.2146"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"expectedVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8273401"</span><span class="p">,</span>
@@ -4151,7 +4417,7 @@ python<span class="w"> </span>nosql_hitl_client.py<span class="w"> </span>http:/
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"/></svg></span> <strong><a href="authentication/index.html">Authentication</a></strong><br />
-  Enable OAuth 2.0 and grant the <code>mcp:write</code> scope.</p>
+  Enable OAuth 2.0 and grant the write scope.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.4 7.5c.8.8.8 2.1 0 2.8l-2.8 2.8-7.8-7.8 2.8-2.8c.8-.8 2.1-.8 2.8 0l1.8 1.8 3-3 1.4 1.4-3 3zm-5.8 5.8-1.4-1.4-2.8 2.8-2.1-2.1 2.8-2.8-1.4-1.4-2.8 2.8-1.5-1.4-2.8 2.8c-.8.8-.8 2.1 0 2.8l1.8 1.8-4 4 1.4 1.4 4-4 1.8 1.8c.8.8 2.1.8 2.8 0l2.8-2.8-1.4-1.4z"/></svg></span> <strong><a href="../mcp-clients/index.html#elicitation-support-for-write-approval">MCP clients</a></strong><br />
@@ -4179,7 +4445,7 @@ python<span class="w"> </span>nosql_hitl_client.py<span class="w"> </span>http:/
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 10:25:06 UTC">November 26, 2026</span>
   </span>
 
     

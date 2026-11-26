@@ -2762,6 +2762,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -2826,8 +2832,6 @@
       
         
       
-        
-      
     
     
     
@@ -2840,14 +2844,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../nosql/authentication/index.html" class="md-nav__link ">
+            <a href="../nosql/targets/index.html" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Authentication
+    Targets
   
 
     
@@ -2869,7 +2873,259 @@
             <span class="md-nav__icon md-icon"></span>
             
   
+    Targets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nosql/targets/without-restart.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changing Targets Without a Restart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nosql/database-availability.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Database Availability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nosql/limits.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../nosql/authentication/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
     Authentication
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_5" id="__nav_10_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authentication
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nosql/authentication/scopes.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_5_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../nosql/authentication/identity-providers/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identity Providers
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_5_3" id="__nav_10_5_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_10_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Identity Providers
   
 
           </label>
@@ -2928,6 +3184,14 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -3774,7 +4038,8 @@
 <li>If a request does not name a database, the server tells the client which URL to use.</li>
 </ul>
 <p>Multi-target deployments work with Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Zen also supports read-only personas, which are named connections that open a database in read-only mode.</p>
-<p>For more information, see <a href="../ingres/multi-target.html">Ingres</a>, <a href="../analytics-engine/multi-target.html">Analytics Engine</a>, <a href="../hcl-informix/multi-target.html">HCL Informix</a>, and <a href="../zen/multi-target.html">Zen</a>.</p>
+<p>Actian NoSQL also serves several databases from one server, through named targets in <code>application.properties</code>. Each target gets its own URL, <code>/mcp/{target}</code>, and its own read and write scopes. Targets kept in a directory are added, changed, and removed without a restart.</p>
+<p>For more information, see <a href="../ingres/multi-target.html">Ingres</a>, <a href="../analytics-engine/multi-target.html">Analytics Engine</a>, <a href="../hcl-informix/multi-target.html">HCL Informix</a>, <a href="../zen/multi-target.html">Zen</a>, and <a href="../nosql/targets/index.html">NoSQL</a>.</p>
 <h2 id="resource-server-mode">Resource-Server Mode<a class="headerlink" href="#resource-server-mode" title="Permanent link">&para;</a></h2>
 <p>An application that has already signed the user in can now call the MCP Server with an access token from the identity provider (IdP). The user does not need a second OAuth login. The server checks each token against the IdP's published signing keys and runs the call as the user named in the token. The Auth0 and Keycloak guides describe the IdP setup, including the scopes for each target, and how a calling application gets a token.</p>
 <p>For more information, see <a href="../ingres/authentication/resource-server.html">Ingres</a>, <a href="../analytics-engine/authentication/resource-server.html">Analytics Engine</a>, <a href="../zen/authentication/index.html#resource-server-mode">Zen</a>, and <a href="../vectorai-db/authentication/index.html#resource-server-mode">VectorAI DB</a>. HCL Informix enforces per-target grants in resource-server mode. No Informix setup guide is available yet. See <a href="../hcl-informix/authentication/index.html">HCL Informix Authentication</a>.</p>
@@ -3794,11 +4059,14 @@
 <p>For more information, see <a href="../zen/index.html">Zen</a> and <a href="../zen/deployment.html">Deployment Scenarios</a>.</p>
 <h2 id="nosql-updates">NoSQL Updates<a class="headerlink" href="#nosql-updates" title="Permanent link">&para;</a></h2>
 <ul>
+<li>One server can serve several NoSQL databases through named targets. Each target has its own URL, <code>/mcp/{target}</code>, and its own read and write scopes, and targets kept in a directory are added, changed, and removed without a restart. See <a href="#multi-target-deployments">Multi-Target Deployments</a>.</li>
+<li>Each database has a call cap, <code>nsql.db.max-calls</code> (default <code>10</code>), and a deadline for read calls, <code>nsql.db.call-deadline</code> (default <code>30s</code>). A call beyond the cap is refused as busy, and a read that runs past the deadline is stopped. The server reconnects to a database that comes back, without a restart.</li>
 <li>The server accepts a token only when its <code>aud</code> claim contains a value set in <code>quarkus.oidc.token.audience</code>. The Keycloak guide also describes token exchange for a calling application.</li>
-<li>A new page describes the stateful and stateless versions of MCP and how the server confirms a write on each.</li>
+<li>The server supports the stateless 2026-07-28 version of MCP. A client on it confirms a write by repeating the tool call.</li>
 <li><code>get_objects_by_loids</code> lists the Logical Object IDs (LOIDs) it did not find in <code>notFoundLoids</code>.</li>
+<li>For extension authors, the declared return type of a tool, resource, resource template, or prompt decides what the client receives, and some return types stop the server at startup.</li>
 </ul>
-<p>For more information, see <a href="../nosql/authentication/index.html">Authentication</a> and <a href="../nosql/protocol-versions.html">Protocol Versions</a>.</p>
+<p>For more information, see <a href="../nosql/targets/index.html">Targets</a>, <a href="../nosql/database-availability.html">Database Availability</a>, <a href="../nosql/authentication/index.html">Authentication</a>, <a href="../nosql/protocol-versions.html">Protocol Versions</a>, and <a href="../nosql/extensions/index.html">Extensions</a>.</p>
 <h2 id="tool-annotations-and-tool-changes">Tool Annotations and Tool Changes<a class="headerlink" href="#tool-annotations-and-tool-changes" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Each tool declares MCP tool annotations. Clients can use them to decide whether to run a tool without asking first.</li>
@@ -3839,7 +4107,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 24, 2026 18:08:45 UTC">November 24, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 10:25:06 UTC">November 26, 2026</span>
   </span>
 
     

@@ -72,7 +72,7 @@ To connect to one database, use the database's own connection fields, described 
 
 Ingres, Analytics Engine, HCL Informix®, and Zen can serve several databases from one server. You list the database servers and their databases in a `targets` block in `conf.json`, instead of the single-database fields. Each database has its own URL, `/mcp/{host}/{instance}/{database}`, and a client connects to that URL. When the block lists more than one database server, the server requires authentication to check a scope for each database. VectorAI DB does not accept a `targets` block. One container serves one engine.
 
-The fields and their meaning differ by database. For the configuration details, see the multi-target documentation for your database: [Ingres](../ingres/multi-target.md), [Analytics Engine](../analytics-engine/multi-target.md), [Zen](../zen/multi-target.md), or Actian NoSQL.
+The fields and their meaning differ by database. For the configuration details, see the multi-target documentation for your database: [Ingres](../ingres/multi-target.md), [Analytics Engine](../analytics-engine/multi-target.md), [Zen](../zen/multi-target.md), or [Actian NoSQL](../nosql/targets/index.md). Actian NoSQL configures its targets by name in `application.properties` and serves each at `/mcp/{target}`. It needs no authentication for several targets, but without it every target is open to every caller.
 
 !!! note "Configuration File Protection"
     The configuration file contains database credentials. Set restrictive permissions on the host (`chmod 600 conf.json`) and avoid committing it to version control.
