@@ -34,7 +34,7 @@ The server is read-only until writes are turned on. Once they are, tools for cre
 
 ### Extensions
 
-An extension is a Java JAR that adds custom tools, resources, resource templates, and prompts to a running server — no fork, and no rebuild of the product. The server loads only the JARs an operator has declared in an allowlist, with each one's SHA-256 digest pinned by default. An extension's write tools pass the same checks the built-in ones do.
+An extension is a Java JAR that adds custom tools, resources, resource templates, and prompts to a running server, with no fork and no rebuild of the product. The server loads only the JARs an operator has declared in an allowlist, with each one's SHA-256 digest pinned by default. An extension's write tools pass the same setting and scope checks as the built-in ones; whether a person confirms depends on the extension.
 
 With targets, an extension can be offered at some targets only: see [Limiting an Extension to Some Targets](extensions/index.md#limiting-an-extension-to-some-targets).
 

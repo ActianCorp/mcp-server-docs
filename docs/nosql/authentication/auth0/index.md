@@ -218,7 +218,7 @@ This is a **tenant-level** setting required for MCP clients to pass the audience
 3. Enable **Resource Parameter Compatibility Profile**.
 4. Select **Save**.
 
-MCP clients name the server they want a token for in the standard `resource` parameter, not in the Auth0-specific `audience` parameter. With this profile on, Auth0 treats `resource` as the audience, so the API Identifier must match the server URL that clients send, for example `https://<mcp-server-host>:8443/mcp`.
+MCP clients name the server they want a token for in the standard `resource` parameter, not in the Auth0-specific `audience` parameter. With this profile on, Auth0 treats `resource` as the audience, so the API Identifier must match the server URL that clients send, for example `https://<mcp-server-host>:8443/mcp`. With targets, a client connected to `/mcp/{target}` sends the same `…/mcp`, the resource that the server's metadata names at every target, so one API covers every target.
 
 ## Step 6: Configure and Start Server {#step-6-configure-and-start-the-server}
 
