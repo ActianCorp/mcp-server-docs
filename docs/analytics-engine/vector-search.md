@@ -7,7 +7,7 @@ description: Find the rows most similar to a query vector in an Actian Analytics
 
 Actian Analytics Engine stores embeddings and other numeric vectors in `VECTOR` columns. The Actian MCP Server shows an AI agent which columns are vectors and how they are declared, and it provides a `vector_search` tool that returns the rows nearest to a query vector.
 
-Use vector search when the question is about similarity rather than exact matches. Examples include finding the documents closest to a question embedding, the products most like a given product, or the records nearest to a reference point.
+Use the `vector_search` tool when the question is about similarity rather than exact matches. Examples include finding the documents closest to a question embedding, the products most like a given product, or the records nearest to a reference point.
 
 !!! note "Requirements"
     `VECTOR` columns require Analytics Engine 8.0 or later. When the server connects to an earlier release, such as 7.0, `describe_table` and the schema resource report columns without vector details. `vector_search` returns an error saying the server does not support it.
