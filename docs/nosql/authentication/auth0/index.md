@@ -82,7 +82,7 @@ The API represents the Actian MCP Server as a protected resource in Auth0. Token
 !!! important "The Identifier is the audience the server checks"
     Set `quarkus.oidc.token.audience` to the Identifier exactly, with a trailing `/` included or excluded in the same way.
 
-Then add the permissions your mode needs:
+Then add the permissions that the mode needs:
 
 - **Without targets**, the `mcp:write` permission, in write mode only. A read-only server never inspects it. See [Write Permission Without Targets](#write-permission-without-targets-write-mode-only).
 - **With targets**, the permissions of each target, whether writes are on or off, because every target needs its read permission. See [Permissions with Targets](#permissions-with-targets).
@@ -136,7 +136,7 @@ With targets (see [Targets](../../targets/index.md)), `mcp:write` grants nothing
 
 Roles bundle the target permissions, and users receive roles. With **Add Permissions in the Access Token** on, as set in [Enable RBAC](#enable-rbac), the permissions of a user's roles arrive in the token's `permissions` claim without being requested.
 
-1. Navigate to **User Management > Roles** and create a role for each group of users, for example `Sales Team`. On the role's **Permissions** tab, select **Add Permissions**, choose your API, and add the target permissions the group needs. One role can hold permissions of several targets, for example read on `sales` and `hr` and write on `sales` only.
+1. Navigate to **User Management > Roles** and create a role for each group of users, for example, `Sales Team`. On the role's **Permissions** tab, select **Add Permissions**, choose the API, and add the target permissions the group needs. One role can hold permissions of several targets, for example, read on `sales` and `hr` and write on `sales` only.
 2. On the role's **Users** tab, select **Add Users** and assign the members of the group.
 
 The write permission of a target is never named in the `403` the server answers with, because the write tools are not offered without it. It reaches the token through the role, without being requested.
@@ -188,7 +188,7 @@ It applies as written when the API's **Application Access Policy**, on the API's
     | **Client Access** | Tokens the application requests for itself, with no user involved — the Client Credentials flow. |
 
 3. Open the tab that matches the flow this application uses.
-4. For the Authorization Code flow, select no permission: the permissions of the user's roles reach the token through **Add Permissions in the Access Token**, so authorizing the API is enough. For the Client Credentials flow, select on the **Client Access** tab the permissions the application needs: `mcp:write` without targets, in write mode, or the target permissions with targets, for example `actian:sales:read` and `actian:sales:write`. They arrive in the token's `scope` claim. Then select **Save**.
+4. For the Authorization Code flow, select no permission: the permissions of the user's roles reach the token through **Add Permissions in the Access Token**, so authorizing the API is enough. For the Client Credentials flow, select on the **Client Access** tab the permissions the application needs: `mcp:write` without targets, in write mode, or the target permissions with targets, for example, `actian:sales:read` and `actian:sales:write`. They arrive in the token's `scope` claim. Then select **Save**.
 
 !!! note "What the Permission List Controls"
     The permission list controls what the application is *allowed to request*. For Client Credentials that is the entire grant, because there is no user whose role could carry it. For the Authorization Code flow, the user's roles decide, and the permissions that Auth0 adds through **Add Permissions in the Access Token** need no selection.
@@ -218,7 +218,7 @@ This is a **tenant-level** setting required for MCP clients to pass the audience
 3. Enable **Resource Parameter Compatibility Profile**.
 4. Select **Save**.
 
-MCP clients name the server they want a token for in the standard `resource` parameter, not in the Auth0-specific `audience` parameter. With this profile on, Auth0 treats `resource` as the audience, so the API Identifier must match the server URL that clients send, for example `https://<mcp-server-host>:8443/mcp`. With targets, a client connected to `/mcp/{target}` sends the same `…/mcp`, the resource that the server's metadata names at every target, so one API covers every target.
+MCP clients name the server they want a token for in the standard `resource` parameter, not in the Auth0-specific `audience` parameter. With this profile on, Auth0 treats `resource` as the audience, so the API Identifier must match the server URL that clients send, for example, `https://<mcp-server-host>:8443/mcp`. With targets, a client connected to `/mcp/{target}` sends the same `…/mcp`, the resource that the server's metadata names at every target, so one API covers every target.
 
 ## Step 6: Configure and Start Server {#step-6-configure-and-start-the-server}
 

@@ -89,13 +89,13 @@ The audience (`aud` claim) says which service a token is for. With authenticatio
 What to set depends on the provider:
 
 - **Auth0:** The API Identifier, character for character. See [Step 3: Create an Auth0 API](auth0/index.md#step-3-create-an-auth0-api).
-- **Keycloak:** The Included Custom Audience value of the Audience mapper, for example `nsql-mcp`. See [Step 3: Add the Token Audience](keycloak/index.md#step-3-add-the-token-audience).
+- **Keycloak:** The Included Custom Audience value of the Audience mapper, for example, `nsql-mcp`. See [Step 3: Add the Token Audience](keycloak/index.md#step-3-add-the-token-audience).
 
 With authentication on and no audience set, the server exits at startup with an error that names `quarkus.oidc.token.audience`.
 
 ### Calling Applications
 
-An application that has already signed the user in, for example an agent application, can call this server for that user. The application needs a token for the same user. The `aud` claim of that token must contain this server's audience:
+An application that has already signed the user in, for example, an agent application, can call this server for that user. The application needs a token for the same user. The `aud` claim of that token must contain this server's audience:
 
 - **Keycloak:** The application exchanges the user's token with standard token exchange (RFC 8693). See [Token Exchange for a Calling Application](keycloak/index.md#token-exchange-for-a-calling-application).
 - **Auth0:** The application requests this server's audience when the user signs in. See [Calling Applications](auth0/index.md#calling-applications).

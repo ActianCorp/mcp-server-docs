@@ -5,7 +5,7 @@ description: Step-by-step guides for setting up Auth0 or Keycloak as the identit
 
 # Identity Providers
 
-Choose your identity provider for step-by-step setup instructions. Both are tested with targets.
+Choose an identity provider for step-by-step setup instructions. Both are tested with targets.
 
 <div class="grid cards" markdown>
 

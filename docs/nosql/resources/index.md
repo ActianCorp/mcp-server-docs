@@ -24,7 +24,7 @@ The Actian MCP Server for Actian NoSQL provides built-in resources that enables 
 
     The URIs carry the target: `db://schema/{target}/classes`, `db://schema/{target}/classes/count`, `db://schema/{target}/complete`, and the template `db://schema/{target}/class/{className}`. The target name must match exactly, including case.
 
-    Each resource is named `<name>@<target>`, for example `list_classes@sales`, and its title starts with the target name. A URI of another target is read as not found at this endpoint, the same as a URI that never existed.
+    Each resource is named `<name>@<target>`, for example, `list_classes@sales`, and its title starts with the target name. A URI of another target is read as not found at this endpoint, the same as a URI that never existed.
 
 ---
 

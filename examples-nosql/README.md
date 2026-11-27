@@ -71,7 +71,7 @@ Run the client from anywhere that can reach the server's HTTP endpoint. To reach
 a remote host, tunnel first with `ssh -L 8080:localhost:8080 <host>`, then connect to
 `http://localhost:8080/mcp`.
 
-With targets, pass the target's URL, for example `http://localhost:8080/mcp/sales`. Plain
+With targets, pass the target's URL, for example, `http://localhost:8080/mcp/sales`. Plain
 `/mcp` then offers only `list_accessible_targets`.
 
 ## See also

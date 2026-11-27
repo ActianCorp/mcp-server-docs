@@ -38,11 +38,11 @@ The distributed form `database1@host1|database2@host2` is not supported, in `nsq
 ## Revocation and Process State
 
 - Revoking a grant at the identity provider takes effect when the access token expires, so keep access tokens short-lived.
-- Cursors, pending write confirmations of stateless clients, rate-limit buckets, and session pins live in the memory of one server process. With several instances of the MCP server behind one address, for example the replicas of a Kubernetes Deployment, route a client's requests to one instance (sticky routing). A request that reaches another instance does not find them, and a stateless confirmation answered at another instance is refused, so the client starts over.
+- Cursors, pending write confirmations of stateless clients, rate-limit buckets, and session pins live in the memory of one server process. With several instances of the MCP server behind one address, for example, the replicas of a Kubernetes Deployment, route a client's requests to one instance (sticky routing). A request that reaches another instance does not find them, and a stateless confirmation answered at another instance is refused, so the client starts over.
 
 ## LOIDs Belong to One Endpoint
 
-A LOID (Logical Object ID) is valid only at the endpoint that returned it. Database IDs repeat across NoSQL servers, so a LOID sent to another endpoint, of another target or another MCP server, can name an unrelated object there, and the MCP server cannot detect this. `update_objects` needs an `expectedVersion` read at the same endpoint.
+A Logical Object ID (LOID) is valid only at the endpoint that returned it. Database IDs repeat across NoSQL servers, so a LOID sent to another endpoint, of another target or another MCP server, can name an unrelated object there, and the MCP server cannot detect this. `update_objects` needs an `expectedVersion` read at the same endpoint.
 
 ## With Targets
 
@@ -62,7 +62,7 @@ Each instance reads its own copy of `nsql.targets.dir` on its own schedule, so f
 
 ### Subscriptions Reveal Which URIs Exist
 
-A stateful client can learn whether a schema resource or an extension resource exists at another target by subscribing to its address (its URI). The server answers a subscription to an address that exists with an empty success, and to one that never existed with an error that the resource was not found. No schema content is exposed, but a caller can tell whether a target name exists, which the `403` reply for a target without a scope is built to prevent.
+A stateful client can learn whether a schema resource or an extension resource exists at another target by subscribing to its address, the Uniform Resource Identifier (URI). The server answers a subscription to an address that exists with an empty success, and to one that never existed with an error that the resource was not found. No schema content is exposed, but a caller can tell whether a target name exists, which the `403` reply for a target without a scope is built to prevent.
 
 ## Next Steps
 
