@@ -97,7 +97,7 @@ sequenceDiagram
 
 On the stateless 2026-07-28 protocol, the checks are the same, but the confirmation travels in two calls: the first returns the question and writes nothing, and the client repeats the call with the answer. See [Write Confirmation on Each Protocol](protocol-versions.md#write-confirmation-on-each-protocol).
 
-The write scope is `mcp:write` without targets and the target's `actian:{target}:write` with targets; see [Scopes per Target](authentication/scopes.md#scopes-per-target). To grant it in your identity provider, see [Auth0](authentication/auth0/index.md) or [Keycloak](authentication/keycloak/index.md).
+The write scope is `mcp:write` without targets and the target's `actian:{target}:write` with targets; see [Scopes per Target](authentication/scopes.md#scopes-per-target). To grant it in the identity provider, see [Auth0](authentication/auth0/index.md) or [Keycloak](authentication/keycloak/index.md).
 
 !!! note "The server checks the scope; it never asks for it"
     Nothing on the server requests the write scope. It only reads whatever the presented token carries. The scope reaches the token in one of two ways: the client requests it from its own configuration, or the identity provider assigns it without a request. A client that takes its scopes only from the server needs the second. See [How a Scope Reaches the Token](authentication/scopes.md#how-a-scope-reaches-the-token).
@@ -146,7 +146,7 @@ Write tools go missing because one of the three [registration conditions](#tools
 |--------------|-------|------------|
 | No write tools, and the startup log says `Mode: READ-ONLY` | `nsql.writes.enabled` is `false`. | Set it to `true` and restart the server. |
 | No write tools, but the startup log says `Mode: READ-WRITE` | The connected client did not advertise elicitation. | Connect a client that supports it, or set `nsql.writes.confirmation-required=false`. |
-| No write tools, reads work, authentication is on, and the client can show the confirmation | The access token does not carry the write scope of the mode: `mcp:write` without targets, or, with targets, `actian:{target}:write` for the target of the URL, where `mcp:write` grants nothing. | Grant the write scope in your identity provider, then reconnect the client. See [Scopes per Target](authentication/scopes.md#scopes-per-target). |
+| No write tools, reads work, authentication is on, and the client can show the confirmation | The access token does not carry the write scope of the mode: `mcp:write` without targets, or, with targets, `actian:{target}:write` for the target of the URL, where `mcp:write` grants nothing. | Grant the write scope in the identity provider, then reconnect the client. See [Scopes per Target](authentication/scopes.md#scopes-per-target). |
 | With targets, only `list_accessible_targets` is offered, and no write tools | The client is connected to plain `/mcp`, where no target is routed. | Connect to `/mcp/{target}`. See [What an Agent Sees](targets/index.md#what-an-agent-sees). |
 | A write tool call fails with a protocol error naming the tool, such as `-32602 Invalid tool name` | The tool is not offered to this caller, for one of the reasons above. The MCP runtime rejects the call as unknown; it never reaches the server's write logic. | Fix the cause of the hiding, then reconnect the client so it re-reads the tool list. |
 

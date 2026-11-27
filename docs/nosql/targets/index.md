@@ -105,7 +105,7 @@ At `/mcp/{target}` the agent gets the usual tools, that target's schema resource
 An extension is offered at every target unless its `nsql.extensions.jars.<id>.targets` property limits it to some of them. The limit decides where an extension is offered, and nothing more. See [Limiting an Extension to Some Targets](../extensions/index.md#limiting-an-extension-to-some-targets).
 
 !!! note "A LOID belongs to one endpoint"
-    A LOID (Logical Object ID) is valid only at the endpoint that returned it. Database IDs repeat across NoSQL servers, so the same LOID sent to another target can name an unrelated object there, and the MCP server does not detect this. `update_objects` needs an `expectedVersion` read at the same target, and `delete_objects` shows each object's class in its confirmation unless confirmation is turned off.
+    A Logical Object ID (LOID) is valid only at the endpoint that returned it. Database IDs repeat across NoSQL servers, so the same LOID sent to another target can name an unrelated object there, and the MCP server does not detect this. `update_objects` needs an `expectedVersion` read at the same target, and `delete_objects` shows each object's class in its confirmation unless confirmation is turned off.
 
 Other behavior of the endpoints:
 
@@ -133,7 +133,7 @@ quarkus.log.console.format=%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c] (%t) %X{targetP
 To keep the name:
 
 - If you change `quarkus.log.console.format`, keep `%X{targetPrefix}` before the message. It holds the target name followed by `: `.
-- A filter applies only to the handler it is attached to, so no other handler carries the name by default. To tag another handler, attach the filter and add `%X{targetPrefix}` before the message in that handler's format, for example `quarkus.log.file.filter=target-log`. The same holds for the syslog and socket handlers. A JSON handler needs no format change: it prints the bare target name under the MDC key `target`.
+- A filter applies only to the handler it is attached to, so no other handler carries the name by default. To tag another handler, attach the filter and add `%X{targetPrefix}` before the message in that handler's format, for example, `quarkus.log.file.filter=target-log`. The same holds for the syslog and socket handlers. A JSON handler needs no format change: it prints the bare target name under the Mapped Diagnostic Context (MDC) key `target`.
 
 Lines with no request behind them (startup, shutdown, and scheduled jobs), lines at plain `/mcp`, and the line written when a stateless client first connects carry no name. Without targets no line carries one.
 
