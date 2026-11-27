@@ -196,7 +196,7 @@ For what the server does with the scopes, see [Scopes](../scopes.md) and [Write 
 
 ### Write Scope Without Targets (Write Mode Only)
 
-In write mode, the server offers the write tools only to a token that carries `mcp:write`, and checks every write call for it. In Keycloak, you create the `mcp:write` scope once as a client scope, then attach it to the client that your writers authenticate through.
+In write mode, the server offers the write tools only to a token that carries `mcp:write`, and checks every write call for it. In Keycloak, you create the `mcp:write` scope once as a client scope, then attach it to the client that the writers authenticate through.
 
 #### Create Write Client Scope {#create-the-write-client-scope}
 
@@ -215,7 +215,7 @@ In write mode, the server offers the write tools only to a token that carries `m
 
 #### Attach Client Scope to Writers' Client {#attach-the-client-scope-to-the-writers-client}
 
-1. Navigate to **Clients >** the client your writers authenticate through, and select the **Client scopes** tab.
+1. Navigate to **Clients >** the client that the writers authenticate through, and select the **Client scopes** tab.
 2. Select **Add client scope**.
 3. Select `mcp:write`, then select **Add > Default** or **Add > Optional**:
 
@@ -239,7 +239,7 @@ The server reads the grants from the token's `scope` claim and from a `permissio
 
 #### Per Client
 
-1. Create one client scope for each target scope, for example `actian:sales:read` and `actian:sales:write`, as in [Create the Write Client Scope](#create-the-write-client-scope), with **Include in token scope** `On`.
+1. Create one client scope for each target scope, for example, `actian:sales:read` and `actian:sales:write`, as in [Create the Write Client Scope](#create-the-write-client-scope), with **Include in token scope** `On`.
 2. Attach them to the MCP client on its **Client scopes** tab, as in [Attach Client Scope to Writers' Client](#attach-the-client-scope-to-the-writers-client).
 
 The grants arrive in the token's `scope` claim. Choose **Optional** or **Default** for each scope:
@@ -252,14 +252,14 @@ The grants arrive in the token's `scope` claim. Choose **Optional** or **Default
 
 #### Per User
 
-1. Navigate to **Realm roles** and create one realm role for each target scope, named like the scope, for example `actian:sales:read` and `actian:sales:write`.
-2. Create a composite realm role that bundles the target roles one group of users needs, for example `sales-team`, by adding the target roles to it as associated roles.
+1. Navigate to **Realm roles** and create one realm role for each target scope, named like the scope, for example, `actian:sales:read` and `actian:sales:write`.
+2. Create a composite realm role that bundles the target roles one group of users needs, for example, `sales-team`, by adding the target roles to it as associated roles.
 3. Assign the composite role to each user under **Users >** the user **> Role mapping > Assign role > Realm roles**.
-4. Navigate to **Clients >** your client, select the **Client scopes** tab, and open the dedicated scope of the client (named after it, ending in `-dedicated`). On its **Mappers** tab, select **Configure a new mapper**, or **Add mapper > By configuration** if the scope already has mappers, then select **User Realm Role**. Complete the following fields:
+4. Navigate to **Clients >** the client, select the **Client scopes** tab, and open the dedicated scope of the client (named after it, ending in `-dedicated`). On its **Mappers** tab, select **Configure a new mapper**, or **Add mapper > By configuration** if the scope already has mappers, then select **User Realm Role**. Complete the following fields:
 
     | Field | Value |
     |-------|-------|
-    | **Name** | Any label, for example `realm-roles-as-permissions` |
+    | **Name** | Any label, for example, `realm-roles-as-permissions` |
     | **Token Claim Name** | `permissions` |
     | **Multivalued** | `On` |
     | **Claim JSON Type** | `String` |
@@ -297,7 +297,7 @@ Create users in Keycloak who will sign in through your MCP client.
 !!! note "If login fails with "Offline tokens not allowed""
     Many MCP clients add `offline_access` to their scope request to obtain a refresh token. Keycloak refuses the whole authorization request unless both of these are in place:
 
-    1. The `offline_access` client scope is assigned to the MCP client. Navigate to **Clients >** your client, select the **Client scopes** tab, select **Add client scope**, select `offline_access`, then select **Add > Optional**. Optional is enough.
+    1. The `offline_access` client scope is assigned to the MCP client. Navigate to **Clients >** the client, select the **Client scopes** tab, select **Add client scope**, select `offline_access`, then select **Add > Optional**. Optional is enough.
     2. The user holds the `offline_access` **realm role**. Assign it under **Users >** the user **> Role mapping > Assign role > Realm roles**.
 
     Without the role, the failure looks like a client misconfiguration when it is really a user configuration problem.

@@ -5001,7 +5001,7 @@
 </ul>
 <p>For what the server does with the scopes, see <a href="../scopes.html">Scopes</a> and <a href="../../write-support.html#what-each-call-must-clear">Write support</a>.</p>
 <h3 id="write-scope-without-targets-write-mode-only">Write Scope Without Targets (Write Mode Only)<a class="headerlink" href="#write-scope-without-targets-write-mode-only" title="Permanent link">&para;</a></h3>
-<p>In write mode, the server offers the write tools only to a token that carries <code>mcp:write</code>, and checks every write call for it. In Keycloak, you create the <code>mcp:write</code> scope once as a client scope, then attach it to the client that your writers authenticate through.</p>
+<p>In write mode, the server offers the write tools only to a token that carries <code>mcp:write</code>, and checks every write call for it. In Keycloak, you create the <code>mcp:write</code> scope once as a client scope, then attach it to the client that the writers authenticate through.</p>
 <h4 id="create-the-write-client-scope">Create Write Client Scope<a class="headerlink" href="#create-the-write-client-scope" title="Permanent link">&para;</a></h4>
 <ol>
 <li>Navigate to <strong>Client scopes</strong> in the left sidebar and select <strong>Create client scope</strong>.</li>
@@ -5050,7 +5050,7 @@
 </ol>
 <h4 id="attach-the-client-scope-to-the-writers-client">Attach Client Scope to Writers' Client<a class="headerlink" href="#attach-the-client-scope-to-the-writers-client" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Navigate to <strong>Clients &gt;</strong> the client your writers authenticate through, and select the <strong>Client scopes</strong> tab.</li>
+<li>Navigate to <strong>Clients &gt;</strong> the client that the writers authenticate through, and select the <strong>Client scopes</strong> tab.</li>
 <li>Select <strong>Add client scope</strong>.</li>
 <li>
 <p>Select <code>mcp:write</code>, then select <strong>Add &gt; Default</strong> or <strong>Add &gt; Optional</strong>:</p>
@@ -5072,7 +5072,7 @@
 <p>The server reads the grants from the token's <code>scope</code> claim and from a <code>permissions</code> claim. Keycloak delivers the first through client scopes, which grant per client, and the second through realm roles, which grant per user. Both are described below.</p>
 <h4 id="per-client">Per Client<a class="headerlink" href="#per-client" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Create one client scope for each target scope, for example <code>actian:sales:read</code> and <code>actian:sales:write</code>, as in <a href="#create-the-write-client-scope">Create the Write Client Scope</a>, with <strong>Include in token scope</strong> <code>On</code>.</li>
+<li>Create one client scope for each target scope, for example, <code>actian:sales:read</code> and <code>actian:sales:write</code>, as in <a href="#create-the-write-client-scope">Create the Write Client Scope</a>, with <strong>Include in token scope</strong> <code>On</code>.</li>
 <li>Attach them to the MCP client on its <strong>Client scopes</strong> tab, as in <a href="#attach-the-client-scope-to-the-writers-client">Attach Client Scope to Writers' Client</a>.</li>
 </ol>
 <p>The grants arrive in the token's <code>scope</code> claim. Choose <strong>Optional</strong> or <strong>Default</strong> for each scope:</p>
@@ -5086,11 +5086,11 @@
 </div>
 <h4 id="per-user">Per User<a class="headerlink" href="#per-user" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Navigate to <strong>Realm roles</strong> and create one realm role for each target scope, named like the scope, for example <code>actian:sales:read</code> and <code>actian:sales:write</code>.</li>
-<li>Create a composite realm role that bundles the target roles one group of users needs, for example <code>sales-team</code>, by adding the target roles to it as associated roles.</li>
+<li>Navigate to <strong>Realm roles</strong> and create one realm role for each target scope, named like the scope, for example, <code>actian:sales:read</code> and <code>actian:sales:write</code>.</li>
+<li>Create a composite realm role that bundles the target roles one group of users needs, for example, <code>sales-team</code>, by adding the target roles to it as associated roles.</li>
 <li>Assign the composite role to each user under <strong>Users &gt;</strong> the user <strong>&gt; Role mapping &gt; Assign role &gt; Realm roles</strong>.</li>
 <li>
-<p>Navigate to <strong>Clients &gt;</strong> your client, select the <strong>Client scopes</strong> tab, and open the dedicated scope of the client (named after it, ending in <code>-dedicated</code>). On its <strong>Mappers</strong> tab, select <strong>Configure a new mapper</strong>, or <strong>Add mapper &gt; By configuration</strong> if the scope already has mappers, then select <strong>User Realm Role</strong>. Complete the following fields:</p>
+<p>Navigate to <strong>Clients &gt;</strong> the client, select the <strong>Client scopes</strong> tab, and open the dedicated scope of the client (named after it, ending in <code>-dedicated</code>). On its <strong>Mappers</strong> tab, select <strong>Configure a new mapper</strong>, or <strong>Add mapper &gt; By configuration</strong> if the scope already has mappers, then select <strong>User Realm Role</strong>. Complete the following fields:</p>
 <table>
 <thead>
 <tr>
@@ -5101,7 +5101,7 @@
 <tbody>
 <tr>
 <td><strong>Name</strong></td>
-<td>Any label, for example <code>realm-roles-as-permissions</code></td>
+<td>Any label, for example, <code>realm-roles-as-permissions</code></td>
 </tr>
 <tr>
 <td><strong>Token Claim Name</strong></td>
@@ -5184,7 +5184,7 @@
 <p class="admonition-title">If login fails with "Offline tokens not allowed"</p>
 <p>Many MCP clients add <code>offline_access</code> to their scope request to obtain a refresh token. Keycloak refuses the whole authorization request unless both of these are in place:</p>
 <ol>
-<li>The <code>offline_access</code> client scope is assigned to the MCP client. Navigate to <strong>Clients &gt;</strong> your client, select the <strong>Client scopes</strong> tab, select <strong>Add client scope</strong>, select <code>offline_access</code>, then select <strong>Add &gt; Optional</strong>. Optional is enough.</li>
+<li>The <code>offline_access</code> client scope is assigned to the MCP client. Navigate to <strong>Clients &gt;</strong> the client, select the <strong>Client scopes</strong> tab, select <strong>Add client scope</strong>, select <code>offline_access</code>, then select <strong>Add &gt; Optional</strong>. Optional is enough.</li>
 <li>The user holds the <code>offline_access</code> <strong>realm role</strong>. Assign it under <strong>Users &gt;</strong> the user <strong>&gt; Role mapping &gt; Assign role &gt; Realm roles</strong>.</li>
 </ol>
 <p>Without the role, the failure looks like a client misconfiguration when it is really a user configuration problem.</p>
@@ -5335,7 +5335,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 10:25:06 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 27, 2026 06:23:58 UTC">November 27, 2026</span>
   </span>
 
     

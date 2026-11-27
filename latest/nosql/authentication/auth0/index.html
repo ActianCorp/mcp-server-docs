@@ -4606,7 +4606,7 @@
 <p class="admonition-title">The Identifier is the audience the server checks</p>
 <p>Set <code>quarkus.oidc.token.audience</code> to the Identifier exactly, with a trailing <code>/</code> included or excluded in the same way.</p>
 </div>
-<p>Then add the permissions your mode needs:</p>
+<p>Then add the permissions that the mode needs:</p>
 <ul>
 <li><strong>Without targets</strong>, the <code>mcp:write</code> permission, in write mode only. A read-only server never inspects it. See <a href="#write-permission-without-targets-write-mode-only">Write Permission Without Targets</a>.</li>
 <li><strong>With targets</strong>, the permissions of each target, whether writes are on or off, because every target needs its read permission. See <a href="#permissions-with-targets">Permissions with Targets</a>.</li>
@@ -4667,7 +4667,7 @@
 <h4 id="grant-them-through-roles">Grant Them Through Roles<a class="headerlink" href="#grant-them-through-roles" title="Permanent link">&para;</a></h4>
 <p>Roles bundle the target permissions, and users receive roles. With <strong>Add Permissions in the Access Token</strong> on, as set in <a href="#enable-rbac">Enable RBAC</a>, the permissions of a user's roles arrive in the token's <code>permissions</code> claim without being requested.</p>
 <ol>
-<li>Navigate to <strong>User Management &gt; Roles</strong> and create a role for each group of users, for example <code>Sales Team</code>. On the role's <strong>Permissions</strong> tab, select <strong>Add Permissions</strong>, choose your API, and add the target permissions the group needs. One role can hold permissions of several targets, for example read on <code>sales</code> and <code>hr</code> and write on <code>sales</code> only.</li>
+<li>Navigate to <strong>User Management &gt; Roles</strong> and create a role for each group of users, for example, <code>Sales Team</code>. On the role's <strong>Permissions</strong> tab, select <strong>Add Permissions</strong>, choose the API, and add the target permissions the group needs. One role can hold permissions of several targets, for example, read on <code>sales</code> and <code>hr</code> and write on <code>sales</code> only.</li>
 <li>On the role's <strong>Users</strong> tab, select <strong>Add Users</strong> and assign the members of the group.</li>
 </ol>
 <p>The write permission of a target is never named in the <code>403</code> the server answers with, because the write tools are not offered without it. It reaches the token through the role, without being requested.</p>
@@ -4764,7 +4764,7 @@
 <li>
 <p>Open the tab that matches the flow this application uses.</p>
 </li>
-<li>For the Authorization Code flow, select no permission: the permissions of the user's roles reach the token through <strong>Add Permissions in the Access Token</strong>, so authorizing the API is enough. For the Client Credentials flow, select on the <strong>Client Access</strong> tab the permissions the application needs: <code>mcp:write</code> without targets, in write mode, or the target permissions with targets, for example <code>actian:sales:read</code> and <code>actian:sales:write</code>. They arrive in the token's <code>scope</code> claim. Then select <strong>Save</strong>.</li>
+<li>For the Authorization Code flow, select no permission: the permissions of the user's roles reach the token through <strong>Add Permissions in the Access Token</strong>, so authorizing the API is enough. For the Client Credentials flow, select on the <strong>Client Access</strong> tab the permissions the application needs: <code>mcp:write</code> without targets, in write mode, or the target permissions with targets, for example, <code>actian:sales:read</code> and <code>actian:sales:write</code>. They arrive in the token's <code>scope</code> claim. Then select <strong>Save</strong>.</li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">What the Permission List Controls</p>
@@ -4801,7 +4801,7 @@
 <li>Enable <strong>Resource Parameter Compatibility Profile</strong>.</li>
 <li>Select <strong>Save</strong>.</li>
 </ol>
-<p>MCP clients name the server they want a token for in the standard <code>resource</code> parameter, not in the Auth0-specific <code>audience</code> parameter. With this profile on, Auth0 treats <code>resource</code> as the audience, so the API Identifier must match the server URL that clients send, for example <code>https://&lt;mcp-server-host&gt;:8443/mcp</code>. With targets, a client connected to <code>/mcp/{target}</code> sends the same <code>…/mcp</code>, the resource that the server's metadata names at every target, so one API covers every target.</p>
+<p>MCP clients name the server they want a token for in the standard <code>resource</code> parameter, not in the Auth0-specific <code>audience</code> parameter. With this profile on, Auth0 treats <code>resource</code> as the audience, so the API Identifier must match the server URL that clients send, for example, <code>https://&lt;mcp-server-host&gt;:8443/mcp</code>. With targets, a client connected to <code>/mcp/{target}</code> sends the same <code>…/mcp</code>, the resource that the server's metadata names at every target, so one API covers every target.</p>
 <h2 id="step-6-configure-and-start-the-server">Step 6: Configure and Start Server<a class="headerlink" href="#step-6-configure-and-start-the-server" title="Permanent link">&para;</a></h2>
 <p>The Actian MCP Server requires the Auth0 issuer URL to validate incoming tokens.</p>
 <h3 id="mapping-summary">Mapping Summary<a class="headerlink" href="#mapping-summary" title="Permanent link">&para;</a></h3>
@@ -4895,7 +4895,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 16:55:24 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 27, 2026 06:23:58 UTC">November 27, 2026</span>
   </span>
 
     

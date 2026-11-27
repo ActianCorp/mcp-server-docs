@@ -4288,12 +4288,12 @@
 <tr>
 <td>Tool</td>
 <td><code>@Tool</code>, with arguments marked <code>@ToolArg</code></td>
-<td>A <code>String</code>, a content block, an <code>org.mcpjava.server.tools.ToolResponse</code>, a list of these, or any record or POJO. What the client receives for each is described under <a href="#tool-return-types">Tool Return Types</a>. Setting <code>structuredContent = true</code> sends the return value as structured content, with an output schema derived from the method's return type. <code>outputSchemaFrom</code> names the schema class explicitly and also turns structured content on. If both are set, the schema comes from <code>outputSchemaFrom</code>.</td>
+<td>A <code>String</code>, a content block, an <code>org.mcpjava.server.tools.ToolResponse</code>, a list of these, or any record or plain old Java object (POJO). What the client receives for each is described under <a href="#tool-return-types">Tool Return Types</a>. Setting <code>structuredContent = true</code> sends the return value as structured content, with an output schema derived from the method's return type. <code>outputSchemaFrom</code> names the schema class explicitly and also turns structured content on. If both are set, the schema comes from <code>outputSchemaFrom</code>.</td>
 </tr>
 <tr>
 <td>Resource</td>
-<td><code>@Resource</code>, addressed purely by its fixed URI</td>
-<td>A <code>String</code> (one text content), a <code>byte[]</code> (one binary blob), any other record, POJO or <code>Map</code> (one text content holding its JSON), a <code>List</code> of these (one content per element), or an <code>org.mcpjava.server.resources.ResourceResponse</code>, which is sent as built. What the client receives for each is described under <a href="#resource-return-types">Resource Return Types</a>.</td>
+<td><code>@Resource</code>, addressed purely by its fixed Uniform Resource Identifier (URI)</td>
+<td>A <code>String</code> (one text content), a <code>byte[]</code> (one binary blob), any other record, POJO, or <code>Map</code> (one text content holding JavaScript Object Notation, or JSON), a <code>List</code> of these (one content per element), or an <code>org.mcpjava.server.resources.ResourceResponse</code>, which is sent as built. What the client receives for each is described under <a href="#resource-return-types">Resource Return Types</a>.</td>
 </tr>
 <tr>
 <td>Resource template</td>
@@ -4303,7 +4303,7 @@
 <tr>
 <td>Prompt</td>
 <td><code>@Prompt</code>, with arguments marked <code>@PromptArg</code></td>
-<td>A <code>String</code> (one message attributed to the user role), an <code>org.mcpjava.server.prompts.PromptMessage</code> (one message with its own role), or an <code>org.mcpjava.server.prompts.PromptResponse</code> (several messages, each with its own role, for example an assistant-primed message ahead of the user's question). What the client receives for each is described under <a href="#prompt-return-types">Prompt Return Types</a>.</td>
+<td>A <code>String</code> (one message attributed to the user role), an <code>org.mcpjava.server.prompts.PromptMessage</code> (one message with its own role), or an <code>org.mcpjava.server.prompts.PromptResponse</code> (several messages, each with its own role, for example, an assistant-primed message ahead of the user's question). What the client receives for each is described under <a href="#prompt-return-types">Prompt Return Types</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -4312,7 +4312,7 @@
 <p class="admonition-title">An omitted <code>mimeType()</code> is blank, not JSON</p>
 <p>On <code>@Resource</code> and <code>@ResourceTemplate</code>, leaving <code>mimeType()</code> unset registers an empty MIME type rather than defaulting to <code>application/json</code>. If your resource returns JSON and clients need that advertised, set it yourself.</p>
 </div>
-<p>For records, POJOs, maps and other plain types, a handler never serializes its own return value. The server does it, so an extension needs no JSON library of its own. A handler that returns text, content blocks, a <code>ToolResponse</code>, a <code>ResourceResponse</code>, a <code>PromptMessage</code> or a <code>PromptResponse</code> has already decided its own content, and the server usually sends what it built. Some declared types change this, and the return-type tables below spell each one out: a neutral <code>ResourceContents</code> (<code>TextResourceContents</code> or <code>BlobResourceContents</code>), on its own or in a list, and a <code>ResourceResponse</code> returned from a method declared <code>Object</code> are serialized as JSON text, and a <code>List&lt;ToolResponse&gt;</code> is not merged into one result. Declare <code>ResourceResponse</code> to send resource contents as built.</p>
+<p>For records, POJOs, maps, and other plain types, a handler never serializes its own return value. The server does it, so an extension needs no JSON library of its own. A handler that returns text, content blocks, a <code>ToolResponse</code>, a <code>ResourceResponse</code>, a <code>PromptMessage</code>, or a <code>PromptResponse</code> has already decided its own content, and the server usually sends what it built. Some declared types change this, and the return-type tables below spell each one out: a neutral <code>ResourceContents</code> (<code>TextResourceContents</code> or <code>BlobResourceContents</code>), on its own or in a list, and a <code>ResourceResponse</code> returned from a method declared <code>Object</code> are serialized as JSON text, and a <code>List&lt;ToolResponse&gt;</code> is not merged into one result. Declare <code>ResourceResponse</code> to send resource contents as built.</p>
 <h3 id="tool-return-types">Tool Return Types<a class="headerlink" href="#tool-return-types" title="Permanent link">&para;</a></h3>
 <p>The declared return type of a <code>@Tool</code> method decides what the client receives.</p>
 <table>
@@ -4332,7 +4332,7 @@
 <td>One text block per string.</td>
 </tr>
 <tr>
-<td>A content block: <code>TextContent</code>, <code>ImageContent</code>, <code>AudioContent</code>, <code>EmbeddedResource</code> or <code>ResourceLink</code>, all from <code>org.mcpjava.server.content</code></td>
+<td>A content block: <code>TextContent</code>, <code>ImageContent</code>, <code>AudioContent</code>, <code>EmbeddedResource</code>, or <code>ResourceLink</code>, all from <code>org.mcpjava.server.content</code></td>
 <td>That block.</td>
 </tr>
 <tr>
@@ -4340,7 +4340,7 @@
 <td>One block per element.</td>
 </tr>
 <tr>
-<td><code>ToolResponse</code>, built with <code>ofText</code>, <code>ofError</code>, <code>ofStructured</code> or <code>builder()</code></td>
+<td><code>ToolResponse</code>, built with <code>ofText</code>, <code>ofError</code>, <code>ofStructured</code>, or <code>builder()</code></td>
 <td>The response exactly as built, including its error flag and structured content.</td>
 </tr>
 <tr>
@@ -4355,7 +4355,7 @@
 </table>
 <p>A few rules apply across the table:</p>
 <ul>
-<li>Only a return type declared as <code>List</code> is split into one block per element. A <code>Set</code>, an array or another collection arrives as one JSON text block. To get plain text blocks from a list of strings, declare <code>List&lt;String&gt;</code>.</li>
+<li>Only a return type declared as <code>List</code> is split into one block per element. A <code>Set</code>, an array, or another collection arrives as one JSON text block. To get plain text blocks from a list of strings, declare <code>List&lt;String&gt;</code>.</li>
 <li>To get a single JSON text block from a list, declare a return type other than <code>List</code>, for example a record that holds the list.</li>
 <li>A <code>List&lt;ToolResponse&gt;</code> is not merged into one result. Each response arrives as its own JSON text block and the call is not an error result, so return a single <code>ToolResponse</code> when you need to control the result.</li>
 <li>A method declared <code>Object</code> is matched by the value it returns only when that value is a <code>ToolResponse</code> or a content block, which arrive as in the table. Any other value arrives as one JSON text block, so a returned <code>String</code> arrives quoted and a returned list is not split. Declare <code>String</code> or <code>List&lt;String&gt;</code> to get plain text.</li>
@@ -4439,10 +4439,10 @@
 </table>
 <p>A few rules apply across the table:</p>
 <ul>
-<li>Only a return type declared as <code>List</code> is split into one content per element. A <code>Set</code>, another collection or an array arrives as one JSON text content.</li>
-<li>Only a return type declared as <code>ResourceResponse</code> itself is sent as built. A type of your own that extends or implements it is serialized as JSON text.</li>
-<li>Metadata set on a <code>ResourceResponse</code> goes to the <code>_meta</code> of the result, and metadata set on a content goes to the <code>_meta</code> of that content. A metadata key needs at least two characters: letters, digits, <code>_</code>, <code>.</code> and <code>-</code>, starting and ending with a letter or digit. A key may also start with a prefix such as <code>com.example/</code>, which keeps your keys apart from other people's: <code>com.example/region</code>.</li>
-<li>A <code>@ResourceTemplate</code> method that returns <code>null</code>, whatever its declared type, answers the JSON-RPC error <code>-32002</code> with the message <code>Resource not found: &lt;uri&gt;</code>, naming the requested URI. A client on a stateless protocol version gets <code>-32602</code> instead, as it would from a built-in template. This is the way for a lookup template to say that nothing exists at that URI.</li>
+<li>Only a return type declared as <code>List</code> is split into one content per element. A <code>Set</code>, another collection, or an array arrives as one JSON text content.</li>
+<li>Only a return type declared as <code>ResourceResponse</code> itself is sent as built. A custom type that extends or implements it is serialized as JSON text.</li>
+<li>Metadata set on a <code>ResourceResponse</code> goes to the <code>_meta</code> of the result, and metadata set on a content goes to the <code>_meta</code> of that content. A metadata key needs at least two characters: letters, digits, <code>_</code>, <code>.</code>, and <code>-</code>, starting and ending with a letter or digit. A key may also start with a prefix such as <code>com.example/</code>, which keeps the keys apart from those of other parties: <code>com.example/region</code>.</li>
+<li>A <code>@ResourceTemplate</code> method that returns <code>null</code>, whatever its declared type, answers the JSON Remote Procedure Call (JSON-RPC) error <code>-32002</code> with the message <code>Resource not found: &lt;uri&gt;</code>, naming the requested URI. A client on a stateless protocol version gets <code>-32602</code> instead, as it would from a built-in template. This is the way for a lookup template to say that nothing exists at that URI.</li>
 <li>A static <code>@Resource</code> that returns <code>null</code>, or any resource or template whose returned list holds a <code>null</code> element, fails the read with an error that names the handler.</li>
 </ul>
 <h3 id="prompt-return-types">Prompt Return Types<a class="headerlink" href="#prompt-return-types" title="Permanent link">&para;</a></h3>
@@ -4485,20 +4485,20 @@
 </thead>
 <tbody>
 <tr>
-<td><code>void</code> or the boxed <code>Void</code>, on a tool, resource, resource template or prompt</td>
+<td><code>void</code> or the boxed <code>Void</code>, on a tool, resource, resource template, or prompt</td>
 <td>Return a type from that feature's table above.</td>
 </tr>
 <tr>
-<td>A primitive such as <code>int</code> or <code>boolean</code>, on a tool, resource or resource template</td>
-<td>Return the boxed type, for example <code>Integer</code>.</td>
+<td>A primitive such as <code>int</code> or <code>boolean</code>, on a tool, resource, or resource template</td>
+<td>Return the boxed type, for example, <code>Integer</code>.</td>
 </tr>
 <tr>
-<td>Any type other than <code>String</code>, <code>PromptMessage</code>, <code>PromptResponse</code> or <code>Object</code>, on a prompt: a primitive, a record or POJO, a boxed number, or any <code>List</code> (including <code>List&lt;PromptMessage&gt;</code> and <code>List&lt;String&gt;</code>)</td>
+<td>Any type other than <code>String</code>, <code>PromptMessage</code>, <code>PromptResponse</code>, or <code>Object</code>, on a prompt: a primitive, a record or POJO, a boxed number, or any <code>List</code> (including <code>List&lt;PromptMessage&gt;</code> and <code>List&lt;String&gt;</code>)</td>
 <td>Return a <code>String</code>, a <code>PromptMessage</code> or a <code>PromptResponse</code>.</td>
 </tr>
 <tr>
 <td>Structured output (<code>structuredContent = true</code> or <code>outputSchemaFrom</code>) on a declared return type, or an <code>outputSchemaFrom</code> class, that does not serialize to a JSON object with the server's JSON configuration. For example: a <code>String</code>, a number or boxed primitive, a boolean, a character, an enum, an array, any list or other collection (including <code>List&lt;ContentBlock&gt;</code> and <code>List&lt;ToolResponse&gt;</code>), a <code>UUID</code>, a date or time type such as <code>LocalDate</code> or <code>Date</code>, a <code>URI</code>, a <code>Path</code>, an <code>Optional</code> of a scalar, or a class the server writes as a scalar through <code>@JsonValue</code></td>
-<td>Return a record or POJO, or a <code>ToolResponse</code> built with structured content, for example <code>ToolResponse.ofStructured(...)</code>.</td>
+<td>Return a record or POJO, or a <code>ToolResponse</code> built with structured content, for example, <code>ToolResponse.ofStructured(...)</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -4591,7 +4591,7 @@
 <p>Both need a live per-call channel to the client. Calling either from <code>initialize</code> or from a resource or prompt handler throws <code>UnsupportedOperationException</code>.</p>
 </div>
 <h3 id="signalling-errors">Signaling Errors<a class="headerlink" href="#signalling-errors" title="Permanent link">&para;</a></h3>
-<p><strong>From a tool.</strong> A tool reports a failure in one of two ways: return <code>ToolResponse.ofError(message)</code>, or throw a <code>RuntimeException</code>. Either way the client gets an error result carrying your message. An exception thrown without a message carries its class name instead.</p>
+<p><strong>From a tool.</strong> A tool reports a failure in one of two ways: return <code>ToolResponse.ofError(message)</code>, or throw a <code>RuntimeException</code>. Either way the client gets an error result carrying the message. An exception thrown without a message carries its class name instead.</p>
 <div class="language-java highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.mcpjava.server.tools.ToolResponse</span><span class="p">;</span>
 
 <span class="nd">@Tool</span><span class="p">(</span>
@@ -4612,7 +4612,7 @@
 <p class="admonition-title">The message reaches the client</p>
 <p>Whatever you put in an error message is shown to the caller, and so is an exception's class name when it has no message. This applies to tools, resources, resource templates and prompts alike. Keep secrets, and data the caller should not see, out of it.</p>
 </div>
-<p><code>SchemaExplorerExtension</code>, in the SDK, shows the pattern in its <code>extension_get_object</code> tool: a blank, malformed or unknown LOID returns an error result instead of throwing.</p>
+<p><code>SchemaExplorerExtension</code>, in the SDK, shows the pattern in its <code>extension_get_object</code> tool: a blank, malformed, or unknown Logical Object ID (LOID) returns an error result instead of throwing.</p>
 <h3 id="getting-the-sdk">Getting SDK<a class="headerlink" href="#getting-the-sdk" title="Permanent link">&para;</a></h3>
 <p>Everything needed to write an extension ships in the <strong>Extension SDK</strong>, a self-contained zip that asks only for Java 21 and Maven. It carries the API JAR, a project you can build immediately, and <code>SchemaExplorerExtension</code> — a working example that exercises every contribution kind described on this page, and the easiest starting point for a real extension.</p>
 <p>It also carries the API Javadoc, which goes further than this page does: every annotation's full attribute list, each member of <code>ExtensionContext</code>, and the rules the server applies while loading your JAR.</p>
@@ -4764,12 +4764,12 @@ CertUtil<span class="w"> </span>-hashfile<span class="w"> </span>revenue-forecas
 </tr>
 <tr>
 <td>Startup aborts, naming an extension method's return type</td>
-<td>The method is a <code>@Tool</code>, <code>@Resource</code>, <code>@ResourceTemplate</code> or <code>@Prompt</code> whose declared return type is refused, for example <code>void</code>, a primitive, a prompt returning a record or a list, or a tool asking for structured output (<code>structuredContent</code> or <code>outputSchemaFrom</code>) from a type that does not serialize to a JSON object.</td>
+<td>The method is a <code>@Tool</code>, <code>@Resource</code>, <code>@ResourceTemplate</code>, or <code>@Prompt</code> whose declared return type is refused, for example, <code>void</code>, a primitive, a prompt returning a record or a list, or a tool asking for structured output (<code>structuredContent</code> or <code>outputSchemaFrom</code>) from a type that does not serialize to a JSON object.</td>
 <td>Change the return type or the attribute as the message suggests. See <a href="#return-types-that-stop-startup">Return Types That Stop Startup</a>.</td>
 </tr>
 <tr>
 <td>Startup aborts, reporting that a method is not public</td>
-<td>A <code>@Tool</code>, <code>@Resource</code>, <code>@ResourceTemplate</code> or <code>@Prompt</code> method is private, protected or package-private, on the extension class or one of its superclasses. The server can only call a public method.</td>
+<td>A <code>@Tool</code>, <code>@Resource</code>, <code>@ResourceTemplate</code>, or <code>@Prompt</code> method is private, protected, or package-private, on the extension class or one of its superclasses. The server can only call a public method.</td>
 <td>Declare the method <code>public</code>, or remove the annotation.</td>
 </tr>
 <tr>
@@ -4833,7 +4833,7 @@ CertUtil<span class="w"> </span>-hashfile<span class="w"> </span>revenue-forecas
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 16:55:24 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 07:28:50 UTC">November 25, 2026</span>
   </span>
 
     

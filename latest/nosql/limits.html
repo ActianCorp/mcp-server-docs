@@ -4149,10 +4149,10 @@
 <h2 id="revocation-and-process-state">Revocation and Process State<a class="headerlink" href="#revocation-and-process-state" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Revoking a grant at the identity provider takes effect when the access token expires, so keep access tokens short-lived.</li>
-<li>Cursors, pending write confirmations of stateless clients, rate-limit buckets, and session pins live in the memory of one server process. With several instances of the MCP server behind one address, for example the replicas of a Kubernetes Deployment, route a client's requests to one instance (sticky routing). A request that reaches another instance does not find them, and a stateless confirmation answered at another instance is refused, so the client starts over.</li>
+<li>Cursors, pending write confirmations of stateless clients, rate-limit buckets, and session pins live in the memory of one server process. With several instances of the MCP server behind one address, for example, the replicas of a Kubernetes Deployment, route a client's requests to one instance (sticky routing). A request that reaches another instance does not find them, and a stateless confirmation answered at another instance is refused, so the client starts over.</li>
 </ul>
 <h2 id="loids-belong-to-one-endpoint">LOIDs Belong to One Endpoint<a class="headerlink" href="#loids-belong-to-one-endpoint" title="Permanent link">&para;</a></h2>
-<p>A LOID (Logical Object ID) is valid only at the endpoint that returned it. Database IDs repeat across NoSQL servers, so a LOID sent to another endpoint, of another target or another MCP server, can name an unrelated object there, and the MCP server cannot detect this. <code>update_objects</code> needs an <code>expectedVersion</code> read at the same endpoint.</p>
+<p>A Logical Object ID (LOID) is valid only at the endpoint that returned it. Database IDs repeat across NoSQL servers, so a LOID sent to another endpoint, of another target or another MCP server, can name an unrelated object there, and the MCP server cannot detect this. <code>update_objects</code> needs an <code>expectedVersion</code> read at the same endpoint.</p>
 <h2 id="with-targets">With Targets<a class="headerlink" href="#with-targets" title="Permanent link">&para;</a></h2>
 <h3 id="one-audience-for-every-target">One Audience for Every Target<a class="headerlink" href="#one-audience-for-every-target" title="Permanent link">&para;</a></h3>
 <p>One audience, <code>quarkus.oidc.token.audience</code>, covers every target. The scopes decide which target a token reaches.</p>
@@ -4165,7 +4165,7 @@
 <li>The directory holds credentials in clear text. See <a href="targets/without-restart.html#credentials-in-the-directory">Credentials in the Directory</a>.</li>
 </ul>
 <h3 id="subscriptions-reveal-which-uris-exist">Subscriptions Reveal Which URIs Exist<a class="headerlink" href="#subscriptions-reveal-which-uris-exist" title="Permanent link">&para;</a></h3>
-<p>A stateful client can learn whether a schema resource or an extension resource exists at another target by subscribing to its address (its URI). The server answers a subscription to an address that exists with an empty success, and to one that never existed with an error that the resource was not found. No schema content is exposed, but a caller can tell whether a target name exists, which the <code>403</code> reply for a target without a scope is built to prevent.</p>
+<p>A stateful client can learn whether a schema resource or an extension resource exists at another target by subscribing to its address, the Uniform Resource Identifier (URI). The server answers a subscription to an address that exists with an empty success, and to one that never existed with an error that the resource was not found. No schema content is exposed, but a caller can tell whether a target name exists, which the <code>403</code> reply for a target without a scope is built to prevent.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -4199,7 +4199,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 10:25:06 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 27, 2026 06:23:58 UTC">November 27, 2026</span>
   </span>
 
     

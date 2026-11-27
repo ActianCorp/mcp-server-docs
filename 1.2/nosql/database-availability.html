@@ -4044,12 +4044,12 @@
 </tr>
 </tbody>
 </table>
-<p>Durations are written like the defaults, for example <code>30s</code> or <code>10m</code>. Except for <code>0</code>, a duration is at least one millisecond and at most 365 days. A value outside these rules stops the server at startup, and the failure lists every refused property by name.</p>
+<p>Durations are written like the defaults, for example, <code>30s</code> or <code>10m</code>. Except for <code>0</code>, a duration is at least one millisecond and at most 365 days. A value outside these rules stops the server at startup, and the failure lists every refused property by name.</p>
 <p>At startup the server logs the limits in effect. It also logs a warning when <code>nsql.db.max-calls</code> times the number of databases is more than <code>quarkus.thread-pool.max-threads</code>, because calls to databases that do not answer could then occupy every worker thread. The server starts either way. No warning is logged when the two are equal, or when there is no cap.</p>
 <h2 id="call-cap-and-deadline">Call Cap and Deadline<a class="headerlink" href="#call-cap-and-deadline" title="Permanent link">&para;</a></h2>
 <p>Every tool call and resource read at a database takes one slot for as long as it runs and releases it however it ends. The same holds for the tools, resources, resource templates, and prompts of an <a href="extensions/index.html">extension</a>. With targets, plain <code>/mcp</code> serves no database and takes no slot. A query that leaves a cursor open passes its slot to the cursor, which keeps it until the cursor is read to the end or expires. An extension call that holds more than one entity manager open at a time takes one more slot for each extra one.</p>
 <p>The cap counts these slots per database. A call that finds every slot taken is refused at once with a message that the database is busy. It is not queued. A cursor page uses its cursor's slot and is never refused by the cap.</p>
-<p>The deadline covers a read, which is a query, a cursor page, a fetch by LOID (Logical Object ID), a schema read, a resource, or a prompt of an extension, and it includes opening the database. A read that outlives the deadline is interrupted and answers that the database did not answer in time. A cursor page interrupted this way also closes its cursor, so the query has to be run again. A read that still returns its result after the interrupt passes the result on. Only the interrupted call's connection is dropped, and the other calls on the database go on. The connection pool is closed, and the next call opens a new one, when no other call is using it or when the interrupt may have left it unusable.</p>
+<p>The deadline covers a read, which is a query, a cursor page, a fetch by Logical Object ID (LOID), a schema read, a resource, or a prompt of an extension, and it includes opening the database. A read that outlives the deadline is interrupted and answers that the database did not answer in time. A cursor page interrupted this way also closes its cursor, so the query has to be run again. A read that still returns its result after the interrupt passes the result on. Only the interrupted call's connection is dropped, and the other calls on the database go on. The connection pool is closed, and the next call opens a new one, when no other call is using it or when the interrupt may have left it unusable.</p>
 <p>A write is different:</p>
 <ul>
 <li>The deadline covers only opening the database. Once the database is open, the write runs to its end and is never interrupted, including the wait for the person's confirmation.</li>
@@ -4108,7 +4108,7 @@
 <td>Correct the database name, or create the database.</td>
 </tr>
 <tr>
-<td>The database is not started, or the login lacks DBA privilege</td>
+<td>The database is not started, or the login lacks database administrator (DBA) privilege</td>
 <td>The NoSQL server is up but the database is not started, or the login has no DBA privilege. After a NoSQL server restart, a login without it gets this answer until a DBA login starts the database. The code is 7245.</td>
 <td>Have a DBA login start the database. Calls recover without a restart.</td>
 </tr>
@@ -4156,7 +4156,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 10:25:06 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 27, 2026 06:23:58 UTC">November 27, 2026</span>
   </span>
 
     

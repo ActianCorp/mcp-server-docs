@@ -21,7 +21,7 @@ Each database has its own connection pool to the NoSQL server, its own count of 
 | `nsql.db.idle-timeout` | `10m` | Time without a call after which a database's connection pool is closed. The next call opens it again. `0` never closes an idle pool. |
 | `nsql.db.connect-on-startup` | `true` | Without targets only: whether the database is opened at startup. See [Starting with a Database Down](#starting-with-a-database-down). |
 
-Durations are written like the defaults, for example `30s` or `10m`. Except for `0`, a duration is at least one millisecond and at most 365 days. A value outside these rules stops the server at startup, and the failure lists every refused property by name.
+Durations are written like the defaults, for example, `30s` or `10m`. Except for `0`, a duration is at least one millisecond and at most 365 days. A value outside these rules stops the server at startup, and the failure lists every refused property by name.
 
 At startup the server logs the limits in effect. It also logs a warning when `nsql.db.max-calls` times the number of databases is more than `quarkus.thread-pool.max-threads`, because calls to databases that do not answer could then occupy every worker thread. The server starts either way. No warning is logged when the two are equal, or when there is no cap.
 
@@ -31,7 +31,7 @@ Every tool call and resource read at a database takes one slot for as long as it
 
 The cap counts these slots per database. A call that finds every slot taken is refused at once with a message that the database is busy. It is not queued. A cursor page uses its cursor's slot and is never refused by the cap.
 
-The deadline covers a read, which is a query, a cursor page, a fetch by LOID (Logical Object ID), a schema read, a resource, or a prompt of an extension, and it includes opening the database. A read that outlives the deadline is interrupted and answers that the database did not answer in time. A cursor page interrupted this way also closes its cursor, so the query has to be run again. A read that still returns its result after the interrupt passes the result on. Only the interrupted call's connection is dropped, and the other calls on the database go on. The connection pool is closed, and the next call opens a new one, when no other call is using it or when the interrupt may have left it unusable.
+The deadline covers a read, which is a query, a cursor page, a fetch by Logical Object ID (LOID), a schema read, a resource, or a prompt of an extension, and it includes opening the database. A read that outlives the deadline is interrupted and answers that the database did not answer in time. A cursor page interrupted this way also closes its cursor, so the query has to be run again. A read that still returns its result after the interrupt passes the result on. Only the interrupted call's connection is dropped, and the other calls on the database go on. The connection pool is closed, and the next call opens a new one, when no other call is using it or when the interrupt may have left it unusable.
 
 A write is different:
 
@@ -70,7 +70,7 @@ A call that fails because the database cannot be used says why. The answer names
 | The NoSQL server cannot be reached | The network connect to the host and port of the connection URL failed, or did not finish within `nsql.db.connect-timeout`. | Check that the NoSQL server runs and that the MCP server can reach its host and port. No restart is needed. |
 | The login is refused | The NoSQL server refused the user and password of the connection URL, with a NoSQL error code. | Correct the user and password. A login for a target kept in a directory is changed by replacing its file, see [Changing Targets Without a Restart](targets/without-restart.md). Any other connection URL is read at startup, so restart the server. The login also needs read-write access, see [The Login Needs Read-Write Access](limits.md#the-login-needs-read-write-access). |
 | The database does not exist | The NoSQL server has no database with the name in the connection URL. The code is 7001. | Correct the database name, or create the database. |
-| The database is not started, or the login lacks DBA privilege | The NoSQL server is up but the database is not started, or the login has no DBA privilege. After a NoSQL server restart, a login without it gets this answer until a DBA login starts the database. The code is 7245. | Have a DBA login start the database. Calls recover without a restart. |
+| The database is not started, or the login lacks database administrator (DBA) privilege | The NoSQL server is up but the database is not started, or the login has no DBA privilege. After a NoSQL server restart, a login without it gets this answer until a DBA login starts the database. The code is 7245. | Have a DBA login start the database. Calls recover without a restart. |
 | An open query stops paging after an outage | The outage closed the connection pool the query's cursor was open on. | Run the query again. |
 
 ## Next Steps

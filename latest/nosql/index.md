@@ -167,7 +167,7 @@ The following example demonstrates how to connect to a running Actian MCP Server
 
 Both examples below perform reads only. To write, the client must also be able to answer the server's confirmation prompt, which it can do only if you give it an elicitation handler — see [Answering the prompt from a Python client](write-support.md#answering-the-prompt-from-a-python-client).
 
-With targets, pass the target's URL, for example `http://localhost:8080/mcp/sales`. Plain `/mcp` then offers only `list_accessible_targets`.
+With targets, pass the target's URL, for example, `http://localhost:8080/mcp/sales`. Plain `/mcp` then offers only `list_accessible_targets`.
 
 ### Client Prerequisites
 

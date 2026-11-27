@@ -4055,11 +4055,11 @@ sequenceDiagram
 <p>What to set depends on the provider:</p>
 <ul>
 <li><strong>Auth0:</strong> The API Identifier, character for character. See <a href="auth0/index.html#step-3-create-an-auth0-api">Step 3: Create an Auth0 API</a>.</li>
-<li><strong>Keycloak:</strong> The Included Custom Audience value of the Audience mapper, for example <code>nsql-mcp</code>. See <a href="keycloak/index.html#step-3-add-the-token-audience">Step 3: Add the Token Audience</a>.</li>
+<li><strong>Keycloak:</strong> The Included Custom Audience value of the Audience mapper, for example, <code>nsql-mcp</code>. See <a href="keycloak/index.html#step-3-add-the-token-audience">Step 3: Add the Token Audience</a>.</li>
 </ul>
 <p>With authentication on and no audience set, the server exits at startup with an error that names <code>quarkus.oidc.token.audience</code>.</p>
 <h3 id="calling-applications">Calling Applications<a class="headerlink" href="#calling-applications" title="Permanent link">&para;</a></h3>
-<p>An application that has already signed the user in, for example an agent application, can call this server for that user. The application needs a token for the same user. The <code>aud</code> claim of that token must contain this server's audience:</p>
+<p>An application that has already signed the user in, for example, an agent application, can call this server for that user. The application needs a token for the same user. The <code>aud</code> claim of that token must contain this server's audience:</p>
 <ul>
 <li><strong>Keycloak:</strong> The application exchanges the user's token with standard token exchange (RFC 8693). See <a href="keycloak/index.html#token-exchange-for-a-calling-application">Token Exchange for a Calling Application</a>.</li>
 <li><strong>Auth0:</strong> The application requests this server's audience when the user signs in. See <a href="auth0/index.html#calling-applications">Calling Applications</a>.</li>
@@ -4174,7 +4174,7 @@ sequenceDiagram
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 10:25:06 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 27, 2026 06:23:58 UTC">November 27, 2026</span>
   </span>
 
     

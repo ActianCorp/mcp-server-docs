@@ -4154,7 +4154,7 @@
 <p>The server never requests a scope. It only reads what the presented token carries, and a scope reaches the token in one of three ways:</p>
 <ul>
 <li><strong>The client requests it from its own configuration.</strong> This works for any scope, with a client that lets you set the scopes it requests.</li>
-<li><strong>The identity provider assigns it without a request</strong>, for example a Keycloak <strong>Default</strong> client scope, or an Auth0 role with <strong>Add Permissions in the Access Token</strong> on. This works for any scope.</li>
+<li><strong>The identity provider assigns it without a request</strong>, for example, a Keycloak <strong>Default</strong> client scope, or an Auth0 role with <strong>Add Permissions in the Access Token</strong> on. This works for any scope.</li>
 <li><strong>The server names it in a <code>403</code>, and the client signs in again with it.</strong> This works only for a target's read scope, <code>actian:{target}:read</code>.</li>
 </ul>
 <p>A write scope, <code>mcp:write</code> or <code>actian:{target}:write</code>, is never named in a response, because the write tools are not listed without it. A client that takes its scopes only from the server therefore never requests one, so for such a client the identity provider must assign it. One role can hold the permissions of several targets, which is how groups of targets are built. For the setup, see <a href="keycloak/index.html#step-4-add-the-scopes">Keycloak</a> and <a href="auth0/index.html#step-3-create-an-auth0-api">Auth0</a>.</p>
@@ -4205,7 +4205,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 10:25:06 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 27, 2026 06:23:58 UTC">November 27, 2026</span>
   </span>
 
     

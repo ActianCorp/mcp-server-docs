@@ -675,7 +675,7 @@ Field values go in the per-object maps of `create_objects` (`objects[]`) and in 
 | Dates | Epoch milliseconds (`1700000000000`) or an ISO 8601 string (`"2026-08-10T09:00:00Z"`). |
 | Arrays of scalars | A JSON array — `"accessLevels": [1, 5, 10]`. The same ±2^53 rule applies per element — `"timestamps": ["9007199254740993", "0"]`. |
 | Enums | The **stored** value, because the schema does not surface enums as enums. An ordinal-mapped enum is an integer field: write the ordinal (`1`). A string-mapped enum is a string field: write the constant name (`"NICHES"`). |
-| Single references | The referenced object's LOID string, for example `"address": "135.0.2142"`. |
+| Single references | The referenced object's LOID string, for example, `"address": "135.0.2142"`. |
 | Reference collections | An array of LOID strings — `"subordinates": ["135.0.2145", "135.0.2146"]`. An empty array clears the collection. |
 | Maps | An object with exactly the two keys `keys` and `values`, holding equal-length arrays — `"metadata": { "keys": ["role"], "values": ["dev"] }`. No other keys are accepted. Either side may hold LOID strings. |
 | Clearing a nullable field | `null` — `"department": null`. The field is set to `null`, and a later read returns it as an explicit `null`. For collections and maps, an empty array or `{ "keys": [], "values": [] }` sets an empty container instead. |
@@ -905,7 +905,7 @@ Delete the two employee records I imported by mistake
 
 Lists the targets on this MCP server that the caller may use, each with the path an MCP client connects to. It answers from the configuration and the caller's token, and it does not contact any database.
 
-The tool is offered only at plain `/mcp` when the server runs with targets. It is hidden at `/mcp/{target}` and without targets. At plain `/mcp` it is the only tool, and the server offers no resource, resource template or prompt there. Connect to `/mcp/{target}` to use the other tools. See [What an Agent Sees](../targets/index.md#what-an-agent-sees).
+The tool is offered only at plain `/mcp` when the server runs with targets. It is hidden at `/mcp/{target}` and without targets. At plain `/mcp` it is the only tool, and the server offers no resource, resource template, or prompt there. Connect to `/mcp/{target}` to use the other tools. See [What an Agent Sees](../targets/index.md#what-an-agent-sees).
 
 ### Parameters
 

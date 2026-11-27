@@ -81,7 +81,7 @@ To see which targets a token reaches, call `list_accessible_targets` at plain `/
 The server never requests a scope. It only reads what the presented token carries, and a scope reaches the token in one of three ways:
 
 - **The client requests it from its own configuration.** This works for any scope, with a client that lets you set the scopes it requests.
-- **The identity provider assigns it without a request**, for example a Keycloak **Default** client scope, or an Auth0 role with **Add Permissions in the Access Token** on. This works for any scope.
+- **The identity provider assigns it without a request**, for example, a Keycloak **Default** client scope, or an Auth0 role with **Add Permissions in the Access Token** on. This works for any scope.
 - **The server names it in a `403`, and the client signs in again with it.** This works only for a target's read scope, `actian:{target}:read`.
 
 A write scope, `mcp:write` or `actian:{target}:write`, is never named in a response, because the write tools are not listed without it. A client that takes its scopes only from the server therefore never requests one, so for such a client the identity provider must assign it. One role can hold the permissions of several targets, which is how groups of targets are built. For the setup, see [Keycloak](keycloak/index.md#step-4-add-the-scopes) and [Auth0](auth0/index.md#step-3-create-an-auth0-api).
