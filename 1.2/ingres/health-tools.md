@@ -24,7 +24,7 @@ The tools read the Ingres Management Architecture database (`imadb`) and the con
 | [`storage_health`](#storage_health) | Which tables have the most overflow or over-allocated pages? | Database |
 | [`optimizer_health`](#optimizer_health) | Is the optimizer planning against current statistics? | Database |
 
-None of the tools takes input parameters.
+None of the tools take input parameters.
 
 ### Installation and Database Scope
 

@@ -4031,14 +4031,14 @@
 </ul>
 <p>For more information, see <a href="../vectorai-db/index.html">Actian VectorAI DB</a>.</p>
 <h2 id="multi-target-deployments">Multi-Target Deployments<a class="headerlink" href="#multi-target-deployments" title="Permanent link">&para;</a></h2>
-<p>One container can now serve many databases instead of running one container for each database. You list the databases in a <code>targets</code> block in <code>conf.json</code>. Each database gets its own URL, and OAuth scopes control access to each database separately. You can add or remove targets without restarting the server by using <code>targets.d</code> files. A deployment without a <code>targets</code> block works as before.</p>
+<p>One container can now serve many databases instead of running one container for each database. You list the databases in a <code>targets</code> block in <code>conf.json</code>. Each database gets its own URL, and OAuth scopes control access to each database separately. As an alternative to listing the targets in <code>conf.json</code>, you can add or remove targets without restarting the server by using <code>targets.d</code> files. A deployment without a <code>targets</code> block works as before, with one MCP Server for each database.</p>
 <ul>
-<li>Each database in a target entry can have its own user name and password.</li>
+<li>Each database in a target entry can have its own user name and password, and custom extensions can apply to specific targets.</li>
 <li>A caller whose token has no grant for a database gets <code>403 Forbidden</code> with <code>insufficient_scope</code>. The error names the missing scope.</li>
 <li>If a request does not name a database, the server tells the client which URL to use.</li>
 </ul>
 <p>Multi-target deployments work with Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Zen also supports read-only personas, which are named connections that open a database in read-only mode.</p>
-<p>Actian NoSQL also serves several databases from one server, through named targets in <code>application.properties</code>. Each target gets its own URL, <code>/mcp/{target}</code>, and its own read and write scopes. Targets kept in a directory are added, changed, and removed without a restart.</p>
+<p>Actian NoSQL also serves several databases from one server, through named targets in <code>application.properties</code>. Each target gets its own URL, <code>/mcp/{target}</code>, and its own read and write scopes.</p>
 <p>For more information, see <a href="../ingres/multi-target.html">Ingres</a>, <a href="../analytics-engine/multi-target.html">Analytics Engine</a>, <a href="../hcl-informix/multi-target.html">HCL Informix</a>, <a href="../zen/multi-target.html">Zen</a>, and <a href="../nosql/targets/index.html">NoSQL</a>.</p>
 <h2 id="resource-server-mode">Resource-Server Mode<a class="headerlink" href="#resource-server-mode" title="Permanent link">&para;</a></h2>
 <p>An application that has already signed the user in can now call the MCP Server with an access token from the identity provider (IdP). The user does not need a second OAuth login. The server checks each token against the IdP's published signing keys and runs the call as the user named in the token. The Auth0 and Keycloak guides describe the IdP setup, including the scopes for each target, and how a calling application gets a token.</p>
@@ -4071,7 +4071,10 @@
 <ul>
 <li>Each tool declares MCP tool annotations. Clients can use them to decide whether to run a tool without asking first.</li>
 <li>For Ingres, <code>list_indexes</code> lists the indexes on a table.</li>
-<li>For Ingres, <code>list_tables</code> shows each table's owner, and <code>describe_table</code> accepts an owner-qualified name.</li>
+<li>For Ingres and Analytics Engine, <code>list_tables</code> shows each table's owner, and <code>describe_table</code> accepts an owner-qualified name.</li>
+<li>For Analytics Engine, <code>vector_search</code> returns the rows whose <code>VECTOR</code> column is nearest to a query vector.</li>
+<li>For Ingres, seven read-only health tools report on the installation and the connected database: <code>server_status</code>, <code>checkpoint_journal_health</code>, <code>locking_health</code>, <code>long_running_queries</code>, <code>cache_io_health</code>, <code>storage_health</code>, and <code>optimizer_health</code>.</li>
+<li>For Ingres, Analytics Engine, HCL Informix, Zen, and NoSQL, <code>list_accessible_targets</code> lists the databases that the caller can reach.</li>
 </ul>
 <p>For more information, see <a href="../ingres/tools/index.html#tool-annotations">Ingres Tools</a>.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
@@ -4107,7 +4110,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 10:25:06 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 27, 2026 06:57:22 UTC">November 27, 2026</span>
   </span>
 
     

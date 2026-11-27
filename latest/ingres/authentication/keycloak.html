@@ -5889,7 +5889,7 @@
 </table>
 <p>The following rules apply:</p>
 <ul>
-<li><code>*</code> matches exactly one segment, never zero and never more than one.</li>
+<li><code>*</code> stands in for a whole host, instance, or database segment, and matches any value in that position. For example, <code>actian:*:*:*:write</code> grants write access on any host, any instance, and any database. Each <code>*</code> matches exactly one segment. It cannot be combined with other characters, such as <code>sales*</code>, and it cannot match several segments.</li>
 <li><code>write</code> implies <code>read</code>. A <code>:write</code> grant also satisfies a read of the same host, instance, and database.</li>
 <li>Scopes only grant access. There are no deny scopes. The server refuses a request only when no grant covers it.</li>
 </ul>
@@ -5903,19 +5903,19 @@
 <tbody>
 <tr>
 <td><code>actian:&lt;db-host&gt;:&lt;instance&gt;:salesdb:read</code></td>
-<td>Read <code>salesdb</code> on that one target</td>
+<td>Read the <code>salesdb</code> database only</td>
 </tr>
 <tr>
 <td><code>actian:&lt;db-host&gt;:&lt;instance&gt;:salesdb:write</code></td>
-<td>Read and write <code>salesdb</code> on that one target</td>
+<td>Read and write the <code>salesdb</code> database only</td>
 </tr>
 <tr>
 <td><code>actian:&lt;db-host&gt;:&lt;instance&gt;:*:read</code></td>
-<td>Read every database on that one target</td>
+<td>Read every database on <code>&lt;instance&gt;</code></td>
 </tr>
 <tr>
 <td><code>actian:*:*:*:read</code></td>
-<td>Read every database on every target in the registry</td>
+<td>Read every database on any host and instance in the registry</td>
 </tr>
 </tbody>
 </table>
@@ -6581,7 +6581,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 27, 2026 06:57:22 UTC">November 27, 2026</span>
   </span>
 
     

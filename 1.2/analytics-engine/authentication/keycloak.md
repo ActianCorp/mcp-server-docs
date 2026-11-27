@@ -467,16 +467,16 @@ actian:{host}:{instance}:{database}:{read|write}
 
 The following rules apply:
 
-- `*` matches exactly one segment, never zero and never more than one.
+- `*` stands in for a whole host, instance, or database segment, and matches any value in that position. For example, `actian:*:*:*:write` grants write access on any host, any instance, and any database. Each `*` matches exactly one segment. It cannot be combined with other characters, such as `sales*`, and it cannot match several segments.
 - `write` implies `read`. A `:write` grant also satisfies a read of the same host, instance, and database.
 - Scopes only grant access. There are no deny scopes. The server refuses a request only when no grant covers it.
 
 | Scope | Grants |
 |---|---|
-| `actian:<db-host>:<instance>:salesdb:read` | Read `salesdb` on that one target |
-| `actian:<db-host>:<instance>:salesdb:write` | Read and write `salesdb` on that one target |
-| `actian:<db-host>:<instance>:*:read` | Read every database on that one target |
-| `actian:*:*:*:read` | Read every database on every target in the registry |
+| `actian:<db-host>:<instance>:salesdb:read` | Read the `salesdb` database only |
+| `actian:<db-host>:<instance>:salesdb:write` | Read and write the `salesdb` database only |
+| `actian:<db-host>:<instance>:*:read` | Read every database on `<instance>` |
+| `actian:*:*:*:read` | Read every database on any host and instance in the registry |
 
 !!! warning "Host wildcards are logged every time they are used"
     A scope with `*` in the host segment, such as `actian:*:*:*:write`, reaches every target. Reserve it for administrative or emergency access. Each request that it authorizes writes a `WARNING` line to the server log. The line names the scope and the target, for audit review.

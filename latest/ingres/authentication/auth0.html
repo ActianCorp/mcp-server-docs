@@ -5264,6 +5264,10 @@
 <span class="p">}</span>
 </code></pre></div>
 <div class="admonition note">
+<p class="admonition-title"><code>auth_mode</code> is not set in this example</p>
+<p>This example runs the default OAuth login, so it has no <code>auth_mode</code> setting. To accept access tokens from an application that has already signed the user in, set <code>auth_mode</code> to <code>resource-server</code> at the top level of <code>conf.json</code>. See <a href="#resource-server-mode">Resource-Server Mode</a>.</p>
+</div>
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Replace <code>&lt;db-host&gt;</code> with the database server address. In a Docker container, use the host's IP address or <code>host.docker.internal</code>(not <code>localhost</code> or <code>127.0.0.1</code>, which refer to the container itself).</p>
 </div>
@@ -5311,7 +5315,7 @@
 </tbody>
 </table>
 <ul>
-<li><code>*</code> matches exactly one segment. It is not a prefix or suffix wildcard, and it never matches zero or several segments.</li>
+<li><code>*</code> stands in for a whole host, instance, or database segment, and matches any value in that position. For example, <code>actian:*:*:*:write</code> grants write access on any host, any instance, and any database. Each <code>*</code> matches exactly one segment. It cannot be combined with other characters, such as <code>sales*</code>, and it cannot match several segments.</li>
 <li>A <code>write</code> scope implies <code>read</code> for the same host, instance, and database. A writer does not need a separate <code>read</code> scope.</li>
 <li>There are no deny scopes. What a caller can reach is exactly the union of the scopes it is granted.</li>
 </ul>
@@ -5325,19 +5329,19 @@
 <tbody>
 <tr>
 <td><code>actian:db07.example.com:&lt;installation_id&gt;:sales:read</code></td>
-<td>Read <code>sales</code> on that one target.</td>
+<td>Read the <code>sales</code> database only.</td>
 </tr>
 <tr>
 <td><code>actian:db07.example.com:&lt;installation_id&gt;:sales:write</code></td>
-<td>Read and write <code>sales</code> on that one target.</td>
+<td>Read and write the <code>sales</code> database only.</td>
 </tr>
 <tr>
 <td><code>actian:db07.example.com:&lt;installation_id&gt;:*:read</code></td>
-<td>Read every database on that target.</td>
+<td>Read every database on <code>&lt;installation_id&gt;</code>.</td>
 </tr>
 <tr>
 <td><code>actian:*:*:*:read</code></td>
-<td>Read every database on every target.</td>
+<td>Read every database on any host and instance.</td>
 </tr>
 </tbody>
 </table>
@@ -5363,8 +5367,8 @@
 </tr>
 <tr>
 <td>A target URL, <code>/mcp/{host}/{instance}/{database}</code></td>
-<td>A matching <code>actian:…:read</code> or <code>actian:…:write</code> scope.</td>
-<td>A matching <code>actian:…:write</code> scope. <code>mcp:write</code> is ignored, even if the token carries it.</td>
+<td>A matching <code>actian:{host}:{instance}:{database}:read</code> or <code>actian:{host}:{instance}:{database}:write</code> scope. Each segment is an exact value or <code>*</code>.</td>
+<td>A matching <code>actian:{host}:{instance}:{database}:write</code> scope. Each segment is an exact value or <code>*</code>. <code>mcp:write</code> is ignored, even if the token carries it.</td>
 </tr>
 </tbody>
 </table>
@@ -5393,15 +5397,15 @@
 <tbody>
 <tr>
 <td><code>actian:db07.example.com:&lt;installation_id&gt;:sales:read</code></td>
-<td>Read access to sales</td>
+<td>Read access to the <code>sales</code> database on the given <code>&lt;installation_id&gt;</code></td>
 </tr>
 <tr>
 <td><code>actian:db07.example.com:&lt;installation_id&gt;:sales:write</code></td>
-<td>Read and write access to sales</td>
+<td>Read and write access to the <code>sales</code> database on the given <code>&lt;installation_id&gt;</code></td>
 </tr>
 <tr>
 <td><code>actian:db07.example.com:&lt;installation_id&gt;:*:read</code></td>
-<td>Read access to every database on db07</td>
+<td>Read access to every database on <code>&lt;installation_id&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -5431,8 +5435,7 @@
 <h3 id="step-4-grant-permissions-to-machine-to-machine-callers">Step 4: Grant Permissions to Machine-to-Machine Callers<a class="headerlink" href="#step-4-grant-permissions-to-machine-to-machine-callers" title="Permanent link">&para;</a></h3>
 <p>Roles apply to users. An application that calls the server with its own token, using the client credentials grant, receives only the permissions selected for it on the <strong>Client Access</strong> tab:</p>
 <ol>
-<li>Navigate to <strong>Applications</strong> &gt; <strong>Applications</strong> &gt; <strong>the calling application</strong> &gt; <strong>APIs</strong> tab.</li>
-<li>Select your API.</li>
+<li>Open the application and API pair, as in <a href="#step-3-authorize-the-application-for-the-api">Step 3: Authorize Application for API</a>. Navigate to <strong>Applications</strong> &gt; <strong>Applications</strong> &gt; <strong>the calling application</strong> &gt; <strong>APIs</strong> tab and select your API, or navigate to <strong>Applications</strong> &gt; <strong>APIs</strong> &gt; <strong>your API</strong> &gt; <strong>Application Access</strong> tab and select the calling application.</li>
 <li>On the <strong>Client Access</strong> tab, select the per-target permissions, then select <strong>Save</strong>.</li>
 </ol>
 <div class="admonition warning">
@@ -5453,7 +5456,7 @@
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Discover what a token can reach</p>
-<p>After connecting, call the <code>list_accessible_targets</code> tool. It lists the targets and databases the caller holds a read grant for, with the URL path of each.</p>
+<p>After connecting, call the <code>list_accessible_targets</code> tool. It lists the targets and databases the caller holds a read or write grant for, with the URL path of each.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Revoking a permission</p>
@@ -5522,7 +5525,7 @@
 </ol>
 <p>In this mode there is no userinfo lookup and no fallback to <code>sub</code>. The server rejects a token that carries none of the three claims with <code>401</code>. It writes the reason to the server log, not to the response. Auth0 does not put these claims on an access token by default, so add them with a Post-Login Action.</p>
 <ol>
-<li>Navigate to <strong>Actions</strong> &gt; <strong>Library</strong> &gt; <strong>Build Custom</strong>.</li>
+<li>Navigate to <strong>Actions</strong> &gt; <strong>Library</strong> &gt; <strong>Create Action</strong>.</li>
 <li>Enter a <strong>Name</strong>, for example <code>mcp-username-claim</code>, select the <strong>Login / Post Login</strong> trigger, and select <strong>Create</strong>.</li>
 <li>
 <p>Replace the code with the following:</p>
@@ -5919,7 +5922,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 23, 2026 13:42:36 UTC">November 23, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 27, 2026 06:57:22 UTC">November 27, 2026</span>
   </span>
 
     
