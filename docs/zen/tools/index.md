@@ -70,6 +70,7 @@ Executes a read-only SQL query against Actian Zen with automatic dialect transla
     ```json
     {
       "error": "DDL not allowed in execute_query. Schema changes (CREATE/ALTER/DROP) are not available in read-write mode.",
+      "alternative": null,
       "sql_classification": "DDL"
     }
     ```

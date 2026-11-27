@@ -27,20 +27,23 @@ Actian MCP Server 1.2.0 introduces the Actian MCP Server for VectorAI DB. An AI 
 - **Resources and prompts**: Health, the collection list, and each collection's details are MCP resources. The `find_information` and `store_information` prompts guide an agent.
 - **Security**: The server supports OAuth with Auth0 or Keycloak, and resource-server mode. When the engine requires authentication, the server sends an engine access token from `vectorai.api_key_secret`.
 - **Operations**: A call log writes one record per tool call. Custom extensions add tools and resources.
+- **Container defaults**: The image has no built-in `conf.json`; a container started without a mounted configuration exits with `Configuration file not found`. The compose file and the Quick Start publish port 8000 on `127.0.0.1`; `MCP_SERVER_BIND_ADDRESS` opens it for OAuth deployments.
 
 For more information, see [Actian VectorAI DB](../vectorai-db/index.md).
 
 ## Multi-Target Deployments
 
-One container can now serve many databases instead of running one container for each database. You list the databases in a `targets` block in `conf.json`. Each database gets its own URL, and OAuth scopes control access to each database separately. You can add or remove targets without restarting the server by using `targets.d` files. A deployment without a `targets` block works as before.
+One container can now serve many databases instead of running one container for each database. You list the databases in a `targets` block in `conf.json`. Each database gets its own URL, and OAuth scopes control access to each database separately. As an alternative to listing the targets in `conf.json`, you can add or remove targets without restarting the server by using `targets.d` files. A deployment without a `targets` block works as before, with one MCP Server for each database.
 
-- Each database in a target entry can have its own user name and password.
+- Each database in a target entry can have its own user name and password, and custom extensions can apply to specific targets.
 - A caller whose token has no grant for a database gets `403 Forbidden` with `insufficient_scope`. The error names the missing scope.
 - If a request does not name a database, the server tells the client which URL to use.
 
 Multi-target deployments work with Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Zen also supports read-only personas, which are named connections that open a database in read-only mode.
 
-For more information, see [Ingres](../ingres/multi-target.md), [Analytics Engine](../analytics-engine/multi-target.md), [HCL Informix](../hcl-informix/multi-target.md), and [Zen](../zen/multi-target.md).
+Actian NoSQL also serves several databases from one server, through named targets in `application.properties`. Each target gets its own URL, `/mcp/{target}`, and its own read and write scopes.
+
+For more information, see [Ingres](../ingres/multi-target.md), [Analytics Engine](../analytics-engine/multi-target.md), [HCL Informix](../hcl-informix/multi-target.md), [Zen](../zen/multi-target.md), and [NoSQL](../nosql/targets/index.md).
 
 ## Resource-Server Mode
 
@@ -72,21 +75,29 @@ Zen now supports several databases from one server and resource-server mode. It 
 
 In `orm_operation`, an update or delete no longer accepts `where`. Use `entity_id` for a single row, or `execute_write_query` for a conditional `UPDATE` or `DELETE`.
 
+The image no longer contains a default `conf.json`: a container started without a mounted configuration exits with `Configuration file not found` instead of serving `DEMODATA`. The compose file, the `start-zen-mcp.ps1` launcher, and the Quick Start publish port 8000 on `127.0.0.1` by default; `MCP_SERVER_BIND_ADDRESS` (compose) and `-BindAddress` (launcher) open it for OAuth deployments.
+
 For more information, see [Zen](../zen/index.md) and [Deployment Scenarios](../zen/deployment.md).
 
 ## NoSQL Updates
 
+- One server can serve several NoSQL databases through named targets. Each target has its own URL, `/mcp/{target}`, and its own read and write scopes, and targets kept in a directory are added, changed, and removed without a restart. See [Multi-Target Deployments](#multi-target-deployments).
+- Each database has a call cap, `nsql.db.max-calls` (default `10`), and a deadline for read calls, `nsql.db.call-deadline` (default `30s`). A call beyond the cap is refused as busy, and a read that runs past the deadline is stopped. The server reconnects to a database that comes back, without a restart.
 - The server accepts a token only when its `aud` claim contains a value set in `quarkus.oidc.token.audience`. The Keycloak guide also describes token exchange for a calling application.
-- A new page describes the stateful and stateless versions of MCP and how the server confirms a write on each.
+- The server supports the stateless 2026-07-28 version of MCP. A client on it confirms a write by repeating the tool call.
 - `get_objects_by_loids` lists the Logical Object IDs (LOIDs) it did not find in `notFoundLoids`.
+- For extension authors, the declared return type of a tool, resource, resource template, or prompt decides what the client receives, and some return types stop the server at startup.
 
-For more information, see [Authentication](../nosql/authentication/index.md) and [Protocol Versions](../nosql/protocol-versions.md).
+For more information, see [Targets](../nosql/targets/index.md), [Database Availability](../nosql/database-availability.md), [Authentication](../nosql/authentication/index.md), [Protocol Versions](../nosql/protocol-versions.md), and [Extensions](../nosql/extensions/index.md).
 
 ## Tool Annotations and Tool Changes
 
 - Each tool declares MCP tool annotations. Clients can use them to decide whether to run a tool without asking first.
 - For Ingres, `list_indexes` lists the indexes on a table.
-- For Ingres, `list_tables` shows each table's owner, and `describe_table` accepts an owner-qualified name.
+- For Ingres and Analytics Engine, `list_tables` shows each table's owner, and `describe_table` accepts an owner-qualified name.
+- For Analytics Engine, `vector_search` returns the rows whose `VECTOR` column is nearest to a query vector.
+- For Ingres, seven read-only health tools report on the installation and the connected database: `server_status`, `checkpoint_journal_health`, `locking_health`, `long_running_queries`, `cache_io_health`, `storage_health`, and `optimizer_health`.
+- For Ingres, Analytics Engine, HCL Informix, Zen, and NoSQL, `list_accessible_targets` lists the databases that the caller can reach.
 
 For more information, see [Ingres Tools](../ingres/tools/index.md#tool-annotations).
 

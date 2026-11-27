@@ -75,7 +75,7 @@ Agent URL: `http://localhost:8000/mcp`. If the log shows error `10065`, the cont
 ```bash
 docker network create zentest
 docker run -d --name zen16 --network zentest --network-alias zen16 <zen-engine-image>
-docker run -d --name zen-mcp --network zentest -p 8000:8000 \
+docker run -d --name zen-mcp --network zentest -p 127.0.0.1:8000:8000 \
   -v $(pwd)/conf.json:/app/conf.json:ro \
   actian/zen-mcp-server:1.2.0
 ```
@@ -88,7 +88,7 @@ Use the configuration from [Multiple Databases](multi-target.md#configuration), 
 
 ```bash
 mkdir targets.d
-docker run -d --name zen-mcp --network zentest -p 8000:8000 \
+docker run -d --name zen-mcp --network zentest -p 127.0.0.1:8000:8000 \
   -v $(pwd)/conf.json:/app/conf.json:ro \
   -v $(pwd)/targets.d:/app/targets.d \
   actian/zen-mcp-server:1.2.0

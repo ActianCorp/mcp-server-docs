@@ -50,7 +50,7 @@ To enable authentication, add an `oauth` object to the `conf.json` file. The ser
 | `FASTMCP_SERVER_AUTH_CONFIG_URL` | Yes | OIDC discovery URL, for example `https://domain/.well-known/openid-configuration`. Use `https://` in production |
 | `FASTMCP_SERVER_AUTH_CLIENT_ID` | Yes | OAuth client ID provided by the identity provider |
 | `FASTMCP_SERVER_AUTH_CLIENT_SECRET` | Yes | OAuth client secret |
-| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | External URL of the MCP server, for example `https://<mcp-server-host>:8000`. It must use `https://`. |
+| `FASTMCP_SERVER_AUTH_BASE_URL` | Yes | External URL of the MCP server, for example `https://<mcp-server-host>:8000`. It must start with `https://` unless `host` is `localhost`. |
 | `FASTMCP_SERVER_AUTH_AUDIENCE` | Yes | Token audience |
 | `user_impersonation` | No | Boolean. If `true` (the default setting), the server runs each query as the authenticated user using `SET SESSION AUTHORIZATION`. |
 
@@ -119,7 +119,7 @@ actian:{host}:{instance}:{database}:read
 actian:{host}:{instance}:{database}:write
 ```
 
-The three middle parts come from the target entry. For the entry `{"host": "zen16", "instance": "admin", "databases": ["DEMODATA"]}`, the read grant is `actian:zen16:admin:DEMODATA:read` and the write grant is `actian:zen16:admin:DEMODATA:write`. The server reads grants from the `scope`, `scp`, and `permissions` claims. Matching is exact.
+The three middle parts come from the target entry. For the entry `{"host": "zen16", "instance": "admin", "databases": ["DEMODATA"]}`, the read grant is `actian:zen16:admin:DEMODATA:read` and the write grant is `actian:zen16:admin:DEMODATA:write`. The server reads grants from the `scope`, `scp`, and `permissions` claims. A `*` in the host, instance, or database part matches exactly one segment: `actian:zen16:*:*:read` reads every database on `zen16`, and `actian:*:*:*:read` reads every target. The server writes a WARNING line to its log for each request that a host wildcard authorizes, so keep such grants for admin roles.
 
 | Caller | Result |
 |--------|--------|
