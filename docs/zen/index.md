@@ -32,7 +32,7 @@ The Actian MCP Server for Zen supports the following operations:
 Before starting the server, ensure the following requirements are met:
 
 - **Container Engine:** Docker installed and running on the host machine.
-- **Actian Zen Instance:** A running instance that the container can reach.
+- **Actian Zen Instance:** A running Zen 16 or Zen 17 engine that the container can reach.
 - **Credentials (Optional):** Required if the Zen database uses authentication.
 - **OIDC provider (Optional):** Required if you are using OAuth authentication.
 
@@ -142,14 +142,14 @@ Once the `conf.json` is ready, start the container and mount the configuration f
 ```bash
 docker run -d \
   --name zen-mcp \
-  -p 8000:8000 \
+  -p 127.0.0.1:8000:8000 \
   --add-host=host.docker.internal:host-gateway \
   -v $(pwd)/conf.json:/app/conf.json:ro \
   actian/zen-mcp-server:1.2.0
 ```
 
 !!! note "Container networking"
-    `-p 8000:8000` exposes the server port on the host. `--add-host=host.docker.internal:host-gateway` allows the container to reach services on the host machine (such as the Zen engine on port 1583). Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically; Linux requires the `--add-host` flag.
+    `-p 127.0.0.1:8000:8000` publishes the server port on this machine only. Without an `oauth` block in `conf.json` the server has no authentication, so open the port to other machines (`-p 8000:8000`) only with OAuth or behind an authenticating gateway; see [Deployment](deployment.md). `--add-host=host.docker.internal:host-gateway` allows the container to reach services on the host machine (such as the Zen engine on port 1583). Docker Desktop on Windows and macOS resolves `host.docker.internal` automatically; Linux requires the `--add-host` flag.
 
 Once the container is running, connect the MCP client to the exposed server endpoint using the host and port from the configuration.
 

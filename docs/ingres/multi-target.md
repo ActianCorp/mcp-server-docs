@@ -222,13 +222,13 @@ actian:{host}:{instance}:{database}:{read|write}
 
 | Scope | Grants |
 | :--- | :--- |
-| `actian:sales-db.example.com:II:salesmart:read` | Read `salesmart` |
-| `actian:sales-db.example.com:II:salesmart:write` | Read and write `salesmart` |
-| `actian:sales-db.example.com:II:*:read` | Read every database on that installation |
-| `actian:*:*:*:read` | Read every database in the registry |
+| `actian:sales-db.example.com:II:salesmart:read` | Read `salesmart` on the `II` instance only |
+| `actian:sales-db.example.com:II:salesmart:write` | Read and write `salesmart` on the `II` instance only |
+| `actian:sales-db.example.com:II:*:read` | Read every database on the `II` instance |
+| `actian:*:*:*:read` | Read every database on any host and instance in the registry |
 
-- `*` matches exactly one segment.
-- A `write` scope also grants `read`.
+- `*` matches any one segment: a host, an instance, or a database. It cannot match part of a segment, and it cannot match several segments.
+- A `write` scope also grants `read` for the same host, instance, and database that the scope names. It does not grant `read` on any other database.
 - There are no deny scopes. The scopes in a token show everything it can reach.
 - The server logs a warning each time a scope with a wildcard host is used.
 

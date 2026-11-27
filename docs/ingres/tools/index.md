@@ -16,7 +16,7 @@ Use the following tools to interact with the database:
 | [`execute_query`](#execute_query) | Runs a SQL query against the connected database. Reads run at any time; writes run only when the server permits them. |
 | [`list_tables`](#list_tables) | Lists all available user tables and views, with each one's owner and whether it is a table or a view. |
 | [`describe_table`](#describe_table) | Displays column definitions and comments for a given table. |
-| [`list_indexes`](#list_indexes) | Lists the indexes defined on a given table, with their columns in key order. |
+| [`list_indexes`](#list_indexes) | Lists the indexes defined on a given table, with their columns in key order. Available for Ingres only. |
 | [`list_functions`](#list_functions) | Lists available user-defined functions and procedures. |
 
 The server also provides seven read-only operational health tools. See [Operational health tools](#operational-health-tools).
@@ -332,6 +332,9 @@ The response has the same shape as the previous example. If no table matches bot
 ## list_indexes
 
 Returns the indexes defined on a single table as structured JSON, including each index's columns in key order.
+
+!!! note "Ingres only"
+    This tool is available for Ingres only. The Analytics Engine server does not provide it.
 
 The tool reports two kinds of index:
 

@@ -302,6 +302,9 @@ Users without this role can still read. Their tokens do not carry `mcp:write`, s
 }
 ```
 
+!!! note "`auth_mode` is not set in this example"
+    This example runs the default OAuth login, so it has no `auth_mode` setting. To accept access tokens from an application that has already signed the user in, set `auth_mode` to `resource-server` at the top level of `conf.json`. See [Resource-Server Mode](#resource-server-mode).
+
 !!! note
     Replace `<db-host>` with the database server address. In a Docker container, use the host's IP address or `host.docker.internal`(not `localhost` or `127.0.0.1`, which refer to the container itself).
 
@@ -340,16 +343,16 @@ actian:{host}:{instance}:{database}:{read|write}
 | `{database}` | One of the target's `databases`, or `*`. |
 | Last segment | `read` or `write`. |
 
-- `*` matches exactly one segment. It is not a prefix or suffix wildcard, and it never matches zero or several segments.
+- `*` stands in for a whole host, instance, or database segment, and matches any value in that position. For example, `actian:*:*:*:write` grants write access on any host, any instance, and any database. Each `*` matches exactly one segment. It cannot be combined with other characters, such as `sales*`, and it cannot match several segments.
 - A `write` scope implies `read` for the same host, instance, and database. A writer does not need a separate `read` scope.
 - There are no deny scopes. What a caller can reach is exactly the union of the scopes it is granted.
 
 | Scope | Grants |
 |-------|--------|
-| `actian:db07.example.com:<installation_id>:sales:read` | Read `sales` on that one target. |
-| `actian:db07.example.com:<installation_id>:sales:write` | Read and write `sales` on that one target. |
-| `actian:db07.example.com:<installation_id>:*:read` | Read every database on that target. |
-| `actian:*:*:*:read` | Read every database on every target. |
+| `actian:db07.example.com:<installation_id>:sales:read` | Read the `sales` database only. |
+| `actian:db07.example.com:<installation_id>:sales:write` | Read and write the `sales` database only. |
+| `actian:db07.example.com:<installation_id>:*:read` | Read every database on `<installation_id>`. |
+| `actian:*:*:*:read` | Read every database on any host and instance. |
 
 !!! warning "Treat host wildcards as emergency-only grants"
     A scope with `*` in the `{host}` segment, such as `actian:*:*:*:write`, reaches every target. Keep it out of default roles. Each time such a scope authorizes a request, the server writes a `WARNING` log line that names the scope and the target. This makes its use visible in audit reviews.
@@ -361,7 +364,7 @@ The single-target `mcp:write` scope and the per-target scopes are mutually exclu
 | Request | Read requires | Write requires |
 |---------|---------------|----------------|
 | No `targets` block in `conf.json` | A valid token. | `mcp:write`. |
-| A target URL, `/mcp/{host}/{instance}/{database}` | A matching `actian:…:read` or `actian:…:write` scope. | A matching `actian:…:write` scope. `mcp:write` is ignored, even if the token carries it. |
+| A target URL, `/mcp/{host}/{instance}/{database}` | A matching `actian:{host}:{instance}:{database}:read` or `actian:{host}:{instance}:{database}:write` scope. Each segment is an exact value or `*`. | A matching `actian:{host}:{instance}:{database}:write` scope. Each segment is an exact value or `*`, for example `actian:*:*:*:write`. `mcp:write` is ignored, even if the token carries it. |
 
 In both cases, writes are still possible only when `query_mode` allows them. See [Write support](../write-support.md).
 
@@ -380,9 +383,9 @@ Auth0 permissions are plain strings, so each scope you grant becomes one permiss
 
      | Permission | Description |
      |------------|-------------|
-     | `actian:db07.example.com:<installation_id>:sales:read` | Read access to sales |
-     | `actian:db07.example.com:<installation_id>:sales:write` | Read and write access to sales |
-     | `actian:db07.example.com:<installation_id>:*:read` | Read access to every database on db07 |
+     | `actian:db07.example.com:<installation_id>:sales:read` | Read access to the `sales` database on the given `<installation_id>` |
+     | `actian:db07.example.com:<installation_id>:sales:write` | Read and write access to the `sales` database on the given `<installation_id>` |
+     | `actian:db07.example.com:<installation_id>:*:read` | Read access to every database on `<installation_id>` |
 
 3. Select **+ Add** for each entry.
 
@@ -409,9 +412,8 @@ You can also assign roles from the user's side: **User Management** > **Users** 
 
 Roles apply to users. An application that calls the server with its own token, using the client credentials grant, receives only the permissions selected for it on the **Client Access** tab:
 
-1. Navigate to **Applications** > **Applications** > **the calling application** > **APIs** tab.
-2. Select your API.
-3. On the **Client Access** tab, select the per-target permissions, then select **Save**.
+1. Open the application and API pair, as in [Step 3: Authorize Application for API](#step-3-authorize-the-application-for-the-api). Navigate to **Applications** > **Applications** > **the calling application** > **APIs** tab and select your API, or navigate to **Applications** > **APIs** > **your API** > **Application Access** tab and select the calling application.
+2. On the **Client Access** tab, select the per-target permissions, then select **Save**.
 
 !!! warning "Client Access and User-Delegated Access look identical"
     The two tabs show the same permission checklist. **User-Delegated Access** controls what the application may request on behalf of a signed-in user. **Client Access** controls what a client credentials token carries. Selecting permissions on the wrong tab leaves them out of the token, and Auth0 reports no error.
@@ -434,7 +436,7 @@ A request for a target that does not exist receives the identical response, so t
     Some MCP clients react to this response by starting a new login that asks for the missing scope (step-up). The server's OAuth login proxy, which this guide sets up, cannot obtain the scope in that new login. The browser shows an authorization error such as `Client was not registered with scope ...`. This is expected. Grant the permission or role in Auth0 ([Step 3](#step-3-grant-permissions-to-users-through-roles)), then sign in again.
 
 !!! tip "Discover what a token can reach"
-    After connecting, call the `list_accessible_targets` tool. It lists the targets and databases the caller holds a read grant for, with the URL path of each.
+    After connecting, call the `list_accessible_targets` tool. It lists the targets and databases the caller holds a read or write grant for, with the URL path of each.
 
 !!! note "Revoking a permission"
     Removing a permission or role in Auth0 does not invalidate tokens that were already issued. Access ends when the token expires. See [Token Expiration](#token-expiration).
@@ -488,7 +490,7 @@ With `user_impersonation` set to `true` (the default), the server reads the data
 
 In this mode there is no userinfo lookup and no fallback to `sub`. The server rejects a token that carries none of the three claims with `401`. It writes the reason to the server log, not to the response. Auth0 does not put these claims on an access token by default, so add them with a Post-Login Action.
 
-1. Navigate to **Actions** > **Library** > **Build Custom**.
+1. Navigate to **Actions** > **Library** > **Create Action**.
 2. Enter a **Name**, for example `mcp-username-claim`, select the **Login / Post Login** trigger, and select **Create**.
 3. Replace the code with the following:
 
