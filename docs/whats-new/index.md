@@ -33,15 +33,15 @@ For more information, see [Actian VectorAI DB](../vectorai-db/index.md).
 
 ## Multi-Target Deployments
 
-One container can now serve many databases instead of running one container for each database. You list the databases in a `targets` block in `conf.json`. Each database gets its own URL, and OAuth scopes control access to each database separately. You can add or remove targets without restarting the server by using `targets.d` files. A deployment without a `targets` block works as before.
+One container can now serve many databases instead of running one container for each database. You list the databases in a `targets` block in `conf.json`. Each database gets its own URL, and OAuth scopes control access to each database separately. As an alternative to listing the targets in `conf.json`, you can add or remove targets without restarting the server by using `targets.d` files. A deployment without a `targets` block works as before, with one MCP Server for each database.
 
-- Each database in a target entry can have its own user name and password.
+- Each database in a target entry can have its own user name and password, and custom extensions can apply to specific targets.
 - A caller whose token has no grant for a database gets `403 Forbidden` with `insufficient_scope`. The error names the missing scope.
 - If a request does not name a database, the server tells the client which URL to use.
 
 Multi-target deployments work with Actian Ingres, Actian Analytics Engine, HCL Informix, and Actian Zen. Zen also supports read-only personas, which are named connections that open a database in read-only mode.
 
-Actian NoSQL also serves several databases from one server, through named targets in `application.properties`. Each target gets its own URL, `/mcp/{target}`, and its own read and write scopes. Targets kept in a directory are added, changed, and removed without a restart.
+Actian NoSQL also serves several databases from one server, through named targets in `application.properties`. Each target gets its own URL, `/mcp/{target}`, and its own read and write scopes.
 
 For more information, see [Ingres](../ingres/multi-target.md), [Analytics Engine](../analytics-engine/multi-target.md), [HCL Informix](../hcl-informix/multi-target.md), [Zen](../zen/multi-target.md), and [NoSQL](../nosql/targets/index.md).
 
@@ -94,7 +94,10 @@ For more information, see [Targets](../nosql/targets/index.md), [Database Availa
 
 - Each tool declares MCP tool annotations. Clients can use them to decide whether to run a tool without asking first.
 - For Ingres, `list_indexes` lists the indexes on a table.
-- For Ingres, `list_tables` shows each table's owner, and `describe_table` accepts an owner-qualified name.
+- For Ingres and Analytics Engine, `list_tables` shows each table's owner, and `describe_table` accepts an owner-qualified name.
+- For Analytics Engine, `vector_search` returns the rows whose `VECTOR` column is nearest to a query vector.
+- For Ingres, seven read-only health tools report on the installation and the connected database: `server_status`, `checkpoint_journal_health`, `locking_health`, `long_running_queries`, `cache_io_health`, `storage_health`, and `optimizer_health`.
+- For Ingres, Analytics Engine, HCL Informix, Zen, and NoSQL, `list_accessible_targets` lists the databases that the caller can reach.
 
 For more information, see [Ingres Tools](../ingres/tools/index.md#tool-annotations).
 
