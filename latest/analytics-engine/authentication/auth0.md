@@ -364,7 +364,7 @@ The single-target `mcp:write` scope and the per-target scopes are mutually exclu
 | Request | Read requires | Write requires |
 |---------|---------------|----------------|
 | No `targets` block in `conf.json` | A valid token. | `mcp:write`. |
-| A target URL, `/mcp/{host}/{instance}/{database}` | A matching `actian:{host}:{instance}:{database}:read` or `actian:{host}:{instance}:{database}:write` scope. Each segment is an exact value or `*`. | A matching `actian:{host}:{instance}:{database}:write` scope. Each segment is an exact value or `*`. `mcp:write` is ignored, even if the token carries it. |
+| A target URL, `/mcp/{host}/{instance}/{database}` | A matching `actian:{host}:{instance}:{database}:read` or `actian:{host}:{instance}:{database}:write` scope. Each segment is an exact value or `*`. | A matching `actian:{host}:{instance}:{database}:write` scope. Each segment is an exact value or `*`, for example `actian:*:*:*:write`. `mcp:write` is ignored, even if the token carries it. |
 
 In both cases, writes are still possible only when `query_mode` allows them. See [Write support](../write-support.md).
 
